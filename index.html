@@ -112,10 +112,11 @@ body{
   height:calc(51px + var(--safe-t));
   padding:var(--safe-t) 18px 0;
   display:flex;align-items:center;justify-content:space-between;
-  background:#0d0f0e;
+  background:#000;
 }
-.brand{font-size:19px;font-weight:700;letter-spacing:-.02em;display:flex;align-items:baseline;gap:6px;color:var(--text)}
-.brand i{font-style:normal;font-size:10px;font-weight:600;color:var(--muted2);letter-spacing:.02em}
+.brand{font-size:20px;font-weight:650;letter-spacing:.2px;display:flex;align-items:baseline;color:var(--text)}
+.brand span{color:var(--lime)}
+.brand .btag{font-style:normal;font-size:10px;font-weight:500;color:var(--muted2);margin-left:6px;letter-spacing:normal}
 .topactions{display:flex;gap:6px;align-items:center}
 .topbtn{
   display:inline-flex;align-items:center;justify-content:center;gap:6px;
@@ -636,7 +637,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   <div class="screen">
 
     <div class="topbar">
-      <div class="brand">练账<i class="btag">v0.1</i></div>
+      <div class="brand">练<span>账</span><i class="btag">v0.1</i></div>
       <div class="topactions">
         <button class="topbtn topicon" id="reloadTop" aria-label="强制更新" title="强制更新">
           <svg viewBox="0 -960 960 960" aria-hidden="true"><path d="M480-160q-134 0-227-93t-93-227q0-134 93-227t227-93q69 0 132 28.5T720-690v-70q0-17 11.5-28.5T760-800q17 0 28.5 11.5T800-760v200q0 17-11.5 28.5T760-520H560q-17 0-28.5-11.5T520-560q0-17 11.5-28.5T560-600h128q-32-56-87.5-88T480-720q-100 0-170 70t-70 170q0 100 70 170t170 70q68 0 124.5-34.5T692-367q8-14 22.5-19.5t29.5-.5q16 5 23 21t-1 30q-41 80-117 128t-169 48Z"/></svg>
