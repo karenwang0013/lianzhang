@@ -79,10 +79,10 @@ body{
   body{display:block;overscroll-behavior:none;-webkit-overflow-scrolling:auto}
   .phone{position:absolute;inset:0;width:100%;height:100%;border-radius:0;box-shadow:none}
   /* PWA 里 .phone 的高度比屏幕少 ~56px，底部元素改成相对视口固定，才能真的贴到屏幕底 */
-  .dock{position:fixed;left:10px;right:10px;bottom:-35px}
+  .dock{position:relative;left:auto;right:auto;bottom:auto;margin:0 10px 18px}
   .fade{position:fixed;left:0;right:0;bottom:12px}
   .cta{position:fixed;left:var(--page-pad);right:var(--page-pad);
-       bottom:calc(-35px + var(--dock-h) + 14px)}
+       bottom:calc(18px + var(--dock-h) + 12px)}
   .sheet{position:fixed;left:10px;right:10px;bottom:-35px}
   .screen::after{display:none}
 }
@@ -188,7 +188,7 @@ body{
   scrollbar-width:none;
 }
 .scroller::-webkit-scrollbar{display:none}
-.scroller.tight{padding-bottom:132px}
+.scroller.tight{padding-bottom:24px}
 
 .head{padding:0 0 16px}
 @media (min-width:521px){.head{padding-top:58px}}
@@ -360,7 +360,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 }
 .cta{
   position:absolute;left:var(--page-pad);right:var(--page-pad);
-  bottom:calc(-35px + var(--dock-h) + 14px);z-index:18;
+  bottom:calc(18px + var(--dock-h) + 12px);z-index:18;
   padding:16px;border:1px solid transparent;border-radius:18px;
   background:linear-gradient(180deg,#FF2D4A,var(--lime));color:#fff;
   font-size:16px;font-weight:600;letter-spacing:.01em;
@@ -380,8 +380,9 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
 /* ---------- Dock：玻璃 + 52 圆角 + 104 高（实测） ---------- */
 .dock{
-  position:absolute;left:10px;right:10px;
-  bottom:-35px;z-index:20;
+  position:relative;left:auto;right:auto;bottom:auto;
+  flex:0 0 auto;
+  margin:0 10px 18px;z-index:20;
   height:var(--dock-h);padding:0 12px;
   display:flex;align-items:center;
   border-radius:calc(var(--dock-h) / 2);
@@ -723,7 +724,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
     <div class="statusbg" aria-hidden="true"></div>
     <div class="topbar">
-      <div class="brand">练<span>账</span><i class="btag">v4.6</i></div>
+      <div class="brand">练<span>账</span><i class="btag">v4.7</i></div>
       <div class="topactions">
         <button class="topbtn topicon" id="reloadTop" aria-label="强制更新" title="强制更新">
           <svg viewBox="0 -960 960 960" aria-hidden="true"><path d="M480-160q-134 0-227-93t-93-227q0-134 93-227t227-93q69 0 132 28.5T720-690v-70q0-17 11.5-28.5T760-800q17 0 28.5 11.5T800-760v200q0 17-11.5 28.5T760-520H560q-17 0-28.5-11.5T520-560q0-17 11.5-28.5T560-600h128q-32-56-87.5-88T480-720q-100 0-170 70t-70 170q0 100 70 170t170 70q68 0 124.5-34.5T692-367q8-14 22.5-19.5t29.5-.5q16 5 23 21t-1 30q-41 80-117 128t-169 48Z"/></svg>
@@ -1033,7 +1034,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     <!-- 设置 -->
     <div class="sheet" id="setSheet">
       <div class="grab"></div>
-      <div class="sh-hd"><h2>设置</h2><span class="vtag">v4.6</span></div>
+      <div class="sh-hd"><h2>设置</h2><span class="vtag">v4.7</span></div>
       <div class="setbody">
         <div class="setlabel">功能</div>
         <div class="setrows">
@@ -1049,7 +1050,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
           <div class="srow" data-ic="bolt"><span class="ico"></span><span class="lbl">与热量账本同步</span><span class="sw"></span></div>
           <div class="srow" data-ic="monitor_heart"><span class="ico"></span><span class="lbl">Apple 健康</span><span class="sw"></span></div>
           <div class="srow" data-ic="assignment"><span class="ico"></span><span class="lbl">训练提醒</span><span class="sw"></span></div>
-          <button class="srow" id="openRel" data-ic="checklist"><span class="ico"></span><span class="lbl">更新记录</span><span class="val">v4.6</span></button>
+          <button class="srow" id="openRel" data-ic="checklist"><span class="ico"></span><span class="lbl">更新记录</span><span class="val">v4.7</span></button>
         </div>
       </div>
     </div>
@@ -1572,7 +1573,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   }
 
   /* ---------- 启动版本比对（同热量账本） ---------- */
-  var APP_VERSION = 'v4.6';
+  var APP_VERSION = 'v4.7';
   fetch('./version.txt?t=' + Date.now(), { cache: 'no-store' })
     .then(function(r){ return r.ok ? r.text() : ''; })
     .then(function(v){
