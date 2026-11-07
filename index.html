@@ -489,6 +489,13 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 .weekday.open .exlist{display:block;animation:fade .28s cubic-bezier(.2,1,.3,1)}
 .exi{display:flex;align-items:center;gap:6px;padding:6px 0;font-size:12px;color:rgba(242,244,242,.82)}
 .exi b{margin-left:auto;font-size:11px;font-weight:600;color:var(--muted);font-variant-numeric:tabular-nums}
+.exi .exr{margin-left:auto;display:flex;align-items:center;gap:8px}
+.exi .exr b{margin-left:0}
+.exi .exlast{font-style:normal;font-size:10.5px;color:var(--muted2);font-variant-numeric:tabular-nums}
+.exhist{margin-top:12px;padding-top:12px;border-top:1px solid var(--line)}
+.exhist .ehd{font-size:11px;color:var(--muted2)}
+.exhist .ehrow{display:flex;align-items:baseline;justify-content:space-between;padding:5px 0;font-size:11.5px;color:var(--muted)}
+.exhist .ehrow b{font-weight:600;color:rgba(242,244,242,.86);font-variant-numeric:tabular-nums}
 
 .badge{
   font-size:9.5px;font-weight:700;letter-spacing:.06em;
@@ -744,7 +751,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
     <div class="statusbg" aria-hidden="true"></div>
     <div class="topbar">
-      <div class="brand">训练<span>账本</span><i class="btag">v4.13</i></div>
+      <div class="brand">训练<span>账本</span><i class="btag">v5.0</i></div>
       <div class="topactions">
         <button class="topbtn topicon" id="reloadTop" aria-label="强制更新" title="强制更新">
           <svg viewBox="0 -960 960 960" aria-hidden="true"><path d="M480-160q-134 0-227-93t-93-227q0-134 93-227t227-93q69 0 132 28.5T720-690v-70q0-17 11.5-28.5T760-800q17 0 28.5 11.5T800-760v200q0 17-11.5 28.5T760-520H560q-17 0-28.5-11.5T520-560q0-17 11.5-28.5T560-600h128q-32-56-87.5-88T480-720q-100 0-170 70t-70 170q0 100 70 170t170 70q68 0 124.5-34.5T692-367q8-14 22.5-19.5t29.5-.5q16 5 23 21t-1 30q-41 80-117 128t-169 48Z"/></svg>
@@ -786,8 +793,8 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
             <div class="ringmid">
               <span class="rlbl">本周</span>
               <b id="weekDays">4</b>
-              <span class="rsub">/ 6 天</span>
-              <span class="rgap">还差 2 天</span>
+              <span class="rsub" id="weekTotal">/ 6 天</span>
+              <span class="rgap" id="weekGap">还差 2 天</span>
             </div>
           </div>
 
@@ -802,7 +809,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
             </div>
             <div>
               <div class="k">连续打卡</div>
-              <div class="v">12<small>天</small></div>
+              <div class="v" id="streakDays">12<small>天</small></div>
             </div>
           </div>
           <div class="weekstrip" id="weekStrip"></div>
@@ -825,7 +832,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
       <!-- ============ 计划 ============ -->
       <section class="view" data-view="plan">
         <header class="head">
-          <div class="eyebrow">训练周期 · 第 3 周 / 共 8 周</div>
+          <div class="eyebrow" id="planEyebrow">训练周期 · 第 3 周 / 共 8 周</div>
           <h1>计划 <span class="en">PLAN</span></h1>
           <p class="sub">AI 按你的恢复速度排的，每周自动微调</p>
         </header>
@@ -846,7 +853,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
           <div class="why">
             <span>目标 增肌</span>
             <span>经验 1–2 年</span>
-            <span>每周 6 练</span>
+            <span id="whyDays">每周 6 练</span>
             <span>商业健身房</span>
           </div>
         </div>
@@ -866,7 +873,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
         </div>
 
         <div class="listhead"><h2>每周有效组数</h2><span>上限 20 组 / 肌群</span></div>
-        <div class="card volcard">
+        <div class="card volcard" id="volCard">
           <div class="vol"><span class="vl">胸</span><div class="vbar"><i style="width:70%"></i></div><span class="vv">14</span></div>
           <div class="vol"><span class="vl">背</span><div class="vbar"><i style="width:80%"></i></div><span class="vv">16</span></div>
           <div class="vol"><span class="vl">腿</span><div class="vbar"><i style="width:85%"></i></div><span class="vv">17</span></div>
@@ -885,20 +892,20 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
       <!-- ============ 记录 ============ -->
       <section class="view" data-view="log">
         <header class="head">
-          <div class="eyebrow">累计 128 次训练</div>
+          <div class="eyebrow" id="logTotal">累计 128 次训练</div>
           <h1>记录 <span class="en">LOG</span></h1>
           <p class="sub">每一组都算数</p>
         </header>
 
         <div class="stats">
-          <div class="stat"><b>12</b><span>连续天数</span></div>
-          <div class="stat"><b>36.2<em>t</em></b><span>本月容量</span></div>
-          <div class="stat"><b>4</b><span>刷新 PR</span></div>
+          <div class="stat"><b id="logStreak">12</b><span>连续天数</span></div>
+          <div class="stat"><b id="logMonthVol">36.2<em>t</em></b><span>本月容量</span></div>
+          <div class="stat"><b id="logPR">4</b><span>PR 纪录</span></div>
         </div>
 
         <div class="listhead"><h2>每周容量</h2><span>公斤 · 近 8 周</span></div>
         <div class="card">
-          <div class="bars">
+          <div class="bars" id="logBars">
             <div class="bar"><i style="height:44%"></i><span>W1</span></div>
             <div class="bar"><i style="height:52%"></i><span>W2</span></div>
             <div class="bar"><i style="height:49%"></i><span>W3</span></div>
@@ -910,8 +917,8 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
           </div>
         </div>
 
-        <div class="listhead"><h2>个人最好成绩</h2><span>近 90 天</span></div>
-        <div class="card" style="padding:4px 16px">
+        <div class="listhead"><h2>个人最好成绩</h2><span>有记录才算</span></div>
+        <div class="card" id="prCard" style="padding:4px 16px">
           <div class="pr">
             <div class="nm">硬拉<small>Deadlift · 11/2</small></div>
             <div class="val"><b>140<em>kg</em></b><i>+5</i></div>
@@ -962,6 +969,12 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
           </div>
           <p class="bnote">这四个数字是训练的输入：去脂体重决定起始负荷，体脂率决定盈余幅度，BMI 用来卡减载周。在热量账本里改一次体重，这边下一次排课就跟着变。</p>
         </div>
+
+        <div class="listhead"><h2>训练统计</h2><span>本地记录 · 真实数据</span></div>
+        <div class="card" id="meStats" style="padding:14px 16px"></div>
+
+        <div class="listhead"><h2>常用动作</h2><span>最近练的重量</span></div>
+        <div class="card" id="meMore" style="padding:4px 16px"></div>
 
         </section>
 
@@ -1052,7 +1065,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     <!-- 设置 -->
     <div class="sheet" id="setSheet">
       <div class="grab"></div>
-      <div class="sh-hd"><h2>设置</h2><span class="vtag">v4.13</span></div>
+      <div class="sh-hd"><h2>设置</h2><span class="vtag">v5.0</span></div>
       <div class="setbody">
         <div class="setlabel">功能</div>
         <div class="setrows">
@@ -1068,7 +1081,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
           <div class="srow" data-ic="bolt"><span class="ico"></span><span class="lbl">与热量账本同步</span><span class="sw"></span></div>
           <div class="srow" data-ic="monitor_heart"><span class="ico"></span><span class="lbl">Apple 健康</span><span class="sw"></span></div>
           <div class="srow" data-ic="assignment"><span class="ico"></span><span class="lbl">训练提醒</span><span class="sw"></span></div>
-          <button class="srow" id="openRel" data-ic="checklist"><span class="ico"></span><span class="lbl">更新记录</span><span class="val">v4.13</span></button>
+          <button class="srow" id="openRel" data-ic="checklist"><span class="ico"></span><span class="lbl">更新记录</span><span class="val">v5.0</span></button>
         </div>
       </div>
     </div>
@@ -1082,6 +1095,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
         <div class="exrow2"><span>次数</span><b id="exRep">6–8 次</b></div>
         <div class="exrow2"><span>重量</span><span class="kgstep"><button class="kgbtn" id="kgDown" aria-label="减重量">−</button><b id="exKg">80 kg</b><button class="kgbtn" id="kgUp" aria-label="加重量">+</button></span></div>
         <div class="exrow2"><span>组间休息</span><b id="exRest">150 秒</b></div>
+        <div id="exHist" class="exhist"></div>
         <div class="exrow2"><span>今天完成</span><b id="exDone">0 / 4</b></div>
       </div>
       <p class="exnote" id="exNote">复合动作，排在第一个做。重量以能留 1–2 次余力为准。</p>
@@ -1176,18 +1190,44 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   ringRim.style.strokeDasharray = C;
   ringRim.style.strokeDashoffset = C;
 
-  var state = { sets: {
-    bench:[1,1,0,0],
-    incline:[1,1,1],
-    press:[1,0,0]
-  } };
+  /* ---------- 训练日志（唯一数据源：每点一次组 = 一条记录） ---------- */
+  function pad2(n){ return n < 10 ? '0' + n : '' + n; }
+  function isoOf(dt){ return dt.getFullYear() + '-' + pad2(dt.getMonth() + 1) + '-' + pad2(dt.getDate()); }
+  function todayISO(){ return isoOf(new Date()); }
+  function isoMinus(iso, n){ var d = new Date(iso + 'T00:00:00'); d.setDate(d.getDate() - n); return isoOf(d); }
+  function mondayISO(iso){ var d = new Date(iso + 'T00:00:00'); d.setDate(d.getDate() - ((d.getDay() + 6) % 7)); return isoOf(d); }
+  function shortDate(iso){ var a = String(iso).split('-'); return (+a[1]) + '/' + (+a[2]); }
+  function allLogs(){
+    if (!store.logs) store.logs = [];
+    return store.logs;
+  }
+  function logsTodayFor(id){
+    var d = todayISO();
+    return allLogs().filter(function(l){ return l.d === d && l.id && l.id.split('|')[1] === id; });
+  }
+  function setOn(id, setIdx, on){
+    var key = id.replace(/[0-9]+$/, '');
+    var idx = parseInt(id.replace(/^[a-z]+/, ''), 10) || 0;
+    var ex = (EX[key] || [])[idx];
+    if (!ex) return;
+    var lid = todayISO() + '|' + id + '|' + setIdx;
+    var i = allLogs().findIndex(function(l){ return l.id === lid; });
+    if (on && i < 0){
+      allLogs().push({ id: lid, d: todayISO(), k: key, n: ex.n, m: ex.m,
+        kg: kgOf(ex), reps: repMid(ex.rep), p: setIdx, t: Date.now() });
+    } else if (!on && i >= 0){
+      allLogs().splice(i, 1);
+    }
+    saveStore();
+  }
 
   function renderSets(){
     var done = 0, total = 0;
     $$('.ex').forEach(function(ex){
       var id = ex.dataset.ex;
-      var arr = state.sets[id] || [];
       var dots = $$('.dot', ex);
+      var dayLogs = logsTodayFor(id);
+      var arr = dots.map(function(_, q){ return dayLogs.some(function(l){ return l.p === q; }); });
       var n = 0;
       dots.forEach(function(d,i){
         var on = !!arr[i];
@@ -1215,12 +1255,11 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
   function completeSet(ex){
     var id = ex.dataset.ex;
-    var arr = state.sets[id] || (state.sets[id] = []);
     var total = $$('.dot', ex).length;
-    var i = arr.indexOf(false);
-    if (i < 0){ for (var j = 0; j < total; j++){ if (!arr[j]){ i = j; break; } } }
-    if (i >= 0) arr[i] = true;
+    var on = $$('.dot.on', ex).length;
+    if (on < total) setOn(id, on, true);
     renderSets();
+    paintAll();
     $('#exDone').textContent = $$('.dot.on', ex).length + ' / ' + total;
     paintHere(ex);
   }
@@ -1246,6 +1285,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
       ? '复合动作，排在第一个做。重量以能留 1–2 次余力为准。'
       : (arr.g === 'A' ? '辅助动作，补目标肌群的容量。' : '收尾动作，控制节奏，别甩重量。');
     paintHere(card);
+    paintExHist(arr);
     openSheet('#exSheet');
   }
 
@@ -1274,10 +1314,10 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     if (dot){
       var ex = dot.closest('.ex');
       var id = ex.dataset.ex;
-      if (!state.sets[id]) state.sets[id] = [];
       var idx = Array.prototype.indexOf.call($$('.dot', ex), dot);
-      state.sets[id][idx] = !state.sets[id][idx];
+      setOn(id, idx, !dot.classList.contains('on'));
       renderSets();
+      paintAll();
       return;
     }
     var card = e.target.closest('.ex');
@@ -1396,7 +1436,6 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     $('#todayEn').textContent = t[1];
     $('#todayTotal').textContent = totalSets(key);
 
-    state.sets = {};
     var html = '';
     EX[key].forEach(function(e, i){
       var dots = '';
@@ -1407,7 +1446,8 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
       html += '<article class="ex" data-ex="' + key + i + '" data-rest="' + e.rest + '">' +
         '<div class="exrow"><h3>' + e.n + '<span class="grade' + gcls + '">' + e.g + '</span></h3>' +
         '<span class="exload">' + load + '</span></div>' +
-        '<p class="exmeta">' + e.sets + ' 组 × ' + e.rep + ' 次 · 休息 ' + e.rest + ' 秒</p>' +
+        '<p class="exmeta">' + e.sets + ' 组 × ' + e.rep + ' 次 · 休息 ' + e.rest + ' 秒' +
+          (lastWeightOf(e.n) ? ' · 上次 ' + lastWeightOf(e.n).kg + ' kg' : '') + '</p>' +
         '<div class="sets">' + dots + '<span class="setcount">0/' + e.sets + '</span></div>' +
         '</article>';
     });
@@ -1431,7 +1471,10 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
       var acts = EX[key], sets = totalSets(key);
       var rows = acts.map(function(a){
         var gcls = a.g === 'A' ? ' a' : (a.g === 'B' ? ' b' : '');
-        return '<div class="exi"><span>' + a.n + '</span><span class="grade' + gcls + '">' + a.g + '</span><b>' + a.sets + ' × ' + a.rep + '</b></div>';
+        var lw = lastWeightOf(a.n);
+        return '<div class="exi"><span>' + a.n + '</span><span class="grade' + gcls + '">' + a.g + '</span>' +
+          '<span class="exr"><em class="exlast">' + (lw ? lw.kg + ' kg' : '没练过') + '</em>' +
+          '<b>' + a.sets + ' × ' + a.rep + '</b></span></div>';
       }).join('');
       html += '<div class="weekday" data-day="' + key + '"><div class="wd">' + wd + '</div>' +
         '<div class="wdmain"><h4>' + TITLE[key][0] + ' <span class="en">' + TITLE[key][1] + '</span>' +
@@ -1454,6 +1497,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     renderWeek(n);
     var todayIdx = SPLITS[n].days.filter(function(d){ return d[0] === '周五'; })[0];
     renderToday(todayIdx[1] === 'rest' ? 'push' : todayIdx[1]);
+    paintAll();
   }
 
   /* ---------- Tab 切换 ---------- */
@@ -1662,7 +1706,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   }
 
   /* ---------- 启动版本比对（同热量账本） ---------- */
-  var APP_VERSION = 'v4.13';
+  var APP_VERSION = 'v5.0';
   fetch('./version.txt?t=' + Date.now(), { cache: 'no-store' })
     .then(function(r){ return r.ok ? r.text() : ''; })
     .then(function(v){
@@ -1757,6 +1801,209 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     renderIconSheet();
   });
 
+  /* ---------- 统计：全部从日志算 ---------- */
+  var MG = { chest:'胸', back:'背', quads:'腿', hamstring:'腿', calves:'腿', glutes:'腿',
+             shoulder:'肩', triceps:'手臂', biceps:'手臂', core:'核心', abs:'核心' };
+  var GROUP_ORDER = ['胸','背','腿','肩','手臂','核心'];
+
+  function trainedDays(){
+    var m = {};
+    allLogs().forEach(function(l){ if (l.id && l.d) m[l.d] = 1; });
+    return Object.keys(m).sort();
+  }
+  function streakDays(){
+    var days = trainedDays();
+    if (!days.length) return 0;
+    var set = {};
+    days.forEach(function(d){ set[d] = 1; });
+    var cur = todayISO();
+    if (!set[cur]){ cur = isoMinus(cur, 1); if (!set[cur]) return 0; }
+    var n = 0;
+    while (set[cur]){ n++; cur = isoMinus(cur, 1); }
+    return n;
+  }
+  function trainedThisWeek(){
+    var mon = mondayISO(todayISO()), m = {};
+    allLogs().forEach(function(l){ if (l.d >= mon) m[l.d] = 1; });
+    return Object.keys(m).length;
+  }
+  function weekVolume(){
+    var mon = mondayISO(todayISO()), v = 0;
+    allLogs().forEach(function(l){ if (l.d >= mon) v += (l.kg || 0) * (l.reps || 0); });
+    return Math.round(v);
+  }
+  function monthVolume(){
+    var pre = todayISO().slice(0, 7), v = 0;
+    allLogs().forEach(function(l){ if (l.d.slice(0, 7) === pre) v += (l.kg || 0) * (l.reps || 0); });
+    return Math.round(v);
+  }
+  function weekVolumes(n){
+    var out = [], base = mondayISO(todayISO());
+    for (var i = n - 1; i >= 0; i--){
+      var from = isoMinus(base, i * 7), to = isoMinus(isoMinus(base, i * 7), -6), v = 0;
+      allLogs().forEach(function(l){ if (l.d >= from && l.d <= to) v += (l.kg || 0) * (l.reps || 0); });
+      out.push({ from: from, v: Math.round(v) });
+    }
+    return out;
+  }
+  function lastWeightOf(name){
+    var best = null;
+    allLogs().forEach(function(l){ if (l.n === name && (!best || l.d >= best.d)) best = l; });
+    return best ? { kg: best.kg, d: best.d } : null;
+  }
+  function splitTrainDays(){
+    return SPLITS[splitDays].days.filter(function(d){ return d[1] !== 'rest'; }).length;
+  }
+  function planVolume(){
+    var v = 0;
+    SPLITS[splitDays].days.forEach(function(d){
+      if (d[1] === 'rest') return;
+      EX[d[1]].forEach(function(e){ v += e.sets * repMid(e.rep) * kgOf(e); });
+    });
+    return Math.round(v);
+  }
+
+  function paintHero(){
+    var n = splitTrainDays(), dn = trainedThisWeek();
+    var wd = $('#weekDays'); if (wd) wd.textContent = Math.min(dn, n);
+    var wt = $('#weekTotal'); if (wt) wt.textContent = '/ ' + n + ' 天';
+    var wg = $('#weekGap'); if (wg) wg.textContent = dn >= n ? '本周已完成' : ('还差 ' + (n - dn) + ' 天');
+    var frac = n ? Math.min(1, dn / n) : 0;
+    ringFg.style.strokeDashoffset = C * (1 - frac);
+    ringRim.style.strokeDashoffset = C * (1 - frac);
+    var sv = $('#weekVol');
+    if (sv) sv.innerHTML = weekVolume().toLocaleString('en-US') + '<small>kg</small>';
+    var st = $('#streakDays'); if (st) st.innerHTML = streakDays() + '<small>天</small>';
+  }
+
+  function paintPlan(){
+    var sp = SPLITS[splitDays], n = splitTrainDays();
+    var eb = $('#planEyebrow'); if (eb) eb.textContent = '训练周期 · ' + n + ' 练 / 周 · 共 8 周';
+    var why = $('#whyDays'); if (why) why.textContent = '每周 ' + n + ' 练';
+    var sd = $('#splitDesc');
+    if (sd) sd.textContent = '每周 ' + n + ' 练（' + sp.label + '），每个肌群之间留 48 小时恢复。共 ' +
+      n + ' 个训练日、' + (7 - n) + ' 个休息日；第 3 周为累积周，负荷系数 1.0，第 5 周自动降到 0.7 做减载。' +
+      '本周计划容量 ' + planVolume().toLocaleString('en-US') + ' kg，实际完成 ' + weekVolume().toLocaleString('en-US') + ' kg。';
+    var groups = {}, total = 0;
+    GROUP_ORDER.forEach(function(g){ groups[g] = 0; });
+    sp.days.forEach(function(d){
+      if (d[1] === 'rest') return;
+      EX[d[1]].forEach(function(e){
+        var g = MG[e.m] || '核心';
+        groups[g] = (groups[g] || 0) + e.sets;
+        total += e.sets;
+      });
+    });
+    var html = GROUP_ORDER.map(function(g){
+      var v = groups[g] || 0;
+      return '<div class="vol"><span class="vl">' + g + '</span><div class="vbar"><i style="width:' +
+        Math.min(100, Math.round(v / 20 * 100)) + '%"></i></div><span class="vv">' + v + '</span></div>';
+    }).join('') +
+      '<div class="volfoot"><span>合计 <b>' + total + '</b> 有效组</span><span>建议区间 60–80</span></div>';
+    var vc = $('#volCard'); if (vc) vc.innerHTML = html;
+  }
+
+  var PR_LIST = [
+    { n:'硬拉', label:'硬拉', en:'Deadlift' },
+    { n:'杠铃深蹲', label:'深蹲', en:'Squat' },
+    { n:'平板杠铃卧推', label:'卧推', en:'Bench' },
+    { n:'引体向上', label:'引体向上', en:'Pull-up' }
+  ];
+  function prOf(name){
+    var ls = allLogs().filter(function(l){ return l.n === name; });
+    if (!ls.length) return null;
+    var kg = 0, d = '', byDay = {};
+    ls.forEach(function(l){
+      if ((l.kg || 0) > kg){ kg = l.kg; d = l.d; }
+      byDay[l.d] = (byDay[l.d] || 0) + 1;
+    });
+    var maxSets = 0, maxSetDay = '';
+    Object.keys(byDay).forEach(function(k){ if (byDay[k] > maxSets){ maxSets = byDay[k]; maxSetDay = k; } });
+    if (!kg) return { kg: 0, sets: maxSets, d: maxSetDay };
+    return { kg: kg, sets: maxSets, d: d };
+  }
+  function paintLog(){
+    var days = trainedDays();
+    var lt = $('#logTotal'); if (lt) lt.textContent = '累计 ' + days.length + ' 次训练';
+    var ls2 = $('#logStreak'); if (ls2) ls2.textContent = streakDays();
+    var mv = monthVolume(), mvEl = $('#logMonthVol');
+    if (mvEl) mvEl.innerHTML = mv >= 1000 ? (mv / 1000).toFixed(1) + '<em>t</em>' : mv + '<em>kg</em>';
+    var prCount = 0;
+    PR_LIST.forEach(function(p){ if (prOf(p.n)) prCount++; });
+    var prEl = $('#logPR'); if (prEl) prEl.textContent = prCount;
+    var bars = weekVolumes(8), maxv = 1;
+    bars.forEach(function(b){ if (b.v > maxv) maxv = b.v; });
+    var barsEl = $('#logBars');
+    if (barsEl) barsEl.innerHTML = bars.map(function(b, i){
+      var h = b.v ? Math.max(6, Math.round(b.v / maxv * 100)) : 3;
+      return '<div class="bar"><i style="height:' + h + '%"></i><span>W' + (i + 1) + '</span></div>';
+    }).join('');
+    var prCard = $('#prCard');
+    if (prCard) prCard.innerHTML = PR_LIST.map(function(p){
+      var r = prOf(p.n);
+      if (!r) return '<div class="pr"><div class="nm">' + p.label + '<small>' + p.en + ' · 没记录</small></div>' +
+        '<div class="val"><b>—</b><i class="flat">未练</i></div></div>';
+      var unit = r.kg ? 'kg' : '组', val = r.kg || r.sets;
+      return '<div class="pr"><div class="nm">' + p.label + '<small>' + p.en + ' · ' + shortDate(r.d) + '</small></div>' +
+        '<div class="val"><b>' + val + '<em>' + unit + '</em></b><i class="flat">PR</i></div></div>';
+    }).join('');
+  }
+
+  function paintMe(){
+    var days = trainedDays(), sets = allLogs().length, vol = 0;
+    allLogs().forEach(function(l){ vol += (l.kg || 0) * (l.reps || 0); });
+    var prCount = 0;
+    PR_LIST.forEach(function(p){ if (prOf(p.n)) prCount++; });
+    var el = $('#meStats');
+    if (el){
+      var weeks = days.length ? Math.max(1, Math.ceil((new Date(todayISO()) - new Date(days[0] + 'T00:00:00')) / 604800000)) : 0;
+      el.innerHTML =
+        '<div class="bchead"><span>训练统计 · 本地记录</span><span class="synctime">自动</span></div>' +
+        '<div class="bgrid">' +
+          '<div><b>' + days.length + '</b><i>累计训练 次</i></div>' +
+          '<div><b>' + (vol >= 1000 ? (vol / 1000).toFixed(1) + '<em>t</em>' : Math.round(vol) + '<em>kg</em>') + '</b><i>累计容量</i></div>' +
+          '<div><b>' + sets + '</b><i>累计组数</i></div>' +
+          '<div><b>' + prCount + '</b><i>有记录 PR</i></div>' +
+        '</div>' +
+        '<p class="bnote">' + (days.length
+          ? (sets >= 10 ? '平均每周 ' + (sets / weeks).toFixed(1) + ' 组（建议 60–80）' : '记录还不多，练几周后这里给出每周组数趋势') +
+            ' · 平均每次 ' + (sets / days.length).toFixed(1) + ' 组 · 本周已练 ' + trainedThisWeek() + ' 天。'
+          : '还没有训练记录：在「今日」点组数就会记下来，所有数字自动算。') + '</p>';
+    }
+    var el2 = $('#meMore');
+    if (el2){
+      var by = {}, order = [];
+      allLogs().forEach(function(l){
+        if (!by[l.n]){ by[l.n] = { n: l.n, kg: 0, times: 0, d: '' }; order.push(l.n); }
+        var o = by[l.n];
+        o.times++;
+        if ((l.kg || 0) >= o.kg){ o.kg = l.kg; o.d = l.d; }
+      });
+      var list = order.map(function(n){ return by[n]; }).sort(function(a, b){ return b.times - a.times; }).slice(0, 5);
+      el2.innerHTML = list.length ? list.map(function(o){
+        return '<div class="pr"><div class="nm">' + o.n + '<small>练了 ' + o.times + ' 组 · ' + shortDate(o.d) + '</small></div>' +
+          '<div class="val"><b>' + o.kg + '<em>kg</em></b></div></div>';
+      }).join('') : '<p class="bnote" style="padding:12px 0">练过的动作会按次数排在这里。</p>';
+    }
+  }
+
+  function paintExHist(ex){
+    var el = $('#exHist');
+    if (!el) return;
+    var ls = allLogs().filter(function(l){ return l.n === ex.n; });
+    if (!ls.length){ el.innerHTML = '<span class="ehd">还没有记录 —— 练完一组就记在这。</span>'; return; }
+    var by = {};
+    ls.forEach(function(l){ (by[l.d] = by[l.d] || []).push(l); });
+    var dates = Object.keys(by).sort().reverse().slice(0, 4);
+    el.innerHTML = '<span class="ehd">最近几次</span>' + dates.map(function(d){
+      var a = by[d], kg = 0;
+      a.forEach(function(l){ if ((l.kg || 0) > kg) kg = l.kg; });
+      return '<div class="ehrow"><span>' + shortDate(d) + '</span><b>' + (kg ? kg + ' kg × ' : '') + a.length + ' 组</b></div>';
+    }).join('');
+  }
+
+  function paintAll(){ paintHero(); paintPlan(); paintLog(); paintMe(); }
+
   /* ---------- 初始化 ---------- */
   SLOTS.forEach(function(s){ paintTab(s.key); });
   window.addEventListener('resize', function(){
@@ -1772,9 +2019,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
   setSplit(3);
   paintWeekVol();
-  // 环 = 本周训练进度（4 / 6 天）
-  ringFg.style.strokeDashoffset = C * (1 - 4 / 6);
-  ringRim.style.strokeDashoffset = C * (1 - 4 / 6);
+  paintAll();
   var h = (location.hash || '').replace('#','');
   setTab(order.indexOf(h) > -1 ? h : 'today');
   window.scrollTo(0,0);
