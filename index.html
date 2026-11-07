@@ -2,10 +2,10 @@
 <html lang="zh-CN">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,maximum-scale=1,user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 <meta name="theme-color" content="#0d0f0e">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
 <meta name="apple-mobile-web-app-title" content="练账">
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" type="image/png" href="./icon-192.png">
@@ -43,7 +43,7 @@
   --page-pad:18px;
   --card-r:18px;
   --tile-r:16px;
-  --dock-h:90px;
+  --dock-h:104px;
   --dock-w:10px;
   --dock-bottom:10px;
   --dock-r:52px;
@@ -79,7 +79,7 @@ body{
   body{display:block;overscroll-behavior:none;-webkit-overflow-scrolling:auto}
   .phone{position:absolute;inset:0;width:100%;height:100%;border-radius:0;box-shadow:none}
   /* PWA 里 .phone 的高度比屏幕少 ~56px，底部元素改成相对视口固定，才能真的贴到屏幕底 */
-  .dock{position:relative;left:auto;right:auto;bottom:auto;margin:0 10px 18px}
+  .dock{position:relative;left:auto;right:auto;bottom:auto;margin:0 10px 10px}
   .fade{position:fixed;left:0;right:0;bottom:12px}
   .cta{position:fixed;left:var(--page-pad);right:var(--page-pad);
        bottom:calc(18px + var(--dock-h) + 12px)}
@@ -126,7 +126,7 @@ body{
   display:flex;align-items:center;justify-content:space-between;
   background:#0d0f0e;
 }
-.statusbg{position:absolute;top:0;left:0;right:0;height:max(var(--safe-t),47px);
+.statusbg{position:absolute;top:0;left:0;right:0;height:min(var(--safe-t,0px),90px);
   background:#0d0f0e;z-index:31;pointer-events:none}
 .brand{font-size:20px;font-weight:650;letter-spacing:.2px;display:flex;align-items:baseline;color:var(--text)}
 .brand span{color:var(--lime)}
@@ -382,7 +382,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 .dock{
   position:relative;left:auto;right:auto;bottom:auto;
   flex:0 0 auto;
-  margin:0 10px 18px;z-index:20;
+  margin:0 10px 10px;z-index:20;
   height:var(--dock-h);padding:0 12px;
   display:flex;align-items:center;
   border-radius:calc(var(--dock-h) / 2);
@@ -397,9 +397,9 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 }
 /* 选中块：胶囊（圆角 = 高度一半），比 Dock 高度扁一档 —— 材质与颜色照热量账本 */
 .pill{
-  position:absolute;left:9px;top:9px;
-  height:72px;
-  border-radius:36px;
+  position:absolute;left:10px;top:10px;
+  height:calc(var(--dock-h) - 22px);
+  border-radius:calc((var(--dock-h) - 22px) / 2);
   transition:left .62s cubic-bezier(.33,1.06,.32,1),width .42s cubic-bezier(.33,1.06,.32,1);
   pointer-events:none;
 }
@@ -411,7 +411,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   transition:transform .24s cubic-bezier(.32,.9,.28,1),border-radius .24s ease,background .18s ease;
 }
 .pill.press .pillbody{
-  transform:scale(1.055,.925);border-radius:calc((var(--dock-h) - 18px) / 2 + 1px);
+  transform:scale(1.055,.925);border-radius:calc((var(--dock-h) - 22px) / 2 + 1px);
   /* v11.25：按下时那条径向渐变白删掉（用户 2026-11-07 要求「药丸移动/按下时的渐变白效果全部删除」），
      只保留压扁形变，底色始终是上面那块实色 */
 }
@@ -420,7 +420,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   flex:1;height:100%;border:0;background:transparent;cursor:pointer;
   display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;
   color:var(--muted2);font-family:inherit;
-  border-radius:16px;padding:0;height:72px;
+  border-radius:16px;padding:0;height:calc(var(--dock-h) - 22px);
   transition:background .24s,color .3s;
 }
 .tab .ico{width:35px;height:35px;fill:currentColor;display:block}
@@ -1377,7 +1377,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     var lens = $('#pill');
     var d = $('.dock').getBoundingClientRect();
     var r = t.getBoundingClientRect();
-    var b = $('.dock').clientLeft, g = 9;
+    var b = $('.dock').clientLeft, g = 10;
     lens.style.width = (r.width - g * 2) + 'px';
     lens.style.left = (r.left - d.left - b + g - b) + 'px';
   }
