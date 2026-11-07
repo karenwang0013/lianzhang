@@ -550,9 +550,9 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 /* ---------- 弹层：玻璃 + 46 圆角（实测 #nutSheet） ---------- */
 .sheet{
   position:absolute;left:var(--dock-w);right:var(--dock-w);
-  top:50%;bottom:auto;z-index:41;
-  opacity:0;pointer-events:none;
-  transform:translateY(-50%) scale(.96);
+  bottom:calc(var(--dock-bottom) + var(--safe-b));top:auto;z-index:41;
+  opacity:1;pointer-events:none;
+  transform:translateY(102%);
   border-radius:var(--dock-r);
   background-color:transparent;
   background-image:linear-gradient(180deg,var(--glass-top) 0%,var(--glass-bot) 100%),var(--edge-gloss);
@@ -561,12 +561,17 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   border:1px solid transparent;
   -webkit-backdrop-filter:var(--glass-blur);
   backdrop-filter:var(--glass-blur);
-  padding:18px 20px 20px;
+  padding:18px 0 0;
   transform:translateY(102%);
   transition:transform .34s cubic-bezier(.22,.8,.3,1),opacity .22s ease;
-  max-height:82%;overflow-y:auto;
+  max-height:calc(100% - 120px);overflow-y:auto;
+  scrollbar-width:none;-ms-overflow-style:none;
 }
-.sheet.on{transform:translateY(-50%) scale(1);opacity:1;pointer-events:auto}
+.sheet::-webkit-scrollbar{width:0;height:0;display:none}
+.sheet.on{transform:none;pointer-events:auto}
+/* 小信息卡（动作详情/训练）居中 */
+.sheet.center{top:50%;bottom:auto;padding:20px;transform:translateY(-50%) scale(.96);opacity:0}
+.sheet.center.on{transform:translateY(-50%) scale(1);opacity:1}
 
 /* 悬浮卡：居中浮在屏幕上（热量账本弹层卡那套），不贴底 */
 .sheet.float{
@@ -579,11 +584,11 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 }
 .sheet.float.on{transform:translate(-50%,-50%) scale(1);opacity:1;pointer-events:auto}
 .grab{width:66px;height:4px;border-radius:2px;background:rgba(255,255,255,.16);margin:0 auto 14px}
-.sh-hd{display:flex;align-items:baseline;justify-content:space-between;margin:0 0 4px}
+.sh-hd{display:flex;align-items:baseline;justify-content:space-between;margin:0 0 4px;padding:0 20px}
 .sheet h2{margin:0;font-size:21px;font-weight:700;letter-spacing:-.025em}
 .vtag{font-size:11px;color:var(--muted2);font-weight:600;letter-spacing:.02em;
   padding:5px 11px;border-radius:14px;border:1px solid rgba(255,255,255,.12)}
-.sheet .hint{margin:0 0 18px;font-size:11.5px;color:var(--muted2);line-height:1.7}
+.sheet .hint{margin:0 0 18px;padding:0 20px;font-size:11.5px;color:var(--muted2);line-height:1.7}
 .field{margin-bottom:15px}
 .field label{display:block;font-size:10px;color:var(--muted2);letter-spacing:.09em;margin-bottom:8px;text-transform:uppercase}
 .chips{display:flex;flex-wrap:wrap;gap:7px}
@@ -992,7 +997,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     </div>
 
     <!-- 训练中弹层 -->
-    <div class="sheet" id="trainSheet">
+    <div class="sheet center" id="trainSheet">
       <div class="grab"></div>
       <div class="nowex">
         <div class="t">下一组</div>
@@ -1028,7 +1033,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     </div>
 
         <!-- 动作详情 -->
-    <div class="sheet" id="exSheet">
+    <div class="sheet center" id="exSheet">
       <div class="grab"></div>
       <div class="sh-hd"><h2 id="exName">平板杠铃卧推</h2><span class="vtag" id="exGrade">S</span></div>
       <div class="exdetail">
@@ -1045,7 +1050,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     <div class="sheet" id="relSheet">
       <div class="grab"></div>
       <div class="sh-hd"><h2>更新记录</h2><span class="vtag" id="relVer">v0.2</span></div>
-      <div id="relList"></div>
+      <div id="relList" style="padding:0 20px"></div>
     </div>
 
     <!-- 图标选择弹层 -->
