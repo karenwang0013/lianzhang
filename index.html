@@ -716,6 +716,20 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 #exKg::-webkit-outer-spin-button,#exKg::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
 #exKg::placeholder{color:var(--muted2);font-weight:550}
 #exKgUnit{font-size:12px;color:var(--muted2);font-style:normal}
+#exSwap{margin-top:10px}
+.swaptag{display:inline-block;margin-left:6px;padding:1px 6px;border-radius:8px;font-size:10px;font-style:normal;
+  color:var(--lime);background:rgba(228,0,43,.14);border:1px solid rgba(228,0,43,.36);vertical-align:middle}
+#swapSheet{top:auto;bottom:10px;max-height:calc(100% - 120px);padding:32px 20px 22px}
+#swapSheet .sh-hd{padding:0}
+#swapSheet .hint{padding:0}
+#swapSheet .swaplist{margin-top:4px}
+.swapopt{display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;padding:12px 2px;
+  border:0;border-top:1px solid var(--line);background:none;font-family:inherit;text-align:left;cursor:pointer;color:inherit}
+.swapopt:first-child{border-top:0}
+.swapopt .swl b{display:block;font-size:14.5px;font-weight:650}
+.swapopt .swl em{display:block;font-style:normal;font-size:11.5px;color:var(--muted2);margin-top:3px}
+.swapopt .swr{font-size:11.5px;color:var(--muted2);white-space:nowrap}
+.swapopt.on .swl b,.swapopt.on .swr{color:var(--lime)}
 .exnote{margin:14px 0 0;padding-top:12px;border-top:1px solid var(--line);
   font-size:11.5px;color:var(--muted2);line-height:1.7}
 
@@ -781,7 +795,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
     <div class="statusbg" aria-hidden="true"></div>
     <div class="topbar">
-      <div class="brand">训练<span>账本</span><i class="btag">v5.18</i></div>
+      <div class="brand">训练<span>账本</span><i class="btag">v5.20</i></div>
       <div class="topactions">
         <button class="topbtn topicon" id="reloadTop" aria-label="强制更新" title="强制更新">
           <svg viewBox="0 -960 960 960" aria-hidden="true"><path d="M480-160q-134 0-227-93t-93-227q0-134 93-227t227-93q69 0 132 28.5T720-690v-70q0-17 11.5-28.5T760-800q17 0 28.5 11.5T800-760v200q0 17-11.5 28.5T760-520H560q-17 0-28.5-11.5T520-560q0-17 11.5-28.5T560-600h128q-32-56-87.5-88T480-720q-100 0-170 70t-70 170q0 100 70 170t170 70q68 0 124.5-34.5T692-367q8-14 22.5-19.5t29.5-.5q16 5 23 21t-1 30q-41 80-117 128t-169 48Z"/></svg>
@@ -1093,7 +1107,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     <!-- 设置 -->
     <div class="sheet" id="setSheet">
       <div class="grab"></div>
-      <div class="sh-hd"><h2>设置</h2><span class="vtag">v5.18</span></div>
+      <div class="sh-hd"><h2>设置</h2><span class="vtag">v5.20</span></div>
       <div class="setbody">
         <div class="setlabel">训练设置</div>
         <div class="setrows">
@@ -1110,7 +1124,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
           <div class="srow" data-ic="monitor_heart"><span class="ico"></span><span class="lbl">Apple 健康</span><span class="sw"></span></div>
           <div class="srow" data-ic="assignment"><span class="ico"></span><span class="lbl">训练提醒</span><span class="sw"></span></div>
           <button class="srow" id="openBackup" data-ic="cloud_done"><span class="ico"></span><span class="lbl">数据备份</span><span class="val" id="backupVal">iCloud</span></button>
-          <button class="srow" id="openRel" data-ic="checklist"><span class="ico"></span><span class="lbl">更新记录</span><span class="val">v5.18</span></button>
+          <button class="srow" id="openRel" data-ic="checklist"><span class="ico"></span><span class="lbl">更新记录</span><span class="val">v5.20</span></button>
         </div>
       </div>
     </div>
@@ -1127,7 +1141,16 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
         <div class="exrow2"><span>今天完成</span><b id="exDone">0 / 4</b></div>
       </div>
       <p class="exnote" id="exNote">复合动作，排在第一个做。重量以能留 1–2 次余力为准。</p>
+      <button class="cta ghost" id="exSwap">换一个动作</button>
       <button class="cta" id="finishHere">完成本组</button>
+    </div>
+
+    <!-- 换动作 -->
+    <div class="sheet" id="swapSheet">
+      <div class="grab"></div>
+      <div class="sh-hd"><h2>换成哪个动作</h2><span class="vtag" id="swapOrig">杠铃深蹲</span></div>
+      <p class="hint">练同一块肌肉、对腰膝更友好的替代；只影响今天，明天照原计划。</p>
+      <div class="swaplist" id="swapList"></div>
     </div>
 
     <!-- 更新记录 -->
@@ -1258,7 +1281,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   function setOn(id, setIdx, on){
     var key = id.replace(/[0-9]+$/, '');
     var idx = parseInt(id.replace(/^[a-z]+/, ''), 10) || 0;
-    var ex = (EX[key] || [])[idx];
+    var ex = (dayEx(key) || [])[idx];   /* 换过动作就记在替代动作名下 */
     if (!ex) return;
     var lid = todayISO() + '|' + id + '|' + setIdx;
     var i = allLogs().findIndex(function(l){ return l.id === lid; });
@@ -1318,7 +1341,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     var id = card.dataset.ex || '';
     var key = id.replace(/[0-9]+$/, '');
     var idx = parseInt(id.replace(/^[a-z]+/, ''), 10) || 0;
-    var arr = (EX[key] || [])[idx];
+    var arr = (dayEx(key) || [])[idx];
     if (!arr) return;
     curExId = id;
     var on = $$('.dot.on', card).length;
@@ -1491,11 +1514,78 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     if (el) el.innerHTML = weekVolume().toLocaleString('en-US') + '<small>kg</small>';
   }
 
+  /* ---------- 替代动作（腰 / 膝 / 肩不舒服时换掉今天的动作） ---------- */
+  var SUB = {
+    '腿举':{g:'A',sets:3,rep:'10–12',kg:120,rest:90,m:'quads'},
+    '高脚杯深蹲':{g:'A',sets:3,rep:'10–12',kg:30,rest:90,m:'quads'},
+    '哈克深蹲':{g:'A',sets:3,rep:'10–12',kg:80,rest:90,m:'quads'},
+    '史密斯深蹲':{g:'A',sets:3,rep:'8–10',kg:60,rest:105,m:'quads'},
+    '保加利亚分腿蹲':{g:'B',sets:3,rep:'10',kg:20,rest:75,m:'quads'},
+    '箭步蹲':{g:'B',sets:3,rep:'12',kg:20,rest:75,m:'quads'},
+    '臀桥':{g:'A',sets:3,rep:'12',kg:60,rest:90,m:'glute'},
+    '髋外展':{g:'B',sets:3,rep:'15',kg:40,rest:60,m:'glute'},
+    '坐姿腿弯举':{g:'B',sets:3,rep:'12',kg:35,rest:60,m:'hamstring'},
+    '单臂哑铃划船':{g:'A',sets:3,rep:'10',kg:26,rest:90,m:'back'},
+    '高位下拉':{g:'A',sets:4,rep:'10',kg:55,rest:90,m:'back'},
+    '直臂下压':{g:'B',sets:3,rep:'15',kg:20,rest:60,m:'back'},
+    'T杠划船':{g:'A',sets:3,rep:'10',kg:40,rest:90,m:'back'},
+    '辅助引体':{g:'A',sets:4,rep:'8',kg:0,rest:90,m:'back'},
+    '哑铃卧推':{g:'A',sets:4,rep:'8–10',kg:26,rest:120,m:'chest'},
+    '上斜杠铃卧推':{g:'A',sets:3,rep:'8',kg:50,rest:120,m:'chest'},
+    '器械推胸':{g:'B',sets:3,rep:'12',kg:50,rest:75,m:'chest'},
+    '史密斯卧推':{g:'A',sets:3,rep:'8',kg:60,rest:105,m:'chest'},
+    '俯卧撑':{g:'B',sets:3,rep:'力竭',kg:0,rest:60,m:'chest'},
+    '反向飞鸟':{g:'B',sets:3,rep:'15',kg:8,rest:60,m:'shoulder'},
+    '俯身飞鸟':{g:'B',sets:3,rep:'15',kg:8,rest:60,m:'shoulder'},
+    '器械推肩':{g:'B',sets:3,rep:'10',kg:35,rest:75,m:'shoulder'},
+    '绳索侧平举':{g:'B',sets:4,rep:'15',kg:7,rest:60,m:'shoulder'},
+    '器械侧平举':{g:'B',sets:4,rep:'15',kg:10,rest:60,m:'shoulder'},
+    '哑铃颈后臂屈伸':{g:'B',sets:3,rep:'12',kg:20,rest:60,m:'triceps'},
+    '窄距卧推':{g:'A',sets:3,rep:'8–10',kg:50,rest:105,m:'triceps'},
+    '双杠臂屈伸':{g:'B',sets:3,rep:'力竭',kg:0,rest:75,m:'triceps'},
+    '锤式弯举':{g:'B',sets:3,rep:'12',kg:14,rest:60,m:'biceps'},
+    '绳索弯举':{g:'B',sets:3,rep:'12',kg:20,rest:60,m:'biceps'},
+    '牧师凳弯举':{g:'B',sets:3,rep:'12',kg:20,rest:60,m:'biceps'},
+    '坐姿提踵':{g:'B',sets:4,rep:'15',kg:40,rest:45,m:'calves'},
+    '腿举提踵':{g:'B',sets:4,rep:'15',kg:120,rest:45,m:'calves'}
+  };
+  var SUB_MAP = {
+    '杠铃深蹲':['腿举','哈克深蹲','高脚杯深蹲','史密斯深蹲','保加利亚分腿蹲'],
+    '罗马尼亚硬拉':['坐姿腿弯举','腿弯举','臀桥','髋外展'],
+    '硬拉':['高位下拉','坐姿绳索划船','单臂哑铃划船','直臂下压'],
+    '腿举':['哈克深蹲','高脚杯深蹲','保加利亚分腿蹲','腿举提踵'],
+    '腿弯举':['坐姿腿弯举','臀桥','髋外展'],
+    '站姿提踵':['坐姿提踵','腿举提踵'],
+    '平板杠铃卧推':['哑铃卧推','器械推胸','史密斯卧推','俯卧撑','窄距卧推'],
+    '上斜哑铃卧推':['上斜杠铃卧推','器械推胸','哑铃卧推'],
+    '引体向上':['高位下拉','辅助引体','坐姿绳索划船'],
+    '坐姿绳索划船':['单臂哑铃划船','T杠划船','高位下拉'],
+    '面拉':['反向飞鸟','俯身飞鸟'],
+    '坐姿哑铃推肩':['器械推肩','绳索侧平举','俯身飞鸟'],
+    '哑铃侧平举':['绳索侧平举','器械侧平举','反向飞鸟'],
+    '绳索下压':['哑铃颈后臂屈伸','双杠臂屈伸','窄距卧推'],
+    '哑铃弯举':['锤式弯举','绳索弯举','牧师凳弯举']
+  };
+
+  function swapKey(key, i){ return todayISO() + '|' + key + i; }
+  function swappedName(key, i){ return (store.swaps || {})[swapKey(key, i)] || ''; }
+  /* 今天这一天的动作表（把被替换的动作换掉），计划页仍按原计划展示 */
+  function dayEx(key){
+    return (EX[key] || []).map(function(e, i){
+      var s = swappedName(key, i), a = s && SUB[s];
+      if (!a) return e;
+      return { n:s, g:a.g, sets:a.sets, rep:a.rep, kg:a.kg, rest:a.rest, m:a.m, orig:e.n };
+    });
+  }
+
   var todayKey = 'push';
   var splitDays = 3;
 
   function totalSets(key){
     return EX[key].reduce(function(a,e){ return a + e.sets; }, 0);
+  }
+  function todaySets(key){
+    return dayEx(key).reduce(function(a,e){ return a + e.sets; }, 0);
   }
 
   function renderToday(key){
@@ -1503,25 +1593,27 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     var t = TITLE[key];
     $('#todayName').textContent = t[0];
     $('#todayEn').textContent = t[1];
-    $('#todayTotal').textContent = totalSets(key);
+    $('#todayTotal').textContent = todaySets(key);
 
     var html = '';
-    EX[key].forEach(function(e, i){
+    dayEx(key).forEach(function(e, i){
       var dots = '';
       for (var k = 0; k < e.sets; k++) dots += '<button class="dot"></button>';
       var ekg = kgOf(e);
       var load = ekg ? ekg + ' kg' : '自重';
       var gcls = e.g === 'A' ? ' a' : (e.g === 'B' ? ' b' : '');
       html += '<article class="ex" data-ex="' + key + i + '" data-rest="' + e.rest + '">' +
-        '<div class="exrow"><h3>' + e.n + '<span class="grade' + gcls + '">' + e.g + '</span></h3>' +
+        '<div class="exrow"><h3>' + e.n + '<span class="grade' + gcls + '">' + e.g + '</span>' +
+          (e.orig ? '<i class="swaptag">换</i>' : '') + '</h3>' +
         '<span class="exload">' + load + '</span></div>' +
         '<p class="exmeta">' + e.sets + ' 组 × ' + e.rep + ' 次 · 休息 ' + e.rest + ' 秒' +
-          (lastWeightOf(e.n) ? ' · 上次 ' + lastWeightOf(e.n).kg + ' kg' : '') + '</p>' +
+          (lastWeightOf(e.n) ? ' · 上次 ' + lastWeightOf(e.n).kg + ' kg' : '') +
+          (e.orig ? ' · 已换：原「' + e.orig + '」' : '') + '</p>' +
         '<div class="sets">' + dots + '<span class="setcount">0/' + e.sets + '</span></div>' +
         '</article>';
     });
     $('#exList').innerHTML = html;
-    $('#listMeta').textContent = totalSets(key) + ' 有效组 · 0 垃圾容量';
+    $('#listMeta').textContent = todaySets(key) + ' 有效组 · 0 垃圾容量';
     renderSets();
   }
 
@@ -1754,7 +1846,46 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   }
   paintRows();
 
-  ['#setSheet','#relSheet','#backupSheet'].forEach(function(sel){
+  function openSwap(){
+    if (!curEx) return;
+    var key = curExId.replace(/[0-9]+$/, ''), idx = parseInt(curExId.replace(/^[a-z]+/, ''), 10) || 0;
+    var orig = (EX[key] || [])[idx];
+    if (!orig) return;
+    var names = SUB_MAP[orig.n] || [];
+    var cur = swappedName(key, idx);
+    $('#swapOrig').textContent = orig.n;
+    var html = '';
+    if (cur){
+      html += '<button class="swapopt" data-pick=""><span class="swl"><b>' + orig.n + '</b>' +
+        '<em>原计划动作</em></span><span class="swr">恢复</span></button>';
+    }
+    names.forEach(function(n){
+      var a = SUB[n]; if (!a) return;
+      var lw = lastWeightOf(n);
+      html += '<button class="swapopt' + (cur === n ? ' on' : '') + '" data-pick="' + n + '">' +
+        '<span class="swl"><b>' + n + '</b><em>' + a.sets + ' 组 × ' + a.rep + ' 次 · 休息 ' + a.rest + ' 秒</em></span>' +
+        '<span class="swr">' + (lw ? '上次 ' + lw.kg + ' kg' : '没练过') + '</span></button>';
+    });
+    $('#swapList').innerHTML = html || '<p class="hint">这个动作暂时没有推荐的替代。</p>';
+    openSheet('#swapSheet');
+  }
+  function applySwap(key, idx, name){
+    store.swaps = store.swaps || {};
+    var k = swapKey(key, idx);
+    if (name) store.swaps[k] = name; else delete store.swaps[k];
+    saveStore();
+    closeSheets();
+    renderToday(todayKey);
+    paintWeekVol();
+  }
+  $('#exSwap').addEventListener('click', openSwap);
+  $('#swapList').addEventListener('click', function(ev){
+    var b = ev.target.closest('.swapopt'); if (!b) return;
+    var key = curExId.replace(/[0-9]+$/, ''), idx = parseInt(curExId.replace(/^[a-z]+/, ''), 10) || 0;
+    applySwap(key, idx, b.dataset.pick || '');
+  });
+
+  ['#setSheet','#relSheet','#backupSheet','#swapSheet'].forEach(function(sel){
     var el = $(sel); if (el) wireDragClose(el);
   });
 
@@ -1778,7 +1909,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   }
 
   /* ---------- 启动版本比对（同热量账本） ---------- */
-  var APP_VERSION = 'v5.18';
+  var APP_VERSION = 'v5.20';
   fetch('./version.txt?t=' + Date.now(), { cache: 'no-store' })
     .then(function(r){ return r.ok ? r.text() : ''; })
     .then(function(v){
@@ -1800,27 +1931,34 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
   /* ---------- 更新记录 ---------- */
   var RELEASES = [
-    { v:'v5.18', d:'11-07', items:[
+    { v:'v5.20', d:'11-07', items:[
+      '修：换过动作后，打勾记录用的是原动作的次数（容量会算错），现在按替代动作的次数 / 重量记'
+    ]},
+    { v:'v5.20', d:'11-07', items:[
+      '新增：动作可以换 —— 腰 / 膝 / 肩不舒服时，点开动作 →「换一个动作」，从同类替代里挑一个，今天这张卡立刻换掉（明天照原计划）',
+      '替代动作自带组数 / 次数 / 休息 / 重量，容量和 PR 都算在新动作上'
+    ]},
+    { v:'v5.20', d:'11-07', items:[
       '修：点开重量输入框又没改就直接收起键盘，重量会被清成 0（现在保持原值）'
     ]},
-    { v:'v5.18', d:'11-07', items:[
+    { v:'v5.20', d:'11-07', items:[
       '动作卡片：重量可以直接手输（不用靠 + 一点点加）',
       '动作卡片：去掉下滑关闭，只点卡片外面关闭',
       '弹层横杠离卡顶 4pt、宽 65pt，与热量账本一致（以前在流里，离顶 19pt）'
     ]},
-    { v:'v5.18', d:'11-07', items:[
+    { v:'v5.20', d:'11-07', items:[
       '底部弹出卡片离屏幕底改回 10pt（原来 -35pt，卡片下边缘被屏幕吃掉，看不出间隙）',
       '数据备份新增「自动快照」：手机上每小时自动留一份、保留最近 7 天、可一键回滚（iCloud 只能手动导出，网页 App 没有自动写 iCloud 的权限）'
     ]},
-    { v:'v5.18', d:'11-07', items:[
+    { v:'v5.20', d:'11-07', items:[
       '图标弹层上半部分也加了组标题「底部页签」，跟下面的「设置页」对齐；组标题也加粗提亮'
     ]},
-    { v:'v5.18', d:'11-07', items:[
+    { v:'v5.20', d:'11-07', items:[
       '设置页分组标签加大加亮，组与组之间加分隔线；分组名改成「训练设置」「应用与数据」',
       '计划页去掉抬头那句说明和一大段 AI 说明文字，改成一行摘要（训练日 / 休息日 / 减载周 / 本周计划与实际）',
       '记录页去掉抬头那句口号和「有记录才算」小字'
     ]},
-    { v:'v5.18', d:'11-07', items:[
+    { v:'v5.20', d:'11-07', items:[
       '设置里新增「数据备份」：备份文件走系统分享面板，可直接存进 iCloud Drive（或 AirDrop），文件名「训练账本备份-日期.json」',
       '新增「从文件恢复」：选备份文件后恢复训练记录、动作重量、图标选择；不是训练账本的备份文件会被明确拒绝',
       '做法照热量账本：只在手动点的时候备份，不自动上传；恢复后自动重载一次页面'
