@@ -83,7 +83,7 @@ body{
 /* ---------- 画布背景：与热量账本 html 层同一条 ---------- */
 .screen::after{
   content:"";position:absolute;left:0;right:0;bottom:0;
-  height:calc(10px + var(--safe-b));background:#080b09;
+  height:10px;background:#080b09;
   z-index:19;pointer-events:none;
 }
 .screen{
@@ -322,7 +322,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 }
 .cta{
   position:absolute;left:var(--page-pad);right:var(--page-pad);
-  bottom:calc(var(--dock-h) + var(--dock-bottom) + var(--safe-b) + 14px);z-index:18;
+  bottom:calc(var(--dock-h) + var(--dock-bottom) + 14px);z-index:18;
   padding:16px;border:1px solid transparent;border-radius:18px;
   background:linear-gradient(180deg,#FF2D4A,var(--lime));color:#fff;
   font-size:16px;font-weight:600;letter-spacing:.01em;
@@ -343,7 +343,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 /* ---------- Dock：玻璃 + 52 圆角 + 104 高（实测） ---------- */
 .dock{
   position:absolute;left:var(--dock-w);right:var(--dock-w);
-  bottom:calc(var(--dock-bottom) + var(--safe-b));z-index:20;
+  bottom:var(--dock-bottom);z-index:20;
   height:var(--dock-h);padding:0 12px;
   display:flex;align-items:center;
   border-radius:var(--dock-r);
@@ -550,7 +550,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 /* ---------- 弹层：玻璃 + 46 圆角（实测 #nutSheet） ---------- */
 .sheet{
   position:absolute;left:var(--dock-w);right:var(--dock-w);
-  bottom:calc(var(--dock-bottom) + var(--safe-b));top:auto;z-index:41;
+  bottom:var(--dock-bottom);top:auto;z-index:41;
   opacity:0;pointer-events:none;
   transform:translateY(102%);
   border-radius:var(--dock-r);
