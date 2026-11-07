@@ -182,7 +182,7 @@ body{
 .scroller{
   position:relative;z-index:1;
   flex:1;overflow-y:auto;overflow-x:hidden;
-  padding:calc(51px + var(--safe-t) + 12px) var(--page-pad) 230px;
+  padding:calc(51px + var(--safe-t) + 12px) var(--page-pad) 140px;
   -webkit-overflow-scrolling:touch;
   overscroll-behavior-y:contain;
   scrollbar-width:none;
@@ -233,6 +233,16 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   padding:16px;
 }
 .card + .card{margin-top:13px}
+
+/* 首页头部卡：日期 + 今日训练 + 本周环 + 同步条 */
+.herocard .dateline{margin-bottom:14px}
+.herocard .todayhead{margin-bottom:16px}
+.herofoot{
+  display:flex;align-items:center;flex-wrap:wrap;gap:6px;
+  margin-top:16px;padding-top:13px;border-top:1px solid var(--line);
+  font-size:10.5px;color:var(--muted2);letter-spacing:.02em;
+}
+.herofoot b{color:rgba(242,244,242,.92);font-weight:600;font-variant-numeric:tabular-nums}
 
 /* ---------- 进度环卡 ---------- */
 .ringrow{display:flex;align-items:center;gap:6px}
@@ -691,7 +701,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
     <div class="statusbg" aria-hidden="true"></div>
     <div class="topbar">
-      <div class="brand">练<span>账</span><i class="btag">v2.3</i></div>
+      <div class="brand">练<span>账</span><i class="btag">v3.0</i></div>
       <div class="topactions">
         <button class="topbtn topicon" id="reloadTop" aria-label="强制更新" title="强制更新">
           <svg viewBox="0 -960 960 960" aria-hidden="true"><path d="M480-160q-134 0-227-93t-93-227q0-134 93-227t227-93q69 0 132 28.5T720-690v-70q0-17 11.5-28.5T760-800q17 0 28.5 11.5T800-760v200q0 17-11.5 28.5T760-520H560q-17 0-28.5-11.5T520-560q0-17 11.5-28.5T560-600h128q-32-56-87.5-88T480-720q-100 0-170 70t-70 170q0 100 70 170t170 70q68 0 124.5-34.5T692-367q8-14 22.5-19.5t29.5-.5q16 5 23 21t-1 30q-41 80-117 128t-169 48Z"/></svg>
@@ -706,8 +716,9 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
       <!-- ============ 今日 ============ -->
       <section class="view on" data-view="today">
-        <header class="head">
+        <div class="card herocard">
           <div class="dateline"><span class="d-main">11月7日</span><span class="d-wd">周五</span><span class="d-week">第 3 周 / 共 8 周</span></div>
+
           <div class="todayhead">
             <div class="throw">
               <b id="todayName">推</b><span class="en" id="todayEn">PUSH</span>
@@ -715,16 +726,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
             </div>
             <p id="todayFocus">胸 · 肩 · 三头</p>
           </div>
-        </header>
 
-        <div class="syncline">
-          <span class="live"></span>
-          已同步热量账本
-          <b>64.9</b> kg · 体脂 <b>16.8%</b> · 去脂 <b>54.0</b> kg
-        </div>
-
-
-        <div class="card">
           <div class="ringrow">
           <div class="ringwrap">
             <svg width="124" height="124" viewBox="0 0 124 124">
@@ -758,6 +760,12 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
           </div>
           </div>
           <div class="weekstrip" id="weekStrip"></div>
+
+          <div class="herofoot">
+            <span class="live"></span>
+            已同步热量账本
+            <b>64.9</b> kg · 体脂 <b>16.8%</b> · 去脂 <b>54.0</b> kg
+          </div>
         </div>
 
         <div class="listhead">
@@ -918,9 +926,6 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
     </div>
 
-    <div class="fade"></div>
-    <button class="cta" id="mainCta">开始训练</button>
-
     <nav class="dock">
       <div class="pill" id="pill"><i class="pillbody"></i></div>
       <button class="tab on" data-tab="today">
@@ -1003,22 +1008,10 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
       </div>
     </div>
 
-    <!-- 训练中弹层 -->
-    <div class="sheet center" id="trainSheet">
-      <div class="grab"></div>
-      <div class="nowex">
-        <div class="t">下一组</div>
-        <div class="n" id="nowName">平板杠铃卧推</div>
-        <div class="m" id="nowMeta">第 3 / 4 组 · 6–8 次 · 80 kg</div>
-      </div>
-      <button class="cta" id="finishSet">完成本组</button>
-      <button class="cta ghost" id="endTrain">结束训练</button>
-    </div>
-
     <!-- 设置 -->
     <div class="sheet" id="setSheet">
       <div class="grab"></div>
-      <div class="sh-hd"><h2>设置</h2><span class="vtag">v2.3</span></div>
+      <div class="sh-hd"><h2>设置</h2><span class="vtag">v3.0</span></div>
       <div class="setbody">
         <div class="setlabel">功能</div>
         <div class="setrows">
@@ -1034,7 +1027,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
           <div class="srow" data-ic="bolt"><span class="ico"></span><span class="lbl">与热量账本同步</span><span class="sw"></span></div>
           <div class="srow" data-ic="monitor_heart"><span class="ico"></span><span class="lbl">Apple 健康</span><span class="sw"></span></div>
           <div class="srow" data-ic="assignment"><span class="ico"></span><span class="lbl">训练提醒</span><span class="sw"></span></div>
-          <button class="srow" id="openRel" data-ic="checklist"><span class="ico"></span><span class="lbl">更新记录</span><span class="val">v2.3</span></button>
+          <button class="srow" id="openRel" data-ic="checklist"><span class="ico"></span><span class="lbl">更新记录</span><span class="val">v3.0</span></button>
         </div>
       </div>
     </div>
@@ -1051,6 +1044,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
         <div class="exrow2"><span>今天完成</span><b id="exDone">0 / 4</b></div>
       </div>
       <p class="exnote" id="exNote">复合动作，排在第一个做。重量以能留 1–2 次余力为准。</p>
+      <button class="cta" id="finishHere">完成本组</button>
     </div>
 
     <!-- 更新记录 -->
@@ -1138,12 +1132,29 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     });
     $('#doneSets').textContent = done;
     $('#todayFill').style.width = (total ? (done / total * 100) : 0) + '%';
-    var btn = $('#mainCta');
-    if (done === total && total > 0){
-      btn.textContent = '完成训练 · 记录一下';
-    } else {
-      btn.textContent = '开始训练';
-    }
+  }
+
+  var curExId = '';
+
+  function paintHere(ex){
+    var btn = $('#finishHere');
+    if (!btn || !ex) return;
+    var all = $$('.dot', ex).length;
+    var on = $$('.dot.on', ex).length;
+    btn.textContent = (on >= all && all > 0) ? '这个动作已练完' : '完成本组';
+    btn.classList.toggle('ghost', on >= all && all > 0);
+  }
+
+  function completeSet(ex){
+    var id = ex.dataset.ex;
+    var arr = state.sets[id] || (state.sets[id] = []);
+    var total = $$('.dot', ex).length;
+    var i = arr.indexOf(false);
+    if (i < 0){ for (var j = 0; j < total; j++){ if (!arr[j]){ i = j; break; } } }
+    if (i >= 0) arr[i] = true;
+    renderSets();
+    $('#exDone').textContent = $$('.dot.on', ex).length + ' / ' + total;
+    paintHere(ex);
   }
 
   function openEx(card){
@@ -1152,6 +1163,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     var idx = parseInt(id.replace(/^[a-z]+/, ''), 10) || 0;
     var arr = (EX[key] || [])[idx];
     if (!arr) return;
+    curExId = id;
     var on = $$('.dot.on', card).length;
     var all = $$('.dot', card).length;
     $('#exName').textContent = arr.n;
@@ -1164,8 +1176,14 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     $('#exNote').textContent = arr.g === 'S'
       ? '复合动作，排在第一个做。重量以能留 1–2 次余力为准。'
       : (arr.g === 'A' ? '辅助动作，补目标肌群的容量。' : '收尾动作，控制节奏，别甩重量。');
+    paintHere(card);
     openSheet('#exSheet');
   }
+
+  $('#finishHere').addEventListener('click', function(){
+    var ex = $('.ex[data-ex="' + curExId + '"]');
+    if (ex) completeSet(ex);
+  });
 
   document.addEventListener('click', function(e){
     var dot = e.target.closest('.dot');
@@ -1343,14 +1361,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     $$('.tab').forEach(function(t){ t.classList.toggle('on', t.dataset.tab === name); });
     $$('.view').forEach(function(v){ v.classList.toggle('on', v.dataset.view === name); });
     placePill(order.indexOf(name));
-    var cta = $('#mainCta');
-    if (name === 'today'){
-      cta.hidden = false;
-      cta.classList.remove('ghost');
-      renderSets();
-    }
-    else { cta.hidden = true; }
-    document.querySelector('.fade').hidden = cta.hidden;
+    if (name === 'today') renderSets();
     $('#scroller').classList.toggle('tight', name !== 'today');
     $('#scroller').scrollTop = 0;
   }
@@ -1361,11 +1372,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   document.addEventListener('pointerup', function(){ $('#pill').classList.remove('press'); });
   document.addEventListener('pointercancel', function(){ $('#pill').classList.remove('press'); });
 
-  /* ---------- CTA ---------- */
-  $('#mainCta').addEventListener('click', function(){
-    openSheet('#trainSheet');
-    prepareTrain();
-  });
+  /* ---------- 按钮 ---------- */
   $('#planCta').addEventListener('click', function(){
     openSheet('#aiSheet');
   });
@@ -1479,73 +1486,6 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     setTab('plan');
   });
 
-  /* ---------- 组间休息倒计时 ---------- */
-  var restLeft = 0, timerId = null;
-
-  function fmt(n){ return (n < 10 ? '0' : '') + n; }
-  function paintRest(){
-    $('#timer').textContent = fmt(Math.floor(restLeft / 60)) + ':' + fmt(restLeft % 60);
-  }
-  function stopTimer(){ clearInterval(timerId); timerId = null; }
-
-  function startRest(sec){
-    stopTimer();
-    restLeft = Math.max(5, sec | 0);
-    $('#timerLab').textContent = '组间休息';
-    paintRest();
-    timerId = setInterval(function(){
-      restLeft--;
-      if (restLeft <= 0){
-        restLeft = 0; paintRest(); stopTimer();
-        $('#timerLab').textContent = '休息结束 · 可以开始了';
-      } else paintRest();
-    }, 1000);
-  }
-
-  function nextEx(){
-    return $$('.ex').filter(function(x){ return !x.classList.contains('done'); })[0];
-  }
-
-  function fillNow(){
-    var ex = nextEx();
-    if (!ex){
-      $('#nowName').textContent = '全部完成';
-      $('#nowMeta').textContent = '今天 17 组已练完';
-      return;
-    }
-    var id = ex.dataset.ex;
-    var arr = state.sets[id] || [];
-    var n = arr.filter(Boolean).length;
-    var total = $$('.dot', ex).length;
-    var name = $('h3', ex).childNodes[0].textContent;
-    $('#nowName').textContent = name;
-    $('#nowMeta').textContent = '第 ' + Math.min(n + 1, total) + ' / ' + total + ' 组 · 休息 ' + ex.dataset.rest + ' 秒';
-  }
-
-  function prepareTrain(){
-    stopTimer(); restLeft = 0;
-    fillNow();
-  }
-
-  $('#endTrain').addEventListener('click', function(){
-    stopTimer(); restLeft = 0;
-    closeSheets();
-  });
-
-  $('#finishSet').addEventListener('click', function(){
-    var ex = nextEx();
-    if (!ex){ closeSheets(); renderSets(); return; }
-    var id = ex.dataset.ex;
-    if (!state.sets[id]) state.sets[id] = [];
-    var arr = state.sets[id];
-    var total = $$('.dot', ex).length;
-    var i = arr.indexOf(false);
-    if (i < 0){ for (var j = 0; j < total; j++){ if (!arr[j]){ i = j; break; } } }
-    if (i >= 0) arr[i] = true;
-    renderSets();
-    fillNow();
-  });
-
   /* ---------- 热力图 ---------- */
   (function(){
     var box = $('#heat');
@@ -1585,7 +1525,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     if (ic && ICONS[n]) ic.innerHTML = '<svg viewBox="0 -960 960 960"><path d="' + ICONS[n] + '"/></svg>';
   });
 
-  ['#setSheet','#trainSheet','#relSheet','#exSheet'].forEach(function(sel){
+  ['#setSheet','#relSheet','#exSheet'].forEach(function(sel){
     var el = $(sel); if (el) wireDragClose(el);
   });
 
