@@ -215,7 +215,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 .syncline b{color:rgba(242,244,242,.92);font-weight:600;font-variant-numeric:tabular-nums}
 .live{
   width:5px;height:5px;border-radius:50%;background:var(--lime);
-  box-shadow:0 0 8px rgba(228,0,43,.8);flex:none;
+  flex:none;
 }
 
 /* 动作效率等级 */
@@ -240,11 +240,11 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 .weekstrip{display:flex;gap:4px;margin-top:16px;padding-top:15px;border-top:1px solid var(--line)}
 .wd-day{flex:1;display:flex;flex-direction:column;align-items:center;gap:7px}
 .wd-day i{width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,.12)}
-.wd-day.on i{background:var(--lime);box-shadow:0 0 10px -1px rgba(228,0,43,.55)}
+.wd-day.on i{background:var(--lime)}
 .wd-day span{font-size:11px;color:var(--muted2);letter-spacing:.02em;font-weight:500}
 .wd-day.on span{color:var(--text);font-weight:650}
 .wd-day.today span{color:var(--lime)}
-.wd-day.today i{box-shadow:0 0 0 2.5px rgba(228,0,43,.45)}
+.wd-day.today i{}
 .ringwrap{position:relative;width:118px;height:118px;flex:none}
 .ringwrap svg{transform:rotate(-90deg);display:block}
 .ring-bg{fill:none;stroke:rgba(255,255,255,.06);stroke-width:9}
@@ -362,7 +362,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   border:1px solid transparent;
   -webkit-backdrop-filter:var(--glass-blur);
   backdrop-filter:var(--glass-blur);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.22);
+  box-shadow:none;
 }
 /* 选中块：胶囊（圆角 = 高度一半），比 Dock 高度扁一档 —— 材质与颜色照热量账本 */
 .pill{
@@ -376,7 +376,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 .pillbody{
   display:block;position:absolute;inset:0;border-radius:inherit;
   background:rgba(255,255,255,.085);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.10);
+  box-shadow:none;
   transition:transform .24s cubic-bezier(.32,.9,.28,1),border-radius .24s ease,background .18s ease;
 }
 .pill.press .pillbody{
@@ -692,7 +692,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
     <div class="statusbg" aria-hidden="true"></div>
     <div class="topbar">
-      <div class="brand">练<span>账</span><i class="btag">v1.8</i></div>
+      <div class="brand">练<span>账</span><i class="btag">v1.9</i></div>
       <div class="topactions">
         <button class="topbtn topicon" id="reloadTop" aria-label="强制更新" title="强制更新">
           <svg viewBox="0 -960 960 960" aria-hidden="true"><path d="M480-160q-134 0-227-93t-93-227q0-134 93-227t227-93q69 0 132 28.5T720-690v-70q0-17 11.5-28.5T760-800q17 0 28.5 11.5T800-760v200q0 17-11.5 28.5T760-520H560q-17 0-28.5-11.5T520-560q0-17 11.5-28.5T560-600h128q-32-56-87.5-88T480-720q-100 0-170 70t-70 170q0 100 70 170t170 70q68 0 124.5-34.5T692-367q8-14 22.5-19.5t29.5-.5q16 5 23 21t-1 30q-41 80-117 128t-169 48Z"/></svg>
@@ -1019,7 +1019,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     <!-- 设置 -->
     <div class="sheet" id="setSheet">
       <div class="grab"></div>
-      <div class="sh-hd"><h2>设置</h2><span class="vtag">v1.8</span></div>
+      <div class="sh-hd"><h2>设置</h2><span class="vtag">v1.9</span></div>
       <div class="setbody">
         <div class="setlabel">功能</div>
         <div class="setrows">
@@ -1035,7 +1035,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
           <div class="srow" data-ic="bolt"><span class="ico"></span><span class="lbl">与热量账本同步</span><span class="sw"></span></div>
           <div class="srow" data-ic="monitor_heart"><span class="ico"></span><span class="lbl">Apple 健康</span><span class="sw"></span></div>
           <div class="srow" data-ic="assignment"><span class="ico"></span><span class="lbl">训练提醒</span><span class="sw"></span></div>
-          <button class="srow" id="openRel" data-ic="checklist"><span class="ico"></span><span class="lbl">更新记录</span><span class="val">v1.8</span></button>
+          <button class="srow" id="openRel" data-ic="checklist"><span class="ico"></span><span class="lbl">更新记录</span><span class="val">v1.9</span></button>
         </div>
       </div>
     </div>
@@ -1610,7 +1610,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   }
 
   /* ---------- 启动版本比对（同热量账本） ---------- */
-  var APP_VERSION = 'v1.8';
+  var APP_VERSION = 'v1.9';
   fetch('./version.txt?t=' + Date.now(), { cache: 'no-store' })
     .then(function(r){ return r.ok ? r.text() : ''; })
     .then(function(v){
