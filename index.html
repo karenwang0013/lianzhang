@@ -271,15 +271,13 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 /* 三宫格（同热量账本的三格） */
 .stats3{
   display:grid;grid-template-columns:1fr 1fr 1fr;
-  margin-top:4px;padding:13px 4px;border-radius:16px;
-  background:rgba(255,255,255,.04);border:1px solid var(--line);
+  margin-top:12px;padding:0;
 }
 .stats3>div{text-align:center;position:relative}
-.stats3>div+div::before{content:"";position:absolute;left:0;top:4px;bottom:4px;width:1px;background:var(--line)}
+.stats3>div+div::before{content:"";position:absolute;left:0;top:2px;bottom:2px;width:1px;background:var(--line)}
 .stats3 .k{font-size:11px;color:var(--muted2);letter-spacing:.6px}
-.stats3 .v{font-size:17px;font-weight:600;margin-top:5px;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
-.stats3 .v small{font-size:10px;color:var(--muted2);font-weight:400;margin-left:2px;letter-spacing:0}
-.stats3 .v em{font-style:normal;font-size:10px;color:var(--lime);font-weight:600;margin-left:3px}
+.stats3 .v{font-size:18px;font-weight:600;margin-top:6px;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.stats3 .v small{font-size:10px;color:var(--muted2);font-weight:400;margin-left:5px;letter-spacing:0;vertical-align:2px}
 
 /* 卡片首行：日期 + 今天完成组数 */
 .topline{display:flex;align-items:baseline;gap:8px}
@@ -295,26 +293,8 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 .wd-day.on span{color:var(--text);font-weight:650}
 .wd-day.today span{color:var(--lime)}
 .wd-day.today i{}
-.ringwrap{position:relative;width:118px;height:118px;flex:none}
-.ringwrap svg{transform:rotate(-90deg);display:block}
-.ring-bg{fill:none;stroke:rgba(255,255,255,.06);stroke-width:9}
-.ring-fg{
-  fill:none;stroke:var(--lime);stroke-width:9;stroke-linecap:round;
-  stroke-dasharray:333.0;stroke-dashoffset:333;
-  transition:stroke-dashoffset .55s cubic-bezier(.33,1.02,.3,1);
-}
-.ringmid{
-  position:absolute;inset:0;display:flex;flex-direction:column;
-  align-items:center;justify-content:center;gap:1px;
-}
-.ringmid b{font-size:33px;font-weight:650;letter-spacing:-.04em;font-variant-numeric:tabular-nums;line-height:1}
-.ringmid span{font-size:12px;color:var(--muted);letter-spacing:.04em;font-weight:600}
+.weekstrip{display:flex;gap:4px;margin-top:16px;padding-top:15px;border-top:1px solid var(--line)}
 
-.kpis{flex:1;display:flex;flex-direction:column;gap:10px;padding-left:8px}
-.kpi{display:flex;flex-direction:column;gap:2px}
-.kpi .k{font-size:10px;color:var(--muted2);letter-spacing:.08em}
-.kpi .v{font-size:13.5px;font-weight:600;letter-spacing:-.01em;font-variant-numeric:tabular-nums}
-.kpi .v em{font-style:normal;font-size:11px;color:var(--muted2);font-weight:500;margin-left:3px}
 .up{color:var(--lime)}
 
 /* ---------- 列表头 ---------- */
@@ -758,47 +738,50 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
       <!-- ============ 今日 ============ -->
       <section class="view on" data-view="today">
         <div class="card herocard">
-          <div class="dateline"><span class="d-main">11月7日</span><span class="d-wd">周五</span><span class="d-week">第 3 周 / 共 8 周</span></div>
-
-          <div class="todayhead">
-            <div class="throw">
-              <b id="todayName">推</b><span class="en" id="todayEn">PUSH</span>
-              <i class="thmin">约 <b id="todayMin">52</b> 分钟</i>
-            </div>
-            <p id="todayFocus">胸 · 肩 · 三头</p>
+          <div class="topline">
+            <span class="d-main">11月7日</span><span class="d-wd">周五</span>
+            <span class="dset"><b id="doneSets">0</b> / <span id="todayTotal">17</span> 组</span>
           </div>
 
-          <div class="ringrow">
           <div class="ringwrap">
-            <svg width="124" height="124" viewBox="0 0 124 124">
+            <svg viewBox="0 0 200 200" width="232" height="232">
               <defs>
                 <linearGradient id="ringGrad" x1="0" y1="0" x2="1" y2="1">
-                  <stop offset="0%" stop-color="#E4002B"/>
+                  <stop offset="0%" stop-color="#FF2D4A"/>
                   <stop offset="100%" stop-color="#8F0020"/>
                 </linearGradient>
+                <linearGradient id="rimGrad" x1="0" y1="0" x2="0.75" y2="1">
+                  <stop offset="0%" stop-color="#ffffff" stop-opacity="0.55"/>
+                  <stop offset="30%" stop-color="#ffffff" stop-opacity="0.22"/>
+                  <stop offset="65%" stop-color="#ffffff" stop-opacity="0.08"/>
+                  <stop offset="100%" stop-color="#ffffff" stop-opacity="0.16"/>
+                </linearGradient>
               </defs>
-              <circle class="ring-bg" cx="62" cy="62" r="53"/>
-              <circle class="ring-fg" id="ringFg" cx="62" cy="62" r="53"/>
+              <circle class="ring-bg" cx="100" cy="100" r="84"/>
+              <circle class="ring-rim" id="ringRim" cx="100" cy="100" r="84"/>
+              <circle class="ring-fg" id="ringFg" cx="100" cy="100" r="84"/>
             </svg>
             <div class="ringmid">
+              <span class="rlbl">本周</span>
               <b id="weekDays">4</b>
-              <span>/ 6</span>
+              <span class="rsub">/ 6 天</span>
+              <span class="rgap">还差 2 天</span>
             </div>
           </div>
-          <div class="kpis">
-            <div class="kpi">
-              <div class="k">本周目标</div>
-              <div class="v">6 <em>天 · 还差 2 天</em></div>
+
+          <div class="stats3">
+            <div>
+              <div class="k">今天</div>
+              <div class="v"><span id="todayName">腿</span><small id="todayEn">LEGS</small></div>
             </div>
-            <div class="kpi">
+            <div>
               <div class="k">本周容量</div>
-              <div class="v up">12,480 <em>kg ↑11%</em></div>
+              <div class="v">12,480<small>kg</small></div>
             </div>
-            <div class="kpi">
+            <div>
               <div class="k">连续打卡</div>
-              <div class="v">12 <em>天</em></div>
+              <div class="v">12<small>天</small></div>
             </div>
-          </div>
           </div>
           <div class="weekstrip" id="weekStrip"></div>
 
@@ -812,11 +795,6 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
         <div class="listhead">
           <h2>今天的动作</h2>
           <span id="listMeta">17 有效组 · 0 垃圾容量</span>
-        </div>
-
-        <div class="todaybar">
-          <div class="tbrow"><span>今日完成</span><b><span id="doneSets">6</span> / 17 组</b></div>
-          <div class="tbline"><i id="todayFill" style="width:35%"></i></div>
         </div>
 
         <div id="exList"></div>
@@ -1146,10 +1124,12 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   }
 
   /* ---------- 组数状态 ---------- */
-  var C = 2 * Math.PI * 53;
-  var ringFg = $('#ringFg');
+  var C = 2 * Math.PI * 84;
+  var ringFg = $('#ringFg'), ringRim = $('#ringRim');
   ringFg.style.strokeDasharray = C;
   ringFg.style.strokeDashoffset = C;
+  ringRim.style.strokeDasharray = C;
+  ringRim.style.strokeDashoffset = C;
 
   var state = { sets: {
     bench:[1,1,0,0],
@@ -1174,7 +1154,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
       done += n; total += dots.length;
     });
     $('#doneSets').textContent = done;
-    $('#todayFill').style.width = (total ? (done / total * 100) : 0) + '%';
+    $('#todayTotal').textContent = total;
   }
 
   var curExId = '';
@@ -1325,8 +1305,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     var t = TITLE[key];
     $('#todayName').textContent = t[0];
     $('#todayEn').textContent = t[1];
-    $('#todayFocus').textContent = t[2];
-    $('#todayMin').textContent = t[3];
+    $('#todayTotal').textContent = totalSets(key);
 
     state.sets = {};
     var html = '';
@@ -1698,6 +1677,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   setSplit(3);
   // 环 = 本周训练进度（4 / 6 天）
   ringFg.style.strokeDashoffset = C * (1 - 4 / 6);
+  ringRim.style.strokeDashoffset = C * (1 - 4 / 6);
   var h = (location.hash || '').replace('#','');
   setTab(order.indexOf(h) > -1 ? h : 'today');
   window.scrollTo(0,0);
