@@ -43,7 +43,7 @@
   --page-pad:18px;
   --card-r:18px;
   --tile-r:16px;
-  --dock-h:90px;
+  --dock-h:62px;
   --dock-w:10px;
   --dock-bottom:10px;
   --dock-r:52px;
@@ -396,9 +396,9 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 }
 /* 选中块：胶囊（圆角 = 高度一半），比 Dock 高度扁一档 —— 材质与颜色照热量账本 */
 .pill{
-  position:absolute;left:8px;top:8px;
-  height:72px;
-  border-radius:36px;
+  position:absolute;left:7px;top:7px;
+  height:46px;
+  border-radius:23px;
   transition:left .62s cubic-bezier(.33,1.06,.32,1),width .42s cubic-bezier(.33,1.06,.32,1);
   pointer-events:none;
 }
@@ -418,11 +418,11 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   flex:1;height:100%;border:0;background:transparent;cursor:pointer;
   display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;
   color:var(--muted2);font-family:inherit;
-  border-radius:16px;padding:0;height:72px;
+  border-radius:16px;padding:0;height:46px;
   transition:background .24s,color .3s;
 }
-.tab .ico{width:35px;height:35px;fill:currentColor;display:block}
-.tab span{font-size:13px;font-weight:600;letter-spacing:.2px;line-height:1.2}
+.tab .ico{width:24px;height:24px;fill:currentColor;display:block}
+.tab span{font-size:11px;font-weight:600;letter-spacing:.2px;line-height:1}
 .tab.on{color:var(--lime)}
 
 /* ---------- 视图切换 ---------- */
@@ -722,7 +722,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
     <div class="statusbg" aria-hidden="true"></div>
     <div class="topbar">
-      <div class="brand">练<span>账</span><i class="btag">v3.3</i></div>
+      <div class="brand">练<span>账</span><i class="btag">v3.4</i></div>
       <div class="topactions">
         <button class="topbtn topicon" id="reloadTop" aria-label="强制更新" title="强制更新">
           <svg viewBox="0 -960 960 960" aria-hidden="true"><path d="M480-160q-134 0-227-93t-93-227q0-134 93-227t227-93q69 0 132 28.5T720-690v-70q0-17 11.5-28.5T760-800q17 0 28.5 11.5T800-760v200q0 17-11.5 28.5T760-520H560q-17 0-28.5-11.5T520-560q0-17 11.5-28.5T560-600h128q-32-56-87.5-88T480-720q-100 0-170 70t-70 170q0 100 70 170t170 70q68 0 124.5-34.5T692-367q8-14 22.5-19.5t29.5-.5q16 5 23 21t-1 30q-41 80-117 128t-169 48Z"/></svg>
@@ -1032,7 +1032,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     <!-- 设置 -->
     <div class="sheet" id="setSheet">
       <div class="grab"></div>
-      <div class="sh-hd"><h2>设置</h2><span class="vtag">v3.3</span></div>
+      <div class="sh-hd"><h2>设置</h2><span class="vtag">v3.4</span></div>
       <div class="setbody">
         <div class="setlabel">功能</div>
         <div class="setrows">
@@ -1048,7 +1048,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
           <div class="srow" data-ic="bolt"><span class="ico"></span><span class="lbl">与热量账本同步</span><span class="sw"></span></div>
           <div class="srow" data-ic="monitor_heart"><span class="ico"></span><span class="lbl">Apple 健康</span><span class="sw"></span></div>
           <div class="srow" data-ic="assignment"><span class="ico"></span><span class="lbl">训练提醒</span><span class="sw"></span></div>
-          <button class="srow" id="openRel" data-ic="checklist"><span class="ico"></span><span class="lbl">更新记录</span><span class="val">v3.3</span></button>
+          <button class="srow" id="openRel" data-ic="checklist"><span class="ico"></span><span class="lbl">更新记录</span><span class="val">v3.4</span></button>
         </div>
       </div>
     </div>
@@ -1375,9 +1375,9 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     var lens = $('#pill');
     var d = $('.dock').getBoundingClientRect();
     var r = t.getBoundingClientRect();
-    var b = $('.dock').clientLeft;
-    lens.style.width = (r.width + 8) + 'px';
-    lens.style.left = (r.left - d.left - b - 4) + 'px';
+    var b = $('.dock').clientLeft, g = 8;
+    lens.style.width = (r.width - g * 2) + 'px';
+    lens.style.left = (r.left - d.left - b + g - b) + 'px';
   }
   function setTab(name){
     $$('.tab').forEach(function(t){ t.classList.toggle('on', t.dataset.tab === name); });
@@ -1571,7 +1571,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   }
 
   /* ---------- 启动版本比对（同热量账本） ---------- */
-  var APP_VERSION = 'v3.3';
+  var APP_VERSION = 'v3.4';
   fetch('./version.txt?t=' + Date.now(), { cache: 'no-store' })
     .then(function(r){ return r.ok ? r.text() : ''; })
     .then(function(v){
