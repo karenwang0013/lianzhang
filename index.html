@@ -699,10 +699,10 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 .relitem li{margin-bottom:2px}
 
 /* 图标选择 */
-.islot{display:flex;align-items:center;gap:12px;padding:13px 0}
+.islot{display:flex;align-items:flex-start;gap:12px;padding:13px 0}
 .islot + .islot{border-top:1px solid var(--line)}
 .islab{width:36px;flex:none;font-size:11px;color:var(--muted2);letter-spacing:.04em}
-.iopts{display:flex;gap:8px;flex:1}
+.iopts{display:flex;flex-wrap:wrap;gap:8px;flex:1}
 .iopt{
   width:46px;height:46px;border-radius:14px;flex:none;
   border:1px solid var(--line);background:rgba(255,255,255,.05);
@@ -725,7 +725,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
     <div class="statusbg" aria-hidden="true"></div>
     <div class="topbar">
-      <div class="brand">训练<span>账本</span><i class="btag">v4.10</i></div>
+      <div class="brand">训练<span>账本</span><i class="btag">v4.11</i></div>
       <div class="topactions">
         <button class="topbtn topicon" id="reloadTop" aria-label="强制更新" title="强制更新">
           <svg viewBox="0 -960 960 960" aria-hidden="true"><path d="M480-160q-134 0-227-93t-93-227q0-134 93-227t227-93q69 0 132 28.5T720-690v-70q0-17 11.5-28.5T760-800q17 0 28.5 11.5T800-760v200q0 17-11.5 28.5T760-520H560q-17 0-28.5-11.5T520-560q0-17 11.5-28.5T560-600h128q-32-56-87.5-88T480-720q-100 0-170 70t-70 170q0 100 70 170t170 70q68 0 124.5-34.5T692-367q8-14 22.5-19.5t29.5-.5q16 5 23 21t-1 30q-41 80-117 128t-169 48Z"/></svg>
@@ -948,8 +948,6 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
     </div>
 
-    <div class="fade"></div>
-
     <nav class="dock">
       <div class="pill" id="pill"><i class="pillbody"></i></div>
       <button class="tab on" data-tab="today">
@@ -1035,7 +1033,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     <!-- 设置 -->
     <div class="sheet" id="setSheet">
       <div class="grab"></div>
-      <div class="sh-hd"><h2>设置</h2><span class="vtag">v4.10</span></div>
+      <div class="sh-hd"><h2>设置</h2><span class="vtag">v4.11</span></div>
       <div class="setbody">
         <div class="setlabel">功能</div>
         <div class="setrows">
@@ -1051,7 +1049,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
           <div class="srow" data-ic="bolt"><span class="ico"></span><span class="lbl">与热量账本同步</span><span class="sw"></span></div>
           <div class="srow" data-ic="monitor_heart"><span class="ico"></span><span class="lbl">Apple 健康</span><span class="sw"></span></div>
           <div class="srow" data-ic="assignment"><span class="ico"></span><span class="lbl">训练提醒</span><span class="sw"></span></div>
-          <button class="srow" id="openRel" data-ic="checklist"><span class="ico"></span><span class="lbl">更新记录</span><span class="val">v4.10</span></button>
+          <button class="srow" id="openRel" data-ic="checklist"><span class="ico"></span><span class="lbl">更新记录</span><span class="val">v4.11</span></button>
         </div>
       </div>
     </div>
@@ -1105,6 +1103,9 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     { key:'log',   label:'记录', opts:['bar_chart','monitoring','timeline'] },
     { key:'me',    label:'我的', opts:['person','account_circle','badge','monitor_heart'] }
   ];
+  /* 每个位置都能从整库挑（原来每个位置只给 3~4 个候选，用户 2026-11-07 要求全部可选） */
+  var ALL_ICON_NAMES = Object.keys(ICONS);
+  SLOTS.forEach(function(s){ s.opts = ALL_ICON_NAMES; });
   var chosen = { today:'fitness_center', plan:'event_note', log:'bar_chart', me:'person' };
 
   function paintTab(key){
@@ -1575,7 +1576,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   }
 
   /* ---------- 启动版本比对（同热量账本） ---------- */
-  var APP_VERSION = 'v4.10';
+  var APP_VERSION = 'v4.11';
   fetch('./version.txt?t=' + Date.now(), { cache: 'no-store' })
     .then(function(r){ return r.ok ? r.text() : ''; })
     .then(function(v){
