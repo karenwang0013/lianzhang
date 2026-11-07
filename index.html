@@ -555,7 +555,10 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 /* 设置分组 */
 /* 设置行（实测：rows 圆角18 / 左右16 / 行高54 / 15号字 / label 上下 0 32 8） */
 .setbody{padding:2px 0 26px}
-.setlabel{font-size:12px;color:var(--muted2);letter-spacing:.4px;padding:0 32px 8px;font-weight:400}
+.setlabel{font-size:13px;font-weight:650;color:rgba(242,244,242,.82);letter-spacing:.06em;padding:0 30px 10px}
+.setrows + .setlabel{margin-top:20px;padding-top:16px;position:relative}
+.setrows + .setlabel::before{content:"";position:absolute;left:30px;right:30px;top:0;height:1px;
+  background:linear-gradient(90deg,rgba(255,255,255,.16),rgba(255,255,255,.03))}
 .setrows{margin:0 16px 16px;border-radius:18px;overflow:hidden;
   background-image:linear-gradient(rgba(2,4,3,.42),rgba(2,4,3,.30)),var(--edge-gloss);
   background-origin:border-box;background-clip:padding-box,border-box;border:1px solid transparent}
@@ -769,7 +772,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
     <div class="statusbg" aria-hidden="true"></div>
     <div class="topbar">
-      <div class="brand">训练<span>账本</span><i class="btag">v5.13</i></div>
+      <div class="brand">训练<span>账本</span><i class="btag">v5.14</i></div>
       <div class="topactions">
         <button class="topbtn topicon" id="reloadTop" aria-label="强制更新" title="强制更新">
           <svg viewBox="0 -960 960 960" aria-hidden="true"><path d="M480-160q-134 0-227-93t-93-227q0-134 93-227t227-93q69 0 132 28.5T720-690v-70q0-17 11.5-28.5T760-800q17 0 28.5 11.5T800-760v200q0 17-11.5 28.5T760-520H560q-17 0-28.5-11.5T520-560q0-17 11.5-28.5T560-600h128q-32-56-87.5-88T480-720q-100 0-170 70t-70 170q0 100 70 170t170 70q68 0 124.5-34.5T692-367q8-14 22.5-19.5t29.5-.5q16 5 23 21t-1 30q-41 80-117 128t-169 48Z"/></svg>
@@ -852,7 +855,6 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
         <header class="head">
           <div class="eyebrow" id="planEyebrow">训练周期 · 第 3 周 / 共 8 周</div>
           <h1>计划 <span class="en">PLAN</span></h1>
-          <p class="sub">AI 按你的恢复速度排的，每周自动微调</p>
         </header>
 
         <div class="listhead"><h2>训练分化</h2><span>AI 推荐 · 可自选</span></div>
@@ -865,7 +867,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
         </div>
 
         <div class="card aicard">
-          <span class="tag">✦ AI 生成 · 3 天前更新</span>
+          <span class="tag">✦ AI · 3 天前更新</span>
           <h2 id="splitName">三分化 · 推拉腿</h2>
           <p id="splitDesc">每周 6 练，每个肌群 48 小时恢复窗口。第 3 周为累积周，负荷系数 1.0；第 5 周会自动降到 0.7 做减载。</p>
           <div class="why">
@@ -887,10 +889,10 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
             <div><b>54.0</b><i>去脂体重 kg</i></div>
             <div><b>21.4</b><i>BMI</i></div>
           </div>
-          <p class="bnote">体脂 16.8% 正处在增肌窗口。AI 采用「小盈余 + 高有效容量」：每周 +0.25 kg，蛋白质下限 1.8 g/kg ≈ 117 g/天，与热量账本的盈余目标共用同一套数字。</p>
+          <p class="bnote">体脂 16.8% 在增肌窗口：每周 +0.25 kg，蛋白质 117 g/天。</p>
         </div>
 
-        <div class="listhead"><h2>每周有效组数</h2><span>上限 20 组 / 肌群</span></div>
+        <div class="listhead"><h2>每周有效组数</h2><span>上限 20 组</span></div>
         <div class="card volcard" id="volCard">
           <div class="vol"><span class="vl">胸</span><div class="vbar"><i style="width:70%"></i></div><span class="vv">14</span></div>
           <div class="vol"><span class="vl">背</span><div class="vbar"><i style="width:80%"></i></div><span class="vv">16</span></div>
@@ -912,7 +914,6 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
         <header class="head">
           <div class="eyebrow" id="logTotal">累计 128 次训练</div>
           <h1>记录 <span class="en">LOG</span></h1>
-          <p class="sub">每一组都算数</p>
         </header>
 
         <div class="stats">
@@ -935,7 +936,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
           </div>
         </div>
 
-        <div class="listhead"><h2>个人最好成绩</h2><span>有记录才算</span></div>
+        <div class="listhead"><h2>个人最好成绩</h2></div>
         <div class="card" id="prCard" style="padding:4px 16px">
           <div class="pr">
             <div class="nm">硬拉<small>Deadlift · 11/2</small></div>
@@ -1083,9 +1084,9 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     <!-- 设置 -->
     <div class="sheet" id="setSheet">
       <div class="grab"></div>
-      <div class="sh-hd"><h2>设置</h2><span class="vtag">v5.13</span></div>
+      <div class="sh-hd"><h2>设置</h2><span class="vtag">v5.14</span></div>
       <div class="setbody">
-        <div class="setlabel">功能</div>
+        <div class="setlabel">训练设置</div>
         <div class="setrows">
           <button class="srow" data-ic="event_note"><span class="ico"></span><span class="lbl">每周训练频率</span><span class="val">6 天</span></button>
           <button class="srow" data-ic="fitness_center"><span class="ico"></span><span class="lbl">可用器械</span><span class="val">商业健身房</span></button>
@@ -1093,14 +1094,14 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
           <button class="srow" data-ic="timeline"><span class="ico"></span><span class="lbl">单次时长上限</span><span class="val">60 分钟</span></button>
         </div>
 
-        <div class="setlabel">其他</div>
+        <div class="setlabel">应用与数据</div>
         <div class="setrows">
           <button class="srow" id="iconRow" data-ic="palette"><span class="ico"></span><span class="lbl">App 图标</span><span class="val">更换图标</span></button>
           <div class="srow" data-ic="bolt"><span class="ico"></span><span class="lbl">与热量账本同步</span><span class="sw"></span></div>
           <div class="srow" data-ic="monitor_heart"><span class="ico"></span><span class="lbl">Apple 健康</span><span class="sw"></span></div>
           <div class="srow" data-ic="assignment"><span class="ico"></span><span class="lbl">训练提醒</span><span class="sw"></span></div>
           <button class="srow" id="openBackup" data-ic="cloud_done"><span class="ico"></span><span class="lbl">数据备份</span><span class="val" id="backupVal">iCloud</span></button>
-          <button class="srow" id="openRel" data-ic="checklist"><span class="ico"></span><span class="lbl">更新记录</span><span class="val">v5.13</span></button>
+          <button class="srow" id="openRel" data-ic="checklist"><span class="ico"></span><span class="lbl">更新记录</span><span class="val">v5.14</span></button>
         </div>
       </div>
     </div>
@@ -1748,7 +1749,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   }
 
   /* ---------- 启动版本比对（同热量账本） ---------- */
-  var APP_VERSION = 'v5.13';
+  var APP_VERSION = 'v5.14';
   fetch('./version.txt?t=' + Date.now(), { cache: 'no-store' })
     .then(function(r){ return r.ok ? r.text() : ''; })
     .then(function(v){
@@ -1770,7 +1771,12 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
   /* ---------- 更新记录 ---------- */
   var RELEASES = [
-    { v:'v5.13', d:'11-07', items:[
+    { v:'v5.14', d:'11-07', items:[
+      '设置页分组标签加大加亮，组与组之间加分隔线；分组名改成「训练设置」「应用与数据」',
+      '计划页去掉抬头那句说明和一大段 AI 说明文字，改成一行摘要（训练日 / 休息日 / 减载周 / 本周计划与实际）',
+      '记录页去掉抬头那句口号和「有记录才算」小字'
+    ]},
+    { v:'v5.14', d:'11-07', items:[
       '设置里新增「数据备份」：备份文件走系统分享面板，可直接存进 iCloud Drive（或 AirDrop），文件名「训练账本备份-日期.json」',
       '新增「从文件恢复」：选备份文件后恢复训练记录、动作重量、图标选择；不是训练账本的备份文件会被明确拒绝',
       '做法照热量账本：只在手动点的时候备份，不自动上传；恢复后自动重载一次页面'
@@ -2022,12 +2028,11 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
   function paintPlan(){
     var sp = SPLITS[splitDays], n = splitTrainDays();
-    var eb = $('#planEyebrow'); if (eb) eb.textContent = '训练周期 · ' + n + ' 练 / 周 · 共 8 周';
+    var eb = $('#planEyebrow'); if (eb) eb.textContent = n + ' 练 / 周 · 共 8 周';
     var why = $('#whyDays'); if (why) why.textContent = '每周 ' + n + ' 练';
     var sd = $('#splitDesc');
-    if (sd) sd.textContent = '每周 ' + n + ' 练（' + sp.label + '），每个肌群之间留 48 小时恢复。共 ' +
-      n + ' 个训练日、' + (7 - n) + ' 个休息日；第 3 周为累积周，负荷系数 1.0，第 5 周自动降到 0.7 做减载。' +
-      '本周计划容量 ' + planVolume().toLocaleString('en-US') + ' kg，实际完成 ' + weekVolume().toLocaleString('en-US') + ' kg。';
+    if (sd) sd.textContent = n + ' 个训练日 · ' + (7 - n) + ' 个休息日 · 第 5 周减载。本周计划 ' +
+      planVolume().toLocaleString('en-US') + ' kg，已完成 ' + weekVolume().toLocaleString('en-US') + ' kg。';
     var groups = {}, total = 0;
     GROUP_ORDER.forEach(function(g){ groups[g] = 0; });
     sp.days.forEach(function(d){
