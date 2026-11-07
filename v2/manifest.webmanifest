@@ -1,6 +1,6 @@
 {
-  "name": "练账",
-  "short_name": "练账",
+  "name": "训练账本",
+  "short_name": "训练账本",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
