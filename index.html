@@ -75,8 +75,9 @@ body{
   overflow:hidden;
 }
 @media (max-width:520px){
-  body{display:block}
-  .phone{width:100%;height:100dvh;border-radius:0;box-shadow:none}
+  html,body{height:100%;overflow:hidden;position:fixed;inset:0;width:100%}
+  body{display:block;overscroll-behavior:none;-webkit-overflow-scrolling:auto}
+  .phone{position:absolute;inset:0;width:100%;height:100%;border-radius:0;box-shadow:none}
 }
 
 /* ---------- 画布背景：与热量账本 html 层同一条 ---------- */
@@ -208,6 +209,31 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 }
 .listhead h2{margin:0;font-size:12.5px;line-height:20px;font-weight:600;letter-spacing:.4px;color:var(--muted)}
 .listhead span{font-size:11px;color:var(--muted2);font-variant-numeric:tabular-nums}
+
+/* 今日完成度 */
+.todaybar{padding:0 2px 12px}
+.tbrow{display:flex;justify-content:space-between;font-size:11px;color:var(--muted2);margin-bottom:8px;letter-spacing:.02em}
+.tbrow b{color:var(--text);font-weight:600;font-variant-numeric:tabular-nums}
+.tbline{height:6px;border-radius:3px;background:rgba(255,255,255,.07);overflow:hidden}
+.tbline i{display:block;height:100%;border-radius:3px;
+  background:linear-gradient(90deg,rgba(228,0,43,.55),var(--lime));
+  transition:width .45s cubic-bezier(.33,1.02,.3,1)}
+
+/* 分化选择 */
+.splpick{display:flex;gap:5px;padding:11px 6px 6px}
+.sp{position:relative;flex:1;border:1px solid transparent;background:transparent;border-radius:12px;
+  padding:9px 2px 8px;display:flex;flex-direction:column;align-items:center;gap:2px;
+  cursor:pointer;font-family:inherit;
+  transition:background .2s,border-color .2s,transform .18s cubic-bezier(.2,1.3,.4,1)}
+.sp b{font-size:13px;font-weight:600;color:var(--text);letter-spacing:-.01em}
+.sp span{font-size:9.5px;color:var(--muted2);white-space:nowrap}
+.sp.on{background:rgba(228,0,43,.12);border-color:rgba(228,0,43,.38)}
+.sp.on b{color:#FF4D66}
+.sp.on span{color:rgba(255,77,102,.78)}
+.sp i{position:absolute;top:-7px;right:50%;transform:translateX(50%);
+  font-style:normal;font-size:7.5px;font-weight:700;letter-spacing:.04em;
+  color:#fff;background:var(--lime);padding:1.5px 4px;border-radius:4px;white-space:nowrap}
+.sp:active{transform:scale(.96)}
 
 /* ---------- 动作卡：玻璃 + 16 圆角（对应 .meal） ---------- */
 .ex{
@@ -453,6 +479,17 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   max-height:88%;overflow-y:auto;
 }
 .sheet.on{transform:none}
+
+/* 悬浮卡：居中浮在屏幕上（热量账本弹层卡那套），不贴底 */
+.sheet.float{
+  left:50%;right:auto;bottom:auto;top:50%;width:calc(100% - 40px);max-width:350px;
+  border-radius:46px;padding:20px 20px 18px;
+  transform:translate(-50%,-46%) scale(.96);
+  opacity:0;pointer-events:none;max-height:82%;
+  transition:transform .34s cubic-bezier(.22,.8,.3,1),opacity .22s ease;
+  box-shadow:none;
+}
+.sheet.float.on{transform:translate(-50%,-50%) scale(1);opacity:1;pointer-events:auto}
 .grab{width:38px;height:4px;border-radius:2px;background:rgba(255,255,255,.18);margin:0 auto 16px}
 .sheet h2{margin:0 0 4px;font-size:21px;font-weight:700;letter-spacing:-.025em}
 .sheet .hint{margin:0 0 18px;font-size:11.5px;color:var(--muted2);line-height:1.7}
@@ -540,8 +577,8 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
       <section class="view on" data-view="today">
         <header class="head">
           <div class="eyebrow">11月7日 周五 · 第 3 周</div>
-          <h1>推 <span class="en">PUSH</span></h1>
-          <p class="sub">胸 · 肩 · 三头 &nbsp;·&nbsp; 预计 <b>52 分钟</b></p>
+          <h1><span id="todayName">推</span> <span class="en" id="todayEn">PUSH</span></h1>
+          <p class="sub"><span id="todayFocus">胸 · 肩 · 三头</span> &nbsp;·&nbsp; 预计 <b id="todayMin">52</b> 分钟</p>
         </header>
 
         <div class="syncline">
@@ -564,14 +601,14 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
               <circle class="ring-fg" id="ringFg" cx="62" cy="62" r="53"/>
             </svg>
             <div class="ringmid">
-              <b id="doneSets">0</b>
-              <span id="totalSets">/ 17 组</span>
+              <b id="weekDays">4</b>
+              <span>/ 6 天</span>
             </div>
           </div>
           <div class="kpis">
             <div class="kpi">
-              <div class="k">上次同训</div>
-              <div class="v">11/4 <em>· 4 天前</em></div>
+              <div class="k">本周训练</div>
+              <div class="v">4 <em>天 · 还差 2 天</em></div>
             </div>
             <div class="kpi">
               <div class="k">本周容量</div>
@@ -589,35 +626,12 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
           <span id="listMeta">17 有效组 · 0 垃圾容量</span>
         </div>
 
-        <article class="ex" data-ex="bench">
-          <div class="exrow"><h3>平板杠铃卧推<span class="grade">S</span></h3><span class="exload">80 kg</span></div>
-          <p class="exmeta">4 组 × 6–8 次 · 休息 150 秒</p>
-          <div class="sets"><button class="dot"></button><button class="dot"></button><button class="dot"></button><button class="dot"></button><span class="setcount">0/4</span></div>
-        </article>
+        <div class="todaybar">
+          <div class="tbrow"><span>今日完成</span><b><span id="doneSets">6</span> / 17 组</b></div>
+          <div class="tbline"><i id="todayFill" style="width:35%"></i></div>
+        </div>
 
-        <article class="ex" data-ex="incline">
-          <div class="exrow"><h3>上斜哑铃卧推<span class="grade a">A</span></h3><span class="exload">28 kg</span></div>
-          <p class="exmeta">3 组 × 8–10 次 · 休息 120 秒</p>
-          <div class="sets"><button class="dot"></button><button class="dot"></button><button class="dot"></button><span class="setcount">0/3</span></div>
-        </article>
-
-        <article class="ex" data-ex="press">
-          <div class="exrow"><h3>坐姿哑铃推肩<span class="grade a">A</span></h3><span class="exload">20 kg</span></div>
-          <p class="exmeta">3 组 × 10 次 · 休息 90 秒</p>
-          <div class="sets"><button class="dot"></button><button class="dot"></button><button class="dot"></button><span class="setcount">0/3</span></div>
-        </article>
-
-        <article class="ex" data-ex="pdown">
-          <div class="exrow"><h3>绳索下压<span class="grade b">B</span></h3><span class="exload">25 kg</span></div>
-          <p class="exmeta">3 组 × 12 次 · 休息 60 秒</p>
-          <div class="sets"><button class="dot"></button><button class="dot"></button><button class="dot"></button><span class="setcount">0/3</span></div>
-        </article>
-
-        <article class="ex" data-ex="lat">
-          <div class="exrow"><h3>哑铃侧平举<span class="grade b">B</span></h3><span class="exload">10 kg</span></div>
-          <p class="exmeta">4 组 × 15 次 · 休息 60 秒</p>
-          <div class="sets"><button class="dot"></button><button class="dot"></button><button class="dot"></button><button class="dot"></button><span class="setcount">0/4</span></div>
-        </article>
+        <div id="exList"></div>
       </section>
 
       <!-- ============ 计划 ============ -->
@@ -627,6 +641,15 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
           <h1>计划 <span class="en">PLAN</span></h1>
           <p class="sub">AI 按你的恢复速度排的，每周自动微调</p>
         </header>
+
+        <div class="listhead"><h2>训练分化</h2><span>AI 推荐 · 可自选</span></div>
+        <div class="card splpick" id="splitPick">
+          <button class="sp" data-n="2"><b>2 天</b><span>全身</span></button>
+          <button class="sp on" data-n="3"><b>3 天</b><span>推拉腿</span><i>推荐</i></button>
+          <button class="sp" data-n="4"><b>4 天</b><span>上下肢</span></button>
+          <button class="sp" data-n="5"><b>5 天</b><span>四分化</span></button>
+          <button class="sp" data-n="6"><b>6 天</b><span>推拉腿×2</span></button>
+        </div>
 
         <div class="card aicard">
           <span class="tag">✦ AI 生成 · 3 天前更新</span>
@@ -665,88 +688,8 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
           <div class="volfoot"><span>合计 <b>71</b> 有效组</span><span>建议区间 60–80</span></div>
         </div>
 
-        <div class="listhead"><h2>本周排布</h2><span>点开看动作</span></div>
-
-        <div class="card" style="padding:4px 16px">
-          <div class="weekday" data-day="push">
-            <div class="wd">周一</div>
-            <div class="wdmain">
-              <h4>推 <span class="en">PUSH</span> <span class="badge">今天</span> <span class="chev"></span></h4>
-              <p>5 动作 · 17 有效组 · 52 分钟</p>
-              <div class="exlist">
-                <div class="exi"><span>平板杠铃卧推</span><span class="grade">S</span><b>4 × 6–8</b></div>
-                <div class="exi"><span>上斜哑铃卧推</span><span class="grade a">A</span><b>3 × 8–10</b></div>
-                <div class="exi"><span>坐姿哑铃推肩</span><span class="grade a">A</span><b>3 × 10</b></div>
-                <div class="exi"><span>绳索下压</span><span class="grade b">B</span><b>3 × 12</b></div>
-                <div class="exi"><span>哑铃侧平举</span><span class="grade b">B</span><b>4 × 15</b></div>
-              </div>
-            </div>
-          </div>
-          <div class="weekday" data-day="pull">
-            <div class="wd">周二</div>
-            <div class="wdmain">
-              <h4>拉 <span class="en">PULL</span> <span class="chev"></span></h4>
-              <p>5 动作 · 16 有效组 · 55 分钟</p>
-              <div class="exlist">
-                <div class="exi"><span>硬拉</span><span class="grade">S</span><b>3 × 5</b></div>
-                <div class="exi"><span>引体向上</span><span class="grade">S</span><b>4 × 力竭-1</b></div>
-                <div class="exi"><span>坐姿绳索划船</span><span class="grade a">A</span><b>3 × 10</b></div>
-                <div class="exi"><span>面拉</span><span class="grade b">B</span><b>3 × 15</b></div>
-                <div class="exi"><span>哑铃弯举</span><span class="grade b">B</span><b>3 × 12</b></div>
-              </div>
-            </div>
-          </div>
-          <div class="weekday" data-day="legs">
-            <div class="wd">周三</div>
-            <div class="wdmain">
-              <h4>腿 <span class="en">LEGS</span> <span class="chev"></span></h4>
-              <p>5 动作 · 17 有效组 · 60 分钟</p>
-              <div class="exlist">
-                <div class="exi"><span>杠铃深蹲</span><span class="grade">S</span><b>4 × 5–6</b></div>
-                <div class="exi"><span>罗马尼亚硬拉</span><span class="grade">S</span><b>3 × 8</b></div>
-                <div class="exi"><span>腿举</span><span class="grade a">A</span><b>3 × 10–12</b></div>
-                <div class="exi"><span>腿弯举</span><span class="grade b">B</span><b>3 × 12</b></div>
-                <div class="exi"><span>站姿提踵</span><span class="grade b">B</span><b>4 × 15</b></div>
-              </div>
-            </div>
-          </div>
-          <div class="weekday rest">
-            <div class="wd">周四</div>
-            <div class="wdmain"><h4>休息 <span class="badge ghost">恢复</span></h4><p>8,000 步 + 拉伸 10 分钟</p></div>
-          </div>
-          <div class="weekday" data-day="push2">
-            <div class="wd">周五</div>
-            <div class="wdmain">
-              <h4>推 <span class="en">PUSH</span> <span class="chev"></span></h4>
-              <p>5 动作 · 17 有效组 · 52 分钟</p>
-              <div class="exlist">
-                <div class="exi"><span>平板杠铃卧推</span><span class="grade">S</span><b>4 × 6–8</b></div>
-                <div class="exi"><span>上斜哑铃卧推</span><span class="grade a">A</span><b>3 × 8–10</b></div>
-                <div class="exi"><span>坐姿哑铃推肩</span><span class="grade a">A</span><b>3 × 10</b></div>
-                <div class="exi"><span>绳索下压</span><span class="grade b">B</span><b>3 × 12</b></div>
-                <div class="exi"><span>哑铃侧平举</span><span class="grade b">B</span><b>4 × 15</b></div>
-              </div>
-            </div>
-          </div>
-          <div class="weekday" data-day="pull2">
-            <div class="wd">周六</div>
-            <div class="wdmain">
-              <h4>拉 <span class="en">PULL</span> <span class="chev"></span></h4>
-              <p>5 动作 · 16 有效组 · 55 分钟</p>
-              <div class="exlist">
-                <div class="exi"><span>硬拉</span><span class="grade">S</span><b>3 × 5</b></div>
-                <div class="exi"><span>引体向上</span><span class="grade">S</span><b>4 × 力竭-1</b></div>
-                <div class="exi"><span>坐姿绳索划船</span><span class="grade a">A</span><b>3 × 10</b></div>
-                <div class="exi"><span>面拉</span><span class="grade b">B</span><b>3 × 15</b></div>
-                <div class="exi"><span>哑铃弯举</span><span class="grade b">B</span><b>3 × 12</b></div>
-              </div>
-            </div>
-          </div>
-          <div class="weekday rest">
-            <div class="wd">周日</div>
-            <div class="wdmain"><h4>休息</h4><p>本周总容量目标 36,000 kg</p></div>
-          </div>
-        </div>
+        <div class="listhead"><h2>本周排布</h2><span id="weekMeta">6 练 · 1 休</span></div>
+        <div class="card" id="weekCard" style="padding:4px 16px"></div>
 
         <button class="cta inline ghost" id="planCta">让 AI 重新规划</button>
       </section>
@@ -832,24 +775,16 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
           <p class="bnote">这四个数字是训练的输入：去脂体重决定起始负荷，体脂率决定盈余幅度，BMI 用来卡减载周。在热量账本里改一次体重，这边下一次排课就跟着变。</p>
         </div>
 
-        <div class="listhead"><h2>训练设置</h2><span>影响 AI 排课</span></div>
+        <div class="listhead"><h2>设置</h2><span>训练 · 外观 · 联动</span></div>
         <div class="card" style="padding:4px 16px">
           <div class="row"><div class="lab">每周训练频率<small>决定分化方式</small></div><div class="val">6 天</div></div>
           <div class="row"><div class="lab">可用器械<small>影响动作库</small></div><div class="val">商业健身房</div></div>
           <div class="row"><div class="lab">训练经验</div><div class="val">1–2 年</div></div>
           <div class="row"><div class="lab">单次时长上限</div><div class="val">60 分钟</div></div>
-        </div>
-
-        <div class="listhead"><h2>外观</h2><span></span></div>
-        <div class="card" style="padding:4px 16px">
           <div class="row" id="iconRow">
             <div class="lab">App 图标<small>Material Symbols Rounded · 与热量账本同一套</small></div>
             <div class="val">可换 4 处</div>
           </div>
-        </div>
-
-        <div class="listhead"><h2>联动</h2><span></span></div>
-        <div class="card" style="padding:4px 16px">
           <div class="row"><div class="lab">与热量账本同步<small>体重 / 盈余 / 训练消耗</small></div><div class="sw"></div></div>
           <div class="row"><div class="lab">Apple 健康<small>心率 / 活动能量</small></div><div class="sw"></div></div>
           <div class="row"><div class="lab">训练提醒<small>当天 18:30</small></div><div class="sw"></div></div>
@@ -944,14 +879,14 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     </div>
 
     <!-- 训练中弹层 -->
-    <div class="sheet" id="trainSheet">
+    <div class="sheet float" id="trainSheet">
       <div class="grab"></div>
-      <div class="timerlab">本次训练</div>
+      <div class="timerlab" id="timerLab">组间休息</div>
       <div class="timer" id="timer">00:00</div>
       <div class="nowex">
-        <div class="t">当前动作</div>
+        <div class="t">下一组</div>
         <div class="n" id="nowName">平板杠铃卧推</div>
-        <div class="m" id="nowMeta">第 1 / 4 组 · 6–8 次 · 80 kg</div>
+        <div class="m" id="nowMeta">第 3 / 4 组 · 6–8 次 · 80 kg</div>
       </div>
       <button class="cta" id="finishSet">完成本组</button>
       <button class="cta ghost" id="endTrain">结束训练</button>
@@ -1034,8 +969,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
       done += n; total += dots.length;
     });
     $('#doneSets').textContent = done;
-    $('#totalSets').textContent = '/ ' + total + ' 组';
-    ringFg.style.strokeDashoffset = C * (1 - (total ? done/total : 0));
+    $('#todayFill').style.width = (total ? (done / total * 100) : 0) + '%';
     var btn = $('#mainCta');
     if (done === total && total > 0){
       btn.textContent = '完成训练 · 记录一下';
@@ -1055,6 +989,150 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
       renderSets();
     }
   });
+
+
+  /* ---------- 动作库 + 分化方案 ---------- */
+  var EX = {
+    push: [
+      {n:'平板杠铃卧推',g:'S',sets:4,rep:'6–8',kg:80,rest:150},
+      {n:'上斜哑铃卧推',g:'A',sets:3,rep:'8–10',kg:28,rest:120},
+      {n:'坐姿哑铃推肩',g:'A',sets:3,rep:'10',kg:20,rest:90},
+      {n:'绳索下压',g:'B',sets:3,rep:'12',kg:25,rest:60},
+      {n:'哑铃侧平举',g:'B',sets:4,rep:'15',kg:10,rest:60}
+    ],
+    pull: [
+      {n:'硬拉',g:'S',sets:3,rep:'5',kg:100,rest:180},
+      {n:'引体向上',g:'S',sets:4,rep:'力竭-1',kg:0,rest:120},
+      {n:'坐姿绳索划船',g:'A',sets:3,rep:'10',kg:50,rest:90},
+      {n:'面拉',g:'B',sets:3,rep:'15',kg:20,rest:60},
+      {n:'哑铃弯举',g:'B',sets:3,rep:'12',kg:12,rest:60}
+    ],
+    legs: [
+      {n:'杠铃深蹲',g:'S',sets:4,rep:'5–6',kg:80,rest:180},
+      {n:'罗马尼亚硬拉',g:'S',sets:3,rep:'8',kg:70,rest:120},
+      {n:'腿举',g:'A',sets:3,rep:'10–12',kg:120,rest:90},
+      {n:'腿弯举',g:'B',sets:3,rep:'12',kg:35,rest:60},
+      {n:'站姿提踵',g:'B',sets:4,rep:'15',kg:60,rest:45}
+    ],
+    upper: [
+      {n:'平板杠铃卧推',g:'S',sets:4,rep:'6–8',kg:80,rest:150},
+      {n:'引体向上',g:'S',sets:4,rep:'力竭-1',kg:0,rest:120},
+      {n:'坐姿哑铃推肩',g:'A',sets:3,rep:'10',kg:20,rest:90},
+      {n:'坐姿绳索划船',g:'A',sets:3,rep:'10',kg:50,rest:90},
+      {n:'哑铃侧平举',g:'B',sets:4,rep:'15',kg:10,rest:60}
+    ],
+    lower: [
+      {n:'杠铃深蹲',g:'S',sets:4,rep:'5–6',kg:80,rest:180},
+      {n:'罗马尼亚硬拉',g:'S',sets:3,rep:'8',kg:70,rest:120},
+      {n:'腿举',g:'A',sets:3,rep:'10–12',kg:120,rest:90},
+      {n:'腿弯举',g:'B',sets:3,rep:'12',kg:35,rest:60},
+      {n:'站姿提踵',g:'B',sets:4,rep:'15',kg:60,rest:45}
+    ],
+    full: [
+      {n:'杠铃深蹲',g:'S',sets:4,rep:'5–6',kg:80,rest:180},
+      {n:'平板杠铃卧推',g:'S',sets:4,rep:'6–8',kg:80,rest:150},
+      {n:'坐姿绳索划船',g:'A',sets:3,rep:'10',kg:50,rest:90},
+      {n:'坐姿哑铃推肩',g:'A',sets:3,rep:'10',kg:20,rest:90},
+      {n:'哑铃侧平举',g:'B',sets:3,rep:'15',kg:10,rest:60}
+    ]
+  };
+
+  var TITLE = {
+    push:['推','PUSH','胸 · 肩 · 三头',52],
+    pull:['拉','PULL','背 · 二头 · 后束',55],
+    legs:['腿','LEGS','股四 · 腘绳 · 小腿',60],
+    upper:['上肢','UPPER','胸 · 背 · 肩',58],
+    lower:['下肢','LOWER','股四 · 臀 · 小腿',60],
+    full:['全身','FULL','全身复合',55]
+  };
+
+  /* 5 档分化；周五固定为「今天」 */
+  var SPLITS = {
+    2:{ label:'全身 · 每周 2 练', desc:'时间少的时候，全身训练比分化更划算 —— 每个肌群每周被刺激 2 次，单次动作全是复合动作。',
+        days:[['周一','full'],['周二','rest'],['周三','rest'],['周四','full'],['周五','rest'],['周六','rest'],['周日','rest']] },
+    3:{ label:'三分化 · 推拉腿', desc:'每周 3 练刚好跑完一轮推拉腿。每个肌群一周 1 次，但单次容量给足，适合时间紧但能练透的人。',
+        days:[['周一','push'],['周二','rest'],['周三','pull'],['周四','rest'],['周五','legs'],['周六','rest'],['周日','rest']] },
+    4:{ label:'上下肢分化 · 每周 4 练', desc:'上肢 / 下肢各 2 次，每个肌群一周被刺激 2 次，是增肌效率与恢复成本之间最稳的平衡点。',
+        days:[['周一','push'],['周二','pull'],['周三','rest'],['周四','legs'],['周五','push'],['周六','rest'],['周日','rest']] },
+    5:{ label:'四分化 · 每周 5 练', desc:'推 / 拉 / 腿各一次，第 4 次补上肢弱项，第 5 次给腿。前三天把大肌群排满，后两天补容量。',
+        days:[['周一','push'],['周二','pull'],['周三','legs'],['周四','rest'],['周五','upper'],['周六','lower'],['周日','rest']] },
+    6:{ label:'三分化 · 推拉腿 ×2', desc:'每周 6 练跑两轮推拉腿，每个肌群一周 2 次、间隔 72 小时。8 周为一个大周期，第 5 周自动减载 30%。',
+        days:[['周一','push'],['周二','pull'],['周三','legs'],['周四','pull'],['周五','push'],['周六','legs'],['周日','rest']] }
+  };
+
+  var todayKey = 'push';
+  var splitDays = 3;
+
+  function totalSets(key){
+    return EX[key].reduce(function(a,e){ return a + e.sets; }, 0);
+  }
+
+  function renderToday(key){
+    todayKey = key;
+    var t = TITLE[key];
+    $('#todayName').textContent = t[0];
+    $('#todayEn').textContent = t[1];
+    $('#todayFocus').textContent = t[2];
+    $('#todayMin').textContent = t[3];
+
+    state.sets = {};
+    var html = '';
+    EX[key].forEach(function(e, i){
+      var dots = '';
+      for (var k = 0; k < e.sets; k++) dots += '<button class="dot"></button>';
+      var load = e.kg ? e.kg + ' kg' : '自重';
+      var gcls = e.g === 'A' ? ' a' : (e.g === 'B' ? ' b' : '');
+      html += '<article class="ex" data-ex="' + key + i + '" data-rest="' + e.rest + '">' +
+        '<div class="exrow"><h3>' + e.n + '<span class="grade' + gcls + '">' + e.g + '</span></h3>' +
+        '<span class="exload">' + load + '</span></div>' +
+        '<p class="exmeta">' + e.sets + ' 组 × ' + e.rep + ' 次 · 休息 ' + e.rest + ' 秒</p>' +
+        '<div class="sets">' + dots + '<span class="setcount">0/' + e.sets + '</span></div>' +
+        '</article>';
+    });
+    $('#exList').innerHTML = html;
+    $('#listMeta').textContent = totalSets(key) + ' 有效组 · 0 垃圾容量';
+    renderSets();
+  }
+
+  function renderWeek(n){
+    var sp = SPLITS[n], html = '', train = 0, rest = 0;
+    sp.days.forEach(function(d){
+      var wd = d[0], key = d[1];
+      if (key === 'rest'){
+        rest++;
+        html += '<div class="weekday rest"><div class="wd">' + wd + '</div>' +
+          '<div class="wdmain"><h4>休息</h4><p>恢复 · 8,000 步 + 拉伸</p></div></div>';
+        return;
+      }
+      train++;
+      var today = (wd === '周五');
+      var acts = EX[key], sets = totalSets(key);
+      var rows = acts.map(function(a){
+        var gcls = a.g === 'A' ? ' a' : (a.g === 'B' ? ' b' : '');
+        return '<div class="exi"><span>' + a.n + '</span><span class="grade' + gcls + '">' + a.g + '</span><b>' + a.sets + ' × ' + a.rep + '</b></div>';
+      }).join('');
+      html += '<div class="weekday" data-day="' + key + '"><div class="wd">' + wd + '</div>' +
+        '<div class="wdmain"><h4>' + TITLE[key][0] + ' <span class="en">' + TITLE[key][1] + '</span>' +
+        (today ? ' <span class="badge">今天</span>' : '') +
+        ' <span class="chev"></span></h4><p>' + acts.length + ' 动作 · ' + sets + ' 有效组</p>' +
+        '<div class="exlist">' + rows + '</div></div></div>';
+    });
+    $('#weekCard').innerHTML = html;
+    $('#weekMeta').textContent = train + ' 练 · ' + rest + ' 休';
+    $$('.weekday[data-day]').forEach(function(w){
+      w.addEventListener('click', function(){ w.classList.toggle('open'); });
+    });
+  }
+
+  function setSplit(n){
+    splitDays = n;
+    $$('#splitPick .sp').forEach(function(b){ b.classList.toggle('on', +b.dataset.n === n); });
+    $('#splitName').textContent = SPLITS[n].label;
+    $('#splitDesc').textContent = SPLITS[n].desc;
+    renderWeek(n);
+    var todayIdx = SPLITS[n].days.filter(function(d){ return d[0] === '周五'; })[0];
+    renderToday(todayIdx[1] === 'rest' ? 'push' : todayIdx[1]);
+  }
 
   /* ---------- Tab 切换 ---------- */
   var order = ['today','plan','log','me'];
@@ -1088,18 +1166,17 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   document.addEventListener('pointerup', function(){ $('#pill').classList.remove('press'); });
   document.addEventListener('pointercancel', function(){ $('#pill').classList.remove('press'); });
 
-  /* ---------- 周排布展开 ---------- */
-  $$('.weekday[data-day]').forEach(function(w){
-    w.addEventListener('click', function(){ w.classList.toggle('open'); });
-  });
-
   /* ---------- CTA ---------- */
   $('#mainCta').addEventListener('click', function(){
     openSheet('#trainSheet');
-    startTimer();
+    prepareTrain();
   });
   $('#planCta').addEventListener('click', function(){
     openSheet('#aiSheet');
+  });
+  $('#splitPick').addEventListener('click', function(e){
+    var b = e.target.closest('.sp');
+    if (b) setSplit(+b.dataset.n);
   });
 
   /* ---------- 弹层 ---------- */
@@ -1201,44 +1278,75 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     setTab('plan');
   });
 
-  /* ---------- 训练计时 ---------- */
-  var sec = 0, timerId = null;
-  function fmt(n){ return (n<10?'0':'') + n; }
-  function tickup(){
-    sec++;
-    $('#timer').textContent = fmt(Math.floor(sec/60)) + ':' + fmt(sec%60);
-  }
-  function startTimer(){
-    if (timerId) return;
-    timerId = setInterval(tickup, 1000);
+  /* ---------- 组间休息倒计时 ---------- */
+  var restLeft = 0, timerId = null;
+
+  function fmt(n){ return (n < 10 ? '0' : '') + n; }
+  function paintRest(){
+    $('#timer').textContent = fmt(Math.floor(restLeft / 60)) + ':' + fmt(restLeft % 60);
   }
   function stopTimer(){ clearInterval(timerId); timerId = null; }
-  $('#endTrain').addEventListener('click', function(){ sec = 0; $('#timer').textContent = '00:00'; closeSheets(); });
+
+  function startRest(sec){
+    stopTimer();
+    restLeft = Math.max(5, sec | 0);
+    $('#timerLab').textContent = '组间休息';
+    paintRest();
+    timerId = setInterval(function(){
+      restLeft--;
+      if (restLeft <= 0){
+        restLeft = 0; paintRest(); stopTimer();
+        $('#timerLab').textContent = '休息结束 · 可以开始了';
+      } else paintRest();
+    }, 1000);
+  }
+
+  function nextEx(){
+    return $$('.ex').filter(function(x){ return !x.classList.contains('done'); })[0];
+  }
+
+  function fillNow(){
+    var ex = nextEx();
+    if (!ex){
+      $('#nowName').textContent = '全部完成';
+      $('#nowMeta').textContent = '今天 17 组已练完';
+      return;
+    }
+    var id = ex.dataset.ex;
+    var arr = state.sets[id] || [];
+    var n = arr.filter(Boolean).length;
+    var total = $$('.dot', ex).length;
+    var name = $('h3', ex).childNodes[0].textContent;
+    $('#nowName').textContent = name;
+    $('#nowMeta').textContent = '第 ' + Math.min(n + 1, total) + ' / ' + total + ' 组 · 休息 ' + ex.dataset.rest + ' 秒';
+  }
+
+  function prepareTrain(){
+    stopTimer(); restLeft = 0;
+    $('#timer').textContent = '00:00';
+    $('#timerLab').textContent = '准备开始';
+    fillNow();
+  }
+
+  $('#endTrain').addEventListener('click', function(){
+    stopTimer(); restLeft = 0;
+    $('#timer').textContent = '00:00';
+    closeSheets();
+  });
 
   $('#finishSet').addEventListener('click', function(){
-    var ex = $$('.ex').filter(function(x){ return !x.classList.contains('done'); })[0];
+    var ex = nextEx();
     if (!ex){ closeSheets(); renderSets(); return; }
     var id = ex.dataset.ex;
     if (!state.sets[id]) state.sets[id] = [];
     var arr = state.sets[id];
+    var total = $$('.dot', ex).length;
     var i = arr.indexOf(false);
-    if (i < 0){ for (var j=0;j<$$('.dot',ex).length;j++){ if(!arr[j]){ i = j; break; } } }
+    if (i < 0){ for (var j = 0; j < total; j++){ if (!arr[j]){ i = j; break; } } }
     if (i >= 0) arr[i] = true;
     renderSets();
-    var done = arr.filter(Boolean).length;
-    var dots = $$('.dot', ex).length;
-    if (done >= dots){
-      var next = $$('.ex').filter(function(x){ return !x.classList.contains('done'); })[0];
-      if (next){
-        $('#nowName').textContent = $('h3', next).textContent;
-        $('#nowMeta').textContent = '第 1 / ' + $$('.dot', next).length + ' 组';
-      } else {
-        $('#nowName').textContent = '全部完成 🎉';
-        $('#nowMeta').textContent = '记得补点蛋白质';
-      }
-    } else {
-      $('#nowMeta').textContent = '第 ' + (done+1) + ' / ' + dots + ' 组';
-    }
+    startRest(+ex.dataset.rest || 90);
+    fillNow();
   });
 
   /* ---------- 热力图 ---------- */
@@ -1272,9 +1380,11 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   window.addEventListener('resize', function(){
     placePill(order.indexOf($('.tab.on') ? $('.tab.on').dataset.tab : 'today'));
   });
+  setSplit(3);
+  // 环 = 本周训练进度（4 / 6 天）
+  ringFg.style.strokeDashoffset = C * (1 - 4 / 6);
   var h = (location.hash || '').replace('#','');
   setTab(order.indexOf(h) > -1 ? h : 'today');
-  renderSets();
 })();
 </script>
 </body>
