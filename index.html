@@ -724,11 +724,12 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   font-size:10px;color:var(--muted2);letter-spacing:.12em}
 .islot{display:flex;align-items:center;gap:12px;padding:10px 0}
 .islot + .islot{border-top:1px solid var(--line)}
-.islab{flex:0 0 96px;font-size:12.5px;color:var(--muted);line-height:1.35}
+.islab{flex:0 0 96px;font-size:12.5px;color:var(--muted);line-height:1.35;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
 .iopts{display:flex;gap:8px;overflow-x:auto;flex:1 1 auto;min-width:0;padding-bottom:2px;
   -webkit-overflow-scrolling:touch;scrollbar-width:none;overscroll-behavior-x:contain}
 .iopts::-webkit-scrollbar{display:none}
 .iopt{
+  -webkit-user-select:none;user-select:none;-webkit-touch-callout:none;-webkit-tap-highlight-color:transparent;
   flex:0 0 auto;width:58px;border:1px solid transparent;border-radius:12px;padding:7px 4px 5px;
   background:rgba(255,255,255,.05);color:var(--muted2);
   text-align:center;cursor:pointer;
@@ -763,7 +764,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
     <div class="statusbg" aria-hidden="true"></div>
     <div class="topbar">
-      <div class="brand">训练<span>账本</span><i class="btag">v5.11</i></div>
+      <div class="brand">训练<span>账本</span><i class="btag">v5.12</i></div>
       <div class="topactions">
         <button class="topbtn topicon" id="reloadTop" aria-label="强制更新" title="强制更新">
           <svg viewBox="0 -960 960 960" aria-hidden="true"><path d="M480-160q-134 0-227-93t-93-227q0-134 93-227t227-93q69 0 132 28.5T720-690v-70q0-17 11.5-28.5T760-800q17 0 28.5 11.5T800-760v200q0 17-11.5 28.5T760-520H560q-17 0-28.5-11.5T520-560q0-17 11.5-28.5T560-600h128q-32-56-87.5-88T480-720q-100 0-170 70t-70 170q0 100 70 170t170 70q68 0 124.5-34.5T692-367q8-14 22.5-19.5t29.5-.5q16 5 23 21t-1 30q-41 80-117 128t-169 48Z"/></svg>
@@ -1077,7 +1078,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     <!-- 设置 -->
     <div class="sheet" id="setSheet">
       <div class="grab"></div>
-      <div class="sh-hd"><h2>设置</h2><span class="vtag">v5.11</span></div>
+      <div class="sh-hd"><h2>设置</h2><span class="vtag">v5.12</span></div>
       <div class="setbody">
         <div class="setlabel">功能</div>
         <div class="setrows">
@@ -1093,7 +1094,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
           <div class="srow" data-ic="bolt"><span class="ico"></span><span class="lbl">与热量账本同步</span><span class="sw"></span></div>
           <div class="srow" data-ic="monitor_heart"><span class="ico"></span><span class="lbl">Apple 健康</span><span class="sw"></span></div>
           <div class="srow" data-ic="assignment"><span class="ico"></span><span class="lbl">训练提醒</span><span class="sw"></span></div>
-          <button class="srow" id="openRel" data-ic="checklist"><span class="ico"></span><span class="lbl">更新记录</span><span class="val">v5.11</span></button>
+          <button class="srow" id="openRel" data-ic="checklist"><span class="ico"></span><span class="lbl">更新记录</span><span class="val">v5.12</span></button>
         </div>
       </div>
     </div>
@@ -1730,7 +1731,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   }
 
   /* ---------- 启动版本比对（同热量账本） ---------- */
-  var APP_VERSION = 'v5.11';
+  var APP_VERSION = 'v5.12';
   fetch('./version.txt?t=' + Date.now(), { cache: 'no-store' })
     .then(function(r){ return r.ok ? r.text() : ''; })
     .then(function(v){
