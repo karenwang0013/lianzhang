@@ -79,11 +79,11 @@ body{
   body{display:block;overscroll-behavior:none;-webkit-overflow-scrolling:auto}
   .phone{position:absolute;inset:0;width:100%;height:100%;border-radius:0;box-shadow:none}
   /* PWA 里 .phone 的高度比屏幕少 ~56px，底部元素改成相对视口固定，才能真的贴到屏幕底 */
-  .dock{position:absolute;left:10px;right:10px;bottom:12px}
+  .dock{position:absolute;left:10px;right:10px;bottom:21px}
   .fade{position:fixed;left:0;right:0;bottom:12px}
   .cta{position:absolute;left:var(--page-pad);right:var(--page-pad);
-       bottom:calc(12px + var(--dock-h) + 14px)}
-  .sheet{position:absolute;left:10px;right:10px;bottom:12px}
+       bottom:calc(21px + var(--dock-h) + 14px)}
+  .sheet{position:absolute;left:10px;right:10px;bottom:21px}
   .screen::after{display:none}
 }
 
@@ -360,7 +360,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 }
 .cta{
   position:absolute;left:var(--page-pad);right:var(--page-pad);
-  bottom:calc(12px + var(--dock-h) + 14px);z-index:18;
+  bottom:calc(21px + var(--dock-h) + 14px);z-index:18;
   padding:16px;border:1px solid transparent;border-radius:18px;
   background:linear-gradient(180deg,#FF2D4A,var(--lime));color:#fff;
   font-size:16px;font-weight:600;letter-spacing:.01em;
@@ -381,7 +381,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 /* ---------- Dock：玻璃 + 52 圆角 + 104 高（实测） ---------- */
 .dock{
   position:absolute;left:10px;right:10px;
-  bottom:12px;z-index:20;
+  bottom:21px;z-index:20;
   height:var(--dock-h);padding:0 12px;
   display:flex;align-items:center;
   border-radius:calc(var(--dock-h) / 2);
@@ -411,7 +411,8 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 }
 .pill.press .pillbody{
   transform:scale(1.055,.925);border-radius:calc((var(--dock-h) - 18px) / 2 + 1px);
-  background:radial-gradient(120% 150% at 50% -25%, rgba(255,255,255,.26), rgba(255,255,255,.086) 55%, rgba(255,255,255,.03) 100%);
+  /* v11.25：按下时那条径向渐变白删掉（用户 2026-11-07 要求「药丸移动/按下时的渐变白效果全部删除」），
+     只保留压扁形变，底色始终是上面那块实色 */
 }
 .tab{
   position:relative;z-index:1;
@@ -588,7 +589,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 /* ---------- 弹层：玻璃 + 46 圆角（实测 #nutSheet） ---------- */
 .sheet{
   position:absolute;left:var(--dock-w);right:var(--dock-w);
-  bottom:12px;top:auto;z-index:41;
+  bottom:21px;top:auto;z-index:41;
   opacity:0;pointer-events:none;
   transform:translateY(102%);
   border-radius:calc(var(--dock-h) / 2);
@@ -722,7 +723,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
     <div class="statusbg" aria-hidden="true"></div>
     <div class="topbar">
-      <div class="brand">练<span>账</span><i class="btag">v3.4</i></div>
+      <div class="brand">练<span>账</span><i class="btag">v3.5</i></div>
       <div class="topactions">
         <button class="topbtn topicon" id="reloadTop" aria-label="强制更新" title="强制更新">
           <svg viewBox="0 -960 960 960" aria-hidden="true"><path d="M480-160q-134 0-227-93t-93-227q0-134 93-227t227-93q69 0 132 28.5T720-690v-70q0-17 11.5-28.5T760-800q17 0 28.5 11.5T800-760v200q0 17-11.5 28.5T760-520H560q-17 0-28.5-11.5T520-560q0-17 11.5-28.5T560-600h128q-32-56-87.5-88T480-720q-100 0-170 70t-70 170q0 100 70 170t170 70q68 0 124.5-34.5T692-367q8-14 22.5-19.5t29.5-.5q16 5 23 21t-1 30q-41 80-117 128t-169 48Z"/></svg>
@@ -1032,7 +1033,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     <!-- 设置 -->
     <div class="sheet" id="setSheet">
       <div class="grab"></div>
-      <div class="sh-hd"><h2>设置</h2><span class="vtag">v3.4</span></div>
+      <div class="sh-hd"><h2>设置</h2><span class="vtag">v3.5</span></div>
       <div class="setbody">
         <div class="setlabel">功能</div>
         <div class="setrows">
@@ -1048,7 +1049,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
           <div class="srow" data-ic="bolt"><span class="ico"></span><span class="lbl">与热量账本同步</span><span class="sw"></span></div>
           <div class="srow" data-ic="monitor_heart"><span class="ico"></span><span class="lbl">Apple 健康</span><span class="sw"></span></div>
           <div class="srow" data-ic="assignment"><span class="ico"></span><span class="lbl">训练提醒</span><span class="sw"></span></div>
-          <button class="srow" id="openRel" data-ic="checklist"><span class="ico"></span><span class="lbl">更新记录</span><span class="val">v3.4</span></button>
+          <button class="srow" id="openRel" data-ic="checklist"><span class="ico"></span><span class="lbl">更新记录</span><span class="val">v3.5</span></button>
         </div>
       </div>
     </div>
@@ -1571,7 +1572,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   }
 
   /* ---------- 启动版本比对（同热量账本） ---------- */
-  var APP_VERSION = 'v3.4';
+  var APP_VERSION = 'v3.5';
   fetch('./version.txt?t=' + Date.now(), { cache: 'no-store' })
     .then(function(r){ return r.ok ? r.text() : ''; })
     .then(function(v){
