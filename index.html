@@ -686,6 +686,15 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 .exrow2:first-child{border-top:0}
 .exrow2 span{color:var(--muted2)}
 .exrow2 b{font-weight:600;font-variant-numeric:tabular-nums}
+.kgstep{display:flex;align-items:center;gap:10px;align-self:center}
+.kgbtn{
+  width:30px;height:30px;border-radius:10px;border:1px solid var(--line);
+  background:rgba(255,255,255,.05);color:var(--text);
+  font-size:15px;font-weight:600;font-family:inherit;line-height:1;
+  display:grid;place-items:center;cursor:pointer;
+  transition:transform .18s cubic-bezier(.2,1.3,.4,1),background .2s;
+}
+.kgbtn:active{transform:scale(.92);background:rgba(255,255,255,.12)}
 .exnote{margin:14px 0 0;padding-top:12px;border-top:1px solid var(--line);
   font-size:11.5px;color:var(--muted2);line-height:1.7}
 
@@ -725,7 +734,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
     <div class="statusbg" aria-hidden="true"></div>
     <div class="topbar">
-      <div class="brand">训练<span>账本</span><i class="btag">v4.11</i></div>
+      <div class="brand">训练<span>账本</span><i class="btag">v4.12</i></div>
       <div class="topactions">
         <button class="topbtn topicon" id="reloadTop" aria-label="强制更新" title="强制更新">
           <svg viewBox="0 -960 960 960" aria-hidden="true"><path d="M480-160q-134 0-227-93t-93-227q0-134 93-227t227-93q69 0 132 28.5T720-690v-70q0-17 11.5-28.5T760-800q17 0 28.5 11.5T800-760v200q0 17-11.5 28.5T760-520H560q-17 0-28.5-11.5T520-560q0-17 11.5-28.5T560-600h128q-32-56-87.5-88T480-720q-100 0-170 70t-70 170q0 100 70 170t170 70q68 0 124.5-34.5T692-367q8-14 22.5-19.5t29.5-.5q16 5 23 21t-1 30q-41 80-117 128t-169 48Z"/></svg>
@@ -779,7 +788,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
             </div>
             <div>
               <div class="k">本周容量</div>
-              <div class="v">12,480<small>kg</small></div>
+              <div class="v" id="weekVol">12,480<small>kg</small></div>
             </div>
             <div>
               <div class="k">连续打卡</div>
@@ -1033,7 +1042,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     <!-- 设置 -->
     <div class="sheet" id="setSheet">
       <div class="grab"></div>
-      <div class="sh-hd"><h2>设置</h2><span class="vtag">v4.11</span></div>
+      <div class="sh-hd"><h2>设置</h2><span class="vtag">v4.12</span></div>
       <div class="setbody">
         <div class="setlabel">功能</div>
         <div class="setrows">
@@ -1049,7 +1058,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
           <div class="srow" data-ic="bolt"><span class="ico"></span><span class="lbl">与热量账本同步</span><span class="sw"></span></div>
           <div class="srow" data-ic="monitor_heart"><span class="ico"></span><span class="lbl">Apple 健康</span><span class="sw"></span></div>
           <div class="srow" data-ic="assignment"><span class="ico"></span><span class="lbl">训练提醒</span><span class="sw"></span></div>
-          <button class="srow" id="openRel" data-ic="checklist"><span class="ico"></span><span class="lbl">更新记录</span><span class="val">v4.11</span></button>
+          <button class="srow" id="openRel" data-ic="checklist"><span class="ico"></span><span class="lbl">更新记录</span><span class="val">v4.12</span></button>
         </div>
       </div>
     </div>
@@ -1061,7 +1070,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
       <div class="exdetail">
         <div class="exrow2"><span>组数</span><b id="exSets">4 组</b></div>
         <div class="exrow2"><span>次数</span><b id="exRep">6–8 次</b></div>
-        <div class="exrow2"><span>重量</span><b id="exKg">80 kg</b></div>
+        <div class="exrow2"><span>重量</span><span class="kgstep"><button class="kgbtn" id="kgDown" aria-label="减重量">−</button><b id="exKg">80 kg</b><button class="kgbtn" id="kgUp" aria-label="加重量">+</button></span></div>
         <div class="exrow2"><span>组间休息</span><b id="exRest">150 秒</b></div>
         <div class="exrow2"><span>今天完成</span><b id="exDone">0 / 4</b></div>
       </div>
@@ -1161,7 +1170,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     $('#todayTotal').textContent = total;
   }
 
-  var curExId = '';
+  var curExId = '', curEx = null;
 
   function paintHere(ex){
     var btn = $('#finishHere');
@@ -1197,7 +1206,8 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     $('#exGrade').textContent = arr.g;
     $('#exSets').textContent = arr.sets + ' 组';
     $('#exRep').textContent = arr.rep + ' 次';
-    $('#exKg').textContent = arr.kg ? arr.kg + ' kg' : '自重';
+    curEx = arr;
+    $('#exKg').textContent = kgOf(arr) ? kgOf(arr) + ' kg' : '自重';
     $('#exRest').textContent = arr.rest + ' 秒';
     $('#exDone').textContent = on + ' / ' + all;
     $('#exNote').textContent = arr.g === 'S'
@@ -1211,6 +1221,21 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     var ex = $('.ex[data-ex="' + curExId + '"]');
     if (ex) completeSet(ex);
   });
+
+  /* 重量自己调：每次 ±2.5kg，存到本地，卡片和「本周容量」一起变 */
+  function stepKg(delta){
+    if (!curEx) return;
+    var v = Math.round((kgOf(curEx) + delta) * 10) / 10;
+    if (v < 0) v = 0;
+    store.weights[curEx.n] = v;
+    saveStore();
+    $('#exKg').textContent = v ? v + ' kg' : '自重';
+    var loadEl = $('.ex[data-ex="' + curExId + '"] .exload');
+    if (loadEl) loadEl.textContent = v ? v + ' kg' : '自重';
+    paintWeekVol();
+  }
+  $('#kgUp').addEventListener('click', function(e){ e.stopPropagation(); stepKg(2.5); });
+  $('#kgDown').addEventListener('click', function(e){ e.stopPropagation(); stepKg(-2.5); });
 
   document.addEventListener('click', function(e){
     var dot = e.target.closest('.dot');
@@ -1297,6 +1322,34 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
         days:[['周一','push'],['周二','pull'],['周三','legs'],['周四','pull'],['周五','push'],['周六','legs'],['周日','rest']] }
   };
 
+  /* ---------- 本地数据：动作重量（用户自己改，刷新不丢） ---------- */
+  var LSK = 'lz.v1';
+  var store = { weights: {} };
+  try { var rawLS = localStorage.getItem(LSK); if (rawLS){ var o = JSON.parse(rawLS); if (o && o.weights) store = o; } } catch(e){}
+  if (!store.weights) store.weights = {};
+  function saveStore(){ try { localStorage.setItem(LSK, JSON.stringify(store)); } catch(e){} }
+  /* 重量按动作名存，这样同一动作在「推」「上肢」两个方案里共用一个重量 */
+  function kgOf(ex){ var w = store.weights[ex.n]; return (w == null ? ex.kg : w); }
+  function repMid(rep){
+    var m = String(rep).match(/(\d+(?:\.\d+)?)\s*[–\-~]\s*(\d+(?:\.\d+)?)/);
+    if (m) return (parseFloat(m[1]) + parseFloat(m[2])) / 2;
+    var n = String(rep).match(/\d+(?:\.\d+)?/);
+    return n ? parseFloat(n[0]) : 0;
+  }
+  /* 本周容量 = 本周排的所有有效组 × 每组次数 × 当前重量（重量一改，这个数立刻跟着变） */
+  function weekVolume(){
+    var v = 0;
+    SPLITS[splitDays].days.forEach(function(d){
+      if (d[1] === 'rest') return;
+      EX[d[1]].forEach(function(e){ v += e.sets * repMid(e.rep) * kgOf(e); });
+    });
+    return Math.round(v);
+  }
+  function paintWeekVol(){
+    var el = $('#weekVol');
+    if (el) el.innerHTML = weekVolume().toLocaleString('en-US') + '<small>kg</small>';
+  }
+
   var todayKey = 'push';
   var splitDays = 3;
 
@@ -1316,7 +1369,8 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     EX[key].forEach(function(e, i){
       var dots = '';
       for (var k = 0; k < e.sets; k++) dots += '<button class="dot"></button>';
-      var load = e.kg ? e.kg + ' kg' : '自重';
+      var ekg = kgOf(e);
+      var load = ekg ? ekg + ' kg' : '自重';
       var gcls = e.g === 'A' ? ' a' : (e.g === 'B' ? ' b' : '');
       html += '<article class="ex" data-ex="' + key + i + '" data-rest="' + e.rest + '">' +
         '<div class="exrow"><h3>' + e.n + '<span class="grade' + gcls + '">' + e.g + '</span></h3>' +
@@ -1576,7 +1630,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   }
 
   /* ---------- 启动版本比对（同热量账本） ---------- */
-  var APP_VERSION = 'v4.11';
+  var APP_VERSION = 'v4.12';
   fetch('./version.txt?t=' + Date.now(), { cache: 'no-store' })
     .then(function(r){ return r.ok ? r.text() : ''; })
     .then(function(v){
@@ -1680,6 +1734,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   })();
   if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
   setSplit(3);
+  paintWeekVol();
   // 环 = 本周训练进度（4 / 6 天）
   ringFg.style.strokeDashoffset = C * (1 - 4 / 6);
   ringRim.style.strokeDashoffset = C * (1 - 4 / 6);
