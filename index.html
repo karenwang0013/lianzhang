@@ -707,20 +707,30 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 .relitem ul{margin:7px 0 0;padding-left:16px;font-size:11.5px;color:var(--muted);line-height:1.75}
 .relitem li{margin-bottom:2px}
 
-/* 图标选择 */
-.islot{display:flex;align-items:flex-start;gap:12px;padding:13px 0}
+/* 图标选择：照热量账本那套 —— 左边一列标签，右边一条能横向滑的图标瓷砖，瓷砖里图标在上、名字在下 */
+.islot{display:flex;align-items:center;gap:12px;padding:10px 0}
 .islot + .islot{border-top:1px solid var(--line)}
-.islab{width:36px;flex:none;font-size:11px;color:var(--muted2);letter-spacing:.04em}
-.iopts{display:flex;flex-wrap:wrap;gap:8px;flex:1}
+.islab{flex:0 0 96px;font-size:12.5px;color:var(--muted);line-height:1.35}
+.iopts{display:flex;gap:8px;overflow-x:auto;flex:1 1 auto;min-width:0;padding-bottom:2px;
+  -webkit-overflow-scrolling:touch;scrollbar-width:none}
+.iopts::-webkit-scrollbar{display:none}
 .iopt{
-  width:46px;height:46px;border-radius:14px;flex:none;
-  border:1px solid var(--line);background:rgba(255,255,255,.05);
-  color:var(--muted);display:grid;place-items:center;cursor:pointer;
-  transition:background .2s,border-color .2s,color .2s,transform .18s cubic-bezier(.2,1.3,.4,1),filter .18s ease;
+  flex:0 0 auto;width:58px;border:1px solid transparent;border-radius:12px;padding:7px 4px 5px;
+  background:rgba(255,255,255,.05);color:var(--muted2);
+  text-align:center;cursor:pointer;
+  transition:background .2s,border-color .2s,color .2s,transform .18s cubic-bezier(.2,1.3,.4,1);
 }
-.iopt svg{width:24px;height:24px;fill:currentColor}
-.iopt:active{transform:scale(.96);filter:brightness(1.1) saturate(1.06)}
+.iopt svg{width:22px;height:22px;fill:currentColor;display:block;margin:0 auto}
+.iopt span{display:block;font-size:9px;margin-top:3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.iopt:active{transform:scale(.96)}
 .iopt.on{background:rgba(228,0,43,.12);border-color:rgba(228,0,43,.42);color:var(--lime)}
+.icreset{
+  margin:12px 0 2px;width:100%;height:40px;border-radius:14px;
+  border:1px solid var(--line);background:rgba(255,255,255,.04);
+  color:var(--muted);font-size:12.5px;font-family:inherit;cursor:pointer;
+  transition:transform .18s cubic-bezier(.2,1.3,.4,1),background .2s;
+}
+.icreset:active{transform:scale(.98);background:rgba(255,255,255,.08)}
 .iconnote{
   font-size:10.5px;color:var(--muted2);line-height:1.7;
   padding:13px 0 4px;border-top:1px solid var(--line);margin-top:6px;
@@ -734,7 +744,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
     <div class="statusbg" aria-hidden="true"></div>
     <div class="topbar">
-      <div class="brand">训练<span>账本</span><i class="btag">v4.12</i></div>
+      <div class="brand">训练<span>账本</span><i class="btag">v4.13</i></div>
       <div class="topactions">
         <button class="topbtn topicon" id="reloadTop" aria-label="强制更新" title="强制更新">
           <svg viewBox="0 -960 960 960" aria-hidden="true"><path d="M480-160q-134 0-227-93t-93-227q0-134 93-227t227-93q69 0 132 28.5T720-690v-70q0-17 11.5-28.5T760-800q17 0 28.5 11.5T800-760v200q0 17-11.5 28.5T760-520H560q-17 0-28.5-11.5T520-560q0-17 11.5-28.5T560-600h128q-32-56-87.5-88T480-720q-100 0-170 70t-70 170q0 100 70 170t170 70q68 0 124.5-34.5T692-367q8-14 22.5-19.5t29.5-.5q16 5 23 21t-1 30q-41 80-117 128t-169 48Z"/></svg>
@@ -1042,7 +1052,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     <!-- 设置 -->
     <div class="sheet" id="setSheet">
       <div class="grab"></div>
-      <div class="sh-hd"><h2>设置</h2><span class="vtag">v4.12</span></div>
+      <div class="sh-hd"><h2>设置</h2><span class="vtag">v4.13</span></div>
       <div class="setbody">
         <div class="setlabel">功能</div>
         <div class="setrows">
@@ -1058,7 +1068,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
           <div class="srow" data-ic="bolt"><span class="ico"></span><span class="lbl">与热量账本同步</span><span class="sw"></span></div>
           <div class="srow" data-ic="monitor_heart"><span class="ico"></span><span class="lbl">Apple 健康</span><span class="sw"></span></div>
           <div class="srow" data-ic="assignment"><span class="ico"></span><span class="lbl">训练提醒</span><span class="sw"></span></div>
-          <button class="srow" id="openRel" data-ic="checklist"><span class="ico"></span><span class="lbl">更新记录</span><span class="val">v4.12</span></button>
+          <button class="srow" id="openRel" data-ic="checklist"><span class="ico"></span><span class="lbl">更新记录</span><span class="val">v4.13</span></button>
         </div>
       </div>
     </div>
@@ -1089,8 +1099,9 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     <div class="sheet" id="iconSheet">
       <div class="grab"></div>
       <h2>图标</h2>
-      <p class="hint">Material Symbols Rounded 实心。点一个换一个位置，和热量账本用的是同一个图标库。</p>
+      <p class="hint">点一下立刻替换；排在第一格的是你正在用的那个。每栏先给几个对得上这栏意思的，后面才是别的。</p>
       <div id="iconSlots"></div>
+      <button class="icreset" id="iconReset">恢复全部默认</button>
       <div class="iconnote">跟热量账本一样的规矩：某个功能下线时，这里对应的候选也要一起删掉，不留一个点了没反应的死图标。</div>
       <button class="cta" id="iconDone" style="margin-top:14px">完成</button>
     </div>
@@ -1112,9 +1123,26 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     { key:'log',   label:'记录', opts:['bar_chart','monitoring','timeline'] },
     { key:'me',    label:'我的', opts:['person','account_circle','badge','monitor_heart'] }
   ];
-  /* 每个位置都能从整库挑（原来每个位置只给 3~4 个候选，用户 2026-11-07 要求全部可选） */
+  /* 每个位置：先放「对得上这一栏意思」的，再把整库剩下的接在后面 —— 既能全选，又不会四栏长得一模一样 */
+  var ICON_LABELS = {
+    fitness_center:'杠铃', sports_gymnastics:'体操', bolt:'闪电', today:'今日',
+    event_note:'计划', calendar_month:'日历', assignment:'任务', checklist:'清单',
+    bar_chart:'柱图', monitoring:'曲线', timeline:'时间线', person:'人像',
+    account_circle:'头像', badge:'证件', monitor_heart:'心率', settings:'设置',
+    palette:'调色', auto_awesome:'闪光'
+  };
+  var SLOT_FIRST = {
+    today:['today','bolt','fitness_center','sports_gymnastics','monitor_heart','timeline'],
+    plan:['event_note','calendar_month','checklist','assignment','today','timeline'],
+    log:['bar_chart','monitoring','timeline','checklist','calendar_month'],
+    me:['person','account_circle','badge','monitor_heart','settings','palette','auto_awesome','fitness_center']
+  };
   var ALL_ICON_NAMES = Object.keys(ICONS);
-  SLOTS.forEach(function(s){ s.opts = ALL_ICON_NAMES; });
+  SLOTS.forEach(function(s){
+    var first = (SLOT_FIRST[s.key] || []).filter(function(n){ return ICONS[n]; });
+    s.opts = first.concat(ALL_ICON_NAMES.filter(function(n){ return first.indexOf(n) < 0; }));
+  });
+  var ICON_DEFAULTS = { today:'fitness_center', plan:'event_note', log:'bar_chart', me:'person' };
   var chosen = { today:'fitness_center', plan:'event_note', log:'bar_chart', me:'person' };
 
   function paintTab(key){
@@ -1126,11 +1154,15 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
   function renderIconSheet(){
     $('#iconSlots').innerHTML = SLOTS.map(function(s){
+      var cur = chosen[s.key];
+      var order = [cur].concat(s.opts.filter(function(n){ return n !== cur; }));
       return '<div class="islot"><div class="islab">' + s.label + '</div><div class="iopts">' +
-        s.opts.map(function(n){
-          return '<button class="iopt' + (chosen[s.key] === n ? ' on' : '') +
-            '" data-slot="' + s.key + '" data-name="' + n + '">' +
-            '<svg viewBox="0 -960 960 960"><path d="' + (ICONS[n] || '') + '"/></svg></button>';
+        order.map(function(n){
+          var label = ICON_LABELS[n] || n;
+          return '<button class="iopt' + (cur === n ? ' on' : '') +
+            '" data-slot="' + s.key + '" data-name="' + n + '" title="' + label + '">' +
+            '<svg viewBox="0 -960 960 960"><path d="' + (ICONS[n] || '') + '"/></svg>' +
+            '<span>' + label + '</span></button>';
         }).join('') +
         '</div></div>';
     }).join('');
@@ -1630,7 +1662,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   }
 
   /* ---------- 启动版本比对（同热量账本） ---------- */
-  var APP_VERSION = 'v4.12';
+  var APP_VERSION = 'v4.13';
   fetch('./version.txt?t=' + Date.now(), { cache: 'no-store' })
     .then(function(r){ return r.ok ? r.text() : ''; })
     .then(function(v){
@@ -1712,6 +1744,11 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     openSheet('#iconSheet');
   });
   $('#iconDone').addEventListener('click', closeSheets);
+  $('#iconReset').addEventListener('click', function(){
+    Object.keys(ICON_DEFAULTS).forEach(function(k){ chosen[k] = ICON_DEFAULTS[k]; });
+    SLOTS.forEach(function(s){ paintTab(s.key); });
+    renderIconSheet();
+  });
   $('#iconSlots').addEventListener('click', function(e){
     var b = e.target.closest('.iopt');
     if (!b) return;
