@@ -646,13 +646,6 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 .nowex .m{font-size:11.5px;color:var(--muted);margin-top:5px}
 .sheet .cta+.cta{margin-top:9px}
 
-/* 人体部位图（参考 Muscle Booster：灰色人体 + 高亮目标肌群） */
-.bodymap{display:flex;justify-content:center;padding:6px 0 2px}
-.bodymap svg{width:132px;height:auto}
-.bodymap .mm{fill:#3a3f45;transition:fill .2s}
-.bodymap .mm.on{fill:var(--lime)}
-.bodymap .ml{display:block;text-align:center;font-size:10.5px;color:var(--muted2);margin-top:4px}
-
 /* 动作详情 */
 .sheet#exSheet{max-height:calc(100% - 150px);overflow-y:auto}
 .exdetail{display:flex;flex-direction:column;margin-top:8px}
@@ -700,7 +693,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
     <div class="statusbg" aria-hidden="true"></div>
     <div class="topbar">
-      <div class="brand">练<span>账</span><i class="btag">v1.0</i></div>
+      <div class="brand">练<span>账</span><i class="btag">v1.1</i></div>
       <div class="topactions">
         <button class="topbtn topicon" id="reloadTop" aria-label="强制更新" title="强制更新">
           <svg viewBox="0 -960 960 960" aria-hidden="true"><path d="M480-160q-134 0-227-93t-93-227q0-134 93-227t227-93q69 0 132 28.5T720-690v-70q0-17 11.5-28.5T760-800q17 0 28.5 11.5T800-760v200q0 17-11.5 28.5T760-520H560q-17 0-28.5-11.5T520-560q0-17 11.5-28.5T560-600h128q-32-56-87.5-88T480-720q-100 0-170 70t-70 170q0 100 70 170t170 70q68 0 124.5-34.5T692-367q8-14 22.5-19.5t29.5-.5q16 5 23 21t-1 30q-41 80-117 128t-169 48Z"/></svg>
@@ -1027,7 +1020,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     <!-- 设置 -->
     <div class="sheet" id="setSheet">
       <div class="grab"></div>
-      <div class="sh-hd"><h2>设置</h2><span class="vtag">v1.0</span></div>
+      <div class="sh-hd"><h2>设置</h2><span class="vtag">v1.1</span></div>
       <div class="setbody">
         <div class="setlabel">功能</div>
         <div class="setrows">
@@ -1043,7 +1036,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
           <div class="srow" data-ic="bolt"><span class="ico"></span><span class="lbl">与热量账本同步</span><span class="sw"></span></div>
           <div class="srow" data-ic="monitor_heart"><span class="ico"></span><span class="lbl">Apple 健康</span><span class="sw"></span></div>
           <div class="srow" data-ic="assignment"><span class="ico"></span><span class="lbl">训练提醒</span><span class="sw"></span></div>
-          <button class="srow" id="openRel" data-ic="checklist"><span class="ico"></span><span class="lbl">更新记录</span><span class="val">v1.0</span></button>
+          <button class="srow" id="openRel" data-ic="checklist"><span class="ico"></span><span class="lbl">更新记录</span><span class="val">v1.1</span></button>
         </div>
       </div>
     </div>
@@ -1052,7 +1045,6 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     <div class="sheet center" id="exSheet">
       <div class="grab"></div>
       <div class="sh-hd"><h2 id="exName">平板杠铃卧推</h2><span class="vtag" id="exGrade">S</span></div>
-      <div class="bodymap" id="exBody"></div>
       <div class="exdetail">
         <div class="exrow2"><span>组数</span><b id="exSets">4 组</b></div>
         <div class="exrow2"><span>次数</span><b id="exRep">6–8 次</b></div>
@@ -1156,55 +1148,6 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     }
   }
 
-  var MUSCLE_CN = {
-    chest:'胸大肌', shoulder:'三角肌', triceps:'肱三头肌', biceps:'肱二头肌',
-    back:'背阔肌', quads:'股四头肌', hamstring:'腘绳肌', calves:'小腿'
-  };
-  var BACK_PARTS = ['back','triceps','hamstring'];
-
-  function bodySVG(part){
-    var back = BACK_PARTS.indexOf(part) > -1;
-    var cls = function(k){ return 'mm' + (part === k ? ' on' : ''); };
-    var svg = '';
-    if (!back){
-      svg =
-        '<circle class="mm" cx="60" cy="19" r="10"/>' +
-        '<rect class="mm" x="55" y="31" width="10" height="7" rx="2"/>' +
-        '<circle class="' + cls('shoulder') + '" cx="40" cy="47" r="8"/>' +
-        '<circle class="' + cls('shoulder') + '" cx="80" cy="47" r="8"/>' +
-        '<rect class="' + cls('chest') + '" x="43" y="46" width="34" height="25" rx="9"/>' +
-        '<rect class="' + cls('abs') + '" x="47" y="73" width="26" height="22" rx="8"/>' +
-        '<rect class="' + cls('biceps') + '" x="29" y="55" width="10" height="30" rx="5"/>' +
-        '<rect class="' + cls('biceps') + '" x="81" y="55" width="10" height="30" rx="5"/>' +
-        '<rect class="mm" x="30" y="87" width="8" height="26" rx="4"/>' +
-        '<rect class="mm" x="82" y="87" width="8" height="26" rx="4"/>' +
-        '<rect class="mm" x="44" y="95" width="32" height="14" rx="6"/>' +
-        '<rect class="' + cls('quads') + '" x="45" y="109" width="13" height="44" rx="6"/>' +
-        '<rect class="' + cls('quads') + '" x="62" y="109" width="13" height="44" rx="6"/>' +
-        '<rect class="' + cls('calves') + '" x="46" y="155" width="11" height="34" rx="5"/>' +
-        '<rect class="' + cls('calves') + '" x="63" y="155" width="11" height="34" rx="5"/>';
-    } else {
-      svg =
-        '<circle class="mm" cx="60" cy="19" r="10"/>' +
-        '<rect class="mm" x="55" y="31" width="10" height="7" rx="2"/>' +
-        '<circle class="mm" cx="40" cy="47" r="8"/>' +
-        '<circle class="mm" cx="80" cy="47" r="8"/>' +
-        '<rect class="' + cls('back') + '" x="43" y="44" width="34" height="36" rx="9"/>' +
-        '<rect class="' + cls('triceps') + '" x="29" y="55" width="10" height="30" rx="5"/>' +
-        '<rect class="' + cls('triceps') + '" x="81" y="55" width="10" height="30" rx="5"/>' +
-        '<rect class="mm" x="30" y="87" width="8" height="26" rx="4"/>' +
-        '<rect class="mm" x="82" y="87" width="8" height="26" rx="4"/>' +
-        '<rect class="mm" x="44" y="81" width="32" height="14" rx="6"/>' +
-        '<rect class="mm" x="44" y="96" width="32" height="13" rx="6"/>' +
-        '<rect class="' + cls('hamstring') + '" x="45" y="111" width="13" height="42" rx="6"/>' +
-        '<rect class="' + cls('hamstring') + '" x="62" y="111" width="13" height="42" rx="6"/>' +
-        '<rect class="mm" x="46" y="155" width="11" height="34" rx="5"/>' +
-        '<rect class="mm" x="63" y="155" width="11" height="34" rx="5"/>';
-    }
-    return '<div><svg viewBox="0 0 120 200">' + svg + '</svg>' +
-      '<span class="ml">主要练：' + (MUSCLE_CN[part] || '全身') + (back ? ' · 背面' : ' · 正面') + '</span></div>';
-  }
-
   function openEx(card){
     var id = card.dataset.ex || '';
     var key = id.replace(/[0-9]+$/, '');
@@ -1220,7 +1163,6 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     $('#exKg').textContent = arr.kg ? arr.kg + ' kg' : '自重';
     $('#exRest').textContent = arr.rest + ' 秒';
     $('#exDone').textContent = on + ' / ' + all;
-    $('#exBody').innerHTML = bodySVG(arr.m || 'chest');
     $('#exNote').textContent = arr.g === 'S'
       ? '复合动作，排在第一个做。重量以能留 1–2 次余力为准。'
       : (arr.g === 'A' ? '辅助动作，补目标肌群的容量。' : '收尾动作，控制节奏，别甩重量。');
@@ -1666,7 +1608,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   }
 
   /* ---------- 启动版本比对（同热量账本） ---------- */
-  var APP_VERSION = 'v1.0';
+  var APP_VERSION = 'v1.1';
   fetch('./version.txt?t=' + Date.now(), { cache: 'no-store' })
     .then(function(r){ return r.ok ? r.text() : ''; })
     .then(function(v){
@@ -1688,6 +1630,9 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
   /* ---------- 更新记录 ---------- */
   var RELEASES = [
+    { v:'v1.1', d:'11-07', items:[
+      '去掉动作详情里的人体示意图（简版人形达不到写实解剖的清晰度，按决定移除）'
+    ]},
     { v:'v1.0', d:'11-07', items:[
       '动作详情卡加人体部位图（参考 Muscle Booster）：灰色人体 + 高亮目标肌群，正/背面自动切换',
       '每个动作标注主要练的肌群（胸/肩/三头/二头/背/股四/腘绳/小腿）'
