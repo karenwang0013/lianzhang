@@ -2,10 +2,10 @@
 <html lang="zh-CN">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,maximum-scale=1,user-scalable=no">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <meta name="theme-color" content="#08090a">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
 <meta name="apple-mobile-web-app-title" content="练账">
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" type="image/png" href="./icon-192.png">
@@ -126,8 +126,8 @@ body{
   display:flex;align-items:center;justify-content:space-between;
   background:#0d0f0e;
 }
-.statusbg{position:absolute;top:0;left:0;right:0;height:var(--safe-t);
-  background:#0d0f0e;z-index:29;pointer-events:none}
+.statusbg{position:fixed;top:0;left:0;right:0;height:var(--safe-t);
+  background:#0d0f0e;z-index:25;pointer-events:none}
 .brand{font-size:20px;font-weight:650;letter-spacing:.2px;display:flex;align-items:baseline;color:var(--text)}
 .brand span{color:var(--lime)}
 .brand .btag{font-style:normal;font-size:10px;font-weight:500;color:var(--muted2);margin-left:6px;letter-spacing:normal}
@@ -1609,7 +1609,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   }
 
   /* ---------- 启动版本比对（同热量账本） ---------- */
-  var APP_VERSION = 'v2.9';
+  var APP_VERSION = 'v3.0';
   fetch('./version.txt?t=' + Date.now(), { cache: 'no-store' })
     .then(function(r){ return r.ok ? r.text() : ''; })
     .then(function(v){
