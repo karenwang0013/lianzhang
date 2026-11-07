@@ -84,7 +84,7 @@ body{
   .fade{position:fixed;left:0;right:0;bottom:12px}
   .cta{position:fixed;left:var(--page-pad);right:var(--page-pad);
        bottom:calc(18px + var(--dock-h) + 12px)}
-  .sheet{position:fixed;left:10px;right:10px;bottom:-35px}
+  .sheet{position:fixed;left:10px;right:10px;bottom:10px}
   .screen::after{display:none}
 }
 
@@ -606,7 +606,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 /* ---------- 弹层：玻璃 + 46 圆角（实测 #nutSheet） ---------- */
 .sheet{
   position:absolute;left:var(--dock-w);right:var(--dock-w);
-  bottom:-35px;top:auto;z-index:41;
+  bottom:10px;top:auto;z-index:41;
   opacity:0;pointer-events:none;
   transform:translateY(102%);
   border-radius:calc(var(--dock-h) / 2);
@@ -760,6 +760,8 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 #backupSheet .hint{padding:0}
 #backupSheet .cta{position:static;width:100%;margin-top:12px;padding:15px}
 #backupSheet .bnote{margin-top:14px;font-size:11.5px;color:var(--muted2);line-height:1.7;text-align:center}
+#backupSheet .snapbox{margin-top:16px;padding-top:13px;border-top:1px solid var(--line)}
+#backupSheet .snapinfo{font-size:11.5px;color:var(--muted2);line-height:1.7;text-align:center}
 .iconnote{
   font-size:10.5px;color:var(--muted2);line-height:1.7;
   padding:13px 0 4px;border-top:1px solid var(--line);margin-top:6px;
@@ -773,7 +775,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
     <div class="statusbg" aria-hidden="true"></div>
     <div class="topbar">
-      <div class="brand">训练<span>账本</span><i class="btag">v5.15</i></div>
+      <div class="brand">训练<span>账本</span><i class="btag">v5.16</i></div>
       <div class="topactions">
         <button class="topbtn topicon" id="reloadTop" aria-label="强制更新" title="强制更新">
           <svg viewBox="0 -960 960 960" aria-hidden="true"><path d="M480-160q-134 0-227-93t-93-227q0-134 93-227t227-93q69 0 132 28.5T720-690v-70q0-17 11.5-28.5T760-800q17 0 28.5 11.5T800-760v200q0 17-11.5 28.5T760-520H560q-17 0-28.5-11.5T520-560q0-17 11.5-28.5T560-600h128q-32-56-87.5-88T480-720q-100 0-170 70t-70 170q0 100 70 170t170 70q68 0 124.5-34.5T692-367q8-14 22.5-19.5t29.5-.5q16 5 23 21t-1 30q-41 80-117 128t-169 48Z"/></svg>
@@ -1085,7 +1087,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     <!-- 设置 -->
     <div class="sheet" id="setSheet">
       <div class="grab"></div>
-      <div class="sh-hd"><h2>设置</h2><span class="vtag">v5.15</span></div>
+      <div class="sh-hd"><h2>设置</h2><span class="vtag">v5.16</span></div>
       <div class="setbody">
         <div class="setlabel">训练设置</div>
         <div class="setrows">
@@ -1102,7 +1104,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
           <div class="srow" data-ic="monitor_heart"><span class="ico"></span><span class="lbl">Apple 健康</span><span class="sw"></span></div>
           <div class="srow" data-ic="assignment"><span class="ico"></span><span class="lbl">训练提醒</span><span class="sw"></span></div>
           <button class="srow" id="openBackup" data-ic="cloud_done"><span class="ico"></span><span class="lbl">数据备份</span><span class="val" id="backupVal">iCloud</span></button>
-          <button class="srow" id="openRel" data-ic="checklist"><span class="ico"></span><span class="lbl">更新记录</span><span class="val">v5.15</span></button>
+          <button class="srow" id="openRel" data-ic="checklist"><span class="ico"></span><span class="lbl">更新记录</span><span class="val">v5.16</span></button>
         </div>
       </div>
     </div>
@@ -1134,11 +1136,15 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     <div class="sheet" id="backupSheet">
       <div class="grab"></div>
       <div class="sh-hd"><h2>数据备份</h2><span class="vtag">iCloud</span></div>
-      <p class="hint">自动同步没有，这里只有手动备份：备份文件走系统分享面板，选「存储到文件」就进了 iCloud Drive；也可以 AirDrop 给另一台。<br>卸载 / 重新添加主屏幕 App 会清空这台设备上的训练记录，卸载前先备份。</p>
+      <p class="hint">iCloud 只能手动点「备份文件」存过去 —— 网页 App 拿不到自动写 iCloud 的权限（Apple 只给原生 App）。手机上自己每小时留一份快照（保留最近 7 天），误删可以用下面的回滚。<br>卸载 / 重新添加主屏幕 App 会清空这台设备上的训练记录，卸载前先备份。</p>
       <button class="cta" id="backupNow">备份文件</button>
       <button class="cta ghost" id="backupRestore" style="margin-top:10px">从文件恢复</button>
       <input type="file" id="backupFile" accept="application/json,.json" hidden>
       <div class="bnote" id="backupAt">还没有备份过</div>
+      <div class="snapbox">
+        <div class="snapinfo" id="snapInfo">自动快照：还没有</div>
+        <button class="cta ghost" id="snapRestore" style="margin-top:10px">回滚到最近自动快照</button>
+      </div>
     </div>
 
     <!-- 图标选择弹层 -->
@@ -1439,7 +1445,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   try { var rawLS = localStorage.getItem(LSK); if (rawLS){ var o = JSON.parse(rawLS); if (o && o.weights) store = o; } } catch(e){}
   if (!store.weights) store.weights = {};
   if (store.icons) Object.keys(store.icons).forEach(function(k){ if (k in ICON_DEFAULTS) chosen[k] = store.icons[k]; });
-  function saveStore(){ try { localStorage.setItem(LSK, JSON.stringify(store)); } catch(e){} }
+  function saveStore(){ try { localStorage.setItem(LSK, JSON.stringify(store)); } catch(e){} try { autoSnap(); } catch(e){} }
   /* 重量按动作名存，这样同一动作在「推」「上肢」两个方案里共用一个重量 */
   function kgOf(ex){ var w = store.weights[ex.n]; return (w == null ? ex.kg : w); }
   function repMid(rep){
@@ -1750,7 +1756,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   }
 
   /* ---------- 启动版本比对（同热量账本） ---------- */
-  var APP_VERSION = 'v5.15';
+  var APP_VERSION = 'v5.16';
   fetch('./version.txt?t=' + Date.now(), { cache: 'no-store' })
     .then(function(r){ return r.ok ? r.text() : ''; })
     .then(function(v){
@@ -1772,15 +1778,19 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
   /* ---------- 更新记录 ---------- */
   var RELEASES = [
-    { v:'v5.15', d:'11-07', items:[
+    { v:'v5.16', d:'11-07', items:[
+      '底部弹出卡片离屏幕底改回 10pt（原来 -35pt，卡片下边缘被屏幕吃掉，看不出间隙）',
+      '数据备份新增「自动快照」：手机上每小时自动留一份、保留最近 7 天、可一键回滚（iCloud 只能手动导出，网页 App 没有自动写 iCloud 的权限）'
+    ]},
+    { v:'v5.16', d:'11-07', items:[
       '图标弹层上半部分也加了组标题「底部页签」，跟下面的「设置页」对齐；组标题也加粗提亮'
     ]},
-    { v:'v5.15', d:'11-07', items:[
+    { v:'v5.16', d:'11-07', items:[
       '设置页分组标签加大加亮，组与组之间加分隔线；分组名改成「训练设置」「应用与数据」',
       '计划页去掉抬头那句说明和一大段 AI 说明文字，改成一行摘要（训练日 / 休息日 / 减载周 / 本周计划与实际）',
       '记录页去掉抬头那句口号和「有记录才算」小字'
     ]},
-    { v:'v5.15', d:'11-07', items:[
+    { v:'v5.16', d:'11-07', items:[
       '设置里新增「数据备份」：备份文件走系统分享面板，可直接存进 iCloud Drive（或 AirDrop），文件名「训练账本备份-日期.json」',
       '新增「从文件恢复」：选备份文件后恢复训练记录、动作重量、图标选择；不是训练账本的备份文件会被明确拒绝',
       '做法照热量账本：只在手动点的时候备份，不自动上传；恢复后自动重载一次页面'
@@ -1850,12 +1860,46 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
       data: { logs: store.logs || [], weights: store.weights || {}, icons: store.icons || {} }
     }, null, 2);
   }
+  /* 自动快照：每小时最多写一份，按天保留最近 7 天（PWA 无法自动写 iCloud，本机兜底） */
+  var SNAP_K = 'lz.snap', SNAP_DAYS = 7;
+  function loadSnaps(){ try { return JSON.parse(localStorage.getItem(SNAP_K)) || {}; } catch(e){ return {}; } }
+  function saveSnaps(o){ try { localStorage.setItem(SNAP_K, JSON.stringify(o)); } catch(e){} }
+  function autoSnap(){
+    var o = loadSnaps(), d = dayISO(), hr = new Date().getHours();
+    var n = (store.logs || []).length, cur = o[d];
+    if (cur && cur.h === hr && cur.n === n) return;
+    o[d] = { h: hr, n: n,
+      t: new Date().toLocaleString('zh-CN', { hour: '2-digit', minute: '2-digit' }),
+      data: { logs: store.logs || [], weights: store.weights || {}, icons: store.icons || {} } };
+    var keys = Object.keys(o).sort();
+    while (keys.length > SNAP_DAYS) delete o[keys.shift()];
+    saveSnaps(o); paintSnaps();
+  }
+  function paintSnaps(){
+    var el = $('#snapInfo'); if (!el) return;
+    var o = loadSnaps(), keys = Object.keys(o).sort();
+    if (!keys.length){ el.textContent = '自动快照：还没有'; return; }
+    var last = o[keys[keys.length - 1]];
+    el.textContent = '自动快照：保留 ' + keys.length + ' 天 · 最新今天 ' + last.t + ' · ' + (last.n || 0) + ' 组';
+  }
+  function restoreSnap(){
+    var o = loadSnaps(), keys = Object.keys(o).sort();
+    if (!keys.length) return false;
+    var d = o[keys[keys.length - 1]];
+    if (!d || !d.data) return false;
+    store.logs = d.data.logs || [];
+    store.weights = d.data.weights || {};
+    if (d.data.icons){ store.icons = d.data.icons; Object.keys(d.data.icons).forEach(function(k){ chosen[k] = d.data.icons[k]; }); }
+    saveStore();
+    return true;
+  }
   function paintBackup(){
     var t = (store.settings && store.settings.lastBackupAt) || '';
     var el = $('#backupAt');
     if (el) el.textContent = t ? ('上次备份：' + t) : '还没有备份过';
     var v = $('#backupVal');
     if (v) v.textContent = t ? '已备份' : 'iCloud';
+    paintSnaps();
   }
   function downloadBackup(text, name){
     var blob = new Blob([text], { type: 'application/json' });
@@ -1914,6 +1958,24 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     });
   });
   $('#backupRestore').addEventListener('click', function(){ $('#backupFile').click(); });
+  (function(){
+    var armed = 0;
+    $('#snapRestore').addEventListener('click', function(){
+      var btn = this;
+      if (!armed){
+        armed = setTimeout(function(){ armed = 0; btn.textContent = '回滚到最近自动快照'; }, 4000);
+        btn.textContent = '再点一次确认回滚';
+        return;
+      }
+      clearTimeout(armed); armed = 0; btn.textContent = '回滚到最近自动快照';
+      if (restoreSnap()){
+        $('#backupAt').textContent = '已回滚到自动快照，正在重新载入…';
+        setTimeout(function(){ location.reload(); }, 600);
+      } else {
+        $('#backupAt').textContent = '还没有自动快照';
+      }
+    });
+  })();
   $('#backupFile').addEventListener('change', function(e){
     var f = e.target.files && e.target.files[0];
     if (!f) return;
@@ -1928,6 +1990,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
       e.target.value = '';
     });
   });
+  try { autoSnap(); } catch(e){}
   paintBackup();
 
   /* ---------- 图标选择 ---------- */
