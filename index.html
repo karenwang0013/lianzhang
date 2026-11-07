@@ -611,6 +611,15 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 .nowex .m{font-size:11.5px;color:var(--muted);margin-top:5px}
 .sheet .cta+.cta{margin-top:9px}
 
+/* 更新记录 */
+.relitem{padding:13px 0;border-bottom:1px solid var(--line)}
+.relitem:last-child{border-bottom:0}
+.relhd{display:flex;align-items:baseline;gap:8px}
+.relhd b{font-size:13.5px;font-weight:650}
+.relhd i{font-style:normal;font-size:10px;color:var(--muted2)}
+.relitem ul{margin:7px 0 0;padding-left:16px;font-size:11.5px;color:var(--muted);line-height:1.75}
+.relitem li{margin-bottom:2px}
+
 /* 图标选择 */
 .islot{display:flex;align-items:center;gap:12px;padding:13px 0}
 .islot + .islot{border-top:1px solid var(--line)}
@@ -637,7 +646,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   <div class="screen">
 
     <div class="topbar">
-      <div class="brand">练<span>账</span><i class="btag">v0.1</i></div>
+      <div class="brand">练<span>账</span><i class="btag">v0.2</i></div>
       <div class="topactions">
         <button class="topbtn topicon" id="reloadTop" aria-label="强制更新" title="强制更新">
           <svg viewBox="0 -960 960 960" aria-hidden="true"><path d="M480-160q-134 0-227-93t-93-227q0-134 93-227t227-93q69 0 132 28.5T720-690v-70q0-17 11.5-28.5T760-800q17 0 28.5 11.5T800-760v200q0 17-11.5 28.5T760-520H560q-17 0-28.5-11.5T520-560q0-17 11.5-28.5T560-600h128q-32-56-87.5-88T480-720q-100 0-170 70t-70 170q0 100 70 170t170 70q68 0 124.5-34.5T692-367q8-14 22.5-19.5t29.5-.5q16 5 23 21t-1 30q-41 80-117 128t-169 48Z"/></svg>
@@ -950,7 +959,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     </div>
 
     <!-- 训练中弹层 -->
-    <div class="sheet float" id="trainSheet">
+    <div class="sheet" id="trainSheet">
       <div class="grab"></div>
       <div class="timerlab" id="timerLab">组间休息</div>
       <div class="timer" id="timer">00:00</div>
@@ -966,7 +975,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     <!-- 设置 -->
     <div class="sheet set" id="setSheet">
       <div class="grab"></div>
-      <div class="sh-hd"><h2>设置</h2><span class="vtag">v0.1</span></div>
+      <div class="sh-hd"><h2>设置</h2><span class="vtag">v0.2</span></div>
       <p class="hint">界面预览</p>
 
       <div class="setgroup">
@@ -989,6 +998,18 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
         <div class="row"><div class="lab">训练提醒<small>当天 18:30</small></div><div class="sw"></div></div>
       </div>
 
+      <div class="setgroup">
+        <div class="setlabel">关于</div>
+        <div class="row" id="openRel"><div class="lab">更新记录<small>最近 v0.2 · 11-07</small></div><div class="val">2 个版本</div></div>
+      </div>
+
+    </div>
+
+    <!-- 更新记录 -->
+    <div class="sheet" id="relSheet">
+      <div class="grab"></div>
+      <div class="sh-hd"><h2>更新记录</h2><span class="vtag" id="relVer">v0.2</span></div>
+      <div id="relList"></div>
     </div>
 
     <!-- 图标选择弹层 -->
@@ -1274,6 +1295,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     openSheet('#aiSheet');
   });
   $('#openSet').addEventListener('click', function(){ openSheet('#setSheet'); });
+  $('#openRel').addEventListener('click', function(){ renderRel(); openSheet('#relSheet'); });
   $('#reloadTop').addEventListener('click', function(){ location.reload(); });
 
   $('#splitPick').addEventListener('click', function(e){
@@ -1463,9 +1485,9 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     box.innerHTML = html;
   })();
 
-  /* ---------- 弹层下滑关闭 ---------- */
-  (function(){
-    var sh = $('#setSheet'), startY = 0, dy = 0, dragging = false;
+  /* ---------- 弹层下滑关闭（热量账本同一套） ---------- */
+  function wireDragClose(sh){
+    var startY = 0, dy = 0, dragging = false;
     sh.addEventListener('touchstart', function(e){
       if (sh.scrollTop > 0) return;
       startY = e.touches[0].clientY; dragging = true; dy = 0;
@@ -1483,7 +1505,34 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
       sh.style.transform = '';
       if (dy > 90) closeSheets();
     });
-  })();
+  }
+  ['#setSheet','#trainSheet','#relSheet'].forEach(function(sel){
+    var el = $(sel); if (el) wireDragClose(el);
+  });
+
+  /* ---------- 更新记录 ---------- */
+  var RELEASES = [
+    { v:'v0.2', d:'11-07', items:[
+      '设置卡改成贴底悬浮卡：左右/底 10、圆角 52、抓杆 66×4，支持下滑关闭',
+      '训练卡与设置卡统一同一套卡牌规格，同样支持下滑关闭',
+      '顶栏底色改成 #000，与状态栏同色，消除上下分层',
+      '今日头部去掉封面式大标题，改为「部位 + 时长 + 肌群」信息行',
+      '圆圈改为 4/6，下面加一周 7 点，能看出哪几天练了'
+    ]},
+    { v:'v0.1', d:'11-07', items:[
+      '首个界面预览：今日 / 计划 / 记录 / 我的',
+      '主题换成 Nike Red #E4002B，图标 me + FITNESS',
+      '分化可选 5 档（2/3/4/5/6 天），3 天档标「推荐」',
+      '训练记录改成组间休息倒计时'
+    ]}
+  ];
+  function renderRel(){
+    $('#relList').innerHTML = RELEASES.map(function(r){
+      return '<div class="relitem"><div class="relhd"><b>' + r.v + '</b><i>' + r.d + '</i></div><ul>' +
+        r.items.map(function(t){ return '<li>' + t + '</li>'; }).join('') + '</ul></div>';
+    }).join('');
+    $('#relVer').textContent = RELEASES[0].v;
+  }
 
   /* ---------- 图标选择 ---------- */
   $('#iconRow').addEventListener('click', function(){
