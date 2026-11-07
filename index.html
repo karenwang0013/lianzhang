@@ -646,6 +646,13 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 .nowex .m{font-size:11.5px;color:var(--muted);margin-top:5px}
 .sheet .cta+.cta{margin-top:9px}
 
+/* 人体部位图（参考 Muscle Booster：灰色人体 + 高亮目标肌群） */
+.bodymap{display:flex;justify-content:center;padding:6px 0 2px}
+.bodymap svg{width:132px;height:auto}
+.bodymap .mm{fill:#3a3f45;transition:fill .2s}
+.bodymap .mm.on{fill:var(--lime)}
+.bodymap .ml{display:block;text-align:center;font-size:10.5px;color:var(--muted2);margin-top:4px}
+
 /* 动作详情 */
 .sheet#exSheet{max-height:calc(100% - 150px);overflow-y:auto}
 .exdetail{display:flex;flex-direction:column;margin-top:8px}
@@ -1045,6 +1052,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     <div class="sheet center" id="exSheet">
       <div class="grab"></div>
       <div class="sh-hd"><h2 id="exName">平板杠铃卧推</h2><span class="vtag" id="exGrade">S</span></div>
+      <div class="bodymap" id="exBody"></div>
       <div class="exdetail">
         <div class="exrow2"><span>组数</span><b id="exSets">4 组</b></div>
         <div class="exrow2"><span>次数</span><b id="exRep">6–8 次</b></div>
@@ -1148,6 +1156,55 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     }
   }
 
+  var MUSCLE_CN = {
+    chest:'胸大肌', shoulder:'三角肌', triceps:'肱三头肌', biceps:'肱二头肌',
+    back:'背阔肌', quads:'股四头肌', hamstring:'腘绳肌', calves:'小腿'
+  };
+  var BACK_PARTS = ['back','triceps','hamstring'];
+
+  function bodySVG(part){
+    var back = BACK_PARTS.indexOf(part) > -1;
+    var cls = function(k){ return 'mm' + (part === k ? ' on' : ''); };
+    var svg = '';
+    if (!back){
+      svg =
+        '<circle class="mm" cx="60" cy="20" r="12"/>' +
+        '<rect class="mm" x="55" y="31" width="10" height="7" rx="2"/>' +
+        '<circle class="' + cls('shoulder') + '" cx="40" cy="47" r="8"/>' +
+        '<circle class="' + cls('shoulder') + '" cx="80" cy="47" r="8"/>' +
+        '<rect class="' + cls('chest') + '" x="45" y="47" width="30" height="24" rx="8"/>' +
+        '<rect class="' + cls('abs') + '" x="49" y="73" width="22" height="22" rx="7"/>' +
+        '<rect class="' + cls('biceps') + '" x="29" y="55" width="10" height="30" rx="5"/>' +
+        '<rect class="' + cls('biceps') + '" x="81" y="55" width="10" height="30" rx="5"/>' +
+        '<rect class="mm" x="30" y="87" width="8" height="26" rx="4"/>' +
+        '<rect class="mm" x="82" y="87" width="8" height="26" rx="4"/>' +
+        '<rect class="mm" x="44" y="95" width="32" height="14" rx="6"/>' +
+        '<rect class="' + cls('quads') + '" x="45" y="109" width="13" height="44" rx="6"/>' +
+        '<rect class="' + cls('quads') + '" x="62" y="109" width="13" height="44" rx="6"/>' +
+        '<rect class="' + cls('calves') + '" x="46" y="155" width="11" height="34" rx="5"/>' +
+        '<rect class="' + cls('calves') + '" x="63" y="155" width="11" height="34" rx="5"/>';
+    } else {
+      svg =
+        '<circle class="mm" cx="60" cy="20" r="12"/>' +
+        '<rect class="mm" x="55" y="31" width="10" height="7" rx="2"/>' +
+        '<circle class="mm" cx="40" cy="47" r="8"/>' +
+        '<circle class="mm" cx="80" cy="47" r="8"/>' +
+        '<rect class="' + cls('back') + '" x="45" y="45" width="30" height="34" rx="9"/>' +
+        '<rect class="' + cls('triceps') + '" x="29" y="55" width="10" height="30" rx="5"/>' +
+        '<rect class="' + cls('triceps') + '" x="81" y="55" width="10" height="30" rx="5"/>' +
+        '<rect class="mm" x="30" y="87" width="8" height="26" rx="4"/>' +
+        '<rect class="mm" x="82" y="87" width="8" height="26" rx="4"/>' +
+        '<rect class="mm" x="44" y="81" width="32" height="14" rx="6"/>' +
+        '<rect class="mm" x="44" y="96" width="32" height="13" rx="6"/>' +
+        '<rect class="' + cls('hamstring') + '" x="45" y="111" width="13" height="42" rx="6"/>' +
+        '<rect class="' + cls('hamstring') + '" x="62" y="111" width="13" height="42" rx="6"/>' +
+        '<rect class="mm" x="46" y="155" width="11" height="34" rx="5"/>' +
+        '<rect class="mm" x="63" y="155" width="11" height="34" rx="5"/>';
+    }
+    return '<div><svg viewBox="0 0 120 200">' + svg + '</svg>' +
+      '<span class="ml">主要练：' + (MUSCLE_CN[part] || '全身') + (back ? ' · 背面' : ' · 正面') + '</span></div>';
+  }
+
   function openEx(card){
     var id = card.dataset.ex || '';
     var key = id.replace(/[0-9]+$/, '');
@@ -1163,6 +1220,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     $('#exKg').textContent = arr.kg ? arr.kg + ' kg' : '自重';
     $('#exRest').textContent = arr.rest + ' 秒';
     $('#exDone').textContent = on + ' / ' + all;
+    $('#exBody').innerHTML = bodySVG(arr.m || 'chest');
     $('#exNote').textContent = arr.g === 'S'
       ? '复合动作，排在第一个做。重量以能留 1–2 次余力为准。'
       : (arr.g === 'A' ? '辅助动作，补目标肌群的容量。' : '收尾动作，控制节奏，别甩重量。');
@@ -1188,45 +1246,45 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   /* ---------- 动作库 + 分化方案 ---------- */
   var EX = {
     push: [
-      {n:'平板杠铃卧推',g:'S',sets:4,rep:'6–8',kg:80,rest:150},
-      {n:'上斜哑铃卧推',g:'A',sets:3,rep:'8–10',kg:28,rest:120},
-      {n:'坐姿哑铃推肩',g:'A',sets:3,rep:'10',kg:20,rest:90},
-      {n:'绳索下压',g:'B',sets:3,rep:'12',kg:25,rest:60},
-      {n:'哑铃侧平举',g:'B',sets:4,rep:'15',kg:10,rest:60}
+      {n:'平板杠铃卧推',g:'S',sets:4,rep:'6–8',kg:80,rest:150,m:'chest'},
+      {n:'上斜哑铃卧推',g:'A',sets:3,rep:'8–10',kg:28,rest:120,m:'chest'},
+      {n:'坐姿哑铃推肩',g:'A',sets:3,rep:'10',kg:20,rest:90,m:'shoulder'},
+      {n:'绳索下压',g:'B',sets:3,rep:'12',kg:25,rest:60,m:'triceps'},
+      {n:'哑铃侧平举',g:'B',sets:4,rep:'15',kg:10,rest:60,m:'shoulder'}
     ],
     pull: [
-      {n:'硬拉',g:'S',sets:3,rep:'5',kg:100,rest:180},
-      {n:'引体向上',g:'S',sets:4,rep:'力竭-1',kg:0,rest:120},
-      {n:'坐姿绳索划船',g:'A',sets:3,rep:'10',kg:50,rest:90},
-      {n:'面拉',g:'B',sets:3,rep:'15',kg:20,rest:60},
-      {n:'哑铃弯举',g:'B',sets:3,rep:'12',kg:12,rest:60}
+      {n:'硬拉',g:'S',sets:3,rep:'5',kg:100,rest:180,m:'back'},
+      {n:'引体向上',g:'S',sets:4,rep:'力竭-1',kg:0,rest:120,m:'back'},
+      {n:'坐姿绳索划船',g:'A',sets:3,rep:'10',kg:50,rest:90,m:'back'},
+      {n:'面拉',g:'B',sets:3,rep:'15',kg:20,rest:60,m:'shoulder'},
+      {n:'哑铃弯举',g:'B',sets:3,rep:'12',kg:12,rest:60,m:'biceps'}
     ],
     legs: [
-      {n:'杠铃深蹲',g:'S',sets:4,rep:'5–6',kg:80,rest:180},
-      {n:'罗马尼亚硬拉',g:'S',sets:3,rep:'8',kg:70,rest:120},
-      {n:'腿举',g:'A',sets:3,rep:'10–12',kg:120,rest:90},
-      {n:'腿弯举',g:'B',sets:3,rep:'12',kg:35,rest:60},
-      {n:'站姿提踵',g:'B',sets:4,rep:'15',kg:60,rest:45}
+      {n:'杠铃深蹲',g:'S',sets:4,rep:'5–6',kg:80,rest:180,m:'quads'},
+      {n:'罗马尼亚硬拉',g:'S',sets:3,rep:'8',kg:70,rest:120,m:'hamstring'},
+      {n:'腿举',g:'A',sets:3,rep:'10–12',kg:120,rest:90,m:'quads'},
+      {n:'腿弯举',g:'B',sets:3,rep:'12',kg:35,rest:60,m:'hamstring'},
+      {n:'站姿提踵',g:'B',sets:4,rep:'15',kg:60,rest:45,m:'calves'}
     ],
     upper: [
-      {n:'平板杠铃卧推',g:'S',sets:4,rep:'6–8',kg:80,rest:150},
-      {n:'引体向上',g:'S',sets:4,rep:'力竭-1',kg:0,rest:120},
-      {n:'坐姿哑铃推肩',g:'A',sets:3,rep:'10',kg:20,rest:90},
-      {n:'坐姿绳索划船',g:'A',sets:3,rep:'10',kg:50,rest:90},
-      {n:'哑铃侧平举',g:'B',sets:4,rep:'15',kg:10,rest:60}
+      {n:'平板杠铃卧推',g:'S',sets:4,rep:'6–8',kg:80,rest:150,m:'chest'},
+      {n:'引体向上',g:'S',sets:4,rep:'力竭-1',kg:0,rest:120,m:'back'},
+      {n:'坐姿哑铃推肩',g:'A',sets:3,rep:'10',kg:20,rest:90,m:'shoulder'},
+      {n:'坐姿绳索划船',g:'A',sets:3,rep:'10',kg:50,rest:90,m:'back'},
+      {n:'哑铃侧平举',g:'B',sets:4,rep:'15',kg:10,rest:60,m:'shoulder'}
     ],
     lower: [
-      {n:'杠铃深蹲',g:'S',sets:4,rep:'5–6',kg:80,rest:180},
-      {n:'罗马尼亚硬拉',g:'S',sets:3,rep:'8',kg:70,rest:120},
-      {n:'腿举',g:'A',sets:3,rep:'10–12',kg:120,rest:90},
-      {n:'腿弯举',g:'B',sets:3,rep:'12',kg:35,rest:60},
-      {n:'站姿提踵',g:'B',sets:4,rep:'15',kg:60,rest:45}
+      {n:'杠铃深蹲',g:'S',sets:4,rep:'5–6',kg:80,rest:180,m:'quads'},
+      {n:'罗马尼亚硬拉',g:'S',sets:3,rep:'8',kg:70,rest:120,m:'hamstring'},
+      {n:'腿举',g:'A',sets:3,rep:'10–12',kg:120,rest:90,m:'quads'},
+      {n:'腿弯举',g:'B',sets:3,rep:'12',kg:35,rest:60,m:'hamstring'},
+      {n:'站姿提踵',g:'B',sets:4,rep:'15',kg:60,rest:45,m:'calves'}
     ],
     full: [
-      {n:'杠铃深蹲',g:'S',sets:4,rep:'5–6',kg:80,rest:180},
-      {n:'平板杠铃卧推',g:'S',sets:4,rep:'6–8',kg:80,rest:150},
-      {n:'坐姿绳索划船',g:'A',sets:3,rep:'10',kg:50,rest:90},
-      {n:'坐姿哑铃推肩',g:'A',sets:3,rep:'10',kg:20,rest:90},
+      {n:'杠铃深蹲',g:'S',sets:4,rep:'5–6',kg:80,rest:180,m:'quads'},
+      {n:'平板杠铃卧推',g:'S',sets:4,rep:'6–8',kg:80,rest:150,m:'chest'},
+      {n:'坐姿绳索划船',g:'A',sets:3,rep:'10',kg:50,rest:90,m:'back'},
+      {n:'坐姿哑铃推肩',g:'A',sets:3,rep:'10',kg:20,rest:90,m:'shoulder'},
       {n:'哑铃侧平举',g:'B',sets:3,rep:'15',kg:10,rest:60}
     ]
   };
