@@ -2,10 +2,10 @@
 <html lang="zh-CN">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,maximum-scale=1,user-scalable=no">
 <meta name="theme-color" content="#0d0f0e">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="练账">
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" type="image/png" href="./icon-192.png">
@@ -79,11 +79,11 @@ body{
   body{display:block;overscroll-behavior:none;-webkit-overflow-scrolling:auto}
   .phone{position:absolute;inset:0;width:100%;height:100%;border-radius:0;box-shadow:none}
   /* PWA 里 .phone 的高度比屏幕少 ~56px，底部元素改成相对视口固定，才能真的贴到屏幕底 */
-  .dock{position:fixed;left:10px;right:10px;bottom:12px}
+  .dock{position:absolute;left:10px;right:10px;bottom:12px}
   .fade{position:fixed;left:0;right:0;bottom:12px}
-  .cta{position:fixed;left:var(--page-pad);right:var(--page-pad);
+  .cta{position:absolute;left:var(--page-pad);right:var(--page-pad);
        bottom:calc(12px + var(--dock-h) + 14px)}
-  .sheet{position:fixed;left:10px;right:10px;bottom:12px}
+  .sheet{position:absolute;left:10px;right:10px;bottom:12px}
   .screen::after{display:none}
 }
 
@@ -126,8 +126,8 @@ body{
   display:flex;align-items:center;justify-content:space-between;
   background:#0d0f0e;
 }
-.statusbg{position:fixed;top:0;left:0;right:0;height:var(--safe-t);
-  background:#0d0f0e;z-index:25;pointer-events:none}
+.statusbg{position:absolute;top:0;left:0;right:0;height:max(var(--safe-t),47px);
+  background:#0d0f0e;z-index:31;pointer-events:none}
 .brand{font-size:20px;font-weight:650;letter-spacing:.2px;display:flex;align-items:baseline;color:var(--text)}
 .brand span{color:var(--lime)}
 .brand .btag{font-style:normal;font-size:10px;font-weight:500;color:var(--muted2);margin-left:6px;letter-spacing:normal}
@@ -244,9 +244,50 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 }
 .herofoot b{color:rgba(242,244,242,.92);font-weight:600;font-variant-numeric:tabular-nums}
 
-/* ---------- 进度环卡 ---------- */
-.ringrow{display:flex;align-items:center;gap:6px}
-.weekstrip{display:flex;gap:4px;margin-top:16px;padding-top:15px;border-top:1px solid var(--line)}
+/* ---------- 进度环（照热量账本：232px / r84 / stroke 13） ---------- */
+.ringwrap{position:relative;width:232px;height:232px;margin:10px auto 4px}
+.ringwrap svg{transform:rotate(-90deg);display:block;width:232px;height:232px}
+.ring-bg{fill:none;stroke:rgba(255,255,255,.06);stroke-width:13}
+.ring-rim{
+  fill:none;stroke:url(#rimGrad);stroke-width:14.6;stroke-linecap:round;
+  stroke-dasharray:527.8;stroke-dashoffset:527.8;
+  transition:stroke-dashoffset .7s cubic-bezier(.2,.8,.2,1);
+}
+.ring-fg{
+  fill:none;stroke:url(#ringGrad);stroke-width:13;stroke-linecap:round;
+  stroke-dasharray:527.8;stroke-dashoffset:527.8;
+  filter:drop-shadow(0 0 7px rgba(228,0,43,.35));
+  transition:stroke-dashoffset .7s cubic-bezier(.2,.8,.2,1);
+}
+.ringmid{
+  position:absolute;inset:0;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+}
+.ringmid .rlbl{font-size:11px;letter-spacing:.2em;color:var(--muted);font-weight:500}
+.ringmid b{font-size:56px;font-weight:500;letter-spacing:-1.5px;line-height:.96;font-variant-numeric:tabular-nums;margin-top:2px}
+.ringmid .rsub{font-size:12px;color:var(--muted2);letter-spacing:.02em;margin-top:-1px}
+.ringmid .rgap{font-size:11px;font-weight:600;color:rgba(255,255,255,.8);letter-spacing:.2px;margin-top:12px}
+
+/* 三宫格（同热量账本的三格） */
+.stats3{
+  display:grid;grid-template-columns:1fr 1fr 1fr;
+  margin-top:4px;padding:13px 4px;border-radius:16px;
+  background:rgba(255,255,255,.04);border:1px solid var(--line);
+}
+.stats3>div{text-align:center;position:relative}
+.stats3>div+div::before{content:"";position:absolute;left:0;top:4px;bottom:4px;width:1px;background:var(--line)}
+.stats3 .k{font-size:11px;color:var(--muted2);letter-spacing:.6px}
+.stats3 .v{font-size:17px;font-weight:600;margin-top:5px;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.stats3 .v small{font-size:10px;color:var(--muted2);font-weight:400;margin-left:2px;letter-spacing:0}
+.stats3 .v em{font-style:normal;font-size:10px;color:var(--lime);font-weight:600;margin-left:3px}
+
+/* 卡片首行：日期 + 今天完成组数 */
+.topline{display:flex;align-items:baseline;gap:8px}
+.topline .d-main{font-size:14px;font-weight:650;color:var(--text);letter-spacing:-.01em}
+.topline .d-wd{font-size:13px;color:var(--muted);font-weight:500}
+.topline .dset{margin-left:auto;font-size:11px;color:var(--muted2);font-variant-numeric:tabular-nums}
+.topline .dset b{color:var(--text);font-weight:600}
+
 .wd-day{flex:1;display:flex;flex-direction:column;align-items:center;gap:7px}
 .wd-day i{width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,.12)}
 .wd-day.on i{background:var(--lime)}
@@ -701,7 +742,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
     <div class="statusbg" aria-hidden="true"></div>
     <div class="topbar">
-      <div class="brand">练<span>账</span><i class="btag">v3.1</i></div>
+      <div class="brand">练<span>账</span><i class="btag">v3.2</i></div>
       <div class="topactions">
         <button class="topbtn topicon" id="reloadTop" aria-label="强制更新" title="强制更新">
           <svg viewBox="0 -960 960 960" aria-hidden="true"><path d="M480-160q-134 0-227-93t-93-227q0-134 93-227t227-93q69 0 132 28.5T720-690v-70q0-17 11.5-28.5T760-800q17 0 28.5 11.5T800-760v200q0 17-11.5 28.5T760-520H560q-17 0-28.5-11.5T520-560q0-17 11.5-28.5T560-600h128q-32-56-87.5-88T480-720q-100 0-170 70t-70 170q0 100 70 170t170 70q68 0 124.5-34.5T692-367q8-14 22.5-19.5t29.5-.5q16 5 23 21t-1 30q-41 80-117 128t-169 48Z"/></svg>
@@ -1013,7 +1054,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     <!-- 设置 -->
     <div class="sheet" id="setSheet">
       <div class="grab"></div>
-      <div class="sh-hd"><h2>设置</h2><span class="vtag">v3.1</span></div>
+      <div class="sh-hd"><h2>设置</h2><span class="vtag">v3.2</span></div>
       <div class="setbody">
         <div class="setlabel">功能</div>
         <div class="setrows">
@@ -1029,7 +1070,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
           <div class="srow" data-ic="bolt"><span class="ico"></span><span class="lbl">与热量账本同步</span><span class="sw"></span></div>
           <div class="srow" data-ic="monitor_heart"><span class="ico"></span><span class="lbl">Apple 健康</span><span class="sw"></span></div>
           <div class="srow" data-ic="assignment"><span class="ico"></span><span class="lbl">训练提醒</span><span class="sw"></span></div>
-          <button class="srow" id="openRel" data-ic="checklist"><span class="ico"></span><span class="lbl">更新记录</span><span class="val">v3.1</span></button>
+          <button class="srow" id="openRel" data-ic="checklist"><span class="ico"></span><span class="lbl">更新记录</span><span class="val">v3.2</span></button>
         </div>
       </div>
     </div>
@@ -1551,7 +1592,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   }
 
   /* ---------- 启动版本比对（同热量账本） ---------- */
-  var APP_VERSION = 'v3.1';
+  var APP_VERSION = 'v3.2';
   fetch('./version.txt?t=' + Date.now(), { cache: 'no-store' })
     .then(function(r){ return r.ok ? r.text() : ''; })
     .then(function(v){
