@@ -720,6 +720,8 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 .relitem li{margin-bottom:2px}
 
 /* 图标选择：照热量账本那套 —— 左边一列标签，右边一条能横向滑的图标瓷砖，瓷砖里图标在上、名字在下 */
+.isetdiv{margin:14px 0 2px;padding-top:13px;border-top:1px solid var(--line);
+  font-size:10px;color:var(--muted2);letter-spacing:.12em}
 .islot{display:flex;align-items:flex-start;gap:12px;padding:10px 0}
 .islot + .islot{border-top:1px solid var(--line)}
 .islab{flex:0 0 96px;font-size:12.5px;color:var(--muted);line-height:1.35}
@@ -759,7 +761,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
     <div class="statusbg" aria-hidden="true"></div>
     <div class="topbar">
-      <div class="brand">训练<span>账本</span><i class="btag">v5.5</i></div>
+      <div class="brand">训练<span>账本</span><i class="btag">v5.6</i></div>
       <div class="topactions">
         <button class="topbtn topicon" id="reloadTop" aria-label="强制更新" title="强制更新">
           <svg viewBox="0 -960 960 960" aria-hidden="true"><path d="M480-160q-134 0-227-93t-93-227q0-134 93-227t227-93q69 0 132 28.5T720-690v-70q0-17 11.5-28.5T760-800q17 0 28.5 11.5T800-760v200q0 17-11.5 28.5T760-520H560q-17 0-28.5-11.5T520-560q0-17 11.5-28.5T560-600h128q-32-56-87.5-88T480-720q-100 0-170 70t-70 170q0 100 70 170t170 70q68 0 124.5-34.5T692-367q8-14 22.5-19.5t29.5-.5q16 5 23 21t-1 30q-41 80-117 128t-169 48Z"/></svg>
@@ -1073,7 +1075,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     <!-- 设置 -->
     <div class="sheet" id="setSheet">
       <div class="grab"></div>
-      <div class="sh-hd"><h2>设置</h2><span class="vtag">v5.5</span></div>
+      <div class="sh-hd"><h2>设置</h2><span class="vtag">v5.6</span></div>
       <div class="setbody">
         <div class="setlabel">功能</div>
         <div class="setrows">
@@ -1085,11 +1087,11 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
         <div class="setlabel">其他</div>
         <div class="setrows">
-          <button class="srow" id="iconRow" data-ic="palette"><span class="ico"></span><span class="lbl">App 图标</span><span class="val">可换 4 处</span></button>
+          <button class="srow" id="iconRow" data-ic="palette"><span class="ico"></span><span class="lbl">App 图标</span></button>
           <div class="srow" data-ic="bolt"><span class="ico"></span><span class="lbl">与热量账本同步</span><span class="sw"></span></div>
           <div class="srow" data-ic="monitor_heart"><span class="ico"></span><span class="lbl">Apple 健康</span><span class="sw"></span></div>
           <div class="srow" data-ic="assignment"><span class="ico"></span><span class="lbl">训练提醒</span><span class="sw"></span></div>
-          <button class="srow" id="openRel" data-ic="checklist"><span class="ico"></span><span class="lbl">更新记录</span><span class="val">v5.5</span></button>
+          <button class="srow" id="openRel" data-ic="checklist"><span class="ico"></span><span class="lbl">更新记录</span><span class="val">v5.6</span></button>
         </div>
       </div>
     </div>
@@ -1167,6 +1169,22 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   var ICON_DEFAULTS = { today:'fitness_center', plan:'event_note', log:'bar_chart', me:'person' };
   var chosen = { today:'fitness_center', plan:'event_note', log:'bar_chart', me:'person' };
 
+  /* 设置页每一行前面的小图标也单独可换（不是只有下面 4 个 tab） */
+  var SET_ROWS = $$('#setSheet .srow[data-ic]');
+  var SET_DEFAULTS = SET_ROWS.map(function(r){ return r.dataset.ic; });
+  SET_ROWS.forEach(function(r, i){
+    var key = 'set' + i;
+    var lblEl = r.querySelector('.lbl');
+    var label = (lblEl ? lblEl.textContent : ('设置 ' + (i + 1))).trim();
+    var first = [SET_DEFAULTS[i], 'settings', 'checklist', 'badge', 'bolt', 'palette',
+                 'auto_awesome', 'assignment', 'monitor_heart', 'event_note', 'calendar_month']
+      .filter(function(n){ return ICONS[n]; });
+    SLOTS.push({ key:key, label:label, group:'set',
+      opts: first.concat(ALL_ICON_NAMES.filter(function(n){ return first.indexOf(n) < 0; })) });
+    ICON_DEFAULTS[key] = SET_DEFAULTS[i];
+    chosen[key] = SET_DEFAULTS[i];
+  });
+
   function paintTab(key){
     var btn = $('.tab[data-tab="' + key + '"]');
     if (!btn) return;
@@ -1174,20 +1192,23 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     if (p) p.setAttribute('d', ICONS[chosen[key]] || ICONS['person']);
   }
 
+  function slotHTML(s){
+    var cur = chosen[s.key] || ICON_DEFAULTS[s.key];
+    var order = [cur].concat(s.opts.filter(function(n){ return n !== cur; }));
+    return '<div class="islot"><div class="islab">' + s.label + '</div><div class="iopts">' +
+      order.map(function(n){
+        var label = ICON_LABELS[n] || n;
+        return '<button class="iopt' + (cur === n ? ' on' : '') +
+          '" data-slot="' + s.key + '" data-name="' + n + '" title="' + label + '">' +
+          '<svg viewBox="0 -960 960 960"><path d="' + (ICONS[n] || '') + '"/></svg>' +
+          '<span>' + label + '</span></button>';
+      }).join('') +
+      '</div></div>';
+  }
   function renderIconSheet(){
-    $('#iconSlots').innerHTML = SLOTS.map(function(s){
-      var cur = chosen[s.key];
-      var order = [cur].concat(s.opts.filter(function(n){ return n !== cur; }));
-      return '<div class="islot"><div class="islab">' + s.label + '</div><div class="iopts">' +
-        order.map(function(n){
-          var label = ICON_LABELS[n] || n;
-          return '<button class="iopt' + (cur === n ? ' on' : '') +
-            '" data-slot="' + s.key + '" data-name="' + n + '" title="' + label + '">' +
-            '<svg viewBox="0 -960 960 960"><path d="' + (ICONS[n] || '') + '"/></svg>' +
-            '<span>' + label + '</span></button>';
-        }).join('') +
-        '</div></div>';
-    }).join('');
+    var tabHTML = '', setHTML = '';
+    SLOTS.forEach(function(s){ if (s.group === 'set') setHTML += slotHTML(s); else tabHTML += slotHTML(s); });
+    $('#iconSlots').innerHTML = tabHTML + '<div class="isetdiv">设置页</div>' + setHTML;
   }
 
   /* ---------- 组数状态 ---------- */
@@ -1407,6 +1428,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   var store = { weights: {} };
   try { var rawLS = localStorage.getItem(LSK); if (rawLS){ var o = JSON.parse(rawLS); if (o && o.weights) store = o; } } catch(e){}
   if (!store.weights) store.weights = {};
+  if (store.icons) Object.keys(store.icons).forEach(function(k){ if (k in ICON_DEFAULTS) chosen[k] = store.icons[k]; });
   function saveStore(){ try { localStorage.setItem(LSK, JSON.stringify(store)); } catch(e){} }
   /* 重量按动作名存，这样同一动作在「推」「上肢」两个方案里共用一个重量 */
   function kgOf(ex){ var w = store.weights[ex.n]; return (w == null ? ex.kg : w); }
@@ -1684,11 +1706,15 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
       if (dy > 90) closeSheets();
     });
   }
-  $$('#setSheet .srow[data-ic]').forEach(function(r){
-    var n = r.dataset.ic;
-    var ic = r.querySelector('.ico');
-    if (ic && ICONS[n]) ic.innerHTML = '<svg viewBox="0 -960 960 960"><path d="' + ICONS[n] + '"/></svg>';
-  });
+  function paintRows(){
+    SET_ROWS.forEach(function(r, i){
+      var n = chosen['set' + i];
+      if (!ICONS[n]) n = SET_DEFAULTS[i];
+      var ic = r.querySelector('.ico');
+      if (ic && ICONS[n]) ic.innerHTML = '<svg viewBox="0 -960 960 960"><path d="' + ICONS[n] + '"/></svg>';
+    });
+  }
+  paintRows();
 
   ['#setSheet','#relSheet','#exSheet'].forEach(function(sel){
     var el = $(sel); if (el) wireDragClose(el);
@@ -1714,7 +1740,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   }
 
   /* ---------- 启动版本比对（同热量账本） ---------- */
-  var APP_VERSION = 'v5.5';
+  var APP_VERSION = 'v5.6';
   fetch('./version.txt?t=' + Date.now(), { cache: 'no-store' })
     .then(function(r){ return r.ok ? r.text() : ''; })
     .then(function(v){
@@ -1800,14 +1826,18 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   $$('#iconSheet .grab').forEach(function(g){ g.addEventListener('click', closeSheets); });
   $('#iconReset').addEventListener('click', function(){
     Object.keys(ICON_DEFAULTS).forEach(function(k){ chosen[k] = ICON_DEFAULTS[k]; });
-    SLOTS.forEach(function(s){ paintTab(s.key); });
+    SLOTS.forEach(function(s){ if (s.group === 'set') return; paintTab(s.key); });
+    paintRows();
+    store.icons = chosen; saveStore();
     renderIconSheet();
   });
   $('#iconSlots').addEventListener('click', function(e){
     var b = e.target.closest('.iopt');
     if (!b) return;
-    chosen[b.dataset.slot] = b.dataset.name;
-    paintTab(b.dataset.slot);
+    var k = b.dataset.slot;
+    chosen[k] = b.dataset.name;
+    if (k.indexOf('set') === 0) paintRows(); else paintTab(k);
+    store.icons = chosen; saveStore();
     renderIconSheet();
   });
 
