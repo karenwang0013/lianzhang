@@ -1,0 +1,1692 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,maximum-scale=1,user-scalable=no">
+<meta name="theme-color" content="#0d0f0e">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="练账">
+<link rel="manifest" href="./manifest.webmanifest">
+<link rel="icon" type="image/png" href="./icon-192.png">
+<link rel="apple-touch-icon" href="./apple-touch-icon.png">
+<title>练账 · 界面预览</title>
+<style>
+:root{
+  /* ===== 颜色（与热量账本 :root 一致） ===== */
+  --bg:#0a0b0c;
+  --card:#15181b;
+  --card2:#1b1f23;
+  --line:rgba(255,255,255,.07);
+  --line2:rgba(255,255,255,.12);
+  --text:#f2f4f2;
+  --muted:#8b938c;
+  --muted2:#626963;
+  --lime:#E4002B;
+  --lime-dim:#B3001F;
+  --orange:#ff8a4c;
+  --blue:#6ea8ff;
+  --glow-rgb:228,0,43;
+
+  /* ===== 玻璃母版（实测自 getComputedStyle） ===== */
+  --glass-top:rgba(13,15,14,.46);
+  --glass-bot:rgba(13,15,14,.58);
+  --glass-blur:blur(10px) saturate(1.5);
+  --edge-gloss:linear-gradient(180deg,
+    rgba(255,255,255,.106) 0%,
+    rgba(255,255,255,.043) 26%,
+    rgba(255,255,255,.016) 60%,
+    rgba(255,255,255,.020) 87%,
+    rgba(255,255,255,.034) 100%);
+
+  /* ===== 尺寸（实测） ===== */
+  --page-pad:18px;
+  --card-r:18px;
+  --tile-r:16px;
+  --dock-h:90px;
+  --dock-w:10px;
+  --dock-bottom:10px;
+  --dock-r:52px;
+  --lens-inset:8px;
+  --safe-t:env(safe-area-inset-top,0px);
+  --safe-b:env(safe-area-inset-bottom,0px);
+}
+
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+[hidden]{display:none !important}
+html,body{margin:0;height:100%}
+body{
+  background:#0a0b0c;
+  font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","PingFang SC","Helvetica Neue",Arial,sans-serif;
+  -webkit-font-smoothing:antialiased;
+  color:var(--text);
+  display:grid;place-items:center;
+  min-height:100dvh;
+  overscroll-behavior:none;
+}
+
+/* ---------- 手机外框 ---------- */
+.phone{
+  position:relative;
+  width:390px;height:844px;
+  border-radius:52px;
+  background:#000;
+  box-shadow:0 0 0 10px #16181a,0 0 0 11px rgba(255,255,255,.06),0 40px 120px rgba(0,0,0,.85);
+  overflow:hidden;
+}
+@media (max-width:520px){
+  html,body{height:100%;overflow:hidden;position:fixed;inset:0;width:100%}
+  body{display:block;overscroll-behavior:none;-webkit-overflow-scrolling:auto}
+  .phone{position:absolute;inset:0;width:100%;height:100%;border-radius:0;box-shadow:none}
+  /* PWA 里 .phone 的高度比屏幕少 ~56px，底部元素改成相对视口固定，才能真的贴到屏幕底 */
+  .dock{position:fixed;left:10px;right:10px;bottom:-41px}
+  .fade{position:fixed;left:0;right:0;bottom:12px}
+  .cta{position:fixed;left:var(--page-pad);right:var(--page-pad);
+       bottom:calc(-41px + var(--dock-h) + 14px)}
+  .sheet{position:fixed;left:10px;right:10px;bottom:-41px}
+  .screen::after{display:none}
+}
+
+/* ---------- 画布背景：与热量账本 html 层同一条 ---------- */
+.screen::after{
+  content:"";position:absolute;left:0;right:0;bottom:0;
+  height:10px;background:#080b09;
+  z-index:19;pointer-events:none;
+}
+.screen{
+  position:absolute;inset:0;overflow:hidden;
+  display:flex;flex-direction:column;
+  background-color:#080b09;
+  background-image:
+    radial-gradient(120% 720px at 50% 0%, rgba(var(--glow-rgb),.086) 0%, rgba(var(--glow-rgb),0) 70%),
+    radial-gradient(120% 720px at 50% 100%, rgba(var(--glow-rgb),.086) 0%, rgba(var(--glow-rgb),0) 70%),
+    radial-gradient(circle, rgba(var(--glow-rgb),.042) 1px, transparent 1.3px),
+    radial-gradient(circle, rgba(var(--glow-rgb),.042) 1px, transparent 1.3px),
+    linear-gradient(180deg,#0a0f0c 0%,#080b09 55%,#060907 100%);
+  background-size:auto,auto,15px 15px,15px 15px,100% 100%;
+  background-position:0 0,0 0,0 0,7.5px 7.5px,0 0;
+}
+
+/* 玻璃：所有容器共用这一套（描边是渐变，裁在 1px 边框里） */
+.card,.ex,.syncline,.stat,.dock,.sheet,.cta.ghost{
+  background-color:transparent;
+  background-image:linear-gradient(180deg,var(--glass-top) 0%,var(--glass-bot) 100%),var(--edge-gloss);
+  background-origin:border-box;
+  background-clip:padding-box,border-box;
+  border:1px solid transparent;
+  -webkit-backdrop-filter:var(--glass-blur);
+  backdrop-filter:var(--glass-blur);
+}
+
+/* ---------- 顶栏 ---------- */
+.topbar{
+  position:absolute;top:0;left:0;right:0;z-index:30;
+  height:calc(51px + var(--safe-t));
+  padding:var(--safe-t) 18px 0;
+  display:flex;align-items:center;justify-content:space-between;
+  background:#0d0f0e;
+}
+.statusbg{position:absolute;top:0;left:0;right:0;height:max(var(--safe-t),47px);
+  background:#0d0f0e;z-index:31;pointer-events:none}
+.brand{font-size:20px;font-weight:650;letter-spacing:.2px;display:flex;align-items:baseline;color:var(--text)}
+.brand span{color:var(--lime)}
+.brand .btag{font-style:normal;font-size:10px;font-weight:500;color:var(--muted2);margin-left:6px;letter-spacing:normal}
+.topactions{display:flex;gap:6px;align-items:center}
+.topbtn{
+  display:inline-flex;align-items:center;justify-content:center;gap:6px;
+  height:33px;padding:7px 11px;border-radius:11px;
+  border:1px solid transparent;color:var(--text);
+  background-color:transparent;
+  background-image:linear-gradient(transparent,transparent),var(--edge-gloss);
+  background-origin:border-box;background-clip:padding-box,border-box;
+  box-shadow:none;
+  font-family:inherit;font-size:12.5px;font-weight:600;cursor:pointer;
+  transition:transform .18s cubic-bezier(.2,1.3,.4,1),filter .18s ease;
+}
+.topbtn:active{transform:scale(.96);filter:brightness(1.1) saturate(1.06)}
+.topicon{width:33px;padding:0}
+.topicon svg{width:18px;height:18px;fill:currentColor}
+
+/* 今日头部（App 化，不用封面大标题） */
+.todayhead{margin-bottom:16px}
+.throw{display:flex;align-items:baseline;gap:8px}
+.throw b{font-size:21px;font-weight:700;letter-spacing:-.03em;line-height:1.1}
+.throw .en{font-size:10px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
+.thmin{margin-left:auto;font-style:normal;font-size:11px;color:var(--muted2)}
+.thmin b{font-size:11px;font-weight:600;color:var(--muted)}
+.todayhead p{margin:5px 0 0;font-size:12px;color:var(--muted)}
+
+/* 日期行 */
+.dateline{display:flex;align-items:baseline;gap:8px;margin-bottom:10px}
+.dateline .d-main{font-size:14px;font-weight:650;color:var(--text);letter-spacing:-.01em}
+.dateline .d-wd{font-size:13px;color:var(--muted);font-weight:500}
+.dateline .d-week{font-size:10px;color:var(--muted2);margin-left:auto;letter-spacing:.04em}
+
+/* 假状态栏（仅桌面预览） */
+.statusbar{
+  display:none;
+  position:absolute;top:0;left:0;right:0;height:51px;
+  padding:0 32px;align-items:center;justify-content:space-between;
+  font-size:14px;font-weight:600;letter-spacing:.02em;z-index:30;pointer-events:none;
+}
+.statusbar .sbr{display:flex;gap:5px;align-items:center}
+.sig{width:17px;height:11px;
+  background:linear-gradient(90deg,#f2f4f2 0 3px,transparent 3px 5px,#f2f4f2 5px 8px,transparent 8px 10px,#f2f4f2 10px 13px,transparent 13px 15px,#f2f4f2 15px 17px);
+  -webkit-mask-image:linear-gradient(180deg,transparent 0 30%,#000 30%);
+}
+.bat{width:24px;height:12px;border:1.5px solid rgba(242,244,242,.6);border-radius:3.5px;position:relative}
+.bat::before{content:"";position:absolute;inset:1.5px;width:70%;background:var(--text);border-radius:1.5px}
+@media (min-width:521px){.statusbar{display:flex}}
+
+/* ---------- 滚动区 ---------- */
+.scroller{
+  position:relative;z-index:1;
+  flex:1;overflow-y:auto;overflow-x:hidden;
+  padding:calc(51px + var(--safe-t) + 12px) var(--page-pad) 140px;
+  -webkit-overflow-scrolling:touch;
+  overscroll-behavior-y:contain;
+  scrollbar-width:none;
+}
+.scroller::-webkit-scrollbar{display:none}
+.scroller.tight{padding-bottom:132px}
+
+.head{padding:0 0 16px}
+@media (min-width:521px){.head{padding-top:58px}}
+.eyebrow{
+  font-size:11px;font-weight:600;letter-spacing:.14em;
+  color:var(--muted2);text-transform:uppercase;margin-bottom:9px;
+}
+h1{
+  margin:0;font-size:40px;line-height:1.02;font-weight:700;letter-spacing:-.035em;
+  display:flex;align-items:baseline;gap:9px;
+}
+h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
+.sub{margin:9px 0 0;font-size:13px;color:var(--muted);letter-spacing:.01em}
+.sub b{color:var(--text);font-weight:600}
+
+/* 身体数据同步条 */
+.syncline{
+  display:flex;align-items:center;flex-wrap:wrap;gap:6px;
+  font-size:10.5px;color:var(--muted2);letter-spacing:.02em;
+  padding:9px 12px;margin:-2px 0 12px;
+  border-radius:14px;
+}
+.syncline b{color:rgba(242,244,242,.92);font-weight:600;font-variant-numeric:tabular-nums}
+.live{
+  width:5px;height:5px;border-radius:50%;background:var(--lime);
+  flex:none;
+}
+
+/* 动作效率等级 */
+.grade{
+  font-size:8.5px;font-weight:800;letter-spacing:.06em;
+  padding:2px 5px;border-radius:5px;margin-left:6px;vertical-align:1px;
+  background:rgba(228,0,43,.12);color:var(--lime);
+}
+.grade.a{background:rgba(110,168,255,.14);color:var(--blue)}
+.grade.b{background:rgba(255,255,255,.07);color:var(--muted)}
+
+/* ---------- 卡片：玻璃 + 18 圆角 + 16 内边距 ---------- */
+.card{
+  position:relative;
+  border-radius:var(--card-r);
+  padding:16px;
+}
+.card + .card{margin-top:13px}
+
+/* 首页头部卡：日期 + 今日训练 + 本周环 + 同步条 */
+.herocard .dateline{margin-bottom:14px}
+.herocard .todayhead{margin-bottom:16px}
+.herofoot{
+  display:flex;align-items:center;flex-wrap:wrap;gap:6px;
+  margin-top:16px;padding-top:13px;border-top:1px solid var(--line);
+  font-size:10.5px;color:var(--muted2);letter-spacing:.02em;
+}
+.herofoot b{color:rgba(242,244,242,.92);font-weight:600;font-variant-numeric:tabular-nums}
+
+/* ---------- 进度环（照热量账本：232px / r84 / stroke 13） ---------- */
+.ringwrap{position:relative;width:232px;height:232px;margin:10px auto 4px}
+.ringwrap svg{transform:rotate(-90deg);display:block;width:232px;height:232px}
+.ring-bg{fill:none;stroke:rgba(255,255,255,.06);stroke-width:13}
+.ring-rim{
+  fill:none;stroke:url(#rimGrad);stroke-width:14.6;stroke-linecap:round;
+  stroke-dasharray:527.8;stroke-dashoffset:527.8;
+  transition:stroke-dashoffset .7s cubic-bezier(.2,.8,.2,1);
+}
+.ring-fg{
+  fill:none;stroke:url(#ringGrad);stroke-width:13;stroke-linecap:round;
+  stroke-dasharray:527.8;stroke-dashoffset:527.8;
+  filter:drop-shadow(0 0 7px rgba(228,0,43,.35));
+  transition:stroke-dashoffset .7s cubic-bezier(.2,.8,.2,1);
+}
+.ringmid{
+  position:absolute;inset:0;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+}
+.ringmid .rlbl{font-size:11px;letter-spacing:.2em;color:var(--muted);font-weight:500}
+.ringmid b{font-size:56px;font-weight:500;letter-spacing:-1.5px;line-height:.96;font-variant-numeric:tabular-nums;margin-top:2px}
+.ringmid .rsub{font-size:12px;color:var(--muted2);letter-spacing:.02em;margin-top:-1px}
+.ringmid .rgap{font-size:11px;font-weight:600;color:rgba(255,255,255,.8);letter-spacing:.2px;margin-top:12px}
+
+/* 三宫格（同热量账本的三格） */
+.stats3{
+  display:grid;grid-template-columns:1fr 1fr 1fr;
+  margin-top:12px;padding:0;
+}
+.stats3>div{text-align:center;position:relative}
+.stats3>div+div::before{content:"";position:absolute;left:0;top:2px;bottom:2px;width:1px;background:var(--line)}
+.stats3 .k{font-size:11px;color:var(--muted2);letter-spacing:.6px}
+.stats3 .v{font-size:18px;font-weight:600;margin-top:6px;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.stats3 .v small{font-size:10px;color:var(--muted2);font-weight:400;margin-left:5px;letter-spacing:0;vertical-align:2px}
+
+/* 卡片首行：日期 + 今天完成组数 */
+.topline{display:flex;align-items:baseline;gap:8px}
+.topline .d-main{font-size:14px;font-weight:650;color:var(--text);letter-spacing:-.01em}
+.topline .d-wd{font-size:13px;color:var(--muted);font-weight:500}
+.topline .dset{margin-left:auto;font-size:11px;color:var(--muted2);font-variant-numeric:tabular-nums}
+.topline .dset b{color:var(--text);font-weight:600}
+
+.wd-day{flex:1;display:flex;flex-direction:column;align-items:center;gap:7px}
+.wd-day i{width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,.12)}
+.wd-day.on i{background:var(--lime)}
+.wd-day span{font-size:11px;color:var(--muted2);letter-spacing:.02em;font-weight:500}
+.wd-day.on span{color:var(--text);font-weight:650}
+.wd-day.today span{color:var(--lime)}
+.wd-day.today i{}
+.weekstrip{display:flex;gap:4px;margin-top:16px;padding-top:15px;border-top:1px solid var(--line)}
+
+.up{color:var(--lime)}
+
+/* ---------- 列表头 ---------- */
+.listhead{
+  display:flex;align-items:baseline;justify-content:space-between;
+  margin:24px 2px 10px;
+}
+.listhead h2{margin:0;font-size:12px;line-height:20px;font-weight:600;letter-spacing:.4px;color:var(--muted)}
+.listhead span{font-size:11px;color:var(--muted2);font-variant-numeric:tabular-nums}
+
+/* 今日完成度 */
+.todaybar{padding:0 2px 12px}
+.tbrow{display:flex;justify-content:space-between;font-size:11px;color:var(--muted2);margin-bottom:8px;letter-spacing:.02em}
+.tbrow b{color:var(--text);font-weight:600;font-variant-numeric:tabular-nums}
+.tbline{height:10px;border-radius:5px;background:rgba(255,255,255,.07);overflow:hidden}
+.tbline i{display:block;height:100%;border-radius:5px;
+  background:linear-gradient(90deg,rgba(228,0,43,.55),var(--lime));
+  transition:width .45s cubic-bezier(.33,1.02,.3,1)}
+
+/* 分化选择 */
+.splpick{display:flex;gap:5px;padding:11px 6px 6px}
+.sp{position:relative;flex:1;border:1px solid transparent;background:transparent;border-radius:12px;
+  padding:9px 2px 8px;display:flex;flex-direction:column;align-items:center;gap:2px;
+  cursor:pointer;font-family:inherit;
+  transition:background .2s,border-color .2s,transform .18s cubic-bezier(.2,1.3,.4,1)}
+.sp b{font-size:13px;font-weight:600;color:var(--text);letter-spacing:-.01em}
+.sp span{font-size:9.5px;color:var(--muted2);white-space:nowrap}
+.sp.on{background:rgba(228,0,43,.12);border-color:rgba(228,0,43,.38)}
+.sp.on b{color:#FF4D66}
+.sp.on span{color:rgba(255,77,102,.78)}
+.sp i{position:absolute;top:-7px;right:50%;transform:translateX(50%);
+  font-style:normal;font-size:7.5px;font-weight:700;letter-spacing:.04em;
+  color:#fff;background:var(--lime);padding:1.5px 4px;border-radius:4px;white-space:nowrap}
+.sp:active{transform:scale(.96)}
+
+/* ---------- 动作卡：玻璃 + 16 圆角（对应 .meal） ---------- */
+.ex{
+  border-radius:var(--tile-r);
+  padding:13px 14px 12px;
+  transition:background .25s;
+}
+.ex + .ex{margin-top:8px}
+.ex.done{background-image:linear-gradient(180deg,rgba(228,0,43,.07),rgba(228,0,43,.04)),var(--edge-gloss)}
+.exrow{display:flex;align-items:baseline;justify-content:space-between;gap:10px}
+.ex h3{margin:0;font-size:13.5px;font-weight:600;letter-spacing:-.01em}
+.exload{font-size:12px;font-weight:600;color:var(--muted);font-variant-numeric:tabular-nums;white-space:nowrap}
+.exmeta{margin:5px 0 10px;font-size:11.5px;color:var(--muted2);letter-spacing:.01em}
+.sets{display:flex;align-items:center;gap:7px}
+/* 点击动画：热量账本 .btn/.topbtn 同一套 */
+.dot{
+  width:26px;height:8px;padding:0;border:0;border-radius:4px;
+  background:rgba(255,255,255,.09);cursor:pointer;
+  transition:background .2s,transform .18s cubic-bezier(.2,1.3,.4,1),filter .18s ease;
+}
+.dot:active{transform:scale(.9);filter:brightness(1.1) saturate(1.06)}
+.dot.on{background:var(--lime)}
+.setcount{margin-left:auto;font-size:11px;color:var(--muted2);font-variant-numeric:tabular-nums}
+
+/* ---------- 底部渐隐 + 主按钮 ---------- */
+.fade{
+  position:absolute;left:0;right:0;bottom:0;height:210px;z-index:17;pointer-events:none;
+  background:linear-gradient(to top,#060907 34%,rgba(6,9,7,.92) 58%,rgba(6,9,7,0));
+}
+.cta{
+  position:absolute;left:var(--page-pad);right:var(--page-pad);
+  bottom:calc(-41px + var(--dock-h) + 14px);z-index:18;
+  padding:16px;border:1px solid transparent;border-radius:18px;
+  background:linear-gradient(180deg,#FF2D4A,var(--lime));color:#fff;
+  font-size:16px;font-weight:600;letter-spacing:.01em;
+  font-family:inherit;cursor:pointer;
+  transition:transform .18s cubic-bezier(.2,1.3,.4,1),filter .18s ease,opacity .2s;
+}
+.cta:active{transform:scale(.96);filter:brightness(1.1) saturate(1.06)}
+.cta.ghost{
+  background-image:linear-gradient(180deg,var(--glass-top) 0%,var(--glass-bot) 100%),var(--edge-gloss);
+  background-color:transparent;
+  background-origin:border-box;background-clip:padding-box,border-box;
+  border:1px solid transparent;
+  -webkit-backdrop-filter:var(--glass-blur);backdrop-filter:var(--glass-blur);
+  color:var(--text);
+}
+.cta.inline{position:static;width:100%;display:block;margin-top:16px}
+
+/* ---------- Dock：玻璃 + 52 圆角 + 104 高（实测） ---------- */
+.dock{
+  position:absolute;left:10px;right:10px;
+  bottom:-41px;z-index:20;
+  height:var(--dock-h);padding:0 12px;
+  display:flex;align-items:center;
+  border-radius:calc(var(--dock-h) / 2);
+  background-color:transparent;
+  background-image:linear-gradient(180deg,var(--glass-top) 0%,var(--glass-bot) 100%),var(--edge-gloss);
+  background-origin:border-box;
+  background-clip:padding-box,border-box;
+  border:1px solid transparent;
+  -webkit-backdrop-filter:var(--glass-blur);
+  backdrop-filter:var(--glass-blur);
+  box-shadow:none;
+}
+/* 选中块：胶囊（圆角 = 高度一半），比 Dock 高度扁一档 —— 材质与颜色照热量账本 */
+.pill{
+  position:absolute;left:9px;top:9px;
+  height:72px;
+  border-radius:36px;
+  transition:left .62s cubic-bezier(.33,1.06,.32,1),width .42s cubic-bezier(.33,1.06,.32,1);
+  pointer-events:none;
+}
+/* 内层只做形变：按下横向撑开、纵向压扁（与热量账本 .dock-lens.press 同一条曲线） */
+.pillbody{
+  display:block;position:absolute;inset:0;border-radius:inherit;
+  background:rgba(255,255,255,.085);
+  box-shadow:none;
+  transition:transform .24s cubic-bezier(.32,.9,.28,1),border-radius .24s ease,background .18s ease;
+}
+.pill.press .pillbody{
+  transform:scale(1.055,.925);border-radius:calc((var(--dock-h) - 18px) / 2 + 1px);
+  /* v11.25：按下时那条径向渐变白删掉（用户 2026-11-07 要求「药丸移动/按下时的渐变白效果全部删除」），
+     只保留压扁形变，底色始终是上面那块实色 */
+}
+.tab{
+  position:relative;z-index:1;
+  flex:1;height:100%;border:0;background:transparent;cursor:pointer;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;
+  color:var(--muted2);font-family:inherit;
+  border-radius:16px;padding:0;height:72px;
+  transition:background .24s,color .3s;
+}
+.tab .ico{width:35px;height:35px;fill:currentColor;display:block}
+.tab span{font-size:13px;font-weight:600;letter-spacing:.2px;line-height:1.2}
+.tab.on{color:var(--lime)}
+
+/* ---------- 视图切换 ---------- */
+.view{display:none;animation:fade .22s ease}
+.view.on{display:block}
+@keyframes fade{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+
+/* ---------- 计划页 ---------- */
+.aicard .tag{
+  display:inline-flex;align-items:center;gap:5px;
+  font-size:10px;font-weight:700;letter-spacing:.1em;color:var(--lime);
+  background:rgba(228,0,43,.1);padding:3px 8px;border-radius:20px;
+  margin-bottom:11px;
+}
+.aicard h2{margin:0;font-size:20px;font-weight:700;letter-spacing:-.03em}
+.aicard p{margin:8px 0 0;font-size:12.5px;color:var(--muted);line-height:1.65}
+.why{display:flex;flex-wrap:wrap;gap:6px;margin-top:13px}
+.why span{
+  font-size:10.5px;color:rgba(242,244,242,.72);
+  border-radius:8px;padding:5px 9px;
+  background-color:rgba(255,255,255,.05);
+  border:1px solid var(--line);
+}
+
+/* 身体数据卡 */
+.bchead{display:flex;align-items:center;justify-content:space-between;margin-bottom:13px}
+.bchead span:first-child{font-size:10.5px;color:var(--muted2);letter-spacing:.06em}
+.synctime{font-size:9.5px;color:var(--lime);background:rgba(228,0,43,.1);padding:3px 8px;border-radius:20px;font-weight:600;letter-spacing:.02em}
+.bgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:4px}
+.bgrid div{display:flex;flex-direction:column;gap:5px}
+.bgrid b{font-size:19px;font-weight:650;letter-spacing:-.045em;font-variant-numeric:tabular-nums;line-height:1}
+.bgrid b em{font-style:normal;font-size:10px;color:var(--muted2);margin-left:1px;letter-spacing:0;font-weight:500}
+.bgrid i{font-style:normal;font-size:9px;color:var(--muted2);letter-spacing:.02em}
+.bnote{margin:13px 0 0;padding-top:12px;border-top:1px solid var(--line);font-size:11px;color:var(--muted);line-height:1.7}
+
+/* 每周有效组数 */
+.volcard{display:flex;flex-direction:column;gap:10px}
+.vol{display:flex;align-items:center;gap:10px}
+.vl{width:30px;flex:none;font-size:11px;color:var(--muted)}
+.vbar{flex:1;height:8px;border-radius:4px;background:rgba(255,255,255,.07);overflow:hidden}
+.vbar i{display:block;height:100%;border-radius:4px;background:linear-gradient(90deg,rgba(228,0,43,.5),var(--lime))}
+.vv{width:22px;text-align:right;font-size:11.5px;font-weight:600;font-variant-numeric:tabular-nums}
+.volfoot{display:flex;justify-content:space-between;font-size:10px;color:var(--muted2);padding-top:10px;border-top:1px solid var(--line);margin-top:1px;letter-spacing:.02em}
+.volfoot b{color:var(--text);font-weight:650}
+
+.weekday{display:flex;align-items:flex-start;gap:14px;padding:13px 2px}
+.weekday[data-day]{cursor:pointer}
+.weekday + .weekday{border-top:1px solid var(--line)}
+.wd{width:34px;flex:none;font-size:11px;color:var(--muted2);letter-spacing:.06em;padding-top:2px}
+.wdmain{flex:1;min-width:0}
+.wdmain h4{margin:0;font-size:13.5px;font-weight:600;display:flex;align-items:center;gap:8px}
+.wdmain h4 .en{font-size:10px;letter-spacing:.14em;color:var(--muted2);font-weight:600}
+.wdmain p{margin:4px 0 0;font-size:11.5px;color:var(--muted2)}
+.chev{
+  width:5px;height:5px;margin-left:auto;flex:none;
+  border-right:1.3px solid var(--muted2);border-bottom:1.3px solid var(--muted2);
+  transform:rotate(45deg);opacity:.65;transition:transform .3s;
+}
+.weekday.open .chev{transform:rotate(-135deg);opacity:1}
+.exlist{display:none;margin-top:10px;padding-top:5px;border-top:1px dashed rgba(255,255,255,.07)}
+.weekday.open .exlist{display:block;animation:fade .28s cubic-bezier(.2,1,.3,1)}
+.exi{display:flex;align-items:center;gap:6px;padding:6px 0;font-size:12px;color:rgba(242,244,242,.82)}
+.exi b{margin-left:auto;font-size:11px;font-weight:600;color:var(--muted);font-variant-numeric:tabular-nums}
+
+.badge{
+  font-size:9.5px;font-weight:700;letter-spacing:.06em;
+  color:#fff;background:var(--lime);padding:2px 7px;border-radius:20px;
+}
+.badge.ghost{background:rgba(255,255,255,.09);color:var(--muted)}
+
+/* ---------- 记录页 ---------- */
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.stat{border-radius:var(--card-r);padding:15px 12px}
+.stat b{display:block;font-size:21px;font-weight:650;letter-spacing:-.04em;font-variant-numeric:tabular-nums;line-height:1}
+.stat b em{font-style:normal;font-size:11px;color:var(--muted2);font-weight:500;margin-left:2px;letter-spacing:0}
+.stat span{display:block;margin-top:7px;font-size:10px;color:var(--muted2);letter-spacing:.05em}
+
+.bars{display:flex;align-items:flex-end;justify-content:space-between;gap:6px;height:126px;margin-top:4px}
+.bar{flex:1;display:flex;flex-direction:column;align-items:center;gap:8px;height:100%}
+.bar i{
+  display:block;width:100%;max-width:15px;border-radius:5px;
+  background:rgba(255,255,255,.16);
+  margin-top:auto;transition:height .6s cubic-bezier(.2,1,.3,1);
+}
+.bar:last-child i{background:var(--lime)}
+.bar span{font-size:9.5px;color:var(--muted2);font-variant-numeric:tabular-nums}
+.bar:last-child span{color:var(--lime)}
+
+.pr{display:flex;align-items:center;justify-content:space-between;padding:12px 0}
+.pr + .pr{border-top:1px solid var(--line)}
+.pr .nm{font-size:13.5px;font-weight:550}
+.pr .nm small{display:block;font-size:10px;color:var(--muted2);margin-top:3px;font-weight:400;letter-spacing:.02em}
+.pr .val{text-align:right}
+.pr .val b{font-size:16px;font-weight:650;font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+.pr .val b em{font-style:normal;font-size:10px;color:var(--muted2);font-weight:500;margin-left:2px}
+.pr .val i{display:block;font-style:normal;font-size:10px;color:var(--lime);margin-top:2px}
+.pr .val i.flat{color:var(--muted2)}
+
+.heat{display:grid;grid-template-columns:repeat(14,1fr);gap:4px}
+.heat i{display:block;aspect-ratio:1;border-radius:2.5px;background:rgba(255,255,255,.055)}
+.heat i.l1{background:rgba(228,0,43,.20)}
+.heat i.l2{background:rgba(228,0,43,.42)}
+.heat i.l3{background:rgba(228,0,43,.68)}
+.heat i.l4{background:var(--lime)}
+
+/* ---------- 我的 ---------- */
+.profile{display:flex;align-items:center;gap:12px;padding:2px 0 16px}
+.avatar{width:46px;height:46px;border-radius:16px;display:grid;place-items:center;
+  font-size:17px;font-weight:700;color:#fff;
+  background:linear-gradient(160deg,rgba(228,0,43,.9),rgba(228,0,43,.35))}
+.pinfo{display:flex;flex-direction:column;gap:3px}
+.pinfo b{font-size:16px;font-weight:650;letter-spacing:-.01em}
+.pinfo span{font-size:11.5px;color:var(--muted2)}
+
+/* 设置分组 */
+/* 设置行（实测：rows 圆角18 / 左右16 / 行高54 / 15号字 / label 上下 0 32 8） */
+.setbody{padding:2px 0 26px}
+.setlabel{font-size:12px;color:var(--muted2);letter-spacing:.4px;padding:0 32px 8px;font-weight:400}
+.setrows{margin:0 16px 16px;border-radius:18px;overflow:hidden;
+  background-image:linear-gradient(rgba(2,4,3,.42),rgba(2,4,3,.30)),var(--edge-gloss);
+  background-origin:border-box;background-clip:padding-box,border-box;border:1px solid transparent}
+.srow{display:flex;align-items:center;gap:13px;width:100%;
+  padding:6px 15px;min-height:54px;border:0;background:transparent;
+  font-family:inherit;font-size:15px;font-weight:500;letter-spacing:.1px;color:var(--text);
+  text-align:left;cursor:pointer;
+  transition:transform .18s cubic-bezier(.2,1.3,.4,1),filter .18s ease}
+.srow:active{transform:scale(.985);filter:brightness(1.08)}
+.srow + .srow{border-top:1px solid rgba(255,255,255,.05)}
+.srow .ico{width:22px;height:22px;flex:none;color:var(--lime);display:grid;place-items:center}
+.srow .ico svg{width:22px;height:22px;fill:currentColor;display:block}
+.srow .lbl{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.srow .val{color:var(--muted2);font-size:15px;flex:none;display:flex;align-items:center;gap:5px}
+.srow .val::after{content:"";width:5px;height:5px;border-right:1.4px solid var(--muted2);border-bottom:1.4px solid var(--muted2);transform:rotate(-45deg);opacity:.65}
+.val.plain::after{display:none}
+.goalcard .tag{
+  font-size:10px;font-weight:700;letter-spacing:.1em;color:var(--blue);
+  background:rgba(110,168,255,.12);padding:3px 8px;border-radius:20px;display:inline-block;margin-bottom:11px;
+}
+.goalcard h2{margin:0;font-size:21px;font-weight:700;letter-spacing:-.03em}
+.goalcard p{margin:7px 0 0;font-size:12px;color:var(--muted);line-height:1.65}
+.row{display:flex;align-items:center;justify-content:space-between;padding:14px 0;
+  transition:transform .18s cubic-bezier(.2,1.3,.4,1),filter .18s ease}
+.row:active{transform:scale(.99)}
+.row + .row{border-top:1px solid var(--line)}
+.row .lab{font-size:13px;font-weight:520}
+.row .lab small{display:block;font-size:10.5px;color:var(--muted2);margin-top:3px;font-weight:400}
+.row .val{font-size:12.5px;color:var(--muted);display:flex;align-items:center;gap:6px}
+.row .val::after{content:"";width:5px;height:5px;border-right:1.4px solid var(--muted2);border-bottom:1.4px solid var(--muted2);transform:rotate(-45deg);margin-left:1px;opacity:.7}
+.sw{width:44px;height:26px;border-radius:14px;background:var(--lime);position:relative;flex:none}
+.sw::after{content:"";position:absolute;top:3px;right:3px;width:20px;height:20px;border-radius:50%;background:#0a0b0c}
+.sw.off{background:rgba(255,255,255,.12)}
+.sw.off::after{right:auto;left:3px;background:#8a918b}
+
+/* ---------- 遮罩 ---------- */
+.mask{
+  position:absolute;inset:0;background:rgba(0,0,0,.55);
+  -webkit-backdrop-filter:blur(5px) saturate(1.15);
+  backdrop-filter:blur(5px) saturate(1.15);
+  opacity:0;pointer-events:none;transition:opacity .3s;z-index:40;
+}
+.mask.on{opacity:1;pointer-events:auto}
+
+/* ---------- 弹层：玻璃 + 46 圆角（实测 #nutSheet） ---------- */
+.sheet{
+  position:absolute;left:var(--dock-w);right:var(--dock-w);
+  bottom:-41px;top:auto;z-index:41;
+  opacity:0;pointer-events:none;
+  transform:translateY(102%);
+  border-radius:calc(var(--dock-h) / 2);
+  background-color:transparent;
+  background-image:linear-gradient(180deg,var(--glass-top) 0%,var(--glass-bot) 100%),var(--edge-gloss);
+  background-origin:border-box;
+  background-clip:padding-box,border-box;
+  border:1px solid transparent;
+  -webkit-backdrop-filter:var(--glass-blur);
+  backdrop-filter:var(--glass-blur);
+  padding:18px 0 0;
+  transform:translateY(102%);
+  transition:transform .34s cubic-bezier(.22,.8,.3,1),opacity .22s ease;
+  max-height:calc(100% - 120px);overflow-y:auto;
+  scrollbar-width:none;-ms-overflow-style:none;
+}
+.sheet::-webkit-scrollbar{width:0;height:0;display:none}
+.sheet.on{transform:none;opacity:1;pointer-events:auto}
+/* 小信息卡（动作详情/训练）居中 */
+.sheet.center{top:50%;bottom:auto;padding:20px;transform:translateY(-50%) scale(.96);opacity:0}
+.sheet.center.on{transform:translateY(-50%) scale(1);opacity:1}
+
+/* 悬浮卡：居中浮在屏幕上（热量账本弹层卡那套），不贴底 */
+.sheet.float{
+  left:50%;right:auto;bottom:auto;top:50%;width:calc(100% - 40px);max-width:350px;
+  border-radius:46px;padding:20px 20px 18px;
+  transform:translate(-50%,-46%) scale(.96);
+  opacity:0;pointer-events:none;max-height:82%;
+  transition:transform .34s cubic-bezier(.22,.8,.3,1),opacity .22s ease;
+  box-shadow:none;
+}
+.sheet.float.on{transform:translate(-50%,-50%) scale(1);opacity:1;pointer-events:auto}
+.grab{width:66px;height:4px;border-radius:2px;background:rgba(255,255,255,.16);margin:0 auto 14px}
+.sh-hd{display:flex;align-items:baseline;justify-content:space-between;margin:0 0 4px;padding:0 20px}
+.sheet h2{margin:0;font-size:21px;font-weight:700;letter-spacing:-.025em}
+.vtag{font-size:11px;color:var(--muted2);font-weight:600;letter-spacing:.02em;
+  padding:5px 11px;border-radius:14px;border:1px solid rgba(255,255,255,.12)}
+.sheet .hint{margin:0 0 18px;padding:0 20px;font-size:11.5px;color:var(--muted2);line-height:1.7}
+.field{margin-bottom:15px}
+.field label{display:block;font-size:10px;color:var(--muted2);letter-spacing:.09em;margin-bottom:8px;text-transform:uppercase}
+.chips{display:flex;flex-wrap:wrap;gap:7px}
+.chip{
+  font-family:inherit;font-size:12.5px;font-weight:550;
+  color:rgba(242,244,242,.75);
+  background:rgba(255,255,255,.06);border:1px solid var(--line);
+  padding:9px 14px;border-radius:12px;cursor:pointer;
+  transition:background .2s,border-color .2s,color .2s,transform .18s cubic-bezier(.2,1.3,.4,1),filter .18s ease;
+}
+.chip:active{transform:scale(.96);filter:brightness(1.1) saturate(1.06)}
+.chip.on{background:rgba(228,0,43,.12);border-color:rgba(228,0,43,.42);color:var(--lime);font-weight:650}
+.sheet .cta{position:static;width:100%;margin-top:8px}
+
+.think{display:flex;flex-direction:column;gap:11px;padding:6px 0 4px}
+.think div{
+  display:flex;align-items:center;gap:9px;font-size:12.5px;color:var(--muted2);
+  opacity:.35;transition:opacity .35s,color .35s;
+}
+.think div::before{
+  content:"";width:14px;height:14px;border-radius:50%;flex:none;
+  border:1.5px solid rgba(255,255,255,.2);transition:all .3s;
+}
+.think div.on{opacity:1;color:var(--text)}
+.think div.on::before{background:var(--lime);border-color:var(--lime)}
+
+.result{
+  border-radius:var(--tile-r);padding:16px;margin-top:4px;
+  background-color:rgba(255,255,255,.04);
+  border:1px solid rgba(228,0,43,.18);
+}
+.result h3{margin:0;font-size:19px;font-weight:700;letter-spacing:-.02em}
+.result p{margin:7px 0 0;font-size:11.5px;color:var(--muted);line-height:1.65}
+.resmeta{
+  margin-top:11px;padding-top:10px;border-top:1px solid rgba(228,0,43,.16);
+  font-size:10px;color:rgba(228,0,43,.75);letter-spacing:.02em;line-height:1.5;
+}
+
+/* 训练中 */
+.timer{font-size:54px;font-weight:650;letter-spacing:-.05em;font-variant-numeric:tabular-nums;text-align:center;line-height:1;margin:6px 0 4px}
+.timerlab{text-align:center;font-size:10.5px;color:var(--muted2);letter-spacing:.14em;margin-bottom:20px}
+.nowex{border-radius:var(--tile-r);padding:15px;margin-bottom:14px;
+  background-color:rgba(255,255,255,.04);border:1px solid var(--line)}
+.nowex .t{font-size:10px;color:var(--muted2);letter-spacing:.1em;margin-bottom:6px}
+.nowex .n{font-size:17px;font-weight:650;letter-spacing:-.02em}
+.nowex .m{font-size:11.5px;color:var(--muted);margin-top:5px}
+.sheet .cta+.cta{margin-top:9px}
+
+/* 动作详情 */
+.sheet#exSheet{max-height:calc(100% - 150px);overflow-y:auto}
+.exdetail{display:flex;flex-direction:column;margin-top:8px}
+.exrow2{display:flex;justify-content:space-between;align-items:baseline;padding:12px 0;
+  border-top:1px solid var(--line);font-size:13px}
+.exrow2:first-child{border-top:0}
+.exrow2 span{color:var(--muted2)}
+.exrow2 b{font-weight:600;font-variant-numeric:tabular-nums}
+.exnote{margin:14px 0 0;padding-top:12px;border-top:1px solid var(--line);
+  font-size:11.5px;color:var(--muted2);line-height:1.7}
+
+/* 更新记录 */
+.relitem{padding:13px 0;border-bottom:1px solid var(--line)}
+.relitem:last-child{border-bottom:12px}
+.relhd{display:flex;align-items:baseline;gap:8px}
+.relhd b{font-size:13.5px;font-weight:650}
+.relhd i{font-style:normal;font-size:10px;color:var(--muted2)}
+.relitem ul{margin:7px 0 0;padding-left:16px;font-size:11.5px;color:var(--muted);line-height:1.75}
+.relitem li{margin-bottom:2px}
+
+/* 图标选择 */
+.islot{display:flex;align-items:center;gap:12px;padding:13px 0}
+.islot + .islot{border-top:1px solid var(--line)}
+.islab{width:36px;flex:none;font-size:11px;color:var(--muted2);letter-spacing:.04em}
+.iopts{display:flex;gap:8px;flex:1}
+.iopt{
+  width:46px;height:46px;border-radius:14px;flex:none;
+  border:1px solid var(--line);background:rgba(255,255,255,.05);
+  color:var(--muted);display:grid;place-items:center;cursor:pointer;
+  transition:background .2s,border-color .2s,color .2s,transform .18s cubic-bezier(.2,1.3,.4,1),filter .18s ease;
+}
+.iopt svg{width:24px;height:24px;fill:currentColor}
+.iopt:active{transform:scale(.96);filter:brightness(1.1) saturate(1.06)}
+.iopt.on{background:rgba(228,0,43,.12);border-color:rgba(228,0,43,.42);color:var(--lime)}
+.iconnote{
+  font-size:10.5px;color:var(--muted2);line-height:1.7;
+  padding:13px 0 4px;border-top:1px solid var(--line);margin-top:6px;
+}
+</style>
+</head>
+<body>
+
+<div class="phone">
+  <div class="screen">
+
+    <div class="statusbg" aria-hidden="true"></div>
+    <div class="topbar">
+      <div class="brand">练<span>账</span><i class="btag">v4.3</i></div>
+      <div class="topactions">
+        <button class="topbtn topicon" id="reloadTop" aria-label="强制更新" title="强制更新">
+          <svg viewBox="0 -960 960 960" aria-hidden="true"><path d="M480-160q-134 0-227-93t-93-227q0-134 93-227t227-93q69 0 132 28.5T720-690v-70q0-17 11.5-28.5T760-800q17 0 28.5 11.5T800-760v200q0 17-11.5 28.5T760-520H560q-17 0-28.5-11.5T520-560q0-17 11.5-28.5T560-600h128q-32-56-87.5-88T480-720q-100 0-170 70t-70 170q0 100 70 170t170 70q68 0 124.5-34.5T692-367q8-14 22.5-19.5t29.5-.5q16 5 23 21t-1 30q-41 80-117 128t-169 48Z"/></svg>
+        </button>
+        <button class="topbtn topicon" id="openSet" aria-label="设置" title="设置">
+          <svg viewBox="0 -960 960 960" aria-hidden="true"><path d="M370-80l-16-128q-13-5-24.5-12T307-235l-119 50L78-375l103-78q-1-7-1-13.5v-27q0-6.5 1-13.5L78-585l110-190 119 50q11-8 23-15t24-12l16-128h220l16 128q13 5 24.5 12t22.5 15l119-50 110 190-103 78q1 7 1 13.5v27q0 6.5-1 13.5l103 78-110 190-119-50q-11 8-23 15t-24 12L590-80H370Zm112-260q58 0 99-41t41-99q0-58-41-99t-99-41q-59 0-99.5 41T342-480q0 58 40.5 99t99.5 41Z"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="scroller" id="scroller">
+
+      <!-- ============ 今日 ============ -->
+      <section class="view on" data-view="today">
+        <div class="card herocard">
+          <div class="topline">
+            <span class="d-main">11月7日</span><span class="d-wd">周五</span>
+            <span class="dset"><b id="doneSets">0</b> / <span id="todayTotal">17</span> 组</span>
+          </div>
+
+          <div class="ringwrap">
+            <svg viewBox="0 0 200 200" width="232" height="232">
+              <defs>
+                <linearGradient id="ringGrad" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0%" stop-color="#FF2D4A"/>
+                  <stop offset="100%" stop-color="#8F0020"/>
+                </linearGradient>
+                <linearGradient id="rimGrad" x1="0" y1="0" x2="0.75" y2="1">
+                  <stop offset="0%" stop-color="#ffffff" stop-opacity="0.55"/>
+                  <stop offset="30%" stop-color="#ffffff" stop-opacity="0.22"/>
+                  <stop offset="65%" stop-color="#ffffff" stop-opacity="0.08"/>
+                  <stop offset="100%" stop-color="#ffffff" stop-opacity="0.16"/>
+                </linearGradient>
+              </defs>
+              <circle class="ring-bg" cx="100" cy="100" r="84"/>
+              <circle class="ring-rim" id="ringRim" cx="100" cy="100" r="84"/>
+              <circle class="ring-fg" id="ringFg" cx="100" cy="100" r="84"/>
+            </svg>
+            <div class="ringmid">
+              <span class="rlbl">本周</span>
+              <b id="weekDays">4</b>
+              <span class="rsub">/ 6 天</span>
+              <span class="rgap">还差 2 天</span>
+            </div>
+          </div>
+
+          <div class="stats3">
+            <div>
+              <div class="k">今天</div>
+              <div class="v"><span id="todayName">腿</span><small id="todayEn">LEGS</small></div>
+            </div>
+            <div>
+              <div class="k">本周容量</div>
+              <div class="v">12,480<small>kg</small></div>
+            </div>
+            <div>
+              <div class="k">连续打卡</div>
+              <div class="v">12<small>天</small></div>
+            </div>
+          </div>
+          <div class="weekstrip" id="weekStrip"></div>
+
+          <div class="herofoot">
+            <span class="live"></span>
+            已同步热量账本
+            <b>64.9</b> kg · 体脂 <b>16.8%</b> · 去脂 <b>54.0</b> kg
+          </div>
+        </div>
+
+        <div class="listhead">
+          <h2>今天的动作</h2>
+          <span id="listMeta">17 有效组 · 0 垃圾容量</span>
+        </div>
+
+        <div id="exList"></div>
+      </section>
+
+      <!-- ============ 计划 ============ -->
+      <section class="view" data-view="plan">
+        <header class="head">
+          <div class="eyebrow">训练周期 · 第 3 周 / 共 8 周</div>
+          <h1>计划 <span class="en">PLAN</span></h1>
+          <p class="sub">AI 按你的恢复速度排的，每周自动微调</p>
+        </header>
+
+        <div class="listhead"><h2>训练分化</h2><span>AI 推荐 · 可自选</span></div>
+        <div class="card splpick" id="splitPick">
+          <button class="sp" data-n="2"><b>2 天</b><span>全身</span></button>
+          <button class="sp on" data-n="3"><b>3 天</b><span>推拉腿</span><i>推荐</i></button>
+          <button class="sp" data-n="4"><b>4 天</b><span>上下肢</span></button>
+          <button class="sp" data-n="5"><b>5 天</b><span>四分化</span></button>
+          <button class="sp" data-n="6"><b>6 天</b><span>推拉腿×2</span></button>
+        </div>
+
+        <div class="card aicard">
+          <span class="tag">✦ AI 生成 · 3 天前更新</span>
+          <h2 id="splitName">三分化 · 推拉腿</h2>
+          <p id="splitDesc">每周 6 练，每个肌群 48 小时恢复窗口。第 3 周为累积周，负荷系数 1.0；第 5 周会自动降到 0.7 做减载。</p>
+          <div class="why">
+            <span>目标 增肌</span>
+            <span>经验 1–2 年</span>
+            <span>每周 6 练</span>
+            <span>商业健身房</span>
+          </div>
+        </div>
+
+        <div class="card bodycard">
+          <div class="bchead">
+            <span>身体数据 · 来自热量账本</span>
+            <span class="synctime">11/05 同步</span>
+          </div>
+          <div class="bgrid">
+            <div><b>64.9</b><i>体重 kg</i></div>
+            <div><b>16.8<em>%</em></b><i>体脂率</i></div>
+            <div><b>54.0</b><i>去脂体重 kg</i></div>
+            <div><b>21.4</b><i>BMI</i></div>
+          </div>
+          <p class="bnote">体脂 16.8% 正处在增肌窗口。AI 采用「小盈余 + 高有效容量」：每周 +0.25 kg，蛋白质下限 1.8 g/kg ≈ 117 g/天，与热量账本的盈余目标共用同一套数字。</p>
+        </div>
+
+        <div class="listhead"><h2>每周有效组数</h2><span>上限 20 组 / 肌群</span></div>
+        <div class="card volcard">
+          <div class="vol"><span class="vl">胸</span><div class="vbar"><i style="width:70%"></i></div><span class="vv">14</span></div>
+          <div class="vol"><span class="vl">背</span><div class="vbar"><i style="width:80%"></i></div><span class="vv">16</span></div>
+          <div class="vol"><span class="vl">腿</span><div class="vbar"><i style="width:85%"></i></div><span class="vv">17</span></div>
+          <div class="vol"><span class="vl">肩</span><div class="vbar"><i style="width:50%"></i></div><span class="vv">10</span></div>
+          <div class="vol"><span class="vl">手臂</span><div class="vbar"><i style="width:40%"></i></div><span class="vv">8</span></div>
+          <div class="vol"><span class="vl">核心</span><div class="vbar"><i style="width:30%"></i></div><span class="vv">6</span></div>
+          <div class="volfoot"><span>合计 <b>71</b> 有效组</span><span>建议区间 60–80</span></div>
+        </div>
+
+        <div class="listhead"><h2>本周排布</h2><span id="weekMeta">6 练 · 1 休</span></div>
+        <div class="card" id="weekCard" style="padding:4px 16px"></div>
+
+        <button class="cta inline ghost" id="planCta">让 AI 重新规划</button>
+      </section>
+
+      <!-- ============ 记录 ============ -->
+      <section class="view" data-view="log">
+        <header class="head">
+          <div class="eyebrow">累计 128 次训练</div>
+          <h1>记录 <span class="en">LOG</span></h1>
+          <p class="sub">每一组都算数</p>
+        </header>
+
+        <div class="stats">
+          <div class="stat"><b>12</b><span>连续天数</span></div>
+          <div class="stat"><b>36.2<em>t</em></b><span>本月容量</span></div>
+          <div class="stat"><b>4</b><span>刷新 PR</span></div>
+        </div>
+
+        <div class="listhead"><h2>每周容量</h2><span>公斤 · 近 8 周</span></div>
+        <div class="card">
+          <div class="bars">
+            <div class="bar"><i style="height:44%"></i><span>W1</span></div>
+            <div class="bar"><i style="height:52%"></i><span>W2</span></div>
+            <div class="bar"><i style="height:49%"></i><span>W3</span></div>
+            <div class="bar"><i style="height:63%"></i><span>W4</span></div>
+            <div class="bar"><i style="height:58%"></i><span>W5</span></div>
+            <div class="bar"><i style="height:74%"></i><span>W6</span></div>
+            <div class="bar"><i style="height:81%"></i><span>W7</span></div>
+            <div class="bar"><i style="height:92%"></i><span>W8</span></div>
+          </div>
+        </div>
+
+        <div class="listhead"><h2>个人最好成绩</h2><span>近 90 天</span></div>
+        <div class="card" style="padding:4px 16px">
+          <div class="pr">
+            <div class="nm">硬拉<small>Deadlift · 11/2</small></div>
+            <div class="val"><b>140<em>kg</em></b><i>+5</i></div>
+          </div>
+          <div class="pr">
+            <div class="nm">深蹲<small>Squat · 10/28</small></div>
+            <div class="val"><b>110<em>kg</em></b><i>+2.5</i></div>
+          </div>
+          <div class="pr">
+            <div class="nm">卧推<small>Bench · 10/21</small></div>
+            <div class="val"><b>80<em>kg</em></b><i class="flat">持平</i></div>
+          </div>
+          <div class="pr">
+            <div class="nm">引体向上<small>Pull-up · 11/4</small></div>
+            <div class="val"><b>16<em>次</em></b><i>+1</i></div>
+          </div>
+        </div>
+
+        <div class="listhead"><h2>打卡热力</h2><span>近 14 周</span></div>
+        <div class="card">
+          <div class="heat" id="heat"></div>
+        </div>
+      </section>
+
+      <!-- ============ 我的 ============ -->
+      <section class="view" data-view="me">
+        <div class="profile">
+          <div class="avatar">K</div>
+          <div class="pinfo"><b>Karen</b><span>加入 128 天 · 增肌中</span></div>
+        </div>
+
+        <div class="card goalcard">
+          <span class="tag">当前目标</span>
+          <h2>增肌 · 每周净增 0.25 kg</h2>
+          <p>训练日建议盈余 +300 kcal，休息日 +150 kcal。热量由「热量账本」自动同步，今天还有 420 kcal 额度。</p>
+        </div>
+
+        <div class="card bodycard" style="margin-top:12px">
+          <div class="bchead">
+            <span>身体数据 · 与热量账本共用一份</span>
+            <span class="synctime">自动同步</span>
+          </div>
+          <div class="bgrid">
+            <div><b>64.9</b><i>体重 kg</i></div>
+            <div><b>16.8<em>%</em></b><i>体脂率</i></div>
+            <div><b>54.0</b><i>去脂体重 kg</i></div>
+            <div><b>21.4</b><i>BMI</i></div>
+          </div>
+          <p class="bnote">这四个数字是训练的输入：去脂体重决定起始负荷，体脂率决定盈余幅度，BMI 用来卡减载周。在热量账本里改一次体重，这边下一次排课就跟着变。</p>
+        </div>
+
+        </section>
+
+    </div>
+
+    <div class="fade"></div>
+
+    <nav class="dock">
+      <div class="pill" id="pill"><i class="pillbody"></i></div>
+      <button class="tab on" data-tab="today">
+        <svg class="ico" viewBox="0 -960 960 960" aria-hidden="true"><path/></svg>
+        <span>今日</span>
+      </button>
+      <button class="tab" data-tab="plan">
+        <svg class="ico" viewBox="0 -960 960 960" aria-hidden="true"><path/></svg>
+        <span>计划</span>
+      </button>
+      <button class="tab" data-tab="log">
+        <svg class="ico" viewBox="0 -960 960 960" aria-hidden="true"><path/></svg>
+        <span>记录</span>
+      </button>
+      <button class="tab" data-tab="me">
+        <svg class="ico" viewBox="0 -960 960 960" aria-hidden="true"><path/></svg>
+        <span>我的</span>
+      </button>
+    </nav>
+
+    <!-- 遮罩 -->
+    <div class="mask" id="mask"></div>
+
+    <!-- AI 规划弹层 -->
+    <div class="sheet" id="aiSheet">
+      <div class="grab"></div>
+      <div id="aiForm">
+        <h2>让 AI 重新规划</h2>
+        <p class="hint">根据你的目标、可用时间和恢复能力，决定分化方式与每周组数。</p>
+
+        <div class="field">
+          <label>训练目标</label>
+          <div class="chips" data-f="goal">
+            <button class="chip on">增肌</button><button class="chip">减脂</button><button class="chip">力量</button><button class="chip">塑形</button>
+          </div>
+        </div>
+        <div class="field">
+          <label>每周能练</label>
+          <div class="chips" data-f="days">
+            <button class="chip">2</button><button class="chip">3</button><button class="chip">4</button><button class="chip">5</button><button class="chip on">6</button>
+          </div>
+        </div>
+        <div class="field">
+          <label>可用器械</label>
+          <div class="chips" data-f="gear">
+            <button class="chip on">商业健身房</button><button class="chip">只有哑铃</button><button class="chip">徒手</button>
+          </div>
+        </div>
+        <div class="field">
+          <label>训练经验</label>
+          <div class="chips" data-f="level">
+            <button class="chip">新手</button><button class="chip on">1–2 年</button><button class="chip">3 年以上</button>
+          </div>
+        </div>
+
+        <button class="cta" id="genBtn">生成方案</button>
+      </div>
+
+      <div id="aiThink" hidden>
+        <h2>正在分析</h2>
+        <p class="hint">大约 2 秒</p>
+        <div class="think" id="thinkList">
+          <div>读取身体数据（体重 / 体脂 / 去脂体重）</div>
+          <div>读取近 12 周训练容量与恢复间隔</div>
+          <div>按有效组数分配容量，剔除低效动作</div>
+          <div>生成 8 周周期化排布</div>
+        </div>
+      </div>
+
+      <div id="aiDone" hidden>
+        <h2>方案已生成</h2>
+        <p class="hint">可在「计划」页查看完整排布</p>
+        <div class="result">
+          <h3 id="resName">三分化 · 推拉腿</h3>
+          <p id="resDesc"></p>
+          <div class="resmeta">依据 去脂体重 54.0 kg · 体脂 16.8% · 每周上限 80 有效组</div>
+        </div>
+        <button class="cta" id="useBtn" style="margin-top:16px">采用此方案</button>
+        <button class="cta ghost" id="againBtn">重新调整</button>
+      </div>
+    </div>
+
+    <!-- 设置 -->
+    <div class="sheet" id="setSheet">
+      <div class="grab"></div>
+      <div class="sh-hd"><h2>设置</h2><span class="vtag">v4.3</span></div>
+      <div class="setbody">
+        <div class="setlabel">功能</div>
+        <div class="setrows">
+          <button class="srow" data-ic="event_note"><span class="ico"></span><span class="lbl">每周训练频率</span><span class="val">6 天</span></button>
+          <button class="srow" data-ic="fitness_center"><span class="ico"></span><span class="lbl">可用器械</span><span class="val">商业健身房</span></button>
+          <button class="srow" data-ic="badge"><span class="ico"></span><span class="lbl">训练经验</span><span class="val">1–2 年</span></button>
+          <button class="srow" data-ic="timeline"><span class="ico"></span><span class="lbl">单次时长上限</span><span class="val">60 分钟</span></button>
+        </div>
+
+        <div class="setlabel">其他</div>
+        <div class="setrows">
+          <button class="srow" id="iconRow" data-ic="palette"><span class="ico"></span><span class="lbl">App 图标</span><span class="val">可换 4 处</span></button>
+          <div class="srow" data-ic="bolt"><span class="ico"></span><span class="lbl">与热量账本同步</span><span class="sw"></span></div>
+          <div class="srow" data-ic="monitor_heart"><span class="ico"></span><span class="lbl">Apple 健康</span><span class="sw"></span></div>
+          <div class="srow" data-ic="assignment"><span class="ico"></span><span class="lbl">训练提醒</span><span class="sw"></span></div>
+          <button class="srow" id="openRel" data-ic="checklist"><span class="ico"></span><span class="lbl">更新记录</span><span class="val">v4.3</span></button>
+        </div>
+      </div>
+    </div>
+
+        <!-- 动作详情 -->
+    <div class="sheet center" id="exSheet">
+      <div class="grab"></div>
+      <div class="sh-hd"><h2 id="exName">平板杠铃卧推</h2><span class="vtag" id="exGrade">S</span></div>
+      <div class="exdetail">
+        <div class="exrow2"><span>组数</span><b id="exSets">4 组</b></div>
+        <div class="exrow2"><span>次数</span><b id="exRep">6–8 次</b></div>
+        <div class="exrow2"><span>重量</span><b id="exKg">80 kg</b></div>
+        <div class="exrow2"><span>组间休息</span><b id="exRest">150 秒</b></div>
+        <div class="exrow2"><span>今天完成</span><b id="exDone">0 / 4</b></div>
+      </div>
+      <p class="exnote" id="exNote">复合动作，排在第一个做。重量以能留 1–2 次余力为准。</p>
+      <button class="cta" id="finishHere">完成本组</button>
+    </div>
+
+    <!-- 更新记录 -->
+    <div class="sheet" id="relSheet">
+      <div class="grab"></div>
+      <div class="sh-hd"><h2>更新记录</h2><span class="vtag" id="relVer">v0.2</span></div>
+      <div id="relList" style="padding:0 20px"></div>
+    </div>
+
+    <!-- 图标选择弹层 -->
+    <div class="sheet" id="iconSheet">
+      <div class="grab"></div>
+      <h2>图标</h2>
+      <p class="hint">Material Symbols Rounded 实心。点一个换一个位置，和热量账本用的是同一个图标库。</p>
+      <div id="iconSlots"></div>
+      <div class="iconnote">跟热量账本一样的规矩：某个功能下线时，这里对应的候选也要一起删掉，不留一个点了没反应的死图标。</div>
+      <button class="cta" id="iconDone" style="margin-top:14px">完成</button>
+    </div>
+
+  </div>
+</div>
+
+<script>
+(function(){
+  var $ = function(s,r){ return (r||document).querySelector(s); };
+  var $$ = function(s,r){ return Array.prototype.slice.call((r||document).querySelectorAll(s)); };
+
+  /* ---------- 图标库：Material Symbols Rounded（实心），与热量账本同一套 ---------- */
+  var ICONS = {"fitness_center":"M268-650 147-529q-9 9-21 9t-21-9q-8-8-8.5-20.5T104-571l36-37-35-35q-9-9-9-21t9-21l64-64-21-21q-9-9-9-21t9-21q8-8 20.5-8.5T190-813l22 21 63-63q9-9 21-9t21 9l35 35 37-36q9-8 21-8t21 9q9 9 9 21t-9 21L310-692l382 382 121-121q9-9 21-9t21 9q8 8 8.5 20.5T856-389l-36 37 35 35q9 9 9 21t-9 21l-65 65 21 21q9 9 9 21t-9 21q-9 9-21 9t-21-9l-21-21-63 63q-9 9-21 9t-21-9l-35-35-37 36q-9 8-21 8t-21-9q-9-9-9-21t9-21l121-121-382-382Z","sports_gymnastics":"m489-108-19-370-149-52H70q-12.75 0-21.37-8.68-8.63-8.67-8.63-21.5 0-12.82 8.63-21.32Q57.25-590 70-590h213l253-181q10-7 20.96-5.53 10.96 1.46 19 10.26Q584-756 583-743q-1 13-12 21l-123 88 97 34 320-188q8-5 17.92-2.87 9.92 2.13 18 11.35 8.08 8.52 6.55 19.86Q905.94-748.32 896-741L574-507l-22 399q-.8 11.79-10.4 19.89Q532-80 518.15-80q-11.66 0-20.04-8.11-8.38-8.1-9.11-19.89ZM240.08-647q-30.08 0-51.58-21.42t-21.5-51.5q0-30.08 21.42-51.58t51.5-21.5q30.08 0 51.58 21.42t21.5 51.5q0 30.08-21.42 51.58t-51.5 21.5Z","bolt":"M360-360H217q-18 0-26.5-16t2.5-31l338-488q8-11 20-15t24 1q12 5 19 16t5 24l-39 309h176q19 0 27 17t-4 32L388-66q-8 10-20.5 13T344-55q-11-5-17.5-16T322-95l38-265Z","today":"M284-338.18q-28-28.19-28-69Q256-448 284.18-476q28.19-28 69-28Q394-504 422-475.82q28 28.19 28 69Q450-366 421.82-338q-28.19 28-69 28Q312-310 284-338.18ZM180-80q-24 0-42-18t-18-42v-620q0-24 18-42t42-18h65v-28q0-13.6 9-22.8 9-9.2 23.02-9.2t23.5 9.2Q310-861.6 310-848v28h340v-28q0-13.6 9-22.8 9-9.2 23.02-9.2t23.5 9.2Q715-861.6 715-848v28h65q24 0 42 18t18 42v620q0 24-18 42t-42 18H180Zm0-60h600v-430H180v430Z","event_note":"M180-80q-24 0-42-18t-18-42v-620q0-24 18-42t42-18h65v-28q0-13.6 9-22.8 9-9.2 23.02-9.2t23.5 9.2Q310-861.6 310-848v28h340v-28q0-13.6 9-22.8 9-9.2 23.02-9.2t23.5 9.2Q715-861.6 715-848v28h65q24 0 42 18t18 42v620q0 24-18 42t-42 18H180Zm0-60h600v-430H180v430Zm130-280q-12.75 0-21.37-8.68-8.63-8.67-8.63-21.5 0-12.82 8.63-21.32 8.62-8.5 21.37-8.5h340q12.75 0 21.38 8.68 8.62 8.67 8.62 21.5 0 12.82-8.62 21.32-8.63 8.5-21.38 8.5H310Zm0 180q-12.75 0-21.37-8.68-8.63-8.67-8.63-21.5 0-12.82 8.63-21.32 8.62-8.5 21.37-8.5h219q12.75 0 21.38 8.68 8.62 8.67 8.62 21.5 0 12.82-8.62 21.32-8.63 8.5-21.38 8.5H310Z","calendar_month":"M180-80q-24 0-42-18t-18-42v-620q0-24 18-42t42-18h65v-28q0-13.6 9-22.8 9-9.2 23.02-9.2t23.5 9.2Q310-861.6 310-848v28h340v-28q0-13.6 9-22.8 9-9.2 23.02-9.2t23.5 9.2Q715-861.6 715-848v28h65q24 0 42 18t18 42v620q0 24-18 42t-42 18H180Zm0-60h600v-430H180v430Zm300-260q-17 0-28.5-11.5T440-440q0-17 11.5-28.5T480-480q17 0 28.5 11.5T520-440q0 17-11.5 28.5T480-400Zm-188.5-11.5Q280-423 280-440t11.5-28.5Q303-480 320-480t28.5 11.5Q360-457 360-440t-11.5 28.5Q337-400 320-400t-28.5-11.5ZM640-400q-17 0-28.5-11.5T600-440q0-17 11.5-28.5T640-480q17 0 28.5 11.5T680-440q0 17-11.5 28.5T640-400ZM480-240q-17 0-28.5-11.5T440-280q0-17 11.5-28.5T480-320q17 0 28.5 11.5T520-280q0 17-11.5 28.5T480-240Zm-188.5-11.5Q280-263 280-280t11.5-28.5Q303-320 320-320t28.5 11.5Q360-297 360-280t-11.5 28.5Q337-240 320-240t-28.5-11.5ZM640-240q-17 0-28.5-11.5T600-280q0-17 11.5-28.5T640-320q17 0 28.5 11.5T680-280q0 17-11.5 28.5T640-240Z","assignment":"M180-120q-24.75 0-42.37-17.63Q120-155.25 120-180v-600q0-24.75 17.63-42.38Q155.25-840 180-840h205q5-35 32-57.5t63-22.5q36 0 63 22.5t32 57.5h205q24.75 0 42.38 17.62Q840-804.75 840-780v600q0 24.75-17.62 42.37Q804.75-120 780-120H180Zm130-160h213q12.75 0 21.38-8.68 8.62-8.67 8.62-21.5 0-12.82-8.62-21.32-8.63-8.5-21.38-8.5H310q-12.75 0-21.37 8.68-8.63 8.67-8.63 21.5 0 12.82 8.63 21.32 8.62 8.5 21.37 8.5Zm0-170h340q12.75 0 21.38-8.68 8.62-8.67 8.62-21.5 0-12.82-8.62-21.32-8.63-8.5-21.38-8.5H310q-12.75 0-21.37 8.68-8.63 8.67-8.63 21.5 0 12.82 8.63 21.32 8.62 8.5 21.37 8.5Zm0-170h340q12.75 0 21.38-8.68 8.62-8.67 8.62-21.5 0-12.82-8.62-21.32-8.63-8.5-21.38-8.5H310q-12.75 0-21.37 8.68-8.63 8.67-8.63 21.5 0 12.82 8.63 21.32 8.62 8.5 21.37 8.5Zm194.5-187.5Q515-818 515-832t-10.5-24.5Q494-867 480-867t-24.5 10.5Q445-846 445-832t10.5 24.5Q466-797 480-797t24.5-10.5Z","checklist":"m222-299 158-158q9-9 21-8.5t21.39 9.5q8.61 9 8.61 21t-9 21L243-235q-9 9-21 9t-21-9L101-335q-9-9-9-21t9-21q9-9 21-8.5t21 8.5l79 78Zm0-320 158-158q9-9 21-8.5t21.39 9.5q8.61 9 8.61 21t-9 21L243-555q-9 9-21 9t-21-9L101-655q-9-9-9-21t9-21q9-9 21-8.5t21 8.5l79 78Zm328 329q-12.75 0-21.37-8.68-8.63-8.67-8.63-21.5 0-12.82 8.63-21.32 8.62-8.5 21.37-8.5h300q12.75 0 21.38 8.68 8.62 8.67 8.62 21.5 0 12.82-8.62 21.32-8.63 8.5-21.38 8.5H550Zm0-320q-12.75 0-21.37-8.68-8.63-8.67-8.63-21.5 0-12.82 8.63-21.32 8.62-8.5 21.37-8.5h300q12.75 0 21.38 8.68 8.62 8.67 8.62 21.5 0 12.82-8.62 21.32-8.63 8.5-21.38 8.5H550Z","bar_chart":"M690-160q-12.75 0-21.37-8.63Q660-177.25 660-190v-220q0-12.75 8.63-21.38Q677.25-440 690-440h80q12.75 0 21.38 8.62Q800-422.75 800-410v220q0 12.75-8.62 21.37Q782.75-160 770-160h-80Zm-250 0q-12.75 0-21.37-8.63Q410-177.25 410-190v-580q0-12.75 8.63-21.38Q427.25-800 440-800h80q12.75 0 21.38 8.62Q550-782.75 550-770v580q0 12.75-8.62 21.37Q532.75-160 520-160h-80Zm-250 0q-12.75 0-21.37-8.63Q160-177.25 160-190v-380q0-12.75 8.63-21.38Q177.25-600 190-600h80q12.75 0 21.38 8.62Q300-582.75 300-570v380q0 12.75-8.62 21.37Q282.75-160 270-160h-80Z","monitoring":"M128.5-128.63Q120-137.25 120-150v-46q0-12.75 8.68-21.38 8.67-8.62 21.5-8.62 12.82 0 21.32 8.62 8.5 8.63 8.5 21.38v46q0 12.75-8.68 21.37-8.67 8.63-21.5 8.63-12.82 0-21.32-8.63Zm165 0Q285-137.25 285-150v-206q0-12.75 8.68-21.38 8.67-8.62 21.5-8.62 12.82 0 21.32 8.62 8.5 8.63 8.5 21.38v206q0 12.75-8.68 21.37-8.67 8.63-21.5 8.63-12.82 0-21.32-8.63Zm165 0Q450-137.25 450-150v-146q0-12.75 8.68-21.38 8.67-8.62 21.5-8.62 12.82 0 21.32 8.62 8.5 8.63 8.5 21.38v146q0 12.75-8.68 21.37-8.67 8.63-21.5 8.63-12.82 0-21.32-8.63Zm165 0Q615-137.25 615-150v-246q0-12.75 8.68-21.38 8.67-8.62 21.5-8.62 12.82 0 21.32 8.62 8.5 8.63 8.5 21.38v246q0 12.75-8.68 21.37-8.67 8.63-21.5 8.63-12.82 0-21.32-8.63Zm165 0Q780-137.25 780-150v-366q0-12.75 8.68-21.38 8.67-8.62 21.5-8.62 12.82 0 21.32 8.62 8.5 8.63 8.5 21.38v366q0 12.75-8.68 21.37-8.67 8.63-21.5 8.63-12.82 0-21.32-8.63ZM559.5-499q-11.5 0-22.46-4.7-10.97-4.69-20.04-13.3L400-634 172-407q-9.07 9-21.53 8.5-12.47-.5-21.34-9.5-8.13-9-8.63-21t8.5-21l229-227q9.07-8.87 20.04-12.93Q389-694 400-694t22.34 4.07Q433.68-685.87 442-677l118 118 229-229q9-9 21-9t20.87 9q8.13 9 8.63 21t-8.5 21L602-517q-8 9-19.5 13.5t-23 4.5Z","timeline":"M109.91-240Q81-240 60.5-260.59 40-281.18 40-310.09t20.49-49.41q20.5-20.5 49.28-20.5 5.23 0 10.23.5t13 2.5l200-200q-2-8-2.5-13t-.5-10.23q0-28.78 20.59-49.28Q371.18-670 400.09-670t49.41 20.63q20.5 20.64 20.5 49.61 0 1.76-3 22.76l110 110q8-2 13-2.5t10-.5q5 0 10 .5t13 2.5l160-160q-2-8-2.5-13t-.5-10.23q0-28.78 20.59-49.28Q821.18-720 850.09-720t49.41 20.59q20.5 20.59 20.5 49.5t-20.49 49.41q-20.5 20.5-49.28 20.5-5.23 0-10.23-.5t-13-2.5L667-423q2 8 2.5 13t.5 10.23q0 28.78-20.59 49.28Q628.82-330 599.91-330t-49.41-20.49q-20.5-20.5-20.5-49.28 0-5.23.5-10.23t2.5-13L423-533q-8 2-13 2.5t-10.25.5q-1.75 0-22.75-3L177-333q2 8 2.5 13t.5 10.23q0 28.78-20.59 49.28Q138.82-240 109.91-240Z","person":"M372-523q-42-42-42-108t42-108q42-42 108-42t108 42q42 42 42 108t-42 108q-42 42-108 42t-108-42ZM160-220v-34q0-38 19-65t49-41q67-30 128.5-45T480-420q62 0 123 15.5T731-360q31 14 50 41t19 65v34q0 25-17.5 42.5T740-160H220q-25 0-42.5-17.5T160-220Z","account_circle":"M222-255q63-40 124.5-60.5T480-336q72 0 134 20.5T739-255q44-54 62.5-109T820-480q0-145-97.5-242.5T480-820q-145 0-242.5 97.5T140-480q0 61 19 116t63 109Zm160.5-234.5Q343-529 343-587t39.5-97.5Q422-724 480-724t97.5 39.5Q617-645 617-587t-39.5 97.5Q538-450 480-450t-97.5-39.5ZM480-80q-84 0-157-31.5t-127-86Q142-252 111-325T80-480q0-83 31.5-156t86-127Q252-817 325-848.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 82-31.5 155T763-197.5q-54 54.5-127 86T480-80Z","badge":"M232-247h239v-14q0-18-9-32t-23-19q-32-11-50-14.5t-35-3.5q-19 0-40.5 4.5T265-312q-15 5-24 19t-9 32v14Zm361-67h120q11 0 18-7t7-18q0-11-7-18t-18-7H593q-11 0-18 7t-7 18q0 11 7 18t18 7Zm-200.5-65.5Q408-395 408-418t-15.5-38.5Q377-472 354-472t-38.5 15.5Q300-441 300-418t15.5 38.5Q331-364 354-364t38.5-15.5ZM593-427h120q11 0 18-7t7-18q0-11-7-18t-18-7H593q-11 0-18 7t-7 18q0 11 7 18t18 7ZM140-80q-24 0-42-18t-18-42v-480q0-24 18-42t42-18h250v-140q0-24 18-42t42-18h60q24 0 42 18t18 42v140h250q24 0 42 18t18 42v480q0 24-18 42t-42 18H140Zm310-510h60v-230h-60v230Z","monitor_heart":"M140-160q-24 0-42-18t-18-42v-200q0-13 8.5-21.5T110-450h191l72 144q4 8 11.5 12t15.5 4q8 0 15.5-4t11.5-12l133-266 53 106q4 8 11.5 12t15.5 4h210q13 0 21.5 8.5T880-420v200q0 24-18 42t-42 18H140ZM80-740q0-24 18-42t42-18h680q24 0 42 18t18 42v200q0 13-8.5 21.5T850-510H659l-72-143q-4-8-11.5-11.5T560-668q-8 0-15.5 3.5T533-653L400-388l-53-106q-4-8-11.5-12t-15.5-4H110q-13 0-21.5-8.5T80-540v-200Z","settings":"M421-80q-14 0-25-9t-13-23l-15-94q-19-7-40-19t-37-25l-86 40q-14 6-28 1.5T155-226L97-330q-8-13-4.5-27t15.5-23l80-59q-2-9-2.5-20.5T185-480q0-9 .5-20.5T188-521l-80-59q-12-9-15.5-23t4.5-27l58-104q8-13 22-17.5t28 1.5l86 40q16-13 37-25t40-18l15-95q2-14 13-23t25-9h118q14 0 25 9t13 23l15 94q19 7 40.5 18.5T669-710l86-40q14-6 27.5-1.5T804-734l59 104q8 13 4.5 27.5T852-580l-80 57q2 10 2.5 21.5t.5 21.5q0 10-.5 21t-2.5 21l80 58q12 8 15.5 22.5T863-330l-58 104q-8 13-22 17.5t-28-1.5l-86-40q-16 13-36.5 25.5T592-206l-15 94q-2 14-13 23t-25 9H421Zm59-270q54 0 92-38t38-92q0-54-38-92t-92-38q-54 0-92 38t-38 92q0 54 38 92t92 38Z","palette":"M480-80q-82 0-155-31.5t-127.5-86Q143-252 111.5-325T80-480q0-84 32-157t87.5-127q55.5-54 130-85T489-880q79 0 150 26.5T763.5-780q53.5 47 85 111.5T880-527q0 108-63 170.5T650-294h-75q-18 0-31 14t-13 31q0 20 14.5 38t14.5 43q0 26-24.5 57T480-80ZM282-469q15-15 15-35t-15-35q-15-15-35-15t-35 15q-15 15-15 35t15 35q15 15 35 15t35-15Zm126-170q15-15 15-35t-15-35q-15-15-35-15t-35 15q-15 15-15 35t15 35q15 15 35 15t35-15Zm214 0q15-15 15-35t-15-35q-15-15-35-15t-35 15q-15 15-15 35t15 35q15 15 35 15t35-15Zm131 170q15-15 15-35t-15-35q-15-15-35-15t-35 15q-15 15-15 35t15 35q15 15 35 15t35-15Z","auto_awesome":"M38.6 15.1q-.25 0-.425-.1t-.275-.35l-1.45-3.4-3.65-1.6q-.25-.1-.35-.275-.1-.175-.1-.425t.1-.425q.1-.175.35-.275l3.65-1.55 1.45-3.25q.1-.25.275-.35.175-.1.425-.1t.425.1q.175.1.275.35l1.45 3.25 3.65 1.55q.25.1.35.275.1.175.1.425t-.1.425q-.1.175-.35.275l-3.65 1.6-1.45 3.4q-.1.25-.275.35-.175.1-.425.1Zm0 29.8q-.2 0-.4-.1t-.3-.35l-1.45-3.25-3.6-1.55q-.25-.1-.35-.275-.1-.175-.1-.425t.1-.425q.1-.175.35-.275l3.6-1.55 1.45-3.45q.1-.25.275-.35.175-.1.425-.1t.425.1q.175.1.275.35l1.45 3.45 3.6 1.55q.25.1.35.275.1.175.1.425t-.1.425q-.1.175-.35.275l-3.6 1.55-1.45 3.25q-.1.25-.3.35-.2.1-.4.1Zm-21.95-8.65q-.4 0-.775-.225T15.3 35.4l-3.25-6.95-7-3.15q-.4-.2-.625-.575-.225-.375-.225-.775t.225-.775q.225-.375.625-.575l7-3.15 3.25-6.9q.2-.45.575-.675.375-.225.775-.225t.775.225q.375.225.575.625l3.3 6.95 6.95 3.15q.45.2.675.575.225.375.225.775t-.225.775q-.225.375-.675.575l-6.95 3.15L18 35.4q-.2.45-.575.65-.375.2-.775.2Z"};
+
+  var SLOTS = [
+    { key:'today', label:'今日', opts:['fitness_center','sports_gymnastics','bolt','today'] },
+    { key:'plan',  label:'计划', opts:['event_note','calendar_month','checklist','assignment'] },
+    { key:'log',   label:'记录', opts:['bar_chart','monitoring','timeline'] },
+    { key:'me',    label:'我的', opts:['person','account_circle','badge','monitor_heart'] }
+  ];
+  var chosen = { today:'fitness_center', plan:'event_note', log:'bar_chart', me:'person' };
+
+  function paintTab(key){
+    var btn = $('.tab[data-tab="' + key + '"]');
+    if (!btn) return;
+    var p = $('.ico path', btn);
+    if (p) p.setAttribute('d', ICONS[chosen[key]] || ICONS['person']);
+  }
+
+  function renderIconSheet(){
+    $('#iconSlots').innerHTML = SLOTS.map(function(s){
+      return '<div class="islot"><div class="islab">' + s.label + '</div><div class="iopts">' +
+        s.opts.map(function(n){
+          return '<button class="iopt' + (chosen[s.key] === n ? ' on' : '') +
+            '" data-slot="' + s.key + '" data-name="' + n + '">' +
+            '<svg viewBox="0 -960 960 960"><path d="' + (ICONS[n] || '') + '"/></svg></button>';
+        }).join('') +
+        '</div></div>';
+    }).join('');
+  }
+
+  /* ---------- 组数状态 ---------- */
+  var C = 2 * Math.PI * 84;
+  var ringFg = $('#ringFg'), ringRim = $('#ringRim');
+  ringFg.style.strokeDasharray = C;
+  ringFg.style.strokeDashoffset = C;
+  ringRim.style.strokeDasharray = C;
+  ringRim.style.strokeDashoffset = C;
+
+  var state = { sets: {
+    bench:[1,1,0,0],
+    incline:[1,1,1],
+    press:[1,0,0]
+  } };
+
+  function renderSets(){
+    var done = 0, total = 0;
+    $$('.ex').forEach(function(ex){
+      var id = ex.dataset.ex;
+      var arr = state.sets[id] || [];
+      var dots = $$('.dot', ex);
+      var n = 0;
+      dots.forEach(function(d,i){
+        var on = !!arr[i];
+        d.classList.toggle('on', on);
+        if (on) n++;
+      });
+      ex.classList.toggle('done', n === dots.length && n > 0);
+      $('.setcount', ex).textContent = n + '/' + dots.length;
+      done += n; total += dots.length;
+    });
+    $('#doneSets').textContent = done;
+    $('#todayTotal').textContent = total;
+  }
+
+  var curExId = '';
+
+  function paintHere(ex){
+    var btn = $('#finishHere');
+    if (!btn || !ex) return;
+    var all = $$('.dot', ex).length;
+    var on = $$('.dot.on', ex).length;
+    btn.textContent = (on >= all && all > 0) ? '这个动作已练完' : '完成本组';
+    btn.classList.toggle('ghost', on >= all && all > 0);
+  }
+
+  function completeSet(ex){
+    var id = ex.dataset.ex;
+    var arr = state.sets[id] || (state.sets[id] = []);
+    var total = $$('.dot', ex).length;
+    var i = arr.indexOf(false);
+    if (i < 0){ for (var j = 0; j < total; j++){ if (!arr[j]){ i = j; break; } } }
+    if (i >= 0) arr[i] = true;
+    renderSets();
+    $('#exDone').textContent = $$('.dot.on', ex).length + ' / ' + total;
+    paintHere(ex);
+  }
+
+  function openEx(card){
+    var id = card.dataset.ex || '';
+    var key = id.replace(/[0-9]+$/, '');
+    var idx = parseInt(id.replace(/^[a-z]+/, ''), 10) || 0;
+    var arr = (EX[key] || [])[idx];
+    if (!arr) return;
+    curExId = id;
+    var on = $$('.dot.on', card).length;
+    var all = $$('.dot', card).length;
+    $('#exName').textContent = arr.n;
+    $('#exGrade').textContent = arr.g;
+    $('#exSets').textContent = arr.sets + ' 组';
+    $('#exRep').textContent = arr.rep + ' 次';
+    $('#exKg').textContent = arr.kg ? arr.kg + ' kg' : '自重';
+    $('#exRest').textContent = arr.rest + ' 秒';
+    $('#exDone').textContent = on + ' / ' + all;
+    $('#exNote').textContent = arr.g === 'S'
+      ? '复合动作，排在第一个做。重量以能留 1–2 次余力为准。'
+      : (arr.g === 'A' ? '辅助动作，补目标肌群的容量。' : '收尾动作，控制节奏，别甩重量。');
+    paintHere(card);
+    openSheet('#exSheet');
+  }
+
+  $('#finishHere').addEventListener('click', function(){
+    var ex = $('.ex[data-ex="' + curExId + '"]');
+    if (ex) completeSet(ex);
+  });
+
+  document.addEventListener('click', function(e){
+    var dot = e.target.closest('.dot');
+    if (dot){
+      var ex = dot.closest('.ex');
+      var id = ex.dataset.ex;
+      if (!state.sets[id]) state.sets[id] = [];
+      var idx = Array.prototype.indexOf.call($$('.dot', ex), dot);
+      state.sets[id][idx] = !state.sets[id][idx];
+      renderSets();
+      return;
+    }
+    var card = e.target.closest('.ex');
+    if (card) openEx(card);
+  });
+
+
+  /* ---------- 动作库 + 分化方案 ---------- */
+  var EX = {
+    push: [
+      {n:'平板杠铃卧推',g:'S',sets:4,rep:'6–8',kg:80,rest:150,m:'chest'},
+      {n:'上斜哑铃卧推',g:'A',sets:3,rep:'8–10',kg:28,rest:120,m:'chest'},
+      {n:'坐姿哑铃推肩',g:'A',sets:3,rep:'10',kg:20,rest:90,m:'shoulder'},
+      {n:'绳索下压',g:'B',sets:3,rep:'12',kg:25,rest:60,m:'triceps'},
+      {n:'哑铃侧平举',g:'B',sets:4,rep:'15',kg:10,rest:60,m:'shoulder'}
+    ],
+    pull: [
+      {n:'硬拉',g:'S',sets:3,rep:'5',kg:100,rest:180,m:'back'},
+      {n:'引体向上',g:'S',sets:4,rep:'力竭-1',kg:0,rest:120,m:'back'},
+      {n:'坐姿绳索划船',g:'A',sets:3,rep:'10',kg:50,rest:90,m:'back'},
+      {n:'面拉',g:'B',sets:3,rep:'15',kg:20,rest:60,m:'shoulder'},
+      {n:'哑铃弯举',g:'B',sets:3,rep:'12',kg:12,rest:60,m:'biceps'}
+    ],
+    legs: [
+      {n:'杠铃深蹲',g:'S',sets:4,rep:'5–6',kg:80,rest:180,m:'quads'},
+      {n:'罗马尼亚硬拉',g:'S',sets:3,rep:'8',kg:70,rest:120,m:'hamstring'},
+      {n:'腿举',g:'A',sets:3,rep:'10–12',kg:120,rest:90,m:'quads'},
+      {n:'腿弯举',g:'B',sets:3,rep:'12',kg:35,rest:60,m:'hamstring'},
+      {n:'站姿提踵',g:'B',sets:4,rep:'15',kg:60,rest:45,m:'calves'}
+    ],
+    upper: [
+      {n:'平板杠铃卧推',g:'S',sets:4,rep:'6–8',kg:80,rest:150,m:'chest'},
+      {n:'引体向上',g:'S',sets:4,rep:'力竭-1',kg:0,rest:120,m:'back'},
+      {n:'坐姿哑铃推肩',g:'A',sets:3,rep:'10',kg:20,rest:90,m:'shoulder'},
+      {n:'坐姿绳索划船',g:'A',sets:3,rep:'10',kg:50,rest:90,m:'back'},
+      {n:'哑铃侧平举',g:'B',sets:4,rep:'15',kg:10,rest:60,m:'shoulder'}
+    ],
+    lower: [
+      {n:'杠铃深蹲',g:'S',sets:4,rep:'5–6',kg:80,rest:180,m:'quads'},
+      {n:'罗马尼亚硬拉',g:'S',sets:3,rep:'8',kg:70,rest:120,m:'hamstring'},
+      {n:'腿举',g:'A',sets:3,rep:'10–12',kg:120,rest:90,m:'quads'},
+      {n:'腿弯举',g:'B',sets:3,rep:'12',kg:35,rest:60,m:'hamstring'},
+      {n:'站姿提踵',g:'B',sets:4,rep:'15',kg:60,rest:45,m:'calves'}
+    ],
+    full: [
+      {n:'杠铃深蹲',g:'S',sets:4,rep:'5–6',kg:80,rest:180,m:'quads'},
+      {n:'平板杠铃卧推',g:'S',sets:4,rep:'6–8',kg:80,rest:150,m:'chest'},
+      {n:'坐姿绳索划船',g:'A',sets:3,rep:'10',kg:50,rest:90,m:'back'},
+      {n:'坐姿哑铃推肩',g:'A',sets:3,rep:'10',kg:20,rest:90,m:'shoulder'},
+      {n:'哑铃侧平举',g:'B',sets:3,rep:'15',kg:10,rest:60}
+    ]
+  };
+
+  var TITLE = {
+    push:['推','PUSH','胸 · 肩 · 三头',52],
+    pull:['拉','PULL','背 · 二头 · 后束',55],
+    legs:['腿','LEGS','股四 · 腘绳 · 小腿',60],
+    upper:['上肢','UPPER','胸 · 背 · 肩',58],
+    lower:['下肢','LOWER','股四 · 臀 · 小腿',60],
+    full:['全身','FULL','全身复合',55]
+  };
+
+  /* 5 档分化；周五固定为「今天」 */
+  var SPLITS = {
+    2:{ label:'全身 · 每周 2 练', desc:'时间少的时候，全身训练比分化更划算 —— 每个肌群每周被刺激 2 次，单次动作全是复合动作。',
+        days:[['周一','full'],['周二','rest'],['周三','rest'],['周四','full'],['周五','rest'],['周六','rest'],['周日','rest']] },
+    3:{ label:'三分化 · 推拉腿', desc:'每周 3 练刚好跑完一轮推拉腿。每个肌群一周 1 次，但单次容量给足，适合时间紧但能练透的人。',
+        days:[['周一','push'],['周二','rest'],['周三','pull'],['周四','rest'],['周五','legs'],['周六','rest'],['周日','rest']] },
+    4:{ label:'上下肢分化 · 每周 4 练', desc:'上肢 / 下肢各 2 次，每个肌群一周被刺激 2 次，是增肌效率与恢复成本之间最稳的平衡点。',
+        days:[['周一','push'],['周二','pull'],['周三','rest'],['周四','legs'],['周五','push'],['周六','rest'],['周日','rest']] },
+    5:{ label:'四分化 · 每周 5 练', desc:'推 / 拉 / 腿各一次，第 4 次补上肢弱项，第 5 次给腿。前三天把大肌群排满，后两天补容量。',
+        days:[['周一','push'],['周二','pull'],['周三','legs'],['周四','rest'],['周五','upper'],['周六','lower'],['周日','rest']] },
+    6:{ label:'三分化 · 推拉腿 ×2', desc:'每周 6 练跑两轮推拉腿，每个肌群一周 2 次、间隔 72 小时。8 周为一个大周期，第 5 周自动减载 30%。',
+        days:[['周一','push'],['周二','pull'],['周三','legs'],['周四','pull'],['周五','push'],['周六','legs'],['周日','rest']] }
+  };
+
+  var todayKey = 'push';
+  var splitDays = 3;
+
+  function totalSets(key){
+    return EX[key].reduce(function(a,e){ return a + e.sets; }, 0);
+  }
+
+  function renderToday(key){
+    todayKey = key;
+    var t = TITLE[key];
+    $('#todayName').textContent = t[0];
+    $('#todayEn').textContent = t[1];
+    $('#todayTotal').textContent = totalSets(key);
+
+    state.sets = {};
+    var html = '';
+    EX[key].forEach(function(e, i){
+      var dots = '';
+      for (var k = 0; k < e.sets; k++) dots += '<button class="dot"></button>';
+      var load = e.kg ? e.kg + ' kg' : '自重';
+      var gcls = e.g === 'A' ? ' a' : (e.g === 'B' ? ' b' : '');
+      html += '<article class="ex" data-ex="' + key + i + '" data-rest="' + e.rest + '">' +
+        '<div class="exrow"><h3>' + e.n + '<span class="grade' + gcls + '">' + e.g + '</span></h3>' +
+        '<span class="exload">' + load + '</span></div>' +
+        '<p class="exmeta">' + e.sets + ' 组 × ' + e.rep + ' 次 · 休息 ' + e.rest + ' 秒</p>' +
+        '<div class="sets">' + dots + '<span class="setcount">0/' + e.sets + '</span></div>' +
+        '</article>';
+    });
+    $('#exList').innerHTML = html;
+    $('#listMeta').textContent = totalSets(key) + ' 有效组 · 0 垃圾容量';
+    renderSets();
+  }
+
+  function renderWeek(n){
+    var sp = SPLITS[n], html = '', train = 0, rest = 0;
+    sp.days.forEach(function(d){
+      var wd = d[0], key = d[1];
+      if (key === 'rest'){
+        rest++;
+        html += '<div class="weekday rest"><div class="wd">' + wd + '</div>' +
+          '<div class="wdmain"><h4>休息</h4><p>恢复 · 8,000 步 + 拉伸</p></div></div>';
+        return;
+      }
+      train++;
+      var today = (wd === '周五');
+      var acts = EX[key], sets = totalSets(key);
+      var rows = acts.map(function(a){
+        var gcls = a.g === 'A' ? ' a' : (a.g === 'B' ? ' b' : '');
+        return '<div class="exi"><span>' + a.n + '</span><span class="grade' + gcls + '">' + a.g + '</span><b>' + a.sets + ' × ' + a.rep + '</b></div>';
+      }).join('');
+      html += '<div class="weekday" data-day="' + key + '"><div class="wd">' + wd + '</div>' +
+        '<div class="wdmain"><h4>' + TITLE[key][0] + ' <span class="en">' + TITLE[key][1] + '</span>' +
+        (today ? ' <span class="badge">今天</span>' : '') +
+        ' <span class="chev"></span></h4><p>' + acts.length + ' 动作 · ' + sets + ' 有效组</p>' +
+        '<div class="exlist">' + rows + '</div></div></div>';
+    });
+    $('#weekCard').innerHTML = html;
+    $('#weekMeta').textContent = train + ' 练 · ' + rest + ' 休';
+    $$('.weekday[data-day]').forEach(function(w){
+      w.addEventListener('click', function(){ w.classList.toggle('open'); });
+    });
+  }
+
+  function setSplit(n){
+    splitDays = n;
+    $$('#splitPick .sp').forEach(function(b){ b.classList.toggle('on', +b.dataset.n === n); });
+    $('#splitName').textContent = SPLITS[n].label;
+    $('#splitDesc').textContent = SPLITS[n].desc;
+    renderWeek(n);
+    var todayIdx = SPLITS[n].days.filter(function(d){ return d[0] === '周五'; })[0];
+    renderToday(todayIdx[1] === 'rest' ? 'push' : todayIdx[1]);
+  }
+
+  /* ---------- Tab 切换 ---------- */
+  var order = ['today','plan','log','me'];
+  function placePill(i){
+    var tabs = $$('.tab');
+    var t = tabs[i];
+    if (!t) return;
+    var lens = $('#pill');
+    var d = $('.dock').getBoundingClientRect();
+    var r = t.getBoundingClientRect();
+    var b = $('.dock').clientLeft, g = 9;
+    lens.style.width = (r.width - g * 2) + 'px';
+    lens.style.left = (r.left - d.left - b + g - b) + 'px';
+  }
+  function setTab(name){
+    $$('.tab').forEach(function(t){ t.classList.toggle('on', t.dataset.tab === name); });
+    $$('.view').forEach(function(v){ v.classList.toggle('on', v.dataset.view === name); });
+    placePill(order.indexOf(name));
+    if (name === 'today') renderSets();
+    $('#scroller').classList.toggle('tight', name !== 'today');
+    $('#scroller').scrollTop = 0;
+  }
+  $$('.tab').forEach(function(t){
+    t.addEventListener('click', function(){ setTab(t.dataset.tab); });
+    t.addEventListener('pointerdown', function(){ $('#pill').classList.add('press'); });
+  });
+  document.addEventListener('pointerup', function(){ $('#pill').classList.remove('press'); });
+  document.addEventListener('pointercancel', function(){ $('#pill').classList.remove('press'); });
+
+  /* ---------- 按钮 ---------- */
+  $('#planCta').addEventListener('click', function(){
+    openSheet('#aiSheet');
+  });
+  $('#openSet').addEventListener('click', function(){ openSheet('#setSheet'); });
+  $('#openRel').addEventListener('click', function(){ renderRel(); openSheet('#relSheet'); });
+  $('#reloadTop').addEventListener('click', function(){
+    location.replace(location.pathname + '?v=' + Date.now());
+  });
+
+  $('#splitPick').addEventListener('click', function(e){
+    var b = e.target.closest('.sp');
+    if (b) setSplit(+b.dataset.n);
+  });
+
+  /* ---------- 弹层 ---------- */
+  var mask = $('#mask');
+  function openSheet(sel){
+    $$('.sheet').forEach(function(s){ s.classList.remove('on'); });
+    $(sel).classList.add('on');
+    mask.classList.add('on');
+  }
+  function openSheetMask(){ mask.classList.add('on'); }
+  function closeSheets(){
+    $$('.sheet').forEach(function(s){ s.classList.remove('on'); });
+    mask.classList.remove('on');
+    stopTimer();
+  }
+  mask.addEventListener('click', closeSheets);
+
+  /* ---------- AI 规划 ---------- */
+  var pick = { goal:'增肌', days:'6', gear:'商业健身房', level:'1–2 年' };
+  $$('.chips').forEach(function(group){
+    group.addEventListener('click', function(e){
+      var chip = e.target.closest('.chip');
+      if (!chip) return;
+      $$('.chip', group).forEach(function(c){ c.classList.remove('on'); });
+      chip.classList.add('on');
+      pick[group.dataset.f] = chip.textContent.trim();
+    });
+  });
+
+  function buildPlan(){
+    var d = parseInt(pick.days, 10);
+    var lvl = pick.level;
+    if (d <= 2){
+      return {
+        name:'全身 · 每周 ' + d + ' 练',
+        desc:'每个动作都是多关节复合动作，每次练全身。频率太低时，全身训练比分化更划算：同样的时间，每个肌群被刺激的次数更多。'
+      };
+    }
+    if (d === 3){
+      if (lvl === '新手'){
+        return {
+          name:'全身 · 每周 3 练',
+          desc:'新手阶段动作质量优先，全身训练能让每个肌群一周被练到 3 次，同时留出充足恢复。约 8 周后再转分化。'
+        };
+      }
+      return {
+        name:'三分化 · 推拉腿',
+        desc:'每周 3 练刚好跑完一轮推拉腿。每个肌群一周 1 次，但单次容量给足，适合时间紧但能练透的人。'
+      };
+    }
+    if (d === 4){
+      return {
+        name:'上下肢分化 · 每周 4 练',
+        desc:'上肢 / 下肢各 2 次，每个肌群一周被刺激 2 次，是增肌效率与恢复成本之间最稳的平衡点。'
+      };
+    }
+    if (d === 5){
+      return {
+        name:'四分化 · 胸背腿肩 + 弱项',
+        desc:'第 5 天留给弱项或手臂。前 4 天把大肌群排满，第 5 天补容量，避免单一肌群周容量过高。'
+      };
+    }
+    return {
+      name:'三分化 · 推拉腿 ×2',
+      desc:'每周 6 练跑两轮推拉腿，每个肌群一周 2 次、间隔 72 小时。8 周为一个大周期，第 5 周自动减载 30%。'
+    };
+  }
+
+  $('#genBtn').addEventListener('click', function(){
+    $('#aiForm').hidden = true;
+    $('#aiThink').hidden = false;
+    $('#aiDone').hidden = true;
+    var items = $$('#thinkList div');
+    items.forEach(function(i){ i.classList.remove('on'); });
+    var k = 0;
+    var t = setInterval(function(){
+      if (k < items.length){ items[k].classList.add('on'); k++; }
+      else {
+        clearInterval(t);
+        var p = buildPlan();
+        $('#resName').textContent = p.name;
+        $('#resDesc').textContent = p.desc;
+        $('#aiThink').hidden = true;
+        $('#aiDone').hidden = false;
+      }
+    }, 360);
+  });
+
+  $('#againBtn').addEventListener('click', function(){
+    $('#aiDone').hidden = true;
+    $('#aiForm').hidden = false;
+  });
+
+  $('#useBtn').addEventListener('click', function(){
+    var name = $('#resName').textContent, desc = $('#resDesc').textContent;
+    $('#splitName').textContent = name;
+    $('#splitDesc').textContent = desc;
+    closeSheets();
+    setTab('plan');
+  });
+
+  /* ---------- 热力图 ---------- */
+  (function(){
+    var box = $('#heat');
+    var lv = [0,1,0,2,3,0,4,1,0,2,4,3,0,2,1,3,4,0,2,1,4,3,0,0,2,4,3,1,0,2,3,4,2,1,0,3,4,2,0,1,3,4,0,2,4,3,1,0,2,3,4,0,1,2,3,4,0,2,1,3,4,2,0,1,3,4,2,3,0,4,2,1,3,4,2,0,3,4,1,2,4,3,0,2,4,3,1,0,3,4,2,4,3,0,2,4,3,1];
+    var html = '';
+    for (var i=0;i<98;i++){
+      var v = lv[i % lv.length];
+      html += '<i class="' + (v ? 'l'+v : '') + '"></i>';
+    }
+    box.innerHTML = html;
+  })();
+
+  /* ---------- 弹层下滑关闭（热量账本同一套） ---------- */
+  function wireDragClose(sh){
+    var startY = 0, dy = 0, dragging = false;
+    sh.addEventListener('touchstart', function(e){
+      if (sh.scrollTop > 0) return;
+      startY = e.touches[0].clientY; dragging = true; dy = 0;
+      sh.style.transition = 'none';
+    }, { passive: true });
+    sh.addEventListener('touchmove', function(e){
+      if (!dragging) return;
+      dy = Math.max(0, e.touches[0].clientY - startY);
+      sh.style.transform = 'translateY(' + dy + 'px)';
+    }, { passive: true });
+    sh.addEventListener('touchend', function(){
+      if (!dragging) return;
+      dragging = false;
+      sh.style.transition = '';
+      sh.style.transform = '';
+      if (dy > 90) closeSheets();
+    });
+  }
+  $$('#setSheet .srow[data-ic]').forEach(function(r){
+    var n = r.dataset.ic;
+    var ic = r.querySelector('.ico');
+    if (ic && ICONS[n]) ic.innerHTML = '<svg viewBox="0 -960 960 960"><path d="' + ICONS[n] + '"/></svg>';
+  });
+
+  ['#setSheet','#relSheet','#exSheet'].forEach(function(sel){
+    var el = $(sel); if (el) wireDragClose(el);
+  });
+
+  /* ---------- Service Worker（网络优先，改版自动拿最新） ---------- */
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function(){
+      navigator.serviceWorker.register('./sw.js').then(function(reg){
+        reg.update().catch(function(){});
+      }).catch(function(){});
+      var done = false;
+      navigator.serviceWorker.addEventListener('controllerchange', function(){
+        if (done) return;
+        done = true;
+        try{
+          if (sessionStorage.getItem('swReloaded')) return;
+          sessionStorage.setItem('swReloaded', '1');
+        }catch(e){}
+        location.reload();
+      });
+    });
+  }
+
+  /* ---------- 启动版本比对（同热量账本） ---------- */
+  var APP_VERSION = 'v4.3';
+  fetch('./version.txt?t=' + Date.now(), { cache: 'no-store' })
+    .then(function(r){ return r.ok ? r.text() : ''; })
+    .then(function(v){
+      v = (v || '').trim();
+      if (v && v !== APP_VERSION){
+        try{
+          var n = +(sessionStorage.getItem('verTries') || 0);
+          if (n < 2){
+            sessionStorage.setItem('verTries', n + 1);
+            // 带参数跳转才能绕过 iOS web clip 的 HTML 缓存
+            location.replace(location.pathname + '?v=' + Date.now());
+          }
+        }catch(e){}
+      } else {
+        try{ sessionStorage.removeItem('verTries'); }catch(e){}
+      }
+    })
+    .catch(function(){});
+
+  /* ---------- 更新记录 ---------- */
+  var RELEASES = [
+    { v:'v1.7', d:'11-07', items:[
+      'Dock 退回 v1.1 尺寸：370×90、胶囊 74×72、四边间距 9、图标 35、文字 13',
+      '阴影按热量账本实测清理：卡片 box-shadow: none；Dock/按钮只保留顶边 1px 内高光，所有外投影删除'
+    ]},
+    { v:'v1.3', d:'11-07', items:[
+      'Dock 按 Muscle Booster 真机实测对齐：高 62、左右 21、距底 21（占屏宽 89.2% vs 89.4%）',
+      '选中胶囊 79×54，到 Dock 四边间距统一 4px'
+    ]},
+    { v:'v1.2', d:'11-07', items:[
+      'Dock 改成通栏贴边：高 66、距屏幕底 34（home 条上方）',
+      '选中胶囊 85×54、圆角 27，到 Dock 四边间距统一 6px',
+      '图标 24、文字 11，水平居中偏差 0'
+    ]},
+    { v:'v1.1', d:'11-07', items:[
+      '去掉动作详情里的人体示意图（简版人形达不到写实解剖的清晰度，按决定移除）'
+    ]},
+    { v:'v1.0', d:'11-07', items:[
+      '动作详情卡加人体部位图（参考 Muscle Booster）：灰色人体 + 高亮目标肌群，正/背面自动切换',
+      '每个动作标注主要练的肌群（胸/肩/三头/二头/背/股四/腘绳/小腿）'
+    ]},
+    { v:'v0.4', d:'11-07', items:[
+      '启动时自动比对 version.txt，版本不一致自动刷新（同热量账本）',
+      '状态栏改为透明，露出网页自己的 #0d0f0e 灰带，和顶栏同色',
+      '设置卡改为贴底固定：左右 10 / 底 10 / 内部板块左 27 宽 336'
+    ]},
+    { v:'v0.3', d:'11-07', items:[
+      '设置页按热量账本实测重建：块宽 336 / 行高 54 / 15 号字 / 图标 20 / 块圆角 18 / 分组标签缩进 32',
+      '顶栏恢复 #0d0f0e 灰，并新增状态栏实色带（与热量账本 .statusbg 同一套）',
+      '全局字号收一档，进度条加粗到 10px',
+      'Dock 下方缝隙加实色底，内容不再从 10px 缝里透出',
+      '动作详情卡、训练卡、设置卡统一居中悬浮'
+    ]},
+    { v:'v0.2', d:'11-07', items:[
+      '设置卡改成贴底悬浮卡：左右/底 10、圆角 52、抓杆 66×4，支持下滑关闭',
+      '训练卡与设置卡统一同一套卡牌规格，同样支持下滑关闭',
+      '顶栏底色改成 #000，与状态栏同色，消除上下分层',
+      '今日头部去掉封面式大标题，改为「部位 + 时长 + 肌群」信息行',
+      '圆圈改为 4/6，下面加一周 7 点，能看出哪几天练了'
+    ]},
+    { v:'v0.1', d:'11-07', items:[
+      '首个界面预览：今日 / 计划 / 记录 / 我的',
+      '主题换成 Nike Red #E4002B，图标 me + FITNESS',
+      '分化可选 5 档（2/3/4/5/6 天），3 天档标「推荐」',
+      '训练记录改成组间休息倒计时'
+    ]}
+  ];
+  function renderRel(){
+    $('#relList').innerHTML = RELEASES.map(function(r){
+      return '<div class="relitem"><div class="relhd"><b>' + r.v + '</b><i>' + r.d + '</i></div><ul>' +
+        r.items.map(function(t){ return '<li>' + t + '</li>'; }).join('') + '</ul></div>';
+    }).join('');
+    $('#relVer').textContent = RELEASES[0].v;
+  }
+
+  /* ---------- 图标选择 ---------- */
+  $('#iconRow').addEventListener('click', function(){
+    renderIconSheet();
+    openSheet('#iconSheet');
+  });
+  $('#iconDone').addEventListener('click', closeSheets);
+  $('#iconSlots').addEventListener('click', function(e){
+    var b = e.target.closest('.iopt');
+    if (!b) return;
+    chosen[b.dataset.slot] = b.dataset.name;
+    paintTab(b.dataset.slot);
+    renderIconSheet();
+  });
+
+  /* ---------- 初始化 ---------- */
+  SLOTS.forEach(function(s){ paintTab(s.key); });
+  window.addEventListener('resize', function(){
+    placePill(order.indexOf($('.tab.on') ? $('.tab.on').dataset.tab : 'today'));
+  });
+  var WEEK = [['一',1],['二',1],['三',0],['四',1],['五',1],['六',0],['日',0]];
+  (function renderWeekStrip(){
+    $('#weekStrip').innerHTML = WEEK.map(function(d,i){
+      return '<div class="wd-day' + (d[1] ? ' on' : '') + (i === 4 ? ' today' : '') +
+        '"><i></i><span>' + d[0] + '</span></div>';
+    }).join('');
+  })();
+  if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+  setSplit(3);
+  // 环 = 本周训练进度（4 / 6 天）
+  ringFg.style.strokeDashoffset = C * (1 - 4 / 6);
+  ringRim.style.strokeDashoffset = C * (1 - 4 / 6);
+  var h = (location.hash || '').replace('#','');
+  setTab(order.indexOf(h) > -1 ? h : 'today');
+  window.scrollTo(0,0);
+  document.documentElement.scrollTop = 0;
+  document.body.scrollTop = 0;
+  $('#scroller').scrollTop = 0;
+  setTimeout(function(){ $('#scroller').scrollTop = 0; }, 120);
+})();
+</script>
+</body>
+</html>
