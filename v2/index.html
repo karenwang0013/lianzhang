@@ -751,6 +751,11 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
    改成 top+bottom 撑出确定高度：这样它才真的成为一个能滚的容器 */
 #iconSheet{top:96px;bottom:10px;max-height:none;height:auto;padding:18px 20px 24px;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
 #iconSheet .iconnote{padding:0}
+#backupSheet{top:auto;bottom:10px;max-height:calc(100% - 120px);padding:18px 20px 24px}
+#backupSheet .sh-hd{padding:0}
+#backupSheet .hint{padding:0}
+#backupSheet .cta{position:static;width:100%;margin-top:12px;padding:15px}
+#backupSheet .bnote{margin-top:14px;font-size:11.5px;color:var(--muted2);line-height:1.7;text-align:center}
 .iconnote{
   font-size:10.5px;color:var(--muted2);line-height:1.7;
   padding:13px 0 4px;border-top:1px solid var(--line);margin-top:6px;
@@ -764,7 +769,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
     <div class="statusbg" aria-hidden="true"></div>
     <div class="topbar">
-      <div class="brand">训练<span>账本</span><i class="btag">v5.12</i></div>
+      <div class="brand">训练<span>账本</span><i class="btag">v5.13</i></div>
       <div class="topactions">
         <button class="topbtn topicon" id="reloadTop" aria-label="强制更新" title="强制更新">
           <svg viewBox="0 -960 960 960" aria-hidden="true"><path d="M480-160q-134 0-227-93t-93-227q0-134 93-227t227-93q69 0 132 28.5T720-690v-70q0-17 11.5-28.5T760-800q17 0 28.5 11.5T800-760v200q0 17-11.5 28.5T760-520H560q-17 0-28.5-11.5T520-560q0-17 11.5-28.5T560-600h128q-32-56-87.5-88T480-720q-100 0-170 70t-70 170q0 100 70 170t170 70q68 0 124.5-34.5T692-367q8-14 22.5-19.5t29.5-.5q16 5 23 21t-1 30q-41 80-117 128t-169 48Z"/></svg>
@@ -1078,7 +1083,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     <!-- 设置 -->
     <div class="sheet" id="setSheet">
       <div class="grab"></div>
-      <div class="sh-hd"><h2>设置</h2><span class="vtag">v5.12</span></div>
+      <div class="sh-hd"><h2>设置</h2><span class="vtag">v5.13</span></div>
       <div class="setbody">
         <div class="setlabel">功能</div>
         <div class="setrows">
@@ -1094,7 +1099,8 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
           <div class="srow" data-ic="bolt"><span class="ico"></span><span class="lbl">与热量账本同步</span><span class="sw"></span></div>
           <div class="srow" data-ic="monitor_heart"><span class="ico"></span><span class="lbl">Apple 健康</span><span class="sw"></span></div>
           <div class="srow" data-ic="assignment"><span class="ico"></span><span class="lbl">训练提醒</span><span class="sw"></span></div>
-          <button class="srow" id="openRel" data-ic="checklist"><span class="ico"></span><span class="lbl">更新记录</span><span class="val">v5.12</span></button>
+          <button class="srow" id="openBackup" data-ic="cloud_done"><span class="ico"></span><span class="lbl">数据备份</span><span class="val" id="backupVal">iCloud</span></button>
+          <button class="srow" id="openRel" data-ic="checklist"><span class="ico"></span><span class="lbl">更新记录</span><span class="val">v5.13</span></button>
         </div>
       </div>
     </div>
@@ -1120,6 +1126,17 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
       <div class="grab"></div>
       <div class="sh-hd"><h2>更新记录</h2><span class="vtag" id="relVer">v0.2</span></div>
       <div id="relList" style="padding:0 20px"></div>
+    </div>
+
+    <!-- 数据备份（照热量账本：分享面板存到 iCloud Drive / 从文件恢复） -->
+    <div class="sheet" id="backupSheet">
+      <div class="grab"></div>
+      <div class="sh-hd"><h2>数据备份</h2><span class="vtag">iCloud</span></div>
+      <p class="hint">自动同步没有，这里只有手动备份：备份文件走系统分享面板，选「存储到文件」就进了 iCloud Drive；也可以 AirDrop 给另一台。<br>卸载 / 重新添加主屏幕 App 会清空这台设备上的训练记录，卸载前先备份。</p>
+      <button class="cta" id="backupNow">备份文件</button>
+      <button class="cta ghost" id="backupRestore" style="margin-top:10px">从文件恢复</button>
+      <input type="file" id="backupFile" accept="application/json,.json" hidden>
+      <div class="bnote" id="backupAt">还没有备份过</div>
     </div>
 
     <!-- 图标选择弹层 -->
@@ -1707,7 +1724,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   }
   paintRows();
 
-  ['#setSheet','#relSheet','#exSheet'].forEach(function(sel){
+  ['#setSheet','#relSheet','#exSheet','#backupSheet'].forEach(function(sel){
     var el = $(sel); if (el) wireDragClose(el);
   });
 
@@ -1731,7 +1748,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   }
 
   /* ---------- 启动版本比对（同热量账本） ---------- */
-  var APP_VERSION = 'v5.12';
+  var APP_VERSION = 'v5.13';
   fetch('./version.txt?t=' + Date.now(), { cache: 'no-store' })
     .then(function(r){ return r.ok ? r.text() : ''; })
     .then(function(v){
@@ -1753,6 +1770,11 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
   /* ---------- 更新记录 ---------- */
   var RELEASES = [
+    { v:'v5.13', d:'11-07', items:[
+      '设置里新增「数据备份」：备份文件走系统分享面板，可直接存进 iCloud Drive（或 AirDrop），文件名「训练账本备份-日期.json」',
+      '新增「从文件恢复」：选备份文件后恢复训练记录、动作重量、图标选择；不是训练账本的备份文件会被明确拒绝',
+      '做法照热量账本：只在手动点的时候备份，不自动上传；恢复后自动重载一次页面'
+    ]},
     { v:'v1.7', d:'11-07', items:[
       'Dock 退回 v1.1 尺寸：370×90、胶囊 74×72、四边间距 9、图标 35、文字 13',
       '阴影按热量账本实测清理：卡片 box-shadow: none；Dock/按钮只保留顶边 1px 内高光，所有外投影删除'
@@ -1806,6 +1828,97 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     }).join('');
     $('#relVer').textContent = RELEASES[0].v;
   }
+
+  /* ---------- 数据备份（跟热量账本同一套做法：File + 分享面板 → 存储到文件 / iCloud Drive） ---------- */
+  function dayISO(){
+    var d = new Date();
+    return d.getFullYear() + '-' + ('0' + (d.getMonth() + 1)).slice(-2) + '-' + ('0' + d.getDate()).slice(-2);
+  }
+  function backupPayload(){
+    return JSON.stringify({
+      app: '训练账本', v: 1, exportedAt: new Date().toISOString(),
+      data: { logs: store.logs || [], weights: store.weights || {}, icons: store.icons || {} }
+    }, null, 2);
+  }
+  function paintBackup(){
+    var t = (store.settings && store.settings.lastBackupAt) || '';
+    var el = $('#backupAt');
+    if (el) el.textContent = t ? ('上次备份：' + t) : '还没有备份过';
+    var v = $('#backupVal');
+    if (v) v.textContent = t ? '已备份' : 'iCloud';
+  }
+  function downloadBackup(text, name){
+    var blob = new Blob([text], { type: 'application/json' });
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = name;
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(function(){ URL.revokeObjectURL(a.href); a.remove(); }, 500);
+    return 'downloaded';
+  }
+  function exportBackup(){
+    var text = backupPayload();
+    var name = '训练账本备份-' + dayISO() + '.json';
+    /* 跟热量账本一样：优先系统分享面板（能直接「存储到文件」进 iCloud Drive），拿不到就退回下载 */
+    try{
+      var file = new File([text], name, { type: 'application/json' });
+      if (navigator.canShare && navigator.canShare({ files: [file] })){
+        return navigator.share({ files: [file] }).then(function(){ return 'shared'; })
+          .catch(function(e){
+            if (e && e.name === 'AbortError') return 'cancel';
+            return downloadBackup(text, name);
+          });
+      }
+    }catch(e){}
+    return Promise.resolve(downloadBackup(text, name));
+  }
+  function importBackup(text){
+    var o = JSON.parse(text);
+    if (!o || typeof o !== 'object' || Array.isArray(o)) throw new Error('这不是有效的备份文件');
+    var d = (o.data && typeof o.data === 'object') ? o.data : o;
+    if (!Array.isArray(d.logs)) throw new Error('这不是有效的备份文件（没有训练记录）');
+    if (d.weights && typeof d.weights !== 'object') throw new Error('这不是有效的备份文件（重量表格式不对）');
+    store.logs = d.logs;
+    store.weights = (d.weights && typeof d.weights === 'object') ? d.weights : {};
+    if (d.icons && typeof d.icons === 'object'){
+      store.icons = d.icons;
+      Object.keys(d.icons).forEach(function(k){ chosen[k] = d.icons[k]; });
+    }
+    saveStore();
+  }
+  $('#openBackup').addEventListener('click', function(){ paintBackup(); openSheet('#backupSheet'); });
+  $('#backupNow').addEventListener('click', function(){
+    exportBackup().then(function(r){
+      if (r === 'cancel') return;
+      var t = new Date().toLocaleString('zh-CN', { month:'2-digit', day:'2-digit', hour:'2-digit', minute:'2-digit' });
+      store.settings = store.settings || {};
+      store.settings.lastBackupAt = t;
+      saveStore();
+      paintBackup();
+      $('#backupAt').textContent = (r === 'shared')
+        ? ('已存到「文件」/ iCloud Drive：' + t)
+        : ('已下载备份文件：' + t);
+    }).catch(function(e){
+      $('#backupAt').textContent = '备份失败：' + (e && e.message ? e.message : '未知错误');
+    });
+  });
+  $('#backupRestore').addEventListener('click', function(){ $('#backupFile').click(); });
+  $('#backupFile').addEventListener('change', function(e){
+    var f = e.target.files && e.target.files[0];
+    if (!f) return;
+    f.text().then(function(txt){
+      try{
+        importBackup(txt);
+        $('#backupAt').textContent = '已恢复，正在重新载入…';
+        setTimeout(function(){ location.reload(); }, 700);
+      }catch(err){
+        $('#backupAt').textContent = '恢复失败：' + (err && err.message ? err.message : '文件不对');
+      }
+      e.target.value = '';
+    });
+  });
+  paintBackup();
 
   /* ---------- 图标选择 ---------- */
   $('#iconRow').addEventListener('click', function(){
