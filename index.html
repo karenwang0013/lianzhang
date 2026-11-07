@@ -79,11 +79,11 @@ body{
   body{display:block;overscroll-behavior:none;-webkit-overflow-scrolling:auto}
   .phone{position:absolute;inset:0;width:100%;height:100%;border-radius:0;box-shadow:none}
   /* PWA 里 .phone 的高度比屏幕少 ~56px，底部元素改成相对视口固定，才能真的贴到屏幕底 */
-  .dock{position:fixed;left:10px;right:10px;bottom:73px}
+  .dock{position:fixed;left:10px;right:10px;bottom:0}
   .fade{position:fixed;left:0;right:0;bottom:0}
   .cta{position:fixed;left:var(--page-pad);right:var(--page-pad);
-       bottom:calc(73px + var(--dock-h) + 14px)}
-  .sheet{position:fixed;left:10px;right:10px;bottom:73px}
+       bottom:calc(var(--dock-h) + 14px)}
+  .sheet{position:fixed;left:10px;right:10px;bottom:0}
   .screen::after{display:none}
 }
 
@@ -329,7 +329,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 }
 .cta{
   position:absolute;left:var(--page-pad);right:var(--page-pad);
-  bottom:calc(73px + var(--dock-h) + 14px);z-index:18;
+  bottom:calc(var(--dock-h) + 14px);z-index:18;
   padding:16px;border:1px solid transparent;border-radius:18px;
   background:linear-gradient(180deg,#FF2D4A,var(--lime));color:#fff;
   font-size:16px;font-weight:600;letter-spacing:.01em;
@@ -350,7 +350,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 /* ---------- Dock：玻璃 + 52 圆角 + 104 高（实测） ---------- */
 .dock{
   position:absolute;left:10px;right:10px;
-  bottom:73px;z-index:20;
+  bottom:0;z-index:20;
   height:var(--dock-h);padding:0 12px;
   display:flex;align-items:center;
   border-radius:calc(var(--dock-h) / 2);
@@ -557,7 +557,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 /* ---------- 弹层：玻璃 + 46 圆角（实测 #nutSheet） ---------- */
 .sheet{
   position:absolute;left:var(--dock-w);right:var(--dock-w);
-  bottom:73px;top:auto;z-index:41;
+  bottom:0;top:auto;z-index:41;
   opacity:0;pointer-events:none;
   transform:translateY(102%);
   border-radius:calc(var(--dock-h) / 2);
@@ -1609,7 +1609,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   }
 
   /* ---------- 启动版本比对（同热量账本） ---------- */
-  var APP_VERSION = 'v2.3';
+  var APP_VERSION = 'v2.4';
   fetch('./version.txt?t=' + Date.now(), { cache: 'no-store' })
     .then(function(r){ return r.ok ? r.text() : ''; })
     .then(function(v){
