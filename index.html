@@ -264,7 +264,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 /* ---------- 进度环（照热量账本：232px / r84 / stroke 13） ---------- */
 .ringwrap{position:relative;width:232px;height:232px;margin:0 auto 4px}
 .ringwrap svg{transform:rotate(-90deg);display:block;width:232px;height:232px}
-.ring-bg{fill:none;stroke:rgba(255,255,255,.06);stroke-width:13}
+.ring-bg{fill:none;stroke:#2b2523;stroke-width:13}
 .ring-rim{
   fill:none;stroke:url(#rimGrad);stroke-width:14.6;stroke-linecap:round;
   stroke-dasharray:527.8;stroke-dashoffset:527.8;
@@ -995,7 +995,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
     <div class="statusbg" aria-hidden="true"></div>
     <div class="topbar">
-      <div class="brand">训练<span>账本</span><i class="btag">v5.85</i></div>
+      <div class="brand">训练<span>账本</span><i class="btag">v5.86</i></div>
       <div class="topactions">
         <button class="topbtn todaypill" id="goToday2" hidden>回到今天</button>
         <button class="topbtn topicon" id="reloadTop" aria-label="强制更新" title="强制更新">
@@ -1281,7 +1281,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     <!-- 设置 -->
     <div class="sheet" id="setSheet">
       <div class="grab"></div>
-      <div class="sh-hd"><h2>设置</h2><span class="vtag">v5.85</span></div>
+      <div class="sh-hd"><h2>设置</h2><span class="vtag">v5.86</span></div>
       <div class="setbody">
         <div class="setlabel">训练设置</div>
         <div class="setrows">
@@ -1298,7 +1298,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
           <div class="srow" data-ic="monitor_heart"><span class="ico"></span><span class="lbl">Apple 健康</span><span class="sw"></span></div>
           <div class="srow" data-ic="assignment"><span class="ico"></span><span class="lbl">训练提醒</span><span class="sw"></span></div>
           <button class="srow" id="openBackup" data-ic="cloud_done"><span class="ico"></span><span class="lbl">数据备份</span><span class="val" id="backupVal">iCloud</span></button>
-          <button class="srow" id="openRel" data-ic="checklist"><span class="ico"></span><span class="lbl">更新记录</span><span class="val">v5.85</span></button>
+          <button class="srow" id="openRel" data-ic="checklist"><span class="ico"></span><span class="lbl">更新记录</span><span class="val">v5.86</span></button>
         </div>
       </div>
     </div>
@@ -2793,7 +2793,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   }
 
   /* ---------- 启动版本比对（同热量账本） ---------- */
-  var APP_VERSION = 'v5.85';
+  var APP_VERSION = 'v5.86';
   fetch('./version.txt?t=' + Date.now(), { cache: 'no-store' })
     .then(function(r){ return r.ok ? r.text() : ''; })
     .then(function(v){
@@ -2815,6 +2815,9 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
   /* ---------- 更新记录 ---------- */
   var RELEASES = [
+    { v:'v5.86', d:'11-08', items:[
+      '圆环底色从「6% 中性白」改成实色 #2B2523（和热量账本同亮度但偏暖），不再在深色卡上读成一圈白灰'
+    ]},
     { v:'v5.85', d:'11-08', items:[
       '「回到今天」从日期下面那颗小字改成顶栏右侧的独立按钮（75×33，红底红字，和刷新/设置同高）；今天时不显示，回看时才出现'
     ]},
