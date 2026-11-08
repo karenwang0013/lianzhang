@@ -392,10 +392,10 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 .ex h3{margin:0;font-size:13.5px;font-weight:600;letter-spacing:-.01em}
 .exload{font-size:12px;font-weight:600;color:var(--muted);font-variant-numeric:tabular-nums;white-space:nowrap}
 .exmeta{margin:5px 0 10px;font-size:11.5px;color:var(--muted2);letter-spacing:.01em}
-.sets{display:flex;align-items:center;gap:7px}
+.sets{display:flex;align-items:center;flex-wrap:wrap;gap:6px;row-gap:6px}
 
 /* 点击动画：热量账本 .btn/.topbtn 同一套 */
-.dot{
+.dot{flex:0 0 26px;
   position:relative;
   width:26px;height:8px;padding:0;border:0;border-radius:4px;
   background:rgba(255,255,255,.09);cursor:pointer;
@@ -1066,7 +1066,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
     <div class="statusbg" aria-hidden="true"></div>
     <div class="topbar">
-      <div class="brand">训练<span>账本</span><i class="btag">v6.12</i></div>
+      <div class="brand">训练<span>账本</span><i class="btag">v6.13</i></div>
       <div class="topactions">
         <button class="topbtn topicon" id="reloadTop" aria-label="强制更新" title="强制更新">
           <svg viewBox="0 -960 960 960" aria-hidden="true"><path d="M480-160q-134 0-227-93t-93-227q0-134 93-227t227-93q69 0 132 28.5T720-690v-70q0-17 11.5-28.5T760-800q17 0 28.5 11.5T800-760v200q0 17-11.5 28.5T760-520H560q-17 0-28.5-11.5T520-560q0-17 11.5-28.5T560-600h128q-32-56-87.5-88T480-720q-100 0-170 70t-70 170q0 100 70 170t170 70q68 0 124.5-34.5T692-367q8-14 22.5-19.5t29.5-.5q16 5 23 21t-1 30q-41 80-117 128t-169 48Z"/></svg>
@@ -1364,7 +1364,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     <!-- 设置 -->
     <div class="sheet" id="setSheet">
       <div class="grab"></div>
-      <div class="sh-hd"><h2>设置</h2><span class="vtag">v6.12</span></div>
+      <div class="sh-hd"><h2>设置</h2><span class="vtag">v6.13</span></div>
       <div class="setbody">
         <div class="setlabel">训练设置</div>
         <div class="setrows">
@@ -1382,7 +1382,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
           <button class="srow" id="openRemind" data-ic="assignment"><span class="ico"></span><span class="lbl">训练提醒</span><span class="val" id="remindVal">开</span></button>
           <button class="srow" id="clearLogs" data-ic="delete"><span class="ico"></span><span class="lbl">清除训练记录</span><span class="val plain">全部删除</span></button>
           <button class="srow" id="openBackup" data-ic="cloud_done"><span class="ico"></span><span class="lbl">数据备份</span><span class="val" id="backupVal">iCloud</span></button>
-          <button class="srow" id="openRel" data-ic="checklist"><span class="ico"></span><span class="lbl">更新记录</span><span class="val">v6.12</span></button>
+          <button class="srow" id="openRel" data-ic="checklist"><span class="ico"></span><span class="lbl">更新记录</span><span class="val">v6.13</span></button>
         </div>
       </div>
     </div>
@@ -1743,7 +1743,13 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     return String(n);
   }
   var syncing = false;
-  function savePlan(sets, rep){ store.exv[curEx.n] = { sets: sets, rep: rep }; }
+  function savePlan(sets, rep){
+    if (curEx && curEx.__extra != null && store.extra && store.extra[todayISO()]){
+      var it = store.extra[todayISO()][curEx.__extra];
+      if (it){ it.sets = sets; it.rep = rep; curEx.sets = sets; curEx.rep = rep; return; }
+    }
+    store.exv[curEx.n] = { sets: sets, rep: rep };
+  }
   function setKg(v){
     v = Math.max(0, Math.min(999, Math.round(v * 10) / 10));
     store.weights[curEx.n] = v;
@@ -1788,7 +1794,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   function applySets(delta){
     if (!curEx || syncing) return;
     var v = exvOf(curEx);
-    var sets = Math.max(1, Math.min(8, v.sets + delta));
+    var sets = Math.max(1, Math.min(60, v.sets + delta));
     if (sets === v.sets) return;
     savePlan(sets, v.rep);          /* 只改组数：重量、次数都不动 */
     afterPlanChange();
@@ -2038,6 +2044,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   }
   /* 自己改过的组数/次数（按动作名存，跨方案共用） */
   function exvOf(ex){
+    if (ex && ex.__extra != null) return { sets: ex.sets, rep: ex.rep };   /* 加练卡自带组数次数 */
     var o = store.exv[ex.n] || {};
     return { sets: o.sets == null ? ex.sets : o.sets, rep: o.rep == null ? ex.rep : o.rep };
   }
@@ -2197,9 +2204,9 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   /* 今天额外加的动作（存在 store.extra[日期]） */
   function extrasToday(){
     var list = (store.extra && store.extra[todayISO()]) || [];
-    return list.map(function(e){
+    return list.map(function(e, i){
       return { n: e.n, g: e.g || 'B', sets: e.sets || 3, rep: e.rep || '10',
-               kg: e.kg || 0, rest: e.rest || 60, m: e.m || 'core' };
+               kg: e.kg || 0, rest: e.rest || 60, m: e.m || 'core', __extra: i };
     });
   }
 
@@ -3146,7 +3153,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   }
 
   /* ---------- 启动版本比对（同热量账本） ---------- */
-  var APP_VERSION = 'v6.12';
+  var APP_VERSION = 'v6.13';
   fetch('./version.txt?t=' + Date.now(), { cache: 'no-store' })
     .then(function(r){ return r.ok ? r.text() : ''; })
     .then(function(v){
@@ -3168,6 +3175,10 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
   /* ---------- 更新记录 ---------- */
   var RELEASES = [
+    { v:'v6.13', d:'11-08', items:[
+      '修「加练卡刚点进去 3 组，点 + 一下变 8 组」：加练卡现在用自己卡里的组数/次数，不会被同名动作的旧存档顶掉（次数 + 也不会跳）',
+      '组数上限 8 → 60：练十几组也能记，不再卡在 8；组数多了点会换行，不会挤成一排小点'
+    ]},
     { v:'v6.12', d:'11-08', items:[
       '组数 / 次数 / 重量 各自独立调：改一个不再自动带动另外两个（之前改「组数」会自动改重量和次数、改「重量」会自动改次数）',
       '建议值就静静写在下方的建议框里，只有点「用建议」才会套到上面'
