@@ -1182,6 +1182,14 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   gap:6px;
 }
 .sheet.page .backbtn{width:30px;height:30px;margin:0}
+/* 整页模式下这两张不再缩在一个窄框里：内容铺满，左右 16 */
+#backupSheet.page,#iconSheet.page{padding-left:0 !important;padding-right:0 !important}
+#backupSheet.page .cbody{padding-left:16px;padding-right:16px}
+#iconSheet.page .ibody{padding-left:16px;padding-right:16px}
+/* 图标分组：整页里不要外框（卡片背景/圆角/边框全去掉），只留组标题和网格 */
+#iconSheet.page .isgroup{
+  background:none;border:0;border-radius:0;margin:0 0 10px;padding:0;
+}
 /* 这三张自己有 20 的左右内边距，标题栏要反推回卡牌边线（16），否则返回键会跑到 36 */
 #iconSheet.page .sh-hd,
 #backupSheet.page .sh-hd,
