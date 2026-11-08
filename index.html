@@ -813,6 +813,24 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 .emptycard p{margin:7px 0 0;font-size:11.5px;color:var(--muted2);line-height:1.6}
 .ex.ro{cursor:pointer}
 
+/* 加动作 */
+.addbtn{display:block;width:100%;margin:12px 0 0;padding:13px;border-radius:16px;
+  border:1px dashed rgba(255,255,255,.16);background:transparent;color:rgba(242,244,242,.72);
+  font-family:inherit;font-size:13.5px;font-weight:600;cursor:pointer}
+.addbtn:active{background:rgba(255,255,255,.04)}
+.exdel{margin-left:auto;border:0;background:none;color:rgba(255,255,255,.34);
+  font-family:inherit;font-size:11px;font-weight:600;cursor:pointer;padding:2px 0 2px 10px}
+.exdel:active{color:var(--lime)}
+.exe .sets{display:flex;align-items:center}
+.libgroup{padding:0 20px}
+.libt{margin:14px 0 2px;font-size:11px;color:var(--muted2);letter-spacing:.08em}
+.librow{display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;
+  padding:11px 0;border:0;border-top:1px solid var(--line);background:none;font-family:inherit;
+  color:var(--text);font-size:14px;cursor:pointer;text-align:left}
+.librow em{font-style:normal;font-size:11px;color:var(--muted2);white-space:nowrap}
+.librow:active{opacity:.65}
+#libSheet{padding-bottom:20px}
+
 /* 动作重量记录 */
 .histsum{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:8px 20px 2px}
 .histsum .hs{background-color:rgba(255,255,255,.04);border:1px solid var(--line);border-radius:14px;
@@ -897,7 +915,9 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 #backupSheet .sh-hd{padding:0}
 #backupSheet .hint{padding:0}
 #backupSheet .cta{position:static;width:100%;margin-top:12px;padding:15px}
-#backupSheet .bnote{margin-top:14px;font-size:11.5px;color:var(--muted2);line-height:1.7;text-align:center}
+#backupAt{margin:14px 0 0;padding:10px 12px;border-top:0;border-radius:12px;
+  background-color:rgba(255,255,255,.04);border:1px solid var(--line);
+  font-size:12px;color:rgba(242,244,242,.82);line-height:1.5;text-align:center}
 #backupSheet .snapbox{margin-top:16px;padding-top:13px;border-top:1px solid var(--line)}
 #backupSheet .snapinfo{font-size:11.5px;color:var(--muted2);line-height:1.7;text-align:center}
 .iconnote{
@@ -950,7 +970,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
     <div class="statusbg" aria-hidden="true"></div>
     <div class="topbar">
-      <div class="brand">训练<span>账本</span><i class="btag">v5.62</i></div>
+      <div class="brand">训练<span>账本</span><i class="btag">v5.63</i></div>
       <div class="topactions">
         <button class="topbtn topicon" id="reloadTop" aria-label="强制更新" title="强制更新">
           <svg viewBox="0 -960 960 960" aria-hidden="true"><path d="M480-160q-134 0-227-93t-93-227q0-134 93-227t227-93q69 0 132 28.5T720-690v-70q0-17 11.5-28.5T760-800q17 0 28.5 11.5T800-760v200q0 17-11.5 28.5T760-520H560q-17 0-28.5-11.5T520-560q0-17 11.5-28.5T560-600h128q-32-56-87.5-88T480-720q-100 0-170 70t-70 170q0 100 70 170t170 70q68 0 124.5-34.5T692-367q8-14 22.5-19.5t29.5-.5q16 5 23 21t-1 30q-41 80-117 128t-169 48Z"/></svg>
@@ -1019,8 +1039,6 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
               <div class="v" id="streakDays">12<small>天</small></div>
             </div>
           </div>
-          <div class="weekstrip" id="weekStrip"></div>
-
           <div class="herofoot">
             <span class="live"></span>
             已同步热量账本
@@ -1034,6 +1052,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
         </div>
 
         <div id="exList"></div>
+        <button class="addbtn" id="addExBtn">＋ 加动作</button>
       </section>
 
       <!-- ============ 计划 ============ -->
@@ -1240,7 +1259,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     <!-- 设置 -->
     <div class="sheet" id="setSheet">
       <div class="grab"></div>
-      <div class="sh-hd"><h2>设置</h2><span class="vtag">v5.62</span></div>
+      <div class="sh-hd"><h2>设置</h2><span class="vtag">v5.63</span></div>
       <div class="setbody">
         <div class="setlabel">训练设置</div>
         <div class="setrows">
@@ -1257,12 +1276,21 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
           <div class="srow" data-ic="monitor_heart"><span class="ico"></span><span class="lbl">Apple 健康</span><span class="sw"></span></div>
           <div class="srow" data-ic="assignment"><span class="ico"></span><span class="lbl">训练提醒</span><span class="sw"></span></div>
           <button class="srow" id="openBackup" data-ic="cloud_done"><span class="ico"></span><span class="lbl">数据备份</span><span class="val" id="backupVal">iCloud</span></button>
-          <button class="srow" id="openRel" data-ic="checklist"><span class="ico"></span><span class="lbl">更新记录</span><span class="val">v5.62</span></button>
+          <button class="srow" id="openRel" data-ic="checklist"><span class="ico"></span><span class="lbl">更新记录</span><span class="val">v5.63</span></button>
         </div>
       </div>
     </div>
 
-        <!-- 动作详情 -->
+        <!-- 添加动作 -->
+    <div class="sheet" id="libSheet">
+      <div class="grab"></div>
+      <div class="sh-hd"><h2>加动作</h2><span class="vtag">练完就记</span></div>
+      <p class="hint">计划里没有的动作也能练、也能记：点一下加到今天，组数/次数/重量照样能调。</p>
+      <div id="libBody"></div>
+      <button class="cta ghost" id="libClose">关闭</button>
+    </div>
+
+    <!-- 动作详情 -->
     <div class="sheet center" id="exSheet">
       <div class="exdetail">
         <div class="exhead">
@@ -1489,7 +1517,6 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
       done += n; total += dots.length;
     });
     setSub();
-    paintStrip();
   }
 
   var curExId = '', curEx = null;
@@ -1900,7 +1927,50 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   function swapKey(key, i){ return todayISO() + '|' + key + i; }
   function swappedName(key, i){ return (store.swaps || {})[swapKey(key, i)] || ''; }
   /* 今天这一天的动作表（把被替换的动作换掉），计划页仍按原计划展示 */
+  /* 今天额外加的动作（存在 store.extra[日期]） */
+  function extrasToday(){
+    var list = (store.extra && store.extra[todayISO()]) || [];
+    return list.map(function(e){
+      return { n: e.n, g: e.g || 'B', sets: e.sets || 3, rep: e.rep || '10',
+               kg: e.kg || 0, rest: e.rest || 60, m: e.m || 'core' };
+    });
+  }
+
+  /* 可加动作的库：训练计划里出现过的 + 核心动作 */
+  var EXLIB = (function(){
+    var gmap = { chest:'胸', back:'背', quads:'腿', hamstring:'腿', calves:'腿', glutes:'腿',
+                 shoulder:'肩', triceps:'手臂', biceps:'手臂', core:'核心' };
+    var seen = {}, groups = {};
+    var all = [].concat(EX.push, EX.pull, EX.legs, EX.upper, EX.lower, EX.full, [
+      { n:'卷腹', g:'B', sets:3, rep:'15–20', kg:0, rest:45, m:'core' },
+      { n:'悬垂举腿', g:'B', sets:3, rep:'10–12', kg:0, rest:60, m:'core' },
+      { n:'俄罗斯转体', g:'B', sets:3, rep:'20', kg:5, rest:45, m:'core' },
+      { n:'仰卧抬腿', g:'B', sets:3, rep:'12–15', kg:0, rest:45, m:'core' },
+      { n:'健腹轮', g:'A', sets:3, rep:'10', kg:0, rest:60, m:'core' }
+    ]);
+    all.forEach(function(e){
+      if (seen[e.n]) return;
+      seen[e.n] = 1;
+      var g = gmap[e.m] || '核心';
+      (groups[g] = groups[g] || []).push({ n:e.n, g:e.g, sets:e.sets, rep:e.rep, kg:e.kg, rest:e.rest, m:e.m });
+    });
+    return ['核心','胸','背','腿','肩','手臂'].map(function(g){ return { g:g, items:groups[g] || [] }; })
+      .filter(function(x){ return x.items.length; });
+  })();
+
+  function renderLib(){
+    var body = $('#libBody'); if (!body) return;
+    body.innerHTML = EXLIB.map(function(grp){
+      return '<div class="libgroup"><div class="libt">' + grp.g + '</div>' +
+        grp.items.map(function(e){
+          return '<button class="librow" data-n="' + e.n + '"><span>' + e.n + '</span>' +
+            '<em>' + e.sets + ' × ' + e.rep + '</em></button>';
+        }).join('') + '</div>';
+    }).join('');
+  }
+
   function dayEx(key){
+    if (key === 'x') return extrasToday();
     return (EX[key] || []).map(function(e, i){
       var s = swappedName(key, i), a = s && SUB[s];
       if (!a) return normEx(e);
@@ -1949,8 +2019,22 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
         '<div class="sets">' + dots + '<span class="setcount">0/' + e.sets + '</span></div>' +
         '</article>';
     });
+    extrasToday().forEach(function(e, i){
+      var dots = '';
+      for (var k = 0; k < e.sets; k++) dots += '<button class="dot"></button>';
+      var ekg = kgOf(e);
+      html += '<article class="ex extra" data-ex="x' + i + '">' +
+        '<div class="exrow"><h3>' + e.n + '<i class="swaptag">加</i></h3>' +
+        '<span class="exload">' + (ekg ? ekg + ' kg' : '自重') + '</span></div>' +
+        '<p class="exmeta">' + e.sets + ' 组 × ' + e.rep + ' 次 · 休息 ' + e.rest + ' 秒' +
+          (lastWeightOf(e.n) ? ' · 上次 ' + lastWeightOf(e.n).kg + ' kg' : '') + '</p>' +
+        '<div class="sets">' + dots + '<span class="setcount">0/' + e.sets + '</span>' +
+        '<button class="exdel" data-del="' + i + '" aria-label="移除这个动作">移除</button></div>' +
+        '</article>';
+    });
     $('#exList').innerHTML = html;
-    $('#listMeta').textContent = todaySets(key) + ' 有效组 · 0 垃圾容量';
+    var all = todaySets(key) + extrasToday().reduce(function(a, e){ return a + e.sets; }, 0);
+    $('#listMeta').textContent = all + ' 有效组 · 0 垃圾容量';
     renderSets();
   }
 
@@ -1962,7 +2046,8 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
       t = '今天';
       if (todayKey){
         var done = document.querySelectorAll('#exList .dot.on').length;
-        t += ' · ' + TITLE[todayKey][0] + ' · ' + done + '/' + todaySets(todayKey) + ' 组';
+        var total = document.querySelectorAll('#exList .dot').length;
+        t += ' · ' + TITLE[todayKey][0] + ' · ' + done + '/' + total + ' 组';
       } else {
         t += ' · 休息日';
       }
@@ -1980,25 +2065,11 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     $('#goToday').hidden = isToday;
   }
 
-  /* 周条：本周 7 天，可点；有记录的点亮，今天带「今天」色 */
-  function paintStrip(){
-    var mon = mondayISO(viewISO), html = '';
-    for (var i = 0; i < 7; i++){
-      var iso = isoMinus(mon, -i);
-      var has = allLogs().some(function(l){ return l.d === iso; });
-      html += '<button class="wd-day' + (has ? ' on' : '') + (iso === viewISO ? ' sel' : '') +
-        (iso === todayISO() ? ' today' : '') + '" data-iso="' + iso + '">' +
-        '<i></i><span>' + WD_CN[i] + '</span><em>' + (+iso.slice(8)) + '</em></button>';
-    }
-    $('#weekStrip').innerHTML = html;
-  }
-
   /* 看某一天：今天=可操作；过去=当天真实记录；休息日=休息卡 */
   function renderDay(){
     var iso = viewISO, isToday = iso === todayISO(), key = keyForISO(iso);
     $('#kToday').textContent = isToday ? '今天' : '那天';
-    $('#wkNext').disabled = mondayISO(iso) >= mondayISO(todayISO());
-    paintStrip();
+    $('#wkNext').disabled = iso >= todayISO();
 
     if (isToday){
       $('#listTitle').textContent = '今天的动作';
@@ -2165,15 +2236,11 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     var b = e.target.closest('.sp');
     if (b) setSplit(+b.dataset.n);
   });
-  $('#weekStrip').addEventListener('click', function(e){
-    var b = e.target.closest('.wd-day');
-    if (b) selectDay(b.dataset.iso);
-  });
-  $('#wkPrev').addEventListener('click', function(){ selectDay(isoMinus(viewISO, 7)); });
+  $('#wkPrev').addEventListener('click', function(){ selectDay(isoMinus(viewISO, 1)); });
   $('#goToday').addEventListener('click', function(){ selectDay(todayISO()); });
   $('#wkNext').addEventListener('click', function(){
-    if (mondayISO(viewISO) >= mondayISO(todayISO())) return;
-    selectDay(isoMinus(viewISO, -7));
+    if (viewISO >= todayISO()) return;
+    selectDay(isoMinus(viewISO, -1));
   });
 
   /* ---------- 弹层 ---------- */
@@ -2355,7 +2422,9 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   }
   function paintPick(){
     var key = curExId.replace(/[0-9]+$/, ''), idx = parseInt(curExId.replace(/^[a-z]+/, ''), 10) || 0;
-    var names = pickCandidates(key, idx), cur = swappedName(key, idx) || origOf(key, idx).n;
+    var names = pickCandidates(key, idx);
+    var curExObj = origOf(key, idx) || (dayEx(key) || [])[idx] || {};
+    var cur = swappedName(key, idx) || curExObj.n || '';
     var box = $('#exPick');
     box.innerHTML = names.map(function(n){
       return '<div class="expick' + (n === cur ? ' on' : '') + '" data-pick="' + n + '">' + n + '</div>';
@@ -2402,6 +2471,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
    ['#relSheet', ['.grab', '.sh-hd'], []],
    ['#backupSheet', ['.grab', '.sh-hd', '.hint'], []],
    ['#histSheet', ['.grab', '.sh-hd'], ['.cta']],
+   ['#libSheet', ['.grab', '.sh-hd', '.hint'], ['.cta']],
    ['#exSheet', ['.grab'], ['.cta']]].forEach(function(cfg){
     var sh = $(cfg[0]); if (!sh) return;
     var heads = cfg[1], foots = cfg[2], body = null;
@@ -2466,7 +2536,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   }
 
   /* ---------- 启动版本比对（同热量账本） ---------- */
-  var APP_VERSION = 'v5.62';
+  var APP_VERSION = 'v5.63';
   fetch('./version.txt?t=' + Date.now(), { cache: 'no-store' })
     .then(function(r){ return r.ok ? r.text() : ''; })
     .then(function(v){
@@ -2488,6 +2558,12 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
   /* ---------- 更新记录 ---------- */
   var RELEASES = [
+    { v:'v5.63', d:'11-08', items:[
+      '记录页那个标签改成「纪录」（破纪录那个纪录）',
+      '删掉日期下面那排星期选择条（上面已经有日期 + 左右箭头，重复）；左右箭头改成前一天 / 后一天',
+      '今日页底部新增「＋ 加动作」：核心（卷腹 / 悬垂举腿 / 俄罗斯转体 / 仰卧抬腿 / 健腹轮）和其它肌群的动作都能加到今天，能调组数次数重量、能记、能移除',
+      '数据备份：自动快照本来就在跑（每小时一份、保留 7 天）；「还没有备份过 / 上次备份」改成居中框、字提亮'
+    ]},
     { v:'v5.62', d:'11-08', items:[
       '统一间隙：顶栏到第一张卡 = 卡与卡之间 = 13px（原来第一张卡贴死顶栏、记录/我的首行贴着上边）',
       '弹层上沿改成「日期行下沿 + 13」，和卡间距同一个宽度（原来弹层起点低，日期行和弹层中间空一大块）'
@@ -3027,7 +3103,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
       prCard.innerHTML = names.map(function(n){
         var lw = lastWeightOf(n), pr = prOf(n);
         var right = pr
-          ? '<i class="rec">记录</i><b>' + (pr.kg ? pr.kg + '<em>kg</em>' : pr.sets + '<em>组</em>') + '</b>'
+          ? '<i class="rec">纪录</i><b>' + (pr.kg ? pr.kg + '<em>kg</em>' : pr.sets + '<em>组</em>') + '</b>'
           : '<b class="none">—</b>';
         return '<div class="pr"' + (lw ? ' data-n="' + n + '"' : '') + '>' +
           '<div class="nm">' + n + '<small>' + (lw ? shortDate(lw.d) + ' · 最近 ' + (lw.kg ? lw.kg + ' kg' : '自重') : '没记录') + '</small></div>' +
@@ -3134,6 +3210,35 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     var row = e.target.closest('.ex.ro[data-n]');
     if (row) openHist(row.dataset.n);
   });
+
+  /* 加动作 */
+  $('#addExBtn').addEventListener('click', function(){ renderLib(); openSheet('#libSheet'); });
+  $('#libClose').addEventListener('click', closeSheets);
+  $('#libBody').addEventListener('click', function(e){
+    var b = e.target.closest('.librow'); if (!b) return;
+    var name = b.dataset.n, item = null;
+    EXLIB.forEach(function(g){ g.items.forEach(function(x){ if (x.n === name) item = x; }); });
+    if (!item) return;
+    store.extra = store.extra || {};
+    var iso = todayISO(), list = store.extra[iso] = store.extra[iso] || [];
+    if (!list.some(function(x){ return x.n === name; })){
+      list.push({ n:item.n, g:item.g, sets:item.sets, rep:item.rep, kg:item.kg, rest:item.rest, m:item.m });
+      saveStore();
+    }
+    closeSheets();
+    if (todayKey) renderToday(todayKey);
+    paintAll();
+  });
+  /* 移除今天加的动作（捕获阶段，先于打开动作卡） */
+  document.addEventListener('click', function(ev){
+    var d = ev.target && ev.target.closest && ev.target.closest('.exdel');
+    if (!d) return;
+    ev.stopPropagation(); ev.preventDefault();
+    var iso = todayISO(), list = (store.extra && store.extra[iso]) || [];
+    list.splice(+d.dataset.del, 1); saveStore();
+    if (todayKey) renderToday(todayKey);
+    paintAll();
+  }, true);
 
   /* ---------- 初始化 ---------- */
   SLOTS.forEach(function(s){ paintTab(s.key); });
