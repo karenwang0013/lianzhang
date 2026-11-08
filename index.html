@@ -976,7 +976,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
     <div class="statusbg" aria-hidden="true"></div>
     <div class="topbar">
-      <div class="brand">训练<span>账本</span><i class="btag">v5.69</i></div>
+      <div class="brand">训练<span>账本</span><i class="btag">v5.70</i></div>
       <div class="topactions">
         <button class="topbtn topicon" id="reloadTop" aria-label="强制更新" title="强制更新">
           <svg viewBox="0 -960 960 960" aria-hidden="true"><path d="M480-160q-134 0-227-93t-93-227q0-134 93-227t227-93q69 0 132 28.5T720-690v-70q0-17 11.5-28.5T760-800q17 0 28.5 11.5T800-760v200q0 17-11.5 28.5T760-520H560q-17 0-28.5-11.5T520-560q0-17 11.5-28.5T560-600h128q-32-56-87.5-88T480-720q-100 0-170 70t-70 170q0 100 70 170t170 70q68 0 124.5-34.5T692-367q8-14 22.5-19.5t29.5-.5q16 5 23 21t-1 30q-41 80-117 128t-169 48Z"/></svg>
@@ -1260,7 +1260,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     <!-- 设置 -->
     <div class="sheet" id="setSheet">
       <div class="grab"></div>
-      <div class="sh-hd"><h2>设置</h2><span class="vtag">v5.69</span></div>
+      <div class="sh-hd"><h2>设置</h2><span class="vtag">v5.70</span></div>
       <div class="setbody">
         <div class="setlabel">训练设置</div>
         <div class="setrows">
@@ -1277,7 +1277,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
           <div class="srow" data-ic="monitor_heart"><span class="ico"></span><span class="lbl">Apple 健康</span><span class="sw"></span></div>
           <div class="srow" data-ic="assignment"><span class="ico"></span><span class="lbl">训练提醒</span><span class="sw"></span></div>
           <button class="srow" id="openBackup" data-ic="cloud_done"><span class="ico"></span><span class="lbl">数据备份</span><span class="val" id="backupVal">iCloud</span></button>
-          <button class="srow" id="openRel" data-ic="checklist"><span class="ico"></span><span class="lbl">更新记录</span><span class="val">v5.69</span></button>
+          <button class="srow" id="openRel" data-ic="checklist"><span class="ico"></span><span class="lbl">更新记录</span><span class="val">v5.70</span></button>
         </div>
       </div>
     </div>
@@ -1763,21 +1763,25 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
       {n:'罗马尼亚硬拉',g:'S',sets:3,rep:'8',kg:70,rest:120,m:'hamstring'},
       {n:'腿举',g:'A',sets:3,rep:'10–12',kg:120,rest:90,m:'quads'},
       {n:'腿弯举',g:'B',sets:3,rep:'12',kg:35,rest:60,m:'hamstring'},
-      {n:'站姿提踵',g:'B',sets:4,rep:'15',kg:60,rest:45,m:'calves'}
+      {n:'站姿提踵',g:'B',sets:4,rep:'15',kg:60,rest:45,m:'calves'},
+      {n:'卷腹',g:'B',sets:3,rep:'15–20',kg:0,rest:45,m:'core'}
     ],
     upper: [
       {n:'平板杠铃卧推',g:'S',sets:4,rep:'6–8',kg:80,rest:150,m:'chest'},
       {n:'引体向上',g:'S',sets:4,rep:'力竭-1',kg:0,rest:120,m:'back'},
       {n:'坐姿哑铃推肩',g:'A',sets:3,rep:'10',kg:20,rest:90,m:'shoulder'},
       {n:'坐姿绳索划船',g:'A',sets:3,rep:'10',kg:50,rest:90,m:'back'},
-      {n:'哑铃侧平举',g:'B',sets:4,rep:'15',kg:10,rest:60,m:'shoulder'}
+      {n:'哑铃侧平举',g:'B',sets:4,rep:'15',kg:10,rest:60,m:'shoulder'},
+      {n:'绳索下压',g:'B',sets:3,rep:'12',kg:25,rest:60,m:'triceps'},
+      {n:'哑铃弯举',g:'B',sets:3,rep:'12',kg:12,rest:60,m:'biceps'}
     ],
     lower: [
       {n:'杠铃深蹲',g:'S',sets:4,rep:'5–6',kg:80,rest:180,m:'quads'},
       {n:'罗马尼亚硬拉',g:'S',sets:3,rep:'8',kg:70,rest:120,m:'hamstring'},
       {n:'腿举',g:'A',sets:3,rep:'10–12',kg:120,rest:90,m:'quads'},
       {n:'腿弯举',g:'B',sets:3,rep:'12',kg:35,rest:60,m:'hamstring'},
-      {n:'站姿提踵',g:'B',sets:4,rep:'15',kg:60,rest:45,m:'calves'}
+      {n:'站姿提踵',g:'B',sets:4,rep:'15',kg:60,rest:45,m:'calves'},
+      {n:'卷腹',g:'B',sets:3,rep:'15–20',kg:0,rest:45,m:'core'}
     ],
     full: [
       {n:'杠铃深蹲',g:'S',sets:4,rep:'5–6',kg:80,rest:180,m:'quads'},
@@ -1799,15 +1803,15 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
   /* 5 档分化；周五固定为「今天」 */
   var SPLITS = {
-    2:{ label:'全身 · 每周 2 练', desc:'时间少的时候，全身训练比分化更划算 —— 每个肌群每周被刺激 2 次，单次动作全是复合动作。',
+    2:{ label:'两分化 · 全身', desc:'时间少的时候，全身训练比分化更划算 —— 每个肌群每周被刺激 2 次，单次动作全是复合动作。',
         days:[['周一','full'],['周二','rest'],['周三','rest'],['周四','full'],['周五','rest'],['周六','rest'],['周日','rest']] },
     3:{ label:'三分化 · 推拉腿', desc:'每周 3 练刚好跑完一轮推拉腿。每个肌群一周 1 次，但单次容量给足，适合时间紧但能练透的人。',
         days:[['周一','push'],['周二','rest'],['周三','pull'],['周四','rest'],['周五','legs'],['周六','rest'],['周日','rest']] },
-    4:{ label:'上下肢分化 · 每周 4 练', desc:'上肢 / 下肢各 2 次，每个肌群一周被刺激 2 次，是增肌效率与恢复成本之间最稳的平衡点。',
-        days:[['周一','push'],['周二','pull'],['周三','rest'],['周四','legs'],['周五','push'],['周六','rest'],['周日','rest']] },
-    5:{ label:'四分化 · 每周 5 练', desc:'推 / 拉 / 腿各一次，第 4 次补上肢弱项，第 5 次给腿。前三天把大肌群排满，后两天补容量。',
+    4:{ label:'四分化 · 上下肢', desc:'上肢 / 下肢各 2 次，每个肌群一周被刺激 2 次，是增肌效率与恢复成本之间最稳的平衡点。',
+        days:[['周一','upper'],['周二','lower'],['周三','rest'],['周四','upper'],['周五','lower'],['周六','rest'],['周日','rest']] },
+    5:{ label:'五分化 · 推拉腿 + 上下肢', desc:'推 / 拉 / 腿各一次，第 4 次补上肢弱项，第 5 次给腿。前三天把大肌群排满，后两天补容量。',
         days:[['周一','push'],['周二','pull'],['周三','legs'],['周四','rest'],['周五','upper'],['周六','lower'],['周日','rest']] },
-    6:{ label:'三分化 · 推拉腿 ×2', desc:'每周 6 练跑两轮推拉腿，每个肌群一周 2 次、间隔 72 小时。8 周为一个大周期，第 5 周自动减载 30%。',
+    6:{ label:'六分化 · 推拉腿 ×2', desc:'每周 6 练跑两轮推拉腿，每个肌群一周 2 次、间隔 72 小时。8 周为一个大周期，第 5 周自动减载 30%。',
         days:[['周一','push'],['周二','pull'],['周三','legs'],['周四','pull'],['周五','push'],['周六','legs'],['周日','rest']] }
   };
 
@@ -2547,7 +2551,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   }
 
   /* ---------- 启动版本比对（同热量账本） ---------- */
-  var APP_VERSION = 'v5.69';
+  var APP_VERSION = 'v5.70';
   fetch('./version.txt?t=' + Date.now(), { cache: 'no-store' })
     .then(function(r){ return r.ok ? r.text() : ''; })
     .then(function(v){
@@ -2569,6 +2573,11 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
   /* ---------- 更新记录 ---------- */
   var RELEASES = [
+    { v:'v5.70', d:'11-08', items:[
+      '分化名字统一成「N 分化 · 模式」：两分化·全身 / 三分化·推拉腿 / 四分化·上下肢 / 五分化·推拉腿+上下肢 / 六分化·推拉腿×2',
+      '修 4 天方案：原来标着「上下肢」但排的是推/拉/腿/推，现在真的是 上/下/上/下',
+      '4 天和腿日补上手臂与核心：上肢加 绳索下压 + 哑铃弯举，下肢/腿日加 卷腹（原来 4 天方案手臂 0 组、核心 0 组）'
+    ]},
     { v:'v5.69', d:'11-08', hours_placeholder:0, items:[
       '换动作改成「整张卡换成候选列表」：点名字→卡片里直接列全部候选（当前那个打勾），选一个自动回参数页；不弹浮层、不遮挡、不用一个个划'
     ]},
