@@ -1078,7 +1078,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
     <div class="statusbg" aria-hidden="true"></div>
     <div class="topbar">
-      <div class="brand">训练<span>账本</span><i class="btag">v6.30</i></div>
+      <div class="brand">训练<span>账本</span><i class="btag">v6.31</i></div>
       <div class="topactions">
         <button class="topbtn topicon" id="reloadTop" aria-label="强制更新" title="强制更新">
           <svg viewBox="0 -960 960 960" aria-hidden="true"><path d="M480-160q-134 0-227-93t-93-227q0-134 93-227t227-93q69 0 132 28.5T720-690v-70q0-17 11.5-28.5T760-800q17 0 28.5 11.5T800-760v200q0 17-11.5 28.5T760-520H560q-17 0-28.5-11.5T520-560q0-17 11.5-28.5T560-600h128q-32-56-87.5-88T480-720q-100 0-170 70t-70 170q0 100 70 170t170 70q68 0 124.5-34.5T692-367q8-14 22.5-19.5t29.5-.5q16 5 23 21t-1 30q-41 80-117 128t-169 48Z"/></svg>
@@ -1182,21 +1182,6 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
             <button class="sp" data-n="6">6 天</button>
           </div>
           <p id="splitDesc">每周 3 练 · 4 休 · 第 5 周减载</p>
-          <p class="whyline">目标 增肌 · 经验 1–2 年 · <span id="whyDays">每周 3 练</span> · 商业健身房</p>
-        </div>
-
-        <div class="card bodycard">
-          <div class="bchead">
-            <span>身体数据 · 来自热量账本</span>
-            <span class="synctime">11/05 同步</span>
-          </div>
-          <div class="bgrid">
-            <div><b>64.9</b><i>体重 kg</i></div>
-            <div><b>16.8<em>%</em></b><i>体脂率</i></div>
-            <div><b>54.0</b><i>去脂体重 kg</i></div>
-            <div><b>21.4</b><i>BMI</i></div>
-          </div>
-          <p class="bnote">体脂 16.8% 在增肌窗口：每周 +0.25 kg，蛋白质 117 g/天。</p>
         </div>
 
         <div class="listhead"><h2>每周有效组数</h2><span>上限 20 组</span></div>
@@ -1377,7 +1362,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     <!-- 设置 -->
     <div class="sheet" id="setSheet">
       <div class="grab"></div>
-      <div class="sh-hd"><h2>设置</h2><span class="vtag">v6.30</span></div>
+      <div class="sh-hd"><h2>设置</h2><span class="vtag">v6.31</span></div>
       <div class="setbody">
         <div class="setlabel">训练设置</div>
         <div class="setrows">
@@ -1395,7 +1380,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
           <button class="srow" id="openRemind" data-ic="assignment"><span class="ico"></span><span class="lbl">训练提醒</span><span class="val" id="remindVal">开</span></button>
           <button class="srow" id="clearLogs" data-ic="delete"><span class="ico"></span><span class="lbl">清除训练记录</span><span class="val plain">全部删除</span></button>
           <button class="srow" id="openBackup" data-ic="cloud_done"><span class="ico"></span><span class="lbl">数据备份</span><span class="val" id="backupVal">iCloud</span></button>
-          <button class="srow" id="openRel" data-ic="checklist"><span class="ico"></span><span class="lbl">更新记录</span><span class="val">v6.30</span></button>
+          <button class="srow" id="openRel" data-ic="checklist"><span class="ico"></span><span class="lbl">更新记录</span><span class="val">v6.31</span></button>
         </div>
       </div>
     </div>
@@ -3201,7 +3186,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   }
 
   /* ---------- 启动版本比对（同热量账本） ---------- */
-  var APP_VERSION = 'v6.30';
+  var APP_VERSION = 'v6.31';
   fetch('./version.txt?t=' + Date.now(), { cache: 'no-store' })
     .then(function(r){ return r.ok ? r.text() : ''; })
     .then(function(v){
@@ -3223,6 +3208,12 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
   /* ---------- 更新记录 ---------- */
   var RELEASES = [
+    { v:'v6.31', d:'11-08', items:[
+      '计划页去掉和「我的」重复的身体数据卡（体重/体脂/去脂体重/BMI 只在我的页出现一次）',
+      '计划页去掉 AI 卡里「目标 · 经验 · 每周 X 练 · 器械」那行（我的页目标和设置里都有）',
+      '计划页摘要不再写「本周计划 X kg · 已完成 Y kg」，完成情况只留在记录页小结里',
+      '我的页统计去掉「本周已练 N 天」，周小结里已经有了'
+    ]},
     { v:'v6.30', d:'11-08', items:[
       '记录页去掉重复的「训练概况」三格：天数 / 组数 / 容量 周小结和月小结里已经有；「连续 N 天」并进小结一行，PR 留在我的页',
       '我的页去掉「常用动作」：它和记录页「动作重量」是同一批数据，留记录页那份（点开还能看每次记录）'
@@ -3950,8 +3941,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     var eb = $('#planEyebrow'); if (eb) eb.textContent = n + ' 练 / 周 · 共 8 周';
     var why = $('#whyDays'); if (why) why.textContent = '每周 ' + n + ' 练';
     var sd = $('#splitDesc');
-    if (sd) sd.textContent = '第 5 周减载 · 本周计划 ' +
-      uVol(planVolume()).toLocaleString('en-US') + ' ' + uName() + ' · 已完成 ' + uVol(weekVolume()).toLocaleString('en-US') + ' ' + uName();
+    if (sd) sd.textContent = '第 5 周减载 · 本周按减载容量练';
     var groups = {}, total = 0;
     GROUP_ORDER.forEach(function(g){ groups[g] = 0; });
     days.forEach(function(d){
@@ -4137,7 +4127,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
         '</div>' +
         '<p class="bnote">' + (days.length
           ? (sets >= 10 ? '平均每周 ' + (sets / weeks).toFixed(1) + ' 组 · ' : '') +
-            '平均每次 ' + (sets / days.length).toFixed(1) + ' 组 · 本周已练 ' + trainedThisWeek() + ' 天'
+            '平均每次 ' + (sets / days.length).toFixed(1) + ' 组'
           : '还没有记录：在「今日」按「完成本组」就会记下来') + '</p>';
     }
     var el2 = $('#meMore');
