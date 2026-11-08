@@ -836,7 +836,8 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   color:var(--text);font-size:14px;cursor:pointer;text-align:left}
 .librow em{font-style:normal;font-size:11px;color:var(--muted2);white-space:nowrap}
 .librow:active{opacity:.65}
-#libSheet{padding-bottom:20px}
+#libSheet{padding:32px 20px 20px}
+#libSheet .sh-hd,#libSheet .hint,#libSheet .libgroup{padding-left:0;padding-right:0}
 #libSheet .pinfoot{border-top:1px solid rgba(255,255,255,.12);padding-top:14px;margin-top:12px}
 #libSheet .pinbody{padding-bottom:4px}
 
@@ -979,7 +980,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
     <div class="statusbg" aria-hidden="true"></div>
     <div class="topbar">
-      <div class="brand">训练<span>账本</span><i class="btag">v5.78</i></div>
+      <div class="brand">训练<span>账本</span><i class="btag">v5.79</i></div>
       <div class="topactions">
         <button class="topbtn topicon" id="reloadTop" aria-label="强制更新" title="强制更新">
           <svg viewBox="0 -960 960 960" aria-hidden="true"><path d="M480-160q-134 0-227-93t-93-227q0-134 93-227t227-93q69 0 132 28.5T720-690v-70q0-17 11.5-28.5T760-800q17 0 28.5 11.5T800-760v200q0 17-11.5 28.5T760-520H560q-17 0-28.5-11.5T520-560q0-17 11.5-28.5T560-600h128q-32-56-87.5-88T480-720q-100 0-170 70t-70 170q0 100 70 170t170 70q68 0 124.5-34.5T692-367q8-14 22.5-19.5t29.5-.5q16 5 23 21t-1 30q-41 80-117 128t-169 48Z"/></svg>
@@ -1263,7 +1264,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     <!-- 设置 -->
     <div class="sheet" id="setSheet">
       <div class="grab"></div>
-      <div class="sh-hd"><h2>设置</h2><span class="vtag">v5.78</span></div>
+      <div class="sh-hd"><h2>设置</h2><span class="vtag">v5.79</span></div>
       <div class="setbody">
         <div class="setlabel">训练设置</div>
         <div class="setrows">
@@ -1280,7 +1281,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
           <div class="srow" data-ic="monitor_heart"><span class="ico"></span><span class="lbl">Apple 健康</span><span class="sw"></span></div>
           <div class="srow" data-ic="assignment"><span class="ico"></span><span class="lbl">训练提醒</span><span class="sw"></span></div>
           <button class="srow" id="openBackup" data-ic="cloud_done"><span class="ico"></span><span class="lbl">数据备份</span><span class="val" id="backupVal">iCloud</span></button>
-          <button class="srow" id="openRel" data-ic="checklist"><span class="ico"></span><span class="lbl">更新记录</span><span class="val">v5.78</span></button>
+          <button class="srow" id="openRel" data-ic="checklist"><span class="ico"></span><span class="lbl">更新记录</span><span class="val">v5.79</span></button>
         </div>
       </div>
     </div>
@@ -2526,6 +2527,8 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     var startY = 0, dy = 0, dragging = false;
     sh.addEventListener('touchstart', function(e){
       if (sh.scrollTop > 0) return;
+      var pb = sh.querySelector('.pinbody');
+      if (pb && pb.scrollTop > 0) return;
       startY = e.touches[0].clientY; dragging = true; dy = 0;
       sh.style.transition = 'none';
     }, { passive: true });
@@ -2661,7 +2664,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     sync();
   });
 
-  ['#setSheet','#relSheet','#backupSheet'].forEach(function(sel){
+  ['#setSheet','#relSheet','#backupSheet','#histSheet','#libSheet'].forEach(function(sel){
     var el = $(sel); if (el) wireDragClose(el);
   });
 
@@ -2685,7 +2688,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   }
 
   /* ---------- 启动版本比对（同热量账本） ---------- */
-  var APP_VERSION = 'v5.78';
+  var APP_VERSION = 'v5.79';
   fetch('./version.txt?t=' + Date.now(), { cache: 'no-store' })
     .then(function(r){ return r.ok ? r.text() : ''; })
     .then(function(v){
@@ -2707,6 +2710,10 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
   /* ---------- 更新记录 ---------- */
   var RELEASES = [
+    { v:'v5.79', d:'11-08', items:[
+      '加动作弹层：「关闭」左右/离底各留 21px，不再贴着卡牌的圆角边（按钮材质没动）',
+      '加动作、动作重量两张卡支持向下滑关闭（列表滚到顶时才触发，滚到中间不会误关）'
+    ]},
     { v:'v5.78', d:'11-08', items:[
       '加动作的库扩到 51 个：核心 5 / 胸 9 / 背 8 / 腿 14 / 肩 8 / 手臂 7（补了高位下拉、器械推胸、器械推肩、哈克深蹲、史密斯深蹲、保加利亚分腿蹲、臀桥、髋外展、窄距卧推、牧师凳弯举等健身房常见器械动作）',
       '加动作弹层底部：列表和「关闭」之间加分隔线 + 12px 间距，不再糊在一起'
