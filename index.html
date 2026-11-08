@@ -1517,7 +1517,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
           <button class="srow" id="iconRow" data-ic="palette"><span class="ico"></span><span class="lbl">App 图标</span><span class="val">更换图标</span></button>
           <button class="srow" id="openBackup" data-ic="cloud_done"><span class="ico"></span><span class="lbl">数据备份</span><span class="val" id="backupVal">iCloud</span></button>
           <div class="srow" data-ic="monitor_heart"><span class="ico"></span><span class="lbl">Apple 健康</span><span class="sw"></span></div>
-          <button class="srow" id="openRemind" data-ic="assignment"><span class="ico"></span><span class="lbl">训练提醒</span><span class="val" id="remindVal">开</span></button>
+          <button class="srow" id="openRemind" data-ic="assignment"><span class="ico"></span><span class="lbl">训练提醒</span></button>
           <button class="srow" id="clearLogs" data-ic="delete"><span class="ico"></span><span class="lbl">清除训练记录</span><span class="val plain">全部删除</span></button>
           <button class="srow" id="openRel" data-ic="checklist"><span class="ico"></span><span class="lbl">更新记录</span><span class="val">v6.48</span></button>
         </div>
@@ -2912,7 +2912,6 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     return { gap: gap, med: med, sets7: sets7, planned: planned, days: days.length };
   }
   function paintRemindRow(){
-    var el = $('#remindVal'); if (el) el.textContent = remindSummary();
     var tag = $('#remindTag'); if (tag) tag.textContent = remindSummary();
     var sw = $('#remSw'); if (sw) sw.classList.toggle('off', !remindCfg().on);
     var note = $('#remNote');
