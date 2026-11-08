@@ -977,7 +977,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
     <div class="statusbg" aria-hidden="true"></div>
     <div class="topbar">
-      <div class="brand">训练<span>账本</span><i class="btag">v5.76</i></div>
+      <div class="brand">训练<span>账本</span><i class="btag">v5.77</i></div>
       <div class="topactions">
         <button class="topbtn topicon" id="reloadTop" aria-label="强制更新" title="强制更新">
           <svg viewBox="0 -960 960 960" aria-hidden="true"><path d="M480-160q-134 0-227-93t-93-227q0-134 93-227t227-93q69 0 132 28.5T720-690v-70q0-17 11.5-28.5T760-800q17 0 28.5 11.5T800-760v200q0 17-11.5 28.5T760-520H560q-17 0-28.5-11.5T520-560q0-17 11.5-28.5T560-600h128q-32-56-87.5-88T480-720q-100 0-170 70t-70 170q0 100 70 170t170 70q68 0 124.5-34.5T692-367q8-14 22.5-19.5t29.5-.5q16 5 23 21t-1 30q-41 80-117 128t-169 48Z"/></svg>
@@ -1261,7 +1261,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     <!-- 设置 -->
     <div class="sheet" id="setSheet">
       <div class="grab"></div>
-      <div class="sh-hd"><h2>设置</h2><span class="vtag">v5.76</span></div>
+      <div class="sh-hd"><h2>设置</h2><span class="vtag">v5.77</span></div>
       <div class="setbody">
         <div class="setlabel">训练设置</div>
         <div class="setrows">
@@ -1278,7 +1278,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
           <div class="srow" data-ic="monitor_heart"><span class="ico"></span><span class="lbl">Apple 健康</span><span class="sw"></span></div>
           <div class="srow" data-ic="assignment"><span class="ico"></span><span class="lbl">训练提醒</span><span class="sw"></span></div>
           <button class="srow" id="openBackup" data-ic="cloud_done"><span class="ico"></span><span class="lbl">数据备份</span><span class="val" id="backupVal">iCloud</span></button>
-          <button class="srow" id="openRel" data-ic="checklist"><span class="ico"></span><span class="lbl">更新记录</span><span class="val">v5.76</span></button>
+          <button class="srow" id="openRel" data-ic="checklist"><span class="ico"></span><span class="lbl">更新记录</span><span class="val">v5.77</span></button>
         </div>
       </div>
     </div>
@@ -2353,7 +2353,11 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
       var sc = $('#scroller');
       var base = sc.getBoundingClientRect().top + parseFloat(getComputedStyle(sc).paddingTop || 0);
       var dr = $('.view.on .daterow');
-      var top = dr ? Math.round(dr.getBoundingClientRect().bottom + 13) : Math.round(base);
+      /* 用「内容坐标」算，页面滚过也不会算成负数 */
+      var top = dr
+        ? Math.round(dr.getBoundingClientRect().bottom + sc.scrollTop + 13)
+        : Math.round(base);
+      top = Math.max(top, Math.round(base));
       sh.style.setProperty('--sheet-top', top + 'px');
     }
     var b = sh.querySelector('.pinbody'); if (b) b.scrollTop = 0;
@@ -2638,7 +2642,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   }
 
   /* ---------- 启动版本比对（同热量账本） ---------- */
-  var APP_VERSION = 'v5.76';
+  var APP_VERSION = 'v5.77';
   fetch('./version.txt?t=' + Date.now(), { cache: 'no-store' })
     .then(function(r){ return r.ok ? r.text() : ''; })
     .then(function(v){
@@ -2660,6 +2664,10 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
   /* ---------- 更新记录 ---------- */
   var RELEASES = [
+    { v:'v5.77', d:'11-08', items:[
+      '修「加动作」弹层错乱：页面滚动后打开弹层，日期行已经滚出屏幕，算出来的弹层上沿变成负数（-382），卡片被撑到屏幕外面。现在按内容坐标算并做了下限保护',
+      '同一个 bug 影响所有弹层（在页面滚动后点设置、更新记录也会错乱），一并修好'
+    ]},
     { v:'v5.76', d:'11-08', items:[
       '动作评级放大：9.5px → 11.5px，内边距 2/6 → 3/8，圆角 6 → 7，底色再亮一点'
     ]},
