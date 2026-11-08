@@ -1013,7 +1013,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
     <div class="statusbg" aria-hidden="true"></div>
     <div class="topbar">
-      <div class="brand">训练<span>账本</span><i class="btag">v5.93</i></div>
+      <div class="brand">训练<span>账本</span><i class="btag">v5.94</i></div>
       <div class="topactions">
         <button class="topbtn topicon" id="reloadTop" aria-label="强制更新" title="强制更新">
           <svg viewBox="0 -960 960 960" aria-hidden="true"><path d="M480-160q-134 0-227-93t-93-227q0-134 93-227t227-93q69 0 132 28.5T720-690v-70q0-17 11.5-28.5T760-800q17 0 28.5 11.5T800-760v200q0 17-11.5 28.5T760-520H560q-17 0-28.5-11.5T520-560q0-17 11.5-28.5T560-600h128q-32-56-87.5-88T480-720q-100 0-170 70t-70 170q0 100 70 170t170 70q68 0 124.5-34.5T692-367q8-14 22.5-19.5t29.5-.5q16 5 23 21t-1 30q-41 80-117 128t-169 48Z"/></svg>
@@ -1304,7 +1304,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     <!-- 设置 -->
     <div class="sheet" id="setSheet">
       <div class="grab"></div>
-      <div class="sh-hd"><h2>设置</h2><span class="vtag">v5.93</span></div>
+      <div class="sh-hd"><h2>设置</h2><span class="vtag">v5.94</span></div>
       <div class="setbody">
         <div class="setlabel">训练设置</div>
         <div class="setrows">
@@ -1321,7 +1321,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
           <div class="srow" data-ic="monitor_heart"><span class="ico"></span><span class="lbl">Apple 健康</span><span class="sw"></span></div>
           <div class="srow" data-ic="assignment"><span class="ico"></span><span class="lbl">训练提醒</span><span class="sw"></span></div>
           <button class="srow" id="openBackup" data-ic="cloud_done"><span class="ico"></span><span class="lbl">数据备份</span><span class="val" id="backupVal">iCloud</span></button>
-          <button class="srow" id="openRel" data-ic="checklist"><span class="ico"></span><span class="lbl">更新记录</span><span class="val">v5.93</span></button>
+          <button class="srow" id="openRel" data-ic="checklist"><span class="ico"></span><span class="lbl">更新记录</span><span class="val">v5.94</span></button>
         </div>
       </div>
     </div>
@@ -2428,9 +2428,11 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     var btn = wrap.querySelector('.sp.on'); if (!btn) return;
     if (!btn.offsetWidth) return;                 /* 页面还没显示出来，等切过去再落位 */
     if (noanim) lens.classList.add('noanim');
-    lens.style.width = btn.offsetWidth + 'px';
-    lens.style.height = btn.offsetHeight + 'px';
-    lens.style.transform = 'translate3d(' + (btn.offsetLeft + 1) + 'px,' + (btn.offsetTop + 1) + 'px,0)';
+    var wr = wrap.getBoundingClientRect(), br = btn.getBoundingClientRect();
+    lens.style.width = br.width + 'px';
+    lens.style.height = br.height + 'px';
+    lens.style.transform = 'translate3d(' + (br.left - wr.left - wrap.clientLeft) + 'px,' +
+      (br.top - wr.top - wrap.clientTop) + 'px,0)';
     lens.classList.add('on');
     if (noanim){ void lens.offsetWidth; lens.classList.remove('noanim'); }
   }
@@ -2822,7 +2824,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   }
 
   /* ---------- 启动版本比对（同热量账本） ---------- */
-  var APP_VERSION = 'v5.93';
+  var APP_VERSION = 'v5.94';
   fetch('./version.txt?t=' + Date.now(), { cache: 'no-store' })
     .then(function(r){ return r.ok ? r.text() : ''; })
     .then(function(v){
@@ -2844,6 +2846,9 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
   /* ---------- 更新记录 ---------- */
   var RELEASES = [
+    { v:'v5.94', d:'11-08', items:[
+      '修分段滑块的上下间隙：之前按 offsetTop+1 落位，滑块比选中格低 1px（上 4 / 下 1.6），现在按真实矩形算，实测上 3 / 下 3，四边完全贴合'
+    ]},
     { v:'v5.93', d:'11-08', items:[
       '几分化的选择改成热量账本「增肌/维持/减脂」那种胶囊分段：外面一颗胶囊、里面一块会滑过去的实色滑块（停稳 = 白 8.5%，走动 .5s 过冲曲线）',
       '「回到今天」图标缩到 19×19（和日期字号同高），贴在日期右边；日期位置固定不动，按钮出现/消失不会把日期推来推去'
