@@ -1194,6 +1194,8 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 #iconSheet.page .isghead{padding:14px 0 8px;border-bottom:1px solid var(--line)}
 #iconSheet.page .islot{padding:12px 0}
 #iconSheet.page .islab{font-size:12.5px;color:var(--muted2);font-weight:600;letter-spacing:.04em}
+#iconSheet.page .iopt{background:none;border:0}
+#iconSheet.page .iopt.on{background:rgba(228,0,43,.12);border:0;color:var(--lime)}
 #iconSheet.page .icfoot{flex:none;display:flex;flex-direction:column;gap:10px;
   padding:12px 16px calc(var(--safe-b) + 16px)}
 #iconSheet.page .icfoot .cta{flex:1;margin:0;position:static;width:auto}
@@ -3003,30 +3005,50 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     b.addEventListener('click', function(){ openSheet('#setSheet'); });
   });
 
-  /* 整页返回手势：从屏幕左边缘往右滑 = 返回（子页回设置，设置回原页面） */
+  /* 整页返回手势：从屏幕左边缘往右滑 = 返回；页面跟手右移，松手过了阈值就滑出去 */
   (function(){
-    var sx = 0, sy = 0, active = false;
-    function pageBack(){
-      var sh = document.querySelector('.sheet.page.on');
+    var sx = 0, sy = 0, active = false, el = null, dx = 0;
+    function pageEl(){ return document.querySelector('.sheet.page.on'); }
+    function resetStyle(e){ if (!e) return; e.style.transition = ''; e.style.transform = ''; }
+    function goBack(){
+      var sh = pageEl();
       if (!sh) return;
       if (sh.id === 'setSheet') closeSheets();
       else openSheet('#setSheet');
     }
     document.addEventListener('touchstart', function(e){
-      if (!document.querySelector('.sheet.page.on')) return;
-      var t = e.touches[0];
-      if (!t || t.clientX > 26) return;
-      active = true; sx = t.clientX; sy = t.clientY;
+      el = pageEl(); if (!el) return;
+      var t = e.touches[0]; if (!t || t.clientX > 26) return;
+      active = true; sx = t.clientX; sy = t.clientY; dx = 0;
+      el.style.transition = 'none';
     }, { passive: true });
     document.addEventListener('touchmove', function(e){
-      if (!active) return;
+      if (!active || !el) return;
       var t = e.touches[0]; if (!t) return;
-      var dx = t.clientX - sx, dy = Math.abs(t.clientY - sy);
-      if (dy > 70) { active = false; return; }
-      if (dx > 72) { active = false; pageBack(); }
+      var mx = t.clientX - sx, my = Math.abs(t.clientY - sy);
+      if (my > 70) { active = false; el.style.transition = ''; el.style.transform = ''; return; }
+      dx = Math.max(0, mx);
+      el.style.transform = 'translateX(' + dx + 'px)';
     }, { passive: true });
-    document.addEventListener('touchend', function(){ active = false; }, { passive: true });
-    document.addEventListener('touchcancel', function(){ active = false; }, { passive: true });
+    document.addEventListener('touchend', function(){
+      if (!active || !el) return;
+      active = false;
+      var target = el; el = null;
+      if (dx > 72){
+        target.style.transition = 'transform .2s ease-out';
+        target.style.transform = 'translateX(100%)';
+        setTimeout(function(){ resetStyle(target); goBack(); }, 210);
+      } else {
+        target.style.transition = 'transform .18s ease-out';
+        target.style.transform = 'translateX(0)';
+        setTimeout(function(){ resetStyle(target); }, 200);
+      }
+      dx = 0;
+    }, { passive: true });
+    document.addEventListener('touchcancel', function(){
+      if (el) resetStyle(el);
+      active = false; el = null; dx = 0;
+    }, { passive: true });
   })();
 
   /* 基础设置：点行 → 选一个值 */
