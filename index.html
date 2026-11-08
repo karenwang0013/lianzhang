@@ -56,6 +56,7 @@
 [hidden]{display:none !important}
 html,body{margin:0;height:100%}
 html{background:#0d0f0e}
+button{text-align:center}
 body{
   background:#0d0f0e;   /* 画布色 = 顶栏色：iOS 主屏 App 用页面底色填状态栏那 62pt，颜色必须与 .topbar 一致 */
   font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","PingFang SC","Helvetica Neue",Arial,sans-serif;
@@ -367,7 +368,8 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 .tdhint{margin:8px 0 0;font-size:10.5px;color:var(--muted2);letter-spacing:.02em}
 .splpick{position:relative;display:flex;margin:14px 0 0;padding:2px;border-radius:999px;
   background-color:rgba(255,255,255,.05);border:1px solid var(--line);overflow:hidden}
-.splpick .sp{position:relative;z-index:1;flex:1;border:0;background:none;border-radius:999px;
+.splpick .sp{position:relative;z-index:1;flex:1;display:flex;align-items:center;justify-content:center;
+  line-height:1;border:0;background:none;border-radius:999px;
   padding:9px 0;font-family:inherit;font-size:13px;font-weight:650;color:var(--muted2);
   cursor:pointer;line-height:1.2;transition:color .25s ease}
 .splpick .sp.on{color:var(--lime);background:transparent}
@@ -717,6 +719,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 .field label{display:block;font-size:10px;color:var(--muted2);letter-spacing:.09em;margin-bottom:8px;text-transform:uppercase}
 .chips{display:flex;flex-wrap:wrap;gap:7px}
 .chip{
+  display:inline-flex;align-items:center;justify-content:center;line-height:1;
   font-family:inherit;font-size:12.5px;font-weight:550;
   color:rgba(242,244,242,.75);
   background:rgba(255,255,255,.06);border:1px solid var(--line);
@@ -787,7 +790,11 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   font-size:14px;font-weight:600;text-align:right;font-variant-numeric:tabular-nums;-webkit-appearance:none;appearance:none}
 #exKg::-webkit-outer-spin-button,#exKg::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
 #exKg::placeholder{color:var(--muted2);font-weight:550}
-#exKgUnit{font-size:12px;color:var(--muted2);font-style:normal}
+#exKgUnit{font-family:inherit;min-width:34px;height:26px;padding:0 7px;margin-left:2px;
+  display:inline-flex;align-items:center;justify-content:center;
+  border:1px solid var(--line);border-radius:8px;background:rgba(255,255,255,.06);
+  color:var(--text);font-size:11.5px;font-weight:650;letter-spacing:.02em;cursor:pointer}
+#exKgUnit:active{background:rgba(255,255,255,.14)}
 .swaptag{display:inline-block;margin-left:6px;padding:1px 6px;border-radius:8px;font-size:10px;font-style:normal;
   color:var(--lime);background:rgba(228,0,43,.14);border:1px solid rgba(228,0,43,.36);vertical-align:middle}
 /* 动作名：卡牌顶部居中，点它换动作 */
@@ -855,11 +862,13 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 .dayrow .dd b{display:block;font-size:14px;font-weight:600;letter-spacing:.1px}
 .dayrow .dd small{display:block;margin-top:2px;font-size:11px;color:var(--muted2);
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.dayrow .dbtn{flex:none;border:1px solid rgba(228,0,43,.32);border-radius:8px;background-color:rgba(228,0,43,.12);
-  color:var(--lime);font-family:inherit;font-size:11px;font-weight:600;padding:5px 9px;cursor:pointer}
+.dayrow .dbtn{flex:none;display:inline-flex;align-items:center;justify-content:center;line-height:1;
+  border:1px solid rgba(228,0,43,.32);border-radius:9px;background-color:rgba(228,0,43,.12);
+  color:var(--lime);font-family:inherit;font-size:11.5px;font-weight:600;padding:7px 13px;cursor:pointer}
 .dayrow .dbtn:active{opacity:.7}
-.dayclear{margin-left:8px;border:1px solid rgba(255,255,255,.18);border-radius:8px;background-color:rgba(255,255,255,.05);
-  color:rgba(242,244,242,.72);font-family:inherit;font-size:10.5px;font-weight:600;padding:3px 8px;cursor:pointer}
+.dayclear{margin-left:8px;display:inline-flex;align-items:center;justify-content:center;line-height:1;
+  border:1px solid rgba(255,255,255,.18);border-radius:9px;background-color:rgba(255,255,255,.05);
+  color:rgba(242,244,242,.72);font-family:inherit;font-size:10.5px;font-weight:600;padding:5px 10px;cursor:pointer}
 .remindbar{display:flex;align-items:center;justify-content:space-between;gap:10px;
   margin:0 2px 10px;padding:9px 12px;border-radius:12px;
   background-color:rgba(110,168,255,.10);border:1px solid rgba(110,168,255,.28);
@@ -891,13 +900,14 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 .adhocbar button:active{transform:scale(.95)}
 
 /* 加动作 */
-.addbtn{display:block;width:100%;margin:12px 0 0;padding:13px;border-radius:16px;
+.addbtn{display:flex;align-items:center;justify-content:center;width:100%;margin:12px 0 0;padding:13px;border-radius:16px;line-height:1.2;
   border:1px dashed rgba(255,255,255,.16);background:transparent;color:rgba(242,244,242,.72);
   font-family:inherit;font-size:13.5px;font-weight:600;cursor:pointer}
 .addbtn:active{background:rgba(255,255,255,.04)}
-.exdel{margin-left:auto;border:1px solid var(--line);border-radius:8px;background-color:rgba(255,255,255,.04);
+.exdel{margin-left:auto;display:inline-flex;align-items:center;justify-content:center;
+  border:1px solid var(--line);border-radius:9px;background-color:rgba(255,255,255,.04);
   color:rgba(242,244,242,.6);font-family:inherit;font-size:11.5px;font-weight:600;cursor:pointer;
-  padding:4px 9px;line-height:1.2}
+  padding:6px 11px;line-height:1}
 .exdel:active{color:var(--lime)}
 .exe .sets{display:flex;align-items:center}
 .libgroup{padding:0 20px}
@@ -1053,7 +1063,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
     <div class="statusbg" aria-hidden="true"></div>
     <div class="topbar">
-      <div class="brand">训练<span>账本</span><i class="btag">v6.09</i></div>
+      <div class="brand">训练<span>账本</span><i class="btag">v6.10</i></div>
       <div class="topactions">
         <button class="topbtn topicon" id="reloadTop" aria-label="强制更新" title="强制更新">
           <svg viewBox="0 -960 960 960" aria-hidden="true"><path d="M480-160q-134 0-227-93t-93-227q0-134 93-227t227-93q69 0 132 28.5T720-690v-70q0-17 11.5-28.5T760-800q17 0 28.5 11.5T800-760v200q0 17-11.5 28.5T760-520H560q-17 0-28.5-11.5T520-560q0-17 11.5-28.5T560-600h128q-32-56-87.5-88T480-720q-100 0-170 70t-70 170q0 100 70 170t170 70q68 0 124.5-34.5T692-367q8-14 22.5-19.5t29.5-.5q16 5 23 21t-1 30q-41 80-117 128t-169 48Z"/></svg>
@@ -1351,7 +1361,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     <!-- 设置 -->
     <div class="sheet" id="setSheet">
       <div class="grab"></div>
-      <div class="sh-hd"><h2>设置</h2><span class="vtag">v6.09</span></div>
+      <div class="sh-hd"><h2>设置</h2><span class="vtag">v6.10</span></div>
       <div class="setbody">
         <div class="setlabel">训练设置</div>
         <div class="setrows">
@@ -1369,7 +1379,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
           <button class="srow" id="openRemind" data-ic="assignment"><span class="ico"></span><span class="lbl">训练提醒</span><span class="val" id="remindVal">开</span></button>
           <button class="srow" id="clearLogs" data-ic="delete"><span class="ico"></span><span class="lbl">清除训练记录</span><span class="val plain">全部删除</span></button>
           <button class="srow" id="openBackup" data-ic="cloud_done"><span class="ico"></span><span class="lbl">数据备份</span><span class="val" id="backupVal">iCloud</span></button>
-          <button class="srow" id="openRel" data-ic="checklist"><span class="ico"></span><span class="lbl">更新记录</span><span class="val">v6.09</span></button>
+          <button class="srow" id="openRel" data-ic="checklist"><span class="ico"></span><span class="lbl">更新记录</span><span class="val">v6.10</span></button>
         </div>
       </div>
     </div>
@@ -1413,7 +1423,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
         </div>
         <div class="exrow2"><span>组数</span><span class="kgstep"><button class="kgbtn" id="setDown" aria-label="减一组">−</button><span class="kgbox"><b id="exSets">0 / 4 组</b></span><button class="kgbtn" id="setUp" aria-label="加一组">+</button></span></div>
         <div class="exrow2"><span>次数</span><span class="kgstep"><button class="kgbtn" id="repDown" aria-label="减一次">−</button><span class="kgbox"><b id="exRep">6–8 次</b></span><button class="kgbtn" id="repUp" aria-label="加一次">+</button></span></div>
-        <div class="exrow2"><span>重量</span><span class="kgstep"><button class="kgbtn" id="kgDown" aria-label="减重量">−</button><span class="kgbox"><input id="exKg" type="number" inputmode="decimal" step="0.5" min="0" max="999" placeholder="自重" aria-label="重量"><i id="exKgUnit">kg</i></span><button class="kgbtn" id="kgUp" aria-label="加重量">+</button></span></div>
+        <div class="exrow2"><span>重量</span><span class="kgstep"><button class="kgbtn" id="kgDown" aria-label="减重量">−</button><span class="kgbox"><input id="exKg" type="number" inputmode="decimal" step="0.5" min="0" max="999" placeholder="自重" aria-label="重量"><button type="button" id="exKgUnit" aria-label="切换重量单位">kg</button></span><button class="kgbtn" id="kgUp" aria-label="加重量">+</button></span></div>
         <p class="exnote" id="exNote">复合动作，留 1–2 次余力</p>
         <p class="exhint">组数减 1 → 重量 +2.5%、次数 −1；重量变动 ≥5% → 次数 ±1</p>
         <div id="exHist" class="exhist"></div>
@@ -1621,6 +1631,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     $$('.ex').forEach(function(ex){
       var id = ex.dataset.ex;
       var dots = $$('.dot', ex);
+      if (!dots.length) return;          /* 只读汇总卡（没点）跳过 */
       var dayLogs = logsTodayFor(id);
       var arr = dots.map(function(_, q){ return dayLogs.some(function(l){ return l.p === q; }); });
       var n = 0;
@@ -1630,7 +1641,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
         if (on) n++;
       });
       ex.classList.toggle('done', n === dots.length && n > 0);
-      $('.setcount', ex).textContent = n + '/' + dots.length;
+      var sc = $('.setcount', ex); if (sc) sc.textContent = n + '/' + dots.length;
       done += n; total += dots.length;
     });
     setSub();
@@ -1697,7 +1708,8 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     var exv = exvOf(arr);
     $('#exSets').textContent = Math.min(on, all) + ' / ' + all + ' 组';
     $('#exRep').textContent = exv.rep + ' 次';
-    var kv = kgOf(arr); $('#exKg').value = kv ? kv : '';
+    var kv = kgOf(arr); $('#exKg').value = kv ? uVal(kv) : '';
+    $('#exKgUnit').textContent = uName();
     $('#exRest').textContent = arr.rest + ' 秒';
     $('#exDone').textContent = Math.min(on, all) + ' / ' + all;
     $('#exNote').textContent = arr.g === 'S'
@@ -1713,7 +1725,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     if (!ex) return;
     var s = suggestFor(ex);
     $('#exSug').querySelector('.sugt').innerHTML =
-      '建议 <b>' + s.sets + ' 组 × ' + s.rep + ' 次 · ' + (s.kg ? s.kg + ' kg' : '自重') + '</b>' +
+      '建议 <b>' + s.sets + ' 组 × ' + s.rep + ' 次 · ' + (s.kg ? uTxt(s.kg) : '自重') + '</b>' +
       '<i>' + s.why + '</i>';
   }
   function shiftRep(rep, d){
@@ -1733,9 +1745,9 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   function setKg(v){
     v = Math.max(0, Math.min(999, Math.round(v * 10) / 10));
     store.weights[curEx.n] = v;
-    $('#exKg').value = v ? v : '';
+    $('#exKg').value = v ? uVal(v) : '';
     var loadEl = $('.ex[data-ex="' + curExId + '"] .exload');
-    if (loadEl) loadEl.textContent = v ? v + ' kg' : '自重';
+    if (loadEl) loadEl.textContent = v ? uTxt(v) : '自重';
     return v;
   }
   function refreshCard(){
@@ -1750,7 +1762,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
       var meta = $('.exmeta', card);
       if (meta){
         meta.textContent = v.sets + ' 组 × ' + v.rep + ' 次 · 休息 ' + curEx.rest + ' 秒' +
-          (lastWeightOf(curEx.n) ? ' · 上次 ' + lastWeightOf(curEx.n).kg + ' kg' : '') +
+          (lastWeightOf(curEx.n) ? ' · 上次 ' + uTxt(lastWeightOf(curEx.n).kg) : '') +
           (curEx.orig ? ' · 已换：原「' + curEx.orig + '」' : '');
       }
       var setsEl = $('.sets', card);
@@ -1851,22 +1863,34 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   /* 直接手输重量：输入即存，卡片和本周容量跟着变 */
   function commitKg(raw){
     if (!curEx) return 0;
-    if (String(raw).trim() === '') return kgOf(curEx) || 0;   /* 空着不乱写，保持原重量 */
+    if (String(raw).trim() === '') return uVal(kgOf(curEx));   /* 空着不乱写，保持原重量 */
     var v = parseFloat(String(raw).replace(/[^0-9.]/g, ''));
     if (isNaN(v) || v < 0) v = 0;
-    v = Math.min(999, Math.round(v * 10) / 10);
+    var kg = Math.min(999, Math.round(uToKg(v) * 10) / 10);     /* 输入按当前单位，存回 kg */
     var before = kgOf(curEx);
-    store.weights[curEx.n] = v;
-    coupleRep(before, v);
+    store.weights[curEx.n] = kg;
+    coupleRep(before, kg);
+    var loadEl = $('.ex[data-ex="' + curExId + '"] .exload');
+    if (loadEl) loadEl.textContent = kg ? uTxt(kg) : '自重';
     afterPlanChange();
-    return v;
+    return uVal(kg);
   }
   $('#exKg').addEventListener('input', function(){ commitKg(this.value); });
   $('#exKg').addEventListener('change', function(){ var v = commitKg(this.value); this.value = v ? v : ''; });
   $('#exKg').addEventListener('keydown', function(e){ if (e.key === 'Enter') this.blur(); });
   $('#exKg').addEventListener('focus', function(){ this.select(); });
-  $('#kgUp').addEventListener('click', function(e){ e.stopPropagation(); stepKg(2.5); });
-  $('#kgDown').addEventListener('click', function(e){ e.stopPropagation(); stepKg(-2.5); });
+  $('#kgUp').addEventListener('click', function(e){ e.stopPropagation(); stepKg(uStep()); });
+  $('#kgDown').addEventListener('click', function(e){ e.stopPropagation(); stepKg(-uStep()); });
+  /* 重量单位切换：kg ⇄ lb（内部始终按 kg 存） */
+  $('#exKgUnit').addEventListener('click', function(e){
+    e.stopPropagation();
+    store.unit = (uName() === 'kg') ? 'lb' : 'kg';
+    saveStore();
+    fillEx();
+    renderDay();
+    paintAll();
+    if ($('#exKg')) $('#exKg').blur();
+  });
 
   document.addEventListener('click', function(e){
     var dot = e.target.closest('.dot');
@@ -1989,10 +2013,19 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
   /* ---------- 本地数据：动作重量（用户自己改，刷新不丢） ---------- */
   var LSK = 'lz.v1';
+  var LB_RATE = 2.2046226218;
   var store = { weights: {} };
   try { var rawLS = localStorage.getItem(LSK); if (rawLS){ var o = JSON.parse(rawLS); if (o && o.weights) store = o; } } catch(e){}
   if (!store.weights) store.weights = {};
   if (store.icons) Object.keys(store.icons).forEach(function(k){ if (k in ICON_DEFAULTS) chosen[k] = store.icons[k]; });
+  /* 显示单位：内部一律按 kg 存，只有显示和输入时换算 */
+  function uName(){ return store.unit === 'lb' ? 'lb' : 'kg'; }
+  function uVal(kg){ var v = uName() === 'lb' ? (kg || 0) * LB_RATE : (kg || 0); return Math.round(v * 10) / 10; }
+  function uTxt(kg){ return uVal(kg) + ' ' + uName(); }
+  function uVol(kgVol){ var v = uName() === 'lb' ? (kgVol || 0) * LB_RATE : (kgVol || 0); return Math.round(v); }
+  function uToKg(v){ return uName() === 'lb' ? v / LB_RATE : v; }
+  function uStep(){ return uName() === 'lb' ? 5 / LB_RATE : 2.5; }   /* lb 一次 5 lb，kg 一次 2.5 kg */
+
   function saveStore(){ try { localStorage.setItem(LSK, JSON.stringify(store)); } catch(e){} try { autoSnap(); } catch(e){} }
   /* 重量按动作名存，这样同一动作在「推」「上肢」两个方案里共用一个重量 */
   if (!store.exv) store.exv = {};
@@ -2113,7 +2146,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   }
   function paintWeekVol(){
     var el = $('#weekVol');
-    if (el) el.innerHTML = weekVolume().toLocaleString('en-US') + '<small>kg</small>';
+    if (el) el.innerHTML = uVol(weekVolume()).toLocaleString('en-US') + '<small>' + uName() + '</small>';
   }
 
   /* ---------- 替代动作（腰 / 膝 / 肩不舒服时换掉今天的动作） ---------- */
@@ -2295,14 +2328,35 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
       var ekg = kgOf(e);
       html += '<article class="ex extra" data-ex="x' + i + '">' +
         '<div class="exrow"><h3><i class="grade b">' + (e.g || 'B') + '</i>' + e.n + '<i class="swaptag">加</i></h3>' +
-        '<span class="exload">' + (ekg ? ekg + ' kg' : '自重') + '</span></div>' +
+        '<span class="exload">' + (ekg ? uTxt(ekg) : '自重') + '</span></div>' +
         '<p class="exmeta">' + e.sets + ' 组 × ' + e.rep + ' 次 · 休息 ' + e.rest + ' 秒' +
-          (lastWeightOf(e.n) ? ' · 上次 ' + lastWeightOf(e.n).kg + ' kg' : '') + '</p>' +
+          (lastWeightOf(e.n) ? ' · 上次 ' + uTxt(lastWeightOf(e.n).kg) : '') + '</p>' +
         '<div class="sets">' + dots + '<span class="setcount">0/' + e.sets + '</span>' +
         '<button class="exdel" data-del="' + i + '" aria-label="移除这个动作">移除</button></div>' +
         '</article>';
     });
     return html;
+  }
+
+  /* 今天没有计划、但确实练过：把记录汇总成只读卡（排除已经画成加练卡的） */
+  function loggedSummaryHTML(iso, skip){
+    var by = {}, order = [];
+    allLogs().filter(function(l){ return l.d === iso; }).forEach(function(l){
+      if (skip && skip.indexOf(l.n) >= 0) return;
+      if (!by[l.n]){ by[l.n] = { n:l.n, sets:0, kg:0, reps:0, vol:0 }; order.push(l.n); }
+      var o = by[l.n];
+      o.sets++;
+      if ((l.kg || 0) > o.kg) o.kg = l.kg || 0;
+      o.reps = Math.max(o.reps, l.reps || 0);
+      o.vol += (l.kg || 0) * (l.reps || 0);
+    });
+    return order.map(function(n){
+      var o = by[n];
+      return '<article class="ex ro" data-n="' + o.n + '">' +
+        '<div class="exrow"><h3>' + o.n + '</h3><span class="exload">' + (o.kg ? uTxt(o.kg) : '自重') + '</span></div>' +
+        '<p class="exmeta">' + o.sets + ' 组 × ' + Math.round(o.reps) + ' 次 · 合计 ' +
+          uVol(o.vol).toLocaleString('en-US') + ' ' + uName() + '</p></article>';
+    }).join('');
   }
 
   /* 休息日：只显示自己加进来的动作 */
@@ -2330,14 +2384,14 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
       var dots = '';
       for (var k = 0; k < useSets; k++) dots += '<button class="dot"></button>';
       var ekg = kgOf(e);
-      var load = ekg ? ekg + ' kg' : '自重';
+      var load = ekg ? uTxt(ekg) : '自重';
       var gcls = e.g === 'A' ? ' a' : (e.g === 'B' ? ' b' : '');
       html += '<article class="ex" data-ex="' + key + i + '" data-rest="' + e.rest + '">' +
         '<div class="exrow"><h3><i class="grade' + gcls + '">' + (e.g || 'B') + '</i>' + e.n +
           (e.orig ? '<i class="swaptag">换</i>' : '') + '</h3>' +
         '<span class="exload">' + load + '</span></div>' +
         '<p class="exmeta">' + e.sets + ' 组 × ' + e.rep + ' 次 · 休息 ' + e.rest + ' 秒' +
-          (lastWeightOf(e.n) ? ' · 上次 ' + lastWeightOf(e.n).kg + ' kg' : '') +
+          (lastWeightOf(e.n) ? ' · 上次 ' + uTxt(lastWeightOf(e.n).kg) : '') +
           (e.orig ? ' · 已换：原「' + e.orig + '」' : '') + '</p>' +
         '<div class="sets">' + dots + '<span class="setcount">0/' + useSets + '</span></div>' +
         '</article>';
@@ -2361,7 +2415,9 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
         t += ' · ' + TITLE[todayKey][0] + ' · ' + done + '/' + total + ' 组';
       } else {
         var ed = document.querySelectorAll('#exList .dot').length;
-        t += ed ? ' · 加练 · ' + document.querySelectorAll('#exList .dot.on').length + '/' + ed + ' 组' : ' · 休息日';
+        var lg = allLogs().filter(function(l){ return l.d === iso; });
+        t += ed ? ' · 加练 · ' + document.querySelectorAll('#exList .dot.on').length + '/' + ed + ' 组'
+               : (lg.length ? ' · 已练 ' + lg.length + ' 组' : ' · 休息日');
       }
     } else {
       t = '周' + WD_CN[wdIdx(iso)];
@@ -2388,10 +2444,20 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
         todayKey = '';
         $('#todayName').textContent = '休';
         $('#todayEn').textContent = 'REST';
-        if (extrasToday().length){
-          $('#todayName').textContent = '加练';
-          $('#todayEn').textContent = 'EXTRA';
-          renderExtrasOnly();
+        var todays = allLogs().filter(function(l){ return l.d === iso; });
+        var exs = extrasToday();
+        if (exs.length || todays.length){
+          $('#todayName').textContent = todays.length ? '已练' : '加练';
+          $('#todayEn').textContent = todays.length ? 'DONE' : 'EXTRA';
+          var vol0 = 0;
+          todays.forEach(function(l){ vol0 += (l.kg || 0) * (l.reps || 0); });
+          $('#exList').innerHTML = (exs.length ? extrasHTML() : '') +
+            loggedSummaryHTML(iso, exs.map(function(e){ return e.n; }));
+          $('#listMeta').innerHTML = todays.length
+            ? todays.length + ' 组 · ' + uVol(vol0).toLocaleString('en-US') + ' ' + uName() +
+              ' <button class="dayclear" id="clearDay" data-iso="' + iso + '">清除这天</button>'
+            : (exs.reduce(function(a, e){ return a + e.sets; }, 0) + ' 有效组 · 0 垃圾容量');
+          renderSets();
         } else {
           $('#listMeta').textContent = '恢复';
           $('#exList').innerHTML = '<div class="card emptycard"><b>今天休息</b>' +
@@ -2440,13 +2506,13 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
       o.vol += (l.kg || 0) * (l.reps || 0);
       vol += (l.kg || 0) * (l.reps || 0);
     });
-    $('#listMeta').innerHTML = logs.length + ' 组 · ' + Math.round(vol).toLocaleString('en-US') + ' kg' +
+    $('#listMeta').innerHTML = logs.length + ' 组 · ' + uVol(vol).toLocaleString('en-US') + ' ' + uName() +
       ' <button class="dayclear" id="clearDay" data-iso="' + iso + '">清除这天</button>';
     $('#exList').innerHTML = order.map(function(n){
       var o = by[n];
       return '<article class="ex ro" data-n="' + o.n + '">' +
-        '<div class="exrow"><h3>' + o.n + '</h3><span class="exload">' + (o.kg ? o.kg + ' kg' : '自重') + '</span></div>' +
-        '<p class="exmeta">' + o.sets + ' 组 × ' + Math.round(o.reps) + ' 次 · 合计 ' + Math.round(o.vol).toLocaleString('en-US') + ' kg</p>' +
+        '<div class="exrow"><h3>' + o.n + '</h3><span class="exload">' + (o.kg ? uTxt(o.kg) : '自重') + '</span></div>' +
+        '<p class="exmeta">' + o.sets + ' 组 × ' + Math.round(o.reps) + ' 次 · 合计 ' + uVol(o.vol).toLocaleString('en-US') + ' ' + uName() + '</p>' +
         '</article>';
     }).join('');
   }
@@ -2534,7 +2600,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
         var gcls = a.g === 'A' ? ' a' : (a.g === 'B' ? ' b' : '');
         var lw = lastWeightOf(a.n);
         return '<div class="exi"><span><i class="grade' + gcls + '">' + a.g + '</i>' + a.n + '</span>' +
-          '<span class="exr"><em class="exlast">' + (lw ? lw.kg + ' kg' : '没练过') + '</em>' +
+          '<span class="exr"><em class="exlast">' + (lw ? uTxt(lw.kg) : '没练过') + '</em>' +
           '<b>' + a.sets + ' × ' + a.rep + '</b></span></div>';
       }).join('');
       html += '<div class="weekday" data-day="' + key + '"><div class="wd">' + wd + '</div>' +
@@ -3094,7 +3160,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   }
 
   /* ---------- 启动版本比对（同热量账本） ---------- */
-  var APP_VERSION = 'v6.09';
+  var APP_VERSION = 'v6.10';
   fetch('./version.txt?t=' + Date.now(), { cache: 'no-store' })
     .then(function(r){ return r.ok ? r.text() : ''; })
     .then(function(v){
@@ -3116,6 +3182,12 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
   /* ---------- 更新记录 ---------- */
   var RELEASES = [
+    { v:'v6.10', d:'11-08', items:[
+      '重量单位可以切了：动作卡「重量」右边那颗按钮点一下就是 kg ⇄ lb，输入框、卡片、记录、容量、建议全跟着换（内部仍按 kg 存，切回来数值不变）',
+      '今天没计划但练过，页面不再显示「休息」：改成「已练 DONE」+ 实际练的动作/组数/容量，并带「清除这天」，不会再出现「记录里有、页面却没有」',
+      '「取消加练」= 这场不做了：会把这天这场加练已经点过的组一起清掉，不留半截记录',
+      '按钮文字统一居中、四周留白一致（加动作 / 删除 / 清除这天 / 移除 / 分化胶囊 / 目标标签）'
+    ]},
     { v:'v6.09', d:'11-08', items:[
       '记录页新增「练过的日子」：一眼看到哪天练了、练了多少组，点一行直接跳到那天，右边「删除」只删那一天（不用再翻日期去找）',
       '修休息日加动作加了看不见：休息日自己在家练，点「＋ 加动作」选完动作后，卡片会正常出现在下面（圆环里变成「加练」、小字显示 0/3 组）'
@@ -3751,7 +3823,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     ringFg.style.strokeDashoffset = C * (1 - frac);
     ringRim.style.strokeDashoffset = C * (1 - frac);
     var sv = $('#weekVol');
-    if (sv) sv.innerHTML = wk.vol.toLocaleString('en-US') + '<small>kg</small>';
+    if (sv) sv.innerHTML = uVol(wk.vol).toLocaleString('en-US') + '<small>' + uName() + '</small>';
     var st = $('#streakDays'); if (st) st.innerHTML = streakDays() + '<small>天</small>';
   }
 
@@ -3762,7 +3834,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     var why = $('#whyDays'); if (why) why.textContent = '每周 ' + n + ' 练';
     var sd = $('#splitDesc');
     if (sd) sd.textContent = '第 5 周减载 · 本周计划 ' +
-      planVolume().toLocaleString('en-US') + ' kg · 已完成 ' + weekVolume().toLocaleString('en-US') + ' kg';
+      uVol(planVolume()).toLocaleString('en-US') + ' ' + uName() + ' · 已完成 ' + uVol(weekVolume()).toLocaleString('en-US') + ' ' + uName();
     var groups = {}, total = 0;
     GROUP_ORDER.forEach(function(g){ groups[g] = 0; });
     days.forEach(function(d){
@@ -3820,7 +3892,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
       });
       return '<div class="dayrow" data-d="' + d + '">' +
         '<div class="dd"><b>' + shortDate(d) + ' 周' + WD_CN[wdIdx(d)] + '</b>' +
-        '<small>' + a.length + ' 组 · ' + Math.round(vol).toLocaleString('en-US') + ' kg · ' +
+        '<small>' + a.length + ' 组 · ' + uVol(vol).toLocaleString('en-US') + ' ' + uName() + ' · ' +
         names.slice(0, 3).join(' / ') + (names.length > 3 ? ' 等' : '') + '</small></div>' +
         '<button class="dbtn" data-del="' + d + '">删除</button></div>';
     }).join('') + (ds.length > 30 ? '<p class="emptyline">只列最近 30 天</p>' : '');
@@ -3832,7 +3904,10 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     var lt = $('#logTotal'); if (lt) lt.textContent = '累计 ' + days.length + ' 次训练';
     var ls2 = $('#logStreak'); if (ls2) ls2.textContent = streakDays();
     var mv = monthVolume(), mvEl = $('#logMonthVol');
-    if (mvEl) mvEl.innerHTML = mv >= 1000 ? (mv / 1000).toFixed(1) + '<em>t</em>' : mv + '<em>kg</em>';
+    if (mvEl){
+      var mvU = uVol(mv);
+      mvEl.innerHTML = (mvU >= 10000 ? Math.round(mvU / 1000) + 'k' : mvU.toLocaleString('en-US')) + '<em>' + uName() + '</em>';
+    }
     var prCount = loggedNames().length;
     var prEl = $('#logPR'); if (prEl) prEl.textContent = prCount;
     var bars = weekVolumes(8), maxv = 1;
@@ -3861,10 +3936,10 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
       prCard.innerHTML = names.map(function(n){
         var lw = lastWeightOf(n), pr = prOf(n);
         var right = pr
-          ? '<i class="rec">纪录</i><b>' + (pr.kg ? pr.kg + '<em>kg</em>' : pr.sets + '<em>组</em>') + '</b>'
+          ? '<i class="rec">纪录</i><b>' + (pr.kg ? uVal(pr.kg) + '<em>' + uName() + '</em>' : pr.sets + '<em>组</em>') + '</b>'
           : '<b class="none">—</b>';
         return '<div class="pr"' + (lw ? ' data-n="' + n + '"' : '') + '>' +
-          '<div class="nm">' + n + '<small>' + (lw ? shortDate(lw.d) + ' · 最近 ' + (lw.kg ? lw.kg + ' kg' : '自重') : '没记录') + '</small></div>' +
+          '<div class="nm">' + n + '<small>' + (lw ? shortDate(lw.d) + ' · 最近 ' + (lw.kg ? uTxt(lw.kg) : '自重') : '没记录') + '</small></div>' +
           '<div class="val">' + right + '</div></div>';
       }).join('');
     }
@@ -3880,7 +3955,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
       el.innerHTML =
         '<div class="bgrid">' +
           '<div><b>' + days.length + '</b><i>累计训练 次</i></div>' +
-          '<div><b>' + (vol >= 1000 ? (vol / 1000).toFixed(1) + '<em>t</em>' : Math.round(vol) + '<em>kg</em>') + '</b><i>累计容量</i></div>' +
+          '<div><b>' + (uVol(vol) >= 10000 ? Math.round(uVol(vol) / 1000) + 'k' : uVol(vol).toLocaleString('en-US')) + '<em>' + uName() + '</em></b><i>累计容量</i></div>' +
           '<div><b>' + sets + '</b><i>累计组数</i></div>' +
           '<div><b>' + prCount + '</b><i>有记录 PR</i></div>' +
         '</div>' +
@@ -3901,7 +3976,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
       var list = order.map(function(n){ return by[n]; }).sort(function(a, b){ return b.times - a.times; }).slice(0, 5);
       el2.innerHTML = list.length ? list.map(function(o){
         return '<div class="pr" data-n="' + o.n + '"><div class="nm">' + o.n + '<small>练了 ' + o.times + ' 组 · ' + shortDate(o.d) + '</small></div>' +
-          '<div class="val"><b>' + (o.kg || '—') + (o.kg ? '<em>kg</em>' : '') + '</b></div></div>';
+          '<div class="val"><b>' + (o.kg ? uVal(o.kg) + '<em>' + uName() + '</em>' : '—') + '</b></div></div>';
       }).join('') : '<p class="bnote" style="padding:12px 0">练过的动作会按次数排在这里。</p>';
     }
   }
@@ -3917,7 +3992,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     el.innerHTML = '<span class="ehd">最近几次</span>' + dates.map(function(d){
       var a = by[d], kg = 0;
       a.forEach(function(l){ if ((l.kg || 0) > kg) kg = l.kg; });
-      return '<div class="ehrow"><span>' + shortDate(d) + '</span><b>' + (kg ? kg + ' kg × ' : '') + a.length + ' 组</b></div>';
+      return '<div class="ehrow"><span>' + shortDate(d) + '</span><b>' + (kg ? uVal(kg) + ' ' + uName() + ' × ' : '') + a.length + ' 组</b></div>';
     }).join('');
   }
 
@@ -3937,8 +4012,8 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     var best = 0; ls.forEach(function(l){ if ((l.kg || 0) > best) best = l.kg || 0; });
     var recent = ls.slice().sort(function(a, b){ return b.d.localeCompare(a.d) || (b.t || 0) - (a.t || 0); })[0];
     $('#histSum').innerHTML =
-      '<div class="hs"><b>' + (best ? best + '<em>kg</em>' : '—') + '</b><i>最好</i></div>' +
-      '<div class="hs"><b>' + (recent.kg ? recent.kg + '<em>kg</em>' : '自重') + '</b><i>最近</i></div>' +
+      '<div class="hs"><b>' + (best ? uVal(best) + '<em>' + uName() + '</em>' : '—') + '</b><i>最好</i></div>' +
+      '<div class="hs"><b>' + (recent.kg ? uVal(recent.kg) + '<em>' + uName() + '</em>' : '自重') + '</b><i>最近</i></div>' +
       '<div class="hs"><b>' + ls.length + '</b><i>组数</i></div>';
     var by = {};
     ls.forEach(function(l){ (by[l.d] = by[l.d] || []).push(l); });
@@ -3946,8 +4021,8 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
       var a = by[d], kg = 0, vol = 0, reps = 0;
       a.forEach(function(l){ if ((l.kg || 0) > kg) kg = l.kg || 0; vol += (l.kg || 0) * (l.reps || 0); reps = Math.max(reps, l.reps || 0); });
       return '<div class="hrow"><div class="hd"><b>' + shortDate(d) + '</b><span>周' + WD_CN[wdIdx(d)] + '</span></div>' +
-        '<div class="hm">' + a.length + ' 组 × ' + Math.round(reps) + ' 次 · 合计 ' + Math.round(vol).toLocaleString('en-US') + ' kg</div>' +
-        '<div class="hv">' + (kg ? kg + '<em>kg</em>' : '自重') + '</div></div>';
+        '<div class="hm">' + a.length + ' 组 × ' + Math.round(reps) + ' 次 · 合计 ' + uVol(vol).toLocaleString('en-US') + ' ' + uName() + '</div>' +
+        '<div class="hv">' + (kg ? uVal(kg) + '<em>' + uName() + '</em>' : '自重') + '</div></div>';
     }).join('');
     openSheet('#histSheet');
   }
@@ -3964,8 +4039,16 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     if (row && curEx) openHist(curEx.n);
   });
   $('#cancelAdhoc').addEventListener('click', function(){
-    adhoc = false;
+    /* 取消加练 = 这场不做了：把今天这场加练已经记的组一起清掉，不留半截记录 */
+    var iso = todayISO(), k = adhocKey;
+    if (k && store.logs && store.logs.length){
+      var n0 = store.logs.length;
+      store.logs = store.logs.filter(function(l){ return !(l.d === iso && l.k === k); });
+      if (store.logs.length !== n0) saveStore();
+    }
+    adhoc = false; adhocKey = '';
     renderDay();
+    paintAll();
   });
   $('#exList').addEventListener('click', function(e){
     if (e.target.closest('#trainAny')){ trainAnyway(); return; }
