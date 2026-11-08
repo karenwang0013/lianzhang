@@ -1478,8 +1478,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
           <div class="srow" data-ic="monitor_heart"><span class="ico"></span><span class="lbl">Apple 健康</span><span class="sw"></span></div>
           <button class="srow" id="openRemind" data-ic="assignment"><span class="ico"></span><span class="lbl">训练提醒</span><span class="val" id="remindVal">开</span></button>
           <button class="srow" id="clearLogs" data-ic="delete"><span class="ico"></span><span class="lbl">清除训练记录</span><span class="val plain">全部删除</span></button>
-          <button class="srow" id="openBackup" data-ic="cloud_done"><span class="ico"></span><span class="lbl">数据备份</span><span class="val" id="backupVal">iCloud</span></button>
-          <button class="srow" id="openRel" data-ic="checklist"><span class="ico"></span><span class="lbl">更新记录</span><span class="val">v6.47</span></button>
+          <button class="srow" id="openRel" data-ic="checklist"><span class="ico"></span><span class="lbl">更新记录</span><span class="val">v6.48</span></button>
         </div>
       </div>
     </div>
@@ -1559,7 +1558,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     <!-- 数据备份（照热量账本：自动同步 + 手动备份 都归在这一张卡里） -->
     <div class="sheet" id="backupSheet">
       <div class="grab"></div>
-      <div class="sh-hd sh-sub"><button class="backbtn" aria-label="返回"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5 8 12l7 7"/></svg></button><h2>数据备份</h2><span class="vtag" id="cloudTag">关</span></div>
+      <div class="sh-hd sh-sub"><button class="backbtn" aria-label="返回"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5 8 12l7 7"/></svg></button><h2>数据备份</h2></div>
       <div class="cbody">
         <div class="cblk">
           <div class="cbhd"><b>自动同步</b></div>
@@ -4027,7 +4026,6 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   function paintCloud(){
     var on = !!cloudToken(), t = (store.settings || {}).cloudSyncedAt || '';
     var v = $('#backupVal'); if (v) v.textContent = on ? '自动同步中' : 'iCloud';
-    var tag = $('#cloudTag'); if (tag) tag.textContent = on ? '开' : '关';
     var inp = $('#cloudToken'); if (inp && document.activeElement !== inp) inp.value = cloudToken();
     cloudSetState(on ? (t ? ('上次同步：' + t) : '还没同步过') : '还没同步过');
   }
