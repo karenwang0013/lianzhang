@@ -708,6 +708,14 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 .sheet.float.on{transform:translate(-50%,-50%) scale(1);opacity:1;pointer-events:auto}
 .grab{position:absolute;top:4px;left:50%;transform:translateX(-50%);width:65px;height:4px;border-radius:2px;background:rgba(255,255,255,.16);margin:0;z-index:3;cursor:pointer}
 .sh-hd{display:flex;align-items:baseline;justify-content:space-between;margin:0 0 4px;padding:0 20px}
+/* 子页标题行：左边返回、右边标题（同热量账本 .mehead） */
+.sh-hd.sub{align-items:center;justify-content:flex-start;gap:2px;margin:0 0 6px;padding:0 16px 0 8px}
+.sh-hd.sub h2{font-size:22px}
+.sh-hd.sub .vtag{margin-left:auto}
+.backbtn{width:40px;height:40px;flex:none;display:grid;place-items:center;border:0;background:none;
+  color:var(--text);cursor:pointer;padding:0;border-radius:10px}
+.backbtn svg{width:21px;height:21px;display:block}
+.backbtn:active{opacity:.6}
 .sheet h2{margin:0;font-size:21px;font-weight:700;letter-spacing:-.025em}
 .vtag{font-size:11px;color:var(--muted2);font-weight:600;letter-spacing:.02em;
   padding:5px 11px;border-radius:14px;border:1px solid rgba(255,255,255,.12)}
@@ -1029,7 +1037,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
     <div class="statusbg" aria-hidden="true"></div>
     <div class="topbar">
-      <div class="brand">训练<span>账本</span><i class="btag">v6.01</i></div>
+      <div class="brand">训练<span>账本</span><i class="btag">v6.02</i></div>
       <div class="topactions">
         <button class="topbtn topicon" id="reloadTop" aria-label="强制更新" title="强制更新">
           <svg viewBox="0 -960 960 960" aria-hidden="true"><path d="M480-160q-134 0-227-93t-93-227q0-134 93-227t227-93q69 0 132 28.5T720-690v-70q0-17 11.5-28.5T760-800q17 0 28.5 11.5T800-760v200q0 17-11.5 28.5T760-520H560q-17 0-28.5-11.5T520-560q0-17 11.5-28.5T560-600h128q-32-56-87.5-88T480-720q-100 0-170 70t-70 170q0 100 70 170t170 70q68 0 124.5-34.5T692-367q8-14 22.5-19.5t29.5-.5q16 5 23 21t-1 30q-41 80-117 128t-169 48Z"/></svg>
@@ -1323,7 +1331,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     <!-- 设置 -->
     <div class="sheet" id="setSheet">
       <div class="grab"></div>
-      <div class="sh-hd"><h2>设置</h2><span class="vtag">v6.01</span></div>
+      <div class="sh-hd"><h2>设置</h2><span class="vtag">v6.02</span></div>
       <div class="setbody">
         <div class="setlabel">训练设置</div>
         <div class="setrows">
@@ -1340,7 +1348,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
           <div class="srow" data-ic="monitor_heart"><span class="ico"></span><span class="lbl">Apple 健康</span><span class="sw"></span></div>
           <button class="srow" id="openRemind" data-ic="assignment"><span class="ico"></span><span class="lbl">训练提醒</span><span class="val" id="remindVal">开</span></button>
           <button class="srow" id="openBackup" data-ic="cloud_done"><span class="ico"></span><span class="lbl">数据备份</span><span class="val" id="backupVal">iCloud</span></button>
-          <button class="srow" id="openRel" data-ic="checklist"><span class="ico"></span><span class="lbl">更新记录</span><span class="val">v6.01</span></button>
+          <button class="srow" id="openRel" data-ic="checklist"><span class="ico"></span><span class="lbl">更新记录</span><span class="val">v6.02</span></button>
         </div>
       </div>
     </div>
@@ -1348,7 +1356,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
         <!-- 训练提醒 -->
     <div class="sheet" id="remindSheet">
       <div class="grab"></div>
-      <div class="sh-hd"><h2>训练提醒</h2><span class="vtag" id="remindTag">开</span></div>
+      <div class="sh-hd sub"><button class="backbtn" aria-label="返回"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5 8 12l7 7"/></svg></button><h2>训练提醒</h2><span class="vtag" id="remindTag">开</span></div>
       <div class="rembody">
         <p class="hint" style="padding:0">只用一个开关。多久算「太久没练」、多少算「练太多」，由系统按你自己的记录判断，不用你设。</p>
         <div class="remrow"><span>开启提醒</span><span class="sw" id="remSw"></span></div>
@@ -1402,14 +1410,14 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     <!-- 更新记录 -->
     <div class="sheet" id="relSheet">
       <div class="grab"></div>
-      <div class="sh-hd"><h2>更新记录</h2><span class="vtag" id="relVer">v0.2</span></div>
+      <div class="sh-hd sub"><button class="backbtn" aria-label="返回"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5 8 12l7 7"/></svg></button><h2>更新记录</h2><span class="vtag" id="relVer">v0.2</span></div>
       <div id="relList" style="padding:0 20px"></div>
     </div>
 
     <!-- 数据备份（照热量账本：分享面板存到 iCloud Drive / 从文件恢复） -->
     <div class="sheet" id="backupSheet">
       <div class="grab"></div>
-      <div class="sh-hd"><h2>数据备份</h2><span class="vtag">iCloud</span></div>
+      <div class="sh-hd sub"><button class="backbtn" aria-label="返回"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5 8 12l7 7"/></svg></button><h2>数据备份</h2><span class="vtag">iCloud</span></div>
       <p class="hint">iCloud 只能手动点「备份文件」存过去 —— 网页 App 拿不到自动写 iCloud 的权限（Apple 只给原生 App）。手机上自己每小时留一份快照（保留最近 7 天），误删可以用下面的回滚。<br>卸载 / 重新添加主屏幕 App 会清空这台设备上的训练记录，卸载前先备份。</p>
       <button class="cta" id="backupNow">备份文件</button>
       <button class="cta ghost" id="backupRestore" style="margin-top:10px">从文件恢复</button>
@@ -1424,7 +1432,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     <!-- 图标选择弹层 -->
     <div class="sheet" id="iconSheet">
       <div class="grab"></div>
-      <h2>图标</h2>
+      <div class="sh-hd sub"><button class="backbtn" aria-label="返回"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5 8 12l7 7"/></svg></button><h2>图标</h2></div>
       <p class="hint">点一下立刻替换；排在第一格的是你正在用的那个。每栏只列跟这栏意思对得上的图标。</p>
       <div class="ibody" id="iconBody">
         <div id="iconSlots"></div>
@@ -2600,6 +2608,9 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
   $('#openSet').addEventListener('click', function(){ openSheet('#setSheet'); });
   $('#openRel').addEventListener('click', function(){ renderRel(); openSheet('#relSheet'); });
+  $$('.sh-hd.sub .backbtn').forEach(function(b){
+    b.addEventListener('click', function(){ openSheet('#setSheet'); });
+  });
   $('#reloadTop').addEventListener('click', function(){
     location.replace(location.pathname + '?v=' + Date.now());
   });
@@ -2941,7 +2952,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   }
 
   /* ---------- 启动版本比对（同热量账本） ---------- */
-  var APP_VERSION = 'v6.01';
+  var APP_VERSION = 'v6.02';
   fetch('./version.txt?t=' + Date.now(), { cache: 'no-store' })
     .then(function(r){ return r.ok ? r.text() : ''; })
     .then(function(v){
@@ -2963,6 +2974,9 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
   /* ---------- 更新记录 ---------- */
   var RELEASES = [
+    { v:'v6.02', d:'11-08', items:[
+      '子页面加返回键（照热量账本 .mehead）：图标 / 更新记录 / 数据备份 / 训练提醒 四个子页，左边一颗 40×40 返回箭头、右边紧挨标题，点返回直接退回设置，不用关掉再点一遍'
+    ]},
     { v:'v6.01', d:'11-08', items:[
       '设置弹层不再撑满整屏、下面不再一大块空白：高度改成跟内容走（超长才滚），实测 724 高、离底 100 多像素的空白消失',
       '图标弹层、训练提醒弹层也支持「顶部横杠」下滑关闭（之前只有设置/更新记录/数据备份/动作重量/加动作这几张有）'
