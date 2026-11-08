@@ -121,14 +121,14 @@ body{
 
 /* ---------- 顶栏 ---------- */
 .topbar{
-  position:absolute;top:0;left:0;right:0;z-index:30;
+  position:absolute;top:0;left:0;right:0;z-index:42;
   height:calc(51px + var(--safe-t));
   padding:var(--safe-t) 18px 0;
   display:flex;align-items:center;justify-content:space-between;
   background:#0d0f0e;
 }
 .statusbg{position:absolute;top:0;left:0;right:0;height:min(var(--safe-t,0px),90px);
-  background:#0d0f0e;z-index:31;pointer-events:none}
+  background:#0d0f0e;z-index:43;pointer-events:none}
 .brand{font-size:20px;font-weight:650;letter-spacing:.2px;display:flex;align-items:baseline;color:var(--text)}
 .brand span{color:var(--lime)}
 .brand .btag{font-style:normal;font-size:10px;font-weight:500;color:var(--muted2);margin-left:6px;letter-spacing:normal}
@@ -561,7 +561,8 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 .emptyline{margin:0;padding:8px 0;font-size:11.5px;color:var(--muted2);text-align:center}
 .bar:last-child span{color:var(--lime)}
 
-.pr{display:flex;align-items:center;justify-content:space-between;padding:12px 0}
+.pr{display:flex;align-items:center;justify-content:flex-start;padding:12px 0}
+.pr .val{margin-left:auto}
 .pr + .pr{border-top:1px solid var(--line)}
 .pr .nm{font-size:13.5px;font-weight:550}
 .pr .nm small{display:block;font-size:10px;color:var(--muted2);margin-top:3px;font-weight:400;letter-spacing:.02em}
@@ -647,13 +648,11 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   opacity:0;pointer-events:none;
   transform:translateY(102%);
   border-radius:calc(var(--dock-h) / 2);
-  background-color:transparent;
-  background-image:linear-gradient(180deg,var(--glass-top) 0%,var(--glass-bot) 100%),var(--edge-gloss);
+  background-color:#121514;
+  background-image:linear-gradient(180deg,#1a1e1c 0%,#121514 100%),var(--edge-gloss);
   background-origin:border-box;
   background-clip:padding-box,border-box;
   border:1px solid transparent;
-  -webkit-backdrop-filter:var(--glass-blur);
-  backdrop-filter:var(--glass-blur);
   padding:32px 0 0;
   transform:translateY(102%);
   transition:transform .34s cubic-bezier(.22,.8,.3,1),opacity .22s ease;
@@ -819,7 +818,10 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 .histsum .hs b{display:block;font-size:17px;font-weight:650;font-variant-numeric:tabular-nums;letter-spacing:-.02em}
 .histsum .hs b em{font-style:normal;font-size:9.5px;color:var(--muted2);font-weight:500;margin-left:1px}
 .histsum .hs i{display:block;font-style:normal;font-size:9.5px;color:var(--muted2);margin-top:4px;letter-spacing:.06em}
-.histlist{margin:6px 20px 0}
+#histSheet{padding:32px 20px 20px}
+#histSheet .sh-hd{padding:0}
+.histsum{margin:8px 0 2px}
+.histlist{margin:6px 0 0}
 .hrow{display:flex;align-items:center;gap:12px;padding:12px 0;border-top:1px solid var(--line)}
 .hrow:first-child{border-top:0}
 .hrow .hd{width:62px;flex:none}
@@ -946,7 +948,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
     <div class="statusbg" aria-hidden="true"></div>
     <div class="topbar">
-      <div class="brand">训练<span>账本</span><i class="btag">v5.59</i></div>
+      <div class="brand">训练<span>账本</span><i class="btag">v5.60</i></div>
       <div class="topactions">
         <button class="topbtn topicon" id="reloadTop" aria-label="强制更新" title="强制更新">
           <svg viewBox="0 -960 960 960" aria-hidden="true"><path d="M480-160q-134 0-227-93t-93-227q0-134 93-227t227-93q69 0 132 28.5T720-690v-70q0-17 11.5-28.5T760-800q17 0 28.5 11.5T800-760v200q0 17-11.5 28.5T760-520H560q-17 0-28.5-11.5T520-560q0-17 11.5-28.5T560-600h128q-32-56-87.5-88T480-720q-100 0-170 70t-70 170q0 100 70 170t170 70q68 0 124.5-34.5T692-367q8-14 22.5-19.5t29.5-.5q16 5 23 21t-1 30q-41 80-117 128t-169 48Z"/></svg>
@@ -1236,7 +1238,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     <!-- 设置 -->
     <div class="sheet" id="setSheet">
       <div class="grab"></div>
-      <div class="sh-hd"><h2>设置</h2><span class="vtag">v5.59</span></div>
+      <div class="sh-hd"><h2>设置</h2><span class="vtag">v5.60</span></div>
       <div class="setbody">
         <div class="setlabel">训练设置</div>
         <div class="setrows">
@@ -1253,7 +1255,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
           <div class="srow" data-ic="monitor_heart"><span class="ico"></span><span class="lbl">Apple 健康</span><span class="sw"></span></div>
           <div class="srow" data-ic="assignment"><span class="ico"></span><span class="lbl">训练提醒</span><span class="sw"></span></div>
           <button class="srow" id="openBackup" data-ic="cloud_done"><span class="ico"></span><span class="lbl">数据备份</span><span class="val" id="backupVal">iCloud</span></button>
-          <button class="srow" id="openRel" data-ic="checklist"><span class="ico"></span><span class="lbl">更新记录</span><span class="val">v5.59</span></button>
+          <button class="srow" id="openRel" data-ic="checklist"><span class="ico"></span><span class="lbl">更新记录</span><span class="val">v5.60</span></button>
         </div>
       </div>
     </div>
@@ -2455,7 +2457,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   }
 
   /* ---------- 启动版本比对（同热量账本） ---------- */
-  var APP_VERSION = 'v5.59';
+  var APP_VERSION = 'v5.60';
   fetch('./version.txt?t=' + Date.now(), { cache: 'no-store' })
     .then(function(r){ return r.ok ? r.text() : ''; })
     .then(function(v){
@@ -2477,6 +2479,12 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
   /* ---------- 更新记录 ---------- */
   var RELEASES = [
+    { v:'v5.60', d:'11-08', items:[
+      '记录页「动作重量」：重量改回靠右（原来被右边箭头挤到中间）',
+      '动作重量弹层：左右留 20、按钮离卡底 20，不再满宽贴着圆角边',
+      '弹层底色改成不透明深灰 + 光泽描边（原来半透明玻璃压在黑色遮罩上，卡片边缘和底色都看不见）',
+      '顶栏和状态条盖在遮罩之上（和热量账本同一套层叠）：点设置时上面不再出现上下两层颜色'
+    ]},
     { v:'v5.59', d:'11-08', items:[
       '日期行放回第一张卡里（卡内第一行），几何照热量账本：行高 63、日期 17px 居中、副标题 11px',
       '左右两个箭头改成 40×40 圆角 12、24px 线条箭头，图标在框里正中（原来 34 的框 + 文字箭头，偏且小）',
