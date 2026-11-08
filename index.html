@@ -3008,7 +3008,10 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   /* 整页返回手势：从屏幕左边缘往右滑 = 返回；页面跟手右移，松手过了阈值就滑出去 */
   (function(){
     var sx = 0, sy = 0, active = false, el = null, dx = 0;
-    function pageEl(){ return document.querySelector('.sheet.page.on'); }
+    function pageEl(){
+      var all = document.querySelectorAll('.sheet.page.on');
+      return all.length ? all[all.length - 1] : null;   /* 最上面那一层 */
+    }
     function resetStyle(e){ if (!e) return; e.style.transition = ''; e.style.transform = ''; }
     function goBack(){
       var sh = pageEl();
@@ -3017,7 +3020,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
       else openSheet('#setSheet');
     }
     document.addEventListener('touchstart', function(e){
-      el = pageEl(); if (!el) return;
+      var all = document.querySelectorAll('.sheet.page.on'); el = all.length ? all[all.length - 1] : null; if (!el) return;
       var t = e.touches[0]; if (!t || t.clientX > 26) return;
       active = true; sx = t.clientX; sy = t.clientY; dx = 0;
       el.style.transition = 'none';
@@ -3113,10 +3116,17 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   var mask = $('#mask');
   /* 设置类：改成整页显示，不开遮罩、不占 Dock 的位置 */
   var PAGE_SHEETS = ['#setSheet','#iconSheet','#backupSheet','#relSheet','#remindSheet','#daysSheet','#optSheet'];
+  var _zTop = 45;
   function openSheet(sel){
-    $$('.sheet').forEach(function(s){ s.classList.remove('on'); });
     var sh = $(sel);
     var isPage = PAGE_SHEETS.indexOf(sel) >= 0;
+    /* 打开「设置」里的子页时，设置页留在下面（不隐藏）—— 子页滑出时直接露出来，不会闪首页 */
+    var setEl = $('#setSheet');
+    var keepSet = isPage && sel !== '#setSheet' && setEl.classList.contains('on');
+    $$('.sheet').forEach(function(s){
+      if (keepSet && s === setEl) return;
+      s.classList.remove('on');
+    });
     sh.classList.toggle('page', isPage);
     if (!isPage && !sh.classList.contains('center') && !sh.classList.contains('float')){
       var sc = $('#scroller');
@@ -3130,6 +3140,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
       sh.style.setProperty('--sheet-top', top + 'px');
     }
     var b = sh.querySelector('.pinbody'); if (b) b.scrollTop = 0;
+    sh.style.zIndex = String(++_zTop);
     sh.classList.add('on');
     if (isPage) mask.classList.remove('on'); else mask.classList.add('on');
   }
