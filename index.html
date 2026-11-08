@@ -1078,7 +1078,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
     <div class="statusbg" aria-hidden="true"></div>
     <div class="topbar">
-      <div class="brand">训练<span>账本</span><i class="btag">v6.28</i></div>
+      <div class="brand">训练<span>账本</span><i class="btag">v6.29</i></div>
       <div class="topactions">
         <button class="topbtn topicon" id="reloadTop" aria-label="强制更新" title="强制更新">
           <svg viewBox="0 -960 960 960" aria-hidden="true"><path d="M480-160q-134 0-227-93t-93-227q0-134 93-227t227-93q69 0 132 28.5T720-690v-70q0-17 11.5-28.5T760-800q17 0 28.5 11.5T800-760v200q0 17-11.5 28.5T760-520H560q-17 0-28.5-11.5T520-560q0-17 11.5-28.5T560-600h128q-32-56-87.5-88T480-720q-100 0-170 70t-70 170q0 100 70 170t170 70q68 0 124.5-34.5T692-367q8-14 22.5-19.5t29.5-.5q16 5 23 21t-1 30q-41 80-117 128t-169 48Z"/></svg>
@@ -1387,7 +1387,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     <!-- 设置 -->
     <div class="sheet" id="setSheet">
       <div class="grab"></div>
-      <div class="sh-hd"><h2>设置</h2><span class="vtag">v6.28</span></div>
+      <div class="sh-hd"><h2>设置</h2><span class="vtag">v6.29</span></div>
       <div class="setbody">
         <div class="setlabel">训练设置</div>
         <div class="setrows">
@@ -1405,7 +1405,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
           <button class="srow" id="openRemind" data-ic="assignment"><span class="ico"></span><span class="lbl">训练提醒</span><span class="val" id="remindVal">开</span></button>
           <button class="srow" id="clearLogs" data-ic="delete"><span class="ico"></span><span class="lbl">清除训练记录</span><span class="val plain">全部删除</span></button>
           <button class="srow" id="openBackup" data-ic="cloud_done"><span class="ico"></span><span class="lbl">数据备份</span><span class="val" id="backupVal">iCloud</span></button>
-          <button class="srow" id="openRel" data-ic="checklist"><span class="ico"></span><span class="lbl">更新记录</span><span class="val">v6.28</span></button>
+          <button class="srow" id="openRel" data-ic="checklist"><span class="ico"></span><span class="lbl">更新记录</span><span class="val">v6.29</span></button>
         </div>
       </div>
     </div>
@@ -1421,7 +1421,6 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     <div class="sheet" id="daysSheet">
       <div class="grab"></div>
       <div class="sh-hd sh-sub"><button class="backbtn" aria-label="返回"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5 8 12l7 7"/></svg></button><h2>锻炼日志</h2><span class="vtag" id="daysTag">0 天</span></div>
-      <p class="hint" style="padding:0 20px">点一行跳到那天；右边「删除」只删那一天，删之前会问一次。</p>
       <div class="dayslist" id="daysList"></div>
     </div>
 
@@ -1430,7 +1429,6 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
       <div class="grab"></div>
       <div class="sh-hd sh-sub"><button class="backbtn" aria-label="返回"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5 8 12l7 7"/></svg></button><h2>训练提醒</h2><span class="vtag" id="remindTag">开</span></div>
       <div class="rembody">
-        <p class="hint" style="padding:0">只用一个开关。多久算「太久没练」、多少算「练太多」，由系统按你自己的记录判断，不用你设。</p>
         <div class="remrow"><span>开启提醒</span><span class="sw" id="remSw"></span></div>
         <p class="remnote" id="remNote">正在读取你的记录…</p>
       </div>
@@ -1441,7 +1439,6 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     <div class="sheet" id="libSheet">
       <div class="grab"></div>
       <div class="sh-hd"><h2>加动作</h2><span class="vtag">练完就记</span></div>
-      <p class="hint">计划里没有的动作也能练、也能记：点一下加到今天，组数/次数/重量照样能调。</p>
       <div id="libBody"></div>
       <button class="cta ghost" id="libClose">关闭</button>
     </div>
@@ -1489,7 +1486,6 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     <div class="sheet" id="backupSheet">
       <div class="grab"></div>
       <div class="sh-hd sh-sub"><button class="backbtn" aria-label="返回"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5 8 12l7 7"/></svg></button><h2>数据备份</h2><span class="vtag">iCloud</span></div>
-      <p class="hint">iCloud 只能手动点「备份文件」存过去 —— 网页 App 拿不到自动写 iCloud 的权限（Apple 只给原生 App）。手机上自己每小时留一份快照（保留最近 7 天），误删可以用下面的回滚。<br>卸载 / 重新添加主屏幕 App 会清空这台设备上的训练记录，卸载前先备份。</p>
       <button class="cta" id="backupNow">备份文件</button>
       <button class="cta ghost" id="backupRestore" style="margin-top:10px">从文件恢复</button>
       <input type="file" id="backupFile" accept="application/json,.json" hidden>
@@ -1504,7 +1500,6 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     <div class="sheet" id="iconSheet">
       <div class="grab"></div>
       <div class="sh-hd sh-sub"><button class="backbtn" aria-label="返回"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5 8 12l7 7"/></svg></button><h2>图标</h2></div>
-      <p class="hint">点一下立刻替换；排在第一格的是你正在用的那个。每栏只列跟这栏意思对得上的图标。</p>
       <div class="ibody" id="iconBody">
         <div id="iconSlots"></div>
         <button class="icreset" id="iconReset">恢复全部默认</button>
@@ -3216,7 +3211,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   }
 
   /* ---------- 启动版本比对（同热量账本） ---------- */
-  var APP_VERSION = 'v6.28';
+  var APP_VERSION = 'v6.29';
   fetch('./version.txt?t=' + Date.now(), { cache: 'no-store' })
     .then(function(r){ return r.ok ? r.text() : ''; })
     .then(function(v){
@@ -3238,6 +3233,9 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
   /* ---------- 更新记录 ---------- */
   var RELEASES = [
+    { v:'v6.29', d:'11-08', items:[
+      '子页标题下面那行灰色注解去掉（图标 / 数据备份 / 训练提醒 / 加动作 / 锻炼日志），和热量账本一样：标题下面直接是内容'
+    ]},
     { v:'v6.28', d:'11-08', items:[
       '「练过的日子」按你说的改名为「锻炼日志」：记录页那一行 + 点开的卡牌标题都改了'
     ]},
