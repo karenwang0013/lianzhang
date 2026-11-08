@@ -709,9 +709,9 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 .grab{position:absolute;top:4px;left:50%;transform:translateX(-50%);width:65px;height:4px;border-radius:2px;background:rgba(255,255,255,.16);margin:0;z-index:3;cursor:pointer}
 .sh-hd{display:flex;align-items:baseline;justify-content:space-between;margin:0 0 4px;padding:0 20px}
 /* 子页标题行：左边返回、右边标题（同热量账本 .mehead） */
-.sh-hd.sub{align-items:center;justify-content:flex-start;gap:2px;margin:0 0 6px;padding:0 16px 0 8px}
-.sh-hd.sub h2{font-size:22px}
-.sh-hd.sub .vtag{margin-left:auto}
+.sh-hd.sub{align-items:center;justify-content:flex-start;gap:8px;margin:0 0 6px;padding:0 18px 0 8px}
+.sh-hd.sub h2{font-size:23px;margin-left:auto;letter-spacing:.2px}
+.sh-hd.sub .vtag{flex:none}
 .backbtn{width:40px;height:40px;flex:none;display:grid;place-items:center;border:0;background:none;
   color:var(--text);cursor:pointer;padding:0;border-radius:10px}
 .backbtn svg{width:21px;height:21px;display:block}
@@ -867,6 +867,14 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 .remrow{display:flex;align-items:center;justify-content:space-between;padding:12px 0;
   border-top:1px solid var(--line);font-size:14px}
 .remnote{margin:14px 0 0;font-size:11.5px;color:var(--muted2);line-height:1.6}
+.optlist{padding:0 20px 20px}
+.optrow{display:flex;align-items:center;justify-content:space-between;width:100%;padding:15px 0;
+  border:0;border-top:1px solid var(--line);background:none;font-family:inherit;color:var(--text);
+  font-size:15px;cursor:pointer;text-align:left}
+.optrow:first-child{border-top:0}
+.optrow.on{color:var(--lime)}
+.optrow.on::after{content:"✓";font-size:13px;color:var(--lime)}
+.optrow:active{opacity:.7}
 .adhocbar{display:flex;align-items:center;justify-content:space-between;gap:10px;
   margin:0 2px 10px;padding:8px 12px;border-radius:12px;
   background-color:rgba(228,0,43,.10);border:1px solid rgba(228,0,43,.28);
@@ -1037,7 +1045,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
     <div class="statusbg" aria-hidden="true"></div>
     <div class="topbar">
-      <div class="brand">训练<span>账本</span><i class="btag">v6.02</i></div>
+      <div class="brand">训练<span>账本</span><i class="btag">v6.03</i></div>
       <div class="topactions">
         <button class="topbtn topicon" id="reloadTop" aria-label="强制更新" title="强制更新">
           <svg viewBox="0 -960 960 960" aria-hidden="true"><path d="M480-160q-134 0-227-93t-93-227q0-134 93-227t227-93q69 0 132 28.5T720-690v-70q0-17 11.5-28.5T760-800q17 0 28.5 11.5T800-760v200q0 17-11.5 28.5T760-520H560q-17 0-28.5-11.5T520-560q0-17 11.5-28.5T560-600h128q-32-56-87.5-88T480-720q-100 0-170 70t-70 170q0 100 70 170t170 70q68 0 124.5-34.5T692-367q8-14 22.5-19.5t29.5-.5q16 5 23 21t-1 30q-41 80-117 128t-169 48Z"/></svg>
@@ -1331,7 +1339,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     <!-- 设置 -->
     <div class="sheet" id="setSheet">
       <div class="grab"></div>
-      <div class="sh-hd"><h2>设置</h2><span class="vtag">v6.02</span></div>
+      <div class="sh-hd"><h2>设置</h2><span class="vtag">v6.03</span></div>
       <div class="setbody">
         <div class="setlabel">训练设置</div>
         <div class="setrows">
@@ -1348,12 +1356,19 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
           <div class="srow" data-ic="monitor_heart"><span class="ico"></span><span class="lbl">Apple 健康</span><span class="sw"></span></div>
           <button class="srow" id="openRemind" data-ic="assignment"><span class="ico"></span><span class="lbl">训练提醒</span><span class="val" id="remindVal">开</span></button>
           <button class="srow" id="openBackup" data-ic="cloud_done"><span class="ico"></span><span class="lbl">数据备份</span><span class="val" id="backupVal">iCloud</span></button>
-          <button class="srow" id="openRel" data-ic="checklist"><span class="ico"></span><span class="lbl">更新记录</span><span class="val">v6.02</span></button>
+          <button class="srow" id="openRel" data-ic="checklist"><span class="ico"></span><span class="lbl">更新记录</span><span class="val">v6.03</span></button>
         </div>
       </div>
     </div>
 
-        <!-- 训练提醒 -->
+        <!-- 选项选择（基础设置用） -->
+    <div class="sheet" id="optSheet">
+      <div class="grab"></div>
+      <div class="sh-hd sub"><button class="backbtn" aria-label="返回"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5 8 12l7 7"/></svg></button><h2 id="optTitle">设置</h2></div>
+      <div class="optlist" id="optList"></div>
+    </div>
+
+    <!-- 训练提醒 -->
     <div class="sheet" id="remindSheet">
       <div class="grab"></div>
       <div class="sh-hd sub"><button class="backbtn" aria-label="返回"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5 8 12l7 7"/></svg></button><h2>训练提醒</h2><span class="vtag" id="remindTag">开</span></div>
@@ -2611,6 +2626,42 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   $$('.sh-hd.sub .backbtn').forEach(function(b){
     b.addEventListener('click', function(){ openSheet('#setSheet'); });
   });
+
+  /* 基础设置：点行 → 选一个值 */
+  var SET_OPTS = {
+    '每周训练频率': ['2 天','3 天','4 天','5 天','6 天'],
+    '可用器械': ['商业健身房','只有哑铃','徒手'],
+    '训练经验': ['新手','1–2 年','3 年以上'],
+    '单次时长上限': ['45 分钟','60 分钟','90 分钟']
+  };
+  var optRow = null;
+  function openOpts(row){
+    var label = row.querySelector('.lbl').textContent.trim();
+    var opts = SET_OPTS[label]; if (!opts) return;
+    optRow = row;
+    $('#optTitle').textContent = label;
+    var cur = (row.querySelector('.val') || {}).textContent || '';
+    $('#optList').innerHTML = opts.map(function(o){
+      return '<button class="optrow' + (o === cur.trim() ? ' on' : '') + '" data-v="' + o + '">' + o + '</button>';
+    }).join('');
+    openSheet('#optSheet');
+  }
+  $$('#setSheet .srow').forEach(function(row){
+    if (row.id) return;                      /* 有 id 的行各有自己的动作 */
+    row.addEventListener('click', function(){ openOpts(row); });
+  });
+  $('#optList').addEventListener('click', function(e){
+    var b = e.target.closest('.optrow'); if (!b || !optRow) return;
+    var v = b.dataset.v;
+    var val = optRow.querySelector('.val'); if (val) val.textContent = v;
+    var label = optRow.querySelector('.lbl').textContent.trim();
+    store.opts = store.opts || {}; store.opts[label] = v; saveStore();
+    if (label === '每周训练频率'){
+      var n = parseInt(v, 10);
+      if (n >= 2 && n <= 6) setSplit(n);
+    }
+    openSheet('#setSheet');
+  });
   $('#reloadTop').addEventListener('click', function(){
     location.replace(location.pathname + '?v=' + Date.now());
   });
@@ -2952,7 +3003,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   }
 
   /* ---------- 启动版本比对（同热量账本） ---------- */
-  var APP_VERSION = 'v6.02';
+  var APP_VERSION = 'v6.03';
   fetch('./version.txt?t=' + Date.now(), { cache: 'no-store' })
     .then(function(r){ return r.ok ? r.text() : ''; })
     .then(function(v){
@@ -2974,6 +3025,10 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
   /* ---------- 更新记录 ---------- */
   var RELEASES = [
+    { v:'v6.03', d:'11-08', items:[
+      '子页头部改成热量账本那样：返回箭头在最左、标题靠最右（之前我把标题紧挨着箭头，做错了）',
+      '基础设置能点了：每周训练频率 / 可用器械 / 训练经验 / 单次时长上限，点开是一列选项、当前值打勾；选「X 天」会直接切到对应分化，其它三项记住你的选择'
+    ]},
     { v:'v6.02', d:'11-08', items:[
       '子页面加返回键（照热量账本 .mehead）：图标 / 更新记录 / 数据备份 / 训练提醒 四个子页，左边一颗 40×40 返回箭头、右边紧挨标题，点返回直接退回设置，不用关掉再点一遍'
     ]},
