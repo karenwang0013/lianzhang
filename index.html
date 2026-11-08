@@ -277,9 +277,11 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 }
 .ringmid .rlbl{font-size:11px;letter-spacing:.2em;color:var(--muted);font-weight:500}
 .ringmid b{font-size:56px;font-weight:500;letter-spacing:-1.5px;line-height:.96;font-variant-numeric:tabular-nums;margin-top:2px}
-.ringmid .rnum{display:flex;align-items:baseline;gap:7px}
-.ringmid .rsub{font-size:15px;color:var(--muted2);letter-spacing:.02em;font-style:normal}
-.ringtoday{margin-top:16px;padding:6px 13px;border-radius:10px;font-family:inherit;
+.ringmid .rnum{display:flex;align-items:baseline;gap:6px}
+.ringmid .rnum b{font-size:48px;font-weight:500;letter-spacing:-1.2px;line-height:.96;margin-top:2px}
+.ringmid .rnum .rslash{font-style:normal;font-size:22px;color:rgba(255,255,255,.34);font-weight:400}
+.ringmid .rnum .runit{font-style:normal;font-size:16px;color:var(--muted2);margin-left:2px}
+.ringtoday{margin:8px auto 0;padding:5px 12px;border-radius:10px;font-family:inherit;
   font-size:11.5px;font-weight:650;letter-spacing:.02em;color:var(--lime);
   background-color:rgba(228,0,43,.14);border:1px solid rgba(228,0,43,.4);cursor:pointer}
 .ringtoday:active{transform:scale(.95)}
@@ -301,10 +303,10 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 /* 日期行：卡牌里第一行（几何照热量账本 .daterow / .arrow） */
 .herocard{padding-top:0}
 .daterow{display:flex;align-items:center;justify-content:space-between;gap:8px;
-  padding:6px 0 14px}
+  margin:0 -9px;padding:7px 0 12px}
 .daterow .dmain{flex:1;min-width:0;display:flex;flex-direction:column;align-items:center;gap:3px}
 .daterow .dmain b{font-size:17px;font-weight:650;letter-spacing:.3px;color:var(--text)}
-.daterow .dline{display:flex;align-items:center;gap:7px;min-height:16px}
+.daterow .dmain{gap:8px}
 .daterow .dline i{font-style:normal;font-size:11px;color:var(--muted2);letter-spacing:.02em;
   font-variant-numeric:tabular-nums;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .gotoday{flex:none;font-family:inherit;font-size:10.5px;font-weight:600;color:var(--lime);
@@ -1002,7 +1004,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
     <div class="statusbg" aria-hidden="true"></div>
     <div class="topbar">
-      <div class="brand">训练<span>账本</span><i class="btag">v5.89</i></div>
+      <div class="brand">训练<span>账本</span><i class="btag">v5.90</i></div>
       <div class="topactions">
         <button class="topbtn topicon" id="reloadTop" aria-label="强制更新" title="强制更新">
           <svg viewBox="0 -960 960 960" aria-hidden="true"><path d="M480-160q-134 0-227-93t-93-227q0-134 93-227t227-93q69 0 132 28.5T720-690v-70q0-17 11.5-28.5T760-800q17 0 28.5 11.5T800-760v200q0 17-11.5 28.5T760-520H560q-17 0-28.5-11.5T520-560q0-17 11.5-28.5T560-600h128q-32-56-87.5-88T480-720q-100 0-170 70t-70 170q0 100 70 170t170 70q68 0 124.5-34.5T692-367q8-14 22.5-19.5t29.5-.5q16 5 23 21t-1 30q-41 80-117 128t-169 48Z"/></svg>
@@ -1024,7 +1026,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
             </button>
             <div class="dmain">
               <b id="dMain">11月8日</b>
-              <span class="dline"><i id="dSub">今天 · 休息日</i></span>
+              <button class="ringtoday" id="goTodayRing" hidden>回到今天</button>
             </div>
             <button class="wkbtn" id="wkNext" aria-label="下一周">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg>
@@ -1051,9 +1053,8 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
             </svg>
             <div class="ringmid">
               <span class="rlbl">本周</span>
-              <span class="rnum"><b id="weekDays">4</b><i class="rsub" id="weekTotal">/ 6 天</i></span>
+              <span class="rnum"><b id="weekDays">4</b><i class="rslash">/</i><b id="weekPlan">3</b><i class="runit">天</i></span>
               <span class="rgap" id="weekGap">还差 2 天</span>
-              <button class="ringtoday" id="goTodayRing" hidden>回到今天</button>
             </div>
           </div>
 
@@ -1290,7 +1291,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     <!-- 设置 -->
     <div class="sheet" id="setSheet">
       <div class="grab"></div>
-      <div class="sh-hd"><h2>设置</h2><span class="vtag">v5.89</span></div>
+      <div class="sh-hd"><h2>设置</h2><span class="vtag">v5.90</span></div>
       <div class="setbody">
         <div class="setlabel">训练设置</div>
         <div class="setrows">
@@ -1307,7 +1308,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
           <div class="srow" data-ic="monitor_heart"><span class="ico"></span><span class="lbl">Apple 健康</span><span class="sw"></span></div>
           <div class="srow" data-ic="assignment"><span class="ico"></span><span class="lbl">训练提醒</span><span class="sw"></span></div>
           <button class="srow" id="openBackup" data-ic="cloud_done"><span class="ico"></span><span class="lbl">数据备份</span><span class="val" id="backupVal">iCloud</span></button>
-          <button class="srow" id="openRel" data-ic="checklist"><span class="ico"></span><span class="lbl">更新记录</span><span class="val">v5.89</span></button>
+          <button class="srow" id="openRel" data-ic="checklist"><span class="ico"></span><span class="lbl">更新记录</span><span class="val">v5.90</span></button>
         </div>
       </div>
     </div>
@@ -2247,30 +2248,8 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
   /* 日期行下面的小字：今天 · 腿 · 2/17 组 / 周五 · 没记录 / 周六 · 计划 17 组 */
   function setSub(){
-    var iso = viewISO, isToday = iso === todayISO(), t = '';
-    $('#dMain').textContent = isoDisplay(iso);
-    if (isToday){
-      t = '今天';
-      if (todayKey){
-        var done = document.querySelectorAll('#exList .dot.on').length;
-        var total = document.querySelectorAll('#exList .dot').length;
-        t += ' · ' + TITLE[todayKey][0] + ' · ' + done + '/' + total + ' 组';
-      } else {
-        t += ' · 休息日';
-      }
-    } else {
-      t = '周' + WD_CN[wdIdx(iso)];
-      if (iso > todayISO()){
-        var k2 = keyForISO(iso);
-        t += ' · ' + (k2 ? '计划 ' + totalSets(k2) + ' 组' : '休息日');
-      } else {
-        var lg = allLogs().filter(function(l){ return l.d === iso; });
-        t += lg.length ? ' · ' + lg.length + ' 组' : ' · 没记录';
-      }
-    }
-    $('#dSub').textContent = t;
-    var g1 = $('#goToday'); if (g1) g1.hidden = isToday;
-    var g2 = $('#goTodayRing'); if (g2) g2.hidden = isToday;
+    $('#dMain').textContent = isoDisplay(viewISO);
+    var g2 = $('#goTodayRing'); if (g2) g2.hidden = (viewISO === todayISO());
   }
 
   /* 看某一天：今天=可操作；过去=当天真实记录；休息日=休息卡 */
@@ -2792,7 +2771,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   }
 
   /* ---------- 启动版本比对（同热量账本） ---------- */
-  var APP_VERSION = 'v5.89';
+  var APP_VERSION = 'v5.90';
   fetch('./version.txt?t=' + Date.now(), { cache: 'no-store' })
     .then(function(r){ return r.ok ? r.text() : ''; })
     .then(function(v){
@@ -2814,6 +2793,11 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
   /* ---------- 更新记录 ---------- */
   var RELEASES = [
+    { v:'v5.90', d:'11-08', items:[
+      '日期下面那行小字（今天 · 腿 · 0/19 组）整行删掉，「回到今天」改到日期正下方（回看时才出现）',
+      '日期行往下、往两侧各收 8px，左右两颗箭头的圆角和卡牌的圆角对得齐',
+      '圆环里的「0 / 3 天」两个数字一样大（都是 48px），斜杠和小「天」字仍小一档'
+    ]},
     { v:'v5.89', d:'11-08', items:[
       '圆环里的「0 / 3 天」改成左右一行（大数字 + 小字 / 3 天），不再上下叠',
       '「回到今天」挪进圆环里（回看历史时才出现），顶栏那颗删掉'
@@ -3363,7 +3347,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   function paintHero(){
     var n = splitTrainDays(), wk = weekStats(viewISO), dn = wk.days;
     var wd = $('#weekDays'); if (wd) wd.textContent = Math.min(dn, n);
-    var wt = $('#weekTotal'); if (wt) wt.textContent = '/ ' + n + ' 天';
+    var wp = $('#weekPlan'); if (wp) wp.textContent = n;
     var wg = $('#weekGap'); if (wg) wg.textContent = dn >= n ? '本周已完成' : ('还差 ' + (n - dn) + ' 天');
     var frac = n ? Math.min(1, dn / n) : 0;
     ringFg.style.strokeDashoffset = C * (1 - frac);
