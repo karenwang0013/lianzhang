@@ -190,7 +190,7 @@ body{
 .scroller{
   position:relative;z-index:1;
   flex:1;overflow-y:auto;overflow-x:hidden;
-  padding:calc(51px + var(--safe-t) + 7px) var(--page-pad) 140px;
+  padding:calc(51px + var(--safe-t)) var(--page-pad) 140px;
   -webkit-overflow-scrolling:touch;
   overscroll-behavior-y:contain;
   scrollbar-width:none;
@@ -562,14 +562,14 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 .bar:last-child span{color:var(--lime)}
 
 .pr{display:flex;align-items:center;justify-content:flex-start;padding:12px 0}
-.pr .val{margin-left:auto}
 .pr + .pr{border-top:1px solid var(--line)}
 .pr .nm{font-size:13.5px;font-weight:550}
 .pr .nm small{display:block;font-size:10px;color:var(--muted2);margin-top:3px;font-weight:400;letter-spacing:.02em}
-.pr .val{text-align:right}
-.pr .val b{font-size:16px;font-weight:650;font-variant-numeric:tabular-nums;letter-spacing:-.02em}
-.pr .val b em{font-style:normal;font-size:10px;color:var(--muted2);font-weight:500;margin-left:2px}
-.pr .val i{display:block;font-style:normal;font-size:10px;color:var(--lime);margin-top:2px}
+.pr .val{margin-left:auto;display:flex;align-items:baseline;justify-content:flex-end;gap:7px;text-align:right}
+.pr .val b{font-size:19px;font-weight:650;font-variant-numeric:tabular-nums;letter-spacing:-.02em;line-height:1}
+.pr .val b em{font-style:normal;font-size:10.5px;color:var(--muted2);font-weight:500;margin-left:2px}
+.pr .val b.none{font-size:15px;color:var(--muted2)}
+.pr .val i{font-style:normal;font-size:10.5px;color:var(--muted2);letter-spacing:.04em}
 .pr .val i.flat{color:var(--muted2)}
 .pr[data-n]{cursor:pointer}
 .pr[data-n]::after{content:"›";margin-left:10px;color:rgba(255,255,255,.24);font-size:15px;line-height:1}
@@ -635,7 +635,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
 /* ---------- 遮罩 ---------- */
 .mask{
-  position:absolute;inset:0;background:rgba(0,0,0,.66);
+  position:absolute;inset:0;background:rgba(0,0,0,.58);
   -webkit-backdrop-filter:none;backdrop-filter:none;
   opacity:0;pointer-events:none;transition:opacity .3s;z-index:40;
 }
@@ -648,11 +648,13 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   opacity:0;pointer-events:none;
   transform:translateY(102%);
   border-radius:calc(var(--dock-h) / 2);
-  background-color:#121514;
-  background-image:linear-gradient(180deg,#1a1e1c 0%,#121514 100%),var(--edge-gloss);
+  background-color:transparent;
+  background-image:linear-gradient(180deg,var(--glass-top) 0%,var(--glass-bot) 100%),var(--edge-gloss);
   background-origin:border-box;
   background-clip:padding-box,border-box;
   border:1px solid transparent;
+  -webkit-backdrop-filter:var(--glass-blur);
+  backdrop-filter:var(--glass-blur);
   padding:32px 0 0;
   transform:translateY(102%);
   transition:transform .34s cubic-bezier(.22,.8,.3,1),opacity .22s ease;
@@ -948,7 +950,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
     <div class="statusbg" aria-hidden="true"></div>
     <div class="topbar">
-      <div class="brand">训练<span>账本</span><i class="btag">v5.60</i></div>
+      <div class="brand">训练<span>账本</span><i class="btag">v5.61</i></div>
       <div class="topactions">
         <button class="topbtn topicon" id="reloadTop" aria-label="强制更新" title="强制更新">
           <svg viewBox="0 -960 960 960" aria-hidden="true"><path d="M480-160q-134 0-227-93t-93-227q0-134 93-227t227-93q69 0 132 28.5T720-690v-70q0-17 11.5-28.5T760-800q17 0 28.5 11.5T800-760v200q0 17-11.5 28.5T760-520H560q-17 0-28.5-11.5T520-560q0-17 11.5-28.5T560-600h128q-32-56-87.5-88T480-720q-100 0-170 70t-70 170q0 100 70 170t170 70q68 0 124.5-34.5T692-367q8-14 22.5-19.5t29.5-.5q16 5 23 21t-1 30q-41 80-117 128t-169 48Z"/></svg>
@@ -1238,7 +1240,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     <!-- 设置 -->
     <div class="sheet" id="setSheet">
       <div class="grab"></div>
-      <div class="sh-hd"><h2>设置</h2><span class="vtag">v5.60</span></div>
+      <div class="sh-hd"><h2>设置</h2><span class="vtag">v5.61</span></div>
       <div class="setbody">
         <div class="setlabel">训练设置</div>
         <div class="setrows">
@@ -1255,7 +1257,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
           <div class="srow" data-ic="monitor_heart"><span class="ico"></span><span class="lbl">Apple 健康</span><span class="sw"></span></div>
           <div class="srow" data-ic="assignment"><span class="ico"></span><span class="lbl">训练提醒</span><span class="sw"></span></div>
           <button class="srow" id="openBackup" data-ic="cloud_done"><span class="ico"></span><span class="lbl">数据备份</span><span class="val" id="backupVal">iCloud</span></button>
-          <button class="srow" id="openRel" data-ic="checklist"><span class="ico"></span><span class="lbl">更新记录</span><span class="val">v5.60</span></button>
+          <button class="srow" id="openRel" data-ic="checklist"><span class="ico"></span><span class="lbl">更新记录</span><span class="val">v5.61</span></button>
         </div>
       </div>
     </div>
@@ -2457,7 +2459,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   }
 
   /* ---------- 启动版本比对（同热量账本） ---------- */
-  var APP_VERSION = 'v5.60';
+  var APP_VERSION = 'v5.61';
   fetch('./version.txt?t=' + Date.now(), { cache: 'no-store' })
     .then(function(r){ return r.ok ? r.text() : ''; })
     .then(function(v){
@@ -2479,6 +2481,11 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
   /* ---------- 更新记录 ---------- */
   var RELEASES = [
+    { v:'v5.61', d:'11-08', items:[
+      '弹层材质还原成玻璃（渐变 + 光泽描边 + blur），不再用实色；遮罩 66% → 58%，让玻璃背后还有东西可透',
+      '记录页「动作重量」：重量和「记录」放在同一行，数字 19px 加大，「记录」两字在数字左边（原来数字和「最好」上下叠着）',
+      '第一张卡贴住顶栏（去掉中间 7px 的空带）；日期文字离顶栏 58pt，与热量账本真机实测一致'
+    ]},
     { v:'v5.60', d:'11-08', items:[
       '记录页「动作重量」：重量改回靠右（原来被右边箭头挤到中间）',
       '动作重量弹层：左右留 20、按钮离卡底 20，不再满宽贴着圆角边',
@@ -3008,8 +3015,9 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
       });
       prCard.innerHTML = names.map(function(n){
         var lw = lastWeightOf(n), pr = prOf(n);
-        var right = !pr ? '<b>—</b>' : (pr.kg ? '<b>' + pr.kg + '<em>kg</em></b><i class="flat">最好</i>'
-          : '<b>' + pr.sets + '<em>组</em></b><i class="flat">最好</i>');
+        var right = pr
+          ? '<i class="rec">记录</i><b>' + (pr.kg ? pr.kg + '<em>kg</em>' : pr.sets + '<em>组</em>') + '</b>'
+          : '<b class="none">—</b>';
         return '<div class="pr"' + (lw ? ' data-n="' + n + '"' : '') + '>' +
           '<div class="nm">' + n + '<small>' + (lw ? shortDate(lw.d) + ' · 最近 ' + (lw.kg ? lw.kg + ' kg' : '自重') : '没记录') + '</small></div>' +
           '<div class="val">' + right + '</div></div>';
