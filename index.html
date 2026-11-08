@@ -1174,8 +1174,21 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 .sheet.page.on{opacity:1;pointer-events:auto;transform:none;transition:none}
 .sheet.page .grab{display:none}
 .sheet.page > .pinbody{border-radius:0}
-/* 标题栏跟卡牌左右对齐（卡牌外边距 16） */
-.sheet.page .sh-hd{padding:0 16px;margin:0 0 8px}
+/* 标题栏跟卡牌左右对齐（卡牌外边距 16）；所有子页统一，不许各写一套 */
+.sheet.page .sh-hd,
+.sheet.page .sh-hd.sh-sub{
+  margin:0 0 8px !important;
+  padding:0 16px !important;
+  gap:6px;
+}
+.sheet.page .backbtn{width:30px;height:30px;margin:0}
+/* 这三张自己有 20 的左右内边距，标题栏要反推回卡牌边线（16），否则返回键会跑到 36 */
+#iconSheet.page .sh-hd,
+#backupSheet.page .sh-hd,
+#remindSheet.page .sh-hd{
+  margin-left:-20px !important;
+  margin-right:-20px !important;
+}
 /* 各个 sheet 自己的 max-height / padding 在整页模式下放开 */
 #setSheet.page,#iconSheet.page,#backupSheet.page,#relSheet.page,#remindSheet.page,#daysSheet.page,#optSheet.page{
   max-height:none;height:100%;
