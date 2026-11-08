@@ -277,9 +277,10 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 }
 .ringmid .rlbl{font-size:11px;letter-spacing:.2em;color:var(--muted);font-weight:500}
 .ringmid b{font-size:56px;font-weight:500;letter-spacing:-1.5px;line-height:.96;font-variant-numeric:tabular-nums;margin-top:2px}
-.ringmid .rnum{display:flex;align-items:baseline;gap:6px}
-.ringmid .rnum b{font-size:48px;font-weight:500;letter-spacing:-1.2px;line-height:.96;margin-top:2px}
-.ringmid .rnum .rslash{font-style:normal;font-size:22px;color:rgba(255,255,255,.34);font-weight:400}
+.ringmid .rnum{display:flex;align-items:center;gap:6px}
+.ringmid .rnum b{font-size:48px;font-weight:500;letter-spacing:-1.2px;line-height:1;margin-top:0}
+.ringmid .rnum b.tot{color:rgba(255,255,255,.5)}
+.ringmid .rnum .rslash{font-style:normal;font-size:24px;line-height:1;color:rgba(255,255,255,.34);font-weight:400}
 .ringmid .rnum .runit{font-style:normal;font-size:16px;color:var(--muted2);margin-left:2px}
 .ringtoday{margin:8px auto 0;padding:5px 12px;border-radius:10px;font-family:inherit;
   font-size:11.5px;font-weight:650;letter-spacing:.02em;color:var(--lime);
@@ -1004,7 +1005,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
     <div class="statusbg" aria-hidden="true"></div>
     <div class="topbar">
-      <div class="brand">训练<span>账本</span><i class="btag">v5.90</i></div>
+      <div class="brand">训练<span>账本</span><i class="btag">v5.91</i></div>
       <div class="topactions">
         <button class="topbtn topicon" id="reloadTop" aria-label="强制更新" title="强制更新">
           <svg viewBox="0 -960 960 960" aria-hidden="true"><path d="M480-160q-134 0-227-93t-93-227q0-134 93-227t227-93q69 0 132 28.5T720-690v-70q0-17 11.5-28.5T760-800q17 0 28.5 11.5T800-760v200q0 17-11.5 28.5T760-520H560q-17 0-28.5-11.5T520-560q0-17 11.5-28.5T560-600h128q-32-56-87.5-88T480-720q-100 0-170 70t-70 170q0 100 70 170t170 70q68 0 124.5-34.5T692-367q8-14 22.5-19.5t29.5-.5q16 5 23 21t-1 30q-41 80-117 128t-169 48Z"/></svg>
@@ -1053,7 +1054,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
             </svg>
             <div class="ringmid">
               <span class="rlbl">本周</span>
-              <span class="rnum"><b id="weekDays">4</b><i class="rslash">/</i><b id="weekPlan">3</b><i class="runit">天</i></span>
+              <span class="rnum"><b id="weekDays">4</b><i class="rslash">/</i><b id="weekPlan" class="tot">3</b><i class="runit">天</i></span>
               <span class="rgap" id="weekGap">还差 2 天</span>
             </div>
           </div>
@@ -1291,7 +1292,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     <!-- 设置 -->
     <div class="sheet" id="setSheet">
       <div class="grab"></div>
-      <div class="sh-hd"><h2>设置</h2><span class="vtag">v5.90</span></div>
+      <div class="sh-hd"><h2>设置</h2><span class="vtag">v5.91</span></div>
       <div class="setbody">
         <div class="setlabel">训练设置</div>
         <div class="setrows">
@@ -1308,7 +1309,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
           <div class="srow" data-ic="monitor_heart"><span class="ico"></span><span class="lbl">Apple 健康</span><span class="sw"></span></div>
           <div class="srow" data-ic="assignment"><span class="ico"></span><span class="lbl">训练提醒</span><span class="sw"></span></div>
           <button class="srow" id="openBackup" data-ic="cloud_done"><span class="ico"></span><span class="lbl">数据备份</span><span class="val" id="backupVal">iCloud</span></button>
-          <button class="srow" id="openRel" data-ic="checklist"><span class="ico"></span><span class="lbl">更新记录</span><span class="val">v5.90</span></button>
+          <button class="srow" id="openRel" data-ic="checklist"><span class="ico"></span><span class="lbl">更新记录</span><span class="val">v5.91</span></button>
         </div>
       </div>
     </div>
@@ -2267,7 +2268,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
         $('#listMeta').textContent = '恢复';
         $('#exList').innerHTML = '<div class="card emptycard"><b>今天休息</b>' +
           '<p>恢复：8,000 步 + 拉伸。想看别的日子，点上面那排星期。</p>' +
-          '<button class="cta inline ghost" id="trainAny">照练</button></div>';
+          '<button class="cta inline ghost" id="trainAny">加练</button></div>';
       } else {
         todayKey = key;
         $('#todayName').textContent = TITLE[key][0];
@@ -2771,7 +2772,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   }
 
   /* ---------- 启动版本比对（同热量账本） ---------- */
-  var APP_VERSION = 'v5.90';
+  var APP_VERSION = 'v5.91';
   fetch('./version.txt?t=' + Date.now(), { cache: 'no-store' })
     .then(function(r){ return r.ok ? r.text() : ''; })
     .then(function(v){
@@ -2793,6 +2794,11 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
   /* ---------- 更新记录 ---------- */
   var RELEASES = [
+    { v:'v5.91', d:'11-08', items:[
+      '圆环里的斜杠改回垂直居中（不再掉到数字脚下）',
+      '「0 / 3」两个数字一样大，但后面的总数用弱一档的灰（和之前一样不是实白），只有已完成那个是实白',
+      '「照练」改名「加练」'
+    ]},
     { v:'v5.90', d:'11-08', items:[
       '日期下面那行小字（今天 · 腿 · 0/19 组）整行删掉，「回到今天」改到日期正下方（回看时才出现）',
       '日期行往下、往两侧各收 8px，左右两颗箭头的圆角和卡牌的圆角对得齐',
