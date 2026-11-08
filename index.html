@@ -1146,7 +1146,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
     <div class="statusbg" aria-hidden="true"></div>
     <div class="topbar">
-      <div class="brand">训练<span>账本</span><i class="btag">v6.46</i></div>
+      <div class="brand">训练<span>账本</span><i class="btag">v6.47</i></div>
       <div class="topactions">
         <button class="topbtn topicon" id="reloadTop" aria-label="强制更新" title="强制更新">
           <svg viewBox="0 -960 960 960" aria-hidden="true"><path d="M480-160q-134 0-227-93t-93-227q0-134 93-227t227-93q69 0 132 28.5T720-690v-70q0-17 11.5-28.5T760-800q17 0 28.5 11.5T800-760v200q0 17-11.5 28.5T760-520H560q-17 0-28.5-11.5T520-560q0-17 11.5-28.5T560-600h128q-32-56-87.5-88T480-720q-100 0-170 70t-70 170q0 100 70 170t170 70q68 0 124.5-34.5T692-367q8-14 22.5-19.5t29.5-.5q16 5 23 21t-1 30q-41 80-117 128t-169 48Z"/></svg>
@@ -1167,8 +1167,8 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5 8 12l7 7"/></svg>
             </button>
             <div class="dmain">
-              <span class="dwrap"><b id="dMain">11月8日</b></span>
-              <span class="dline"><i id="dSub">今天</i></span>
+              <span class="dwrap"><b id="dMain">–</b></span>
+              <span class="dline"><i id="dSub"></i></span>
             </div>
             <button class="wkbtn" id="wkNext" aria-label="下一周">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg>
@@ -1195,8 +1195,8 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
             </svg>
             <div class="ringmid">
               <span class="rlbl">本周</span>
-              <span class="rnum"><b id="weekDays">4</b><i class="rslash">/</i><b id="weekPlan" class="tot">3</b></span>
-              <span class="rgap" id="weekGap">还差 2 天</span>
+              <span class="rnum"><b id="weekDays">–</b><i class="rslash">/</i><b id="weekPlan" class="tot">–</b></span>
+              <span class="rgap" id="weekGap"></span>
             </div>
           </div>
 
@@ -1206,22 +1206,22 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
           <div class="stats3">
             <div>
               <div class="k" id="kToday">今天</div>
-              <div class="v"><span id="todayName">腿</span><small id="todayEn">LEGS</small></div>
+              <div class="v"><span id="todayName">–</span><small id="todayEn"></small></div>
             </div>
             <div>
               <div class="k">本周容量</div>
-              <div class="v" id="weekVol">12,480<small>kg</small></div>
+              <div class="v" id="weekVol">–</div>
             </div>
             <div>
               <div class="k">连续打卡</div>
-              <div class="v" id="streakDays">12<small>天</small></div>
+              <div class="v" id="streakDays">–</div>
             </div>
           </div>
         </div>
 
         <div class="listhead">
           <h2 id="listTitle">今天的动作</h2>
-          <span id="listMeta">17 有效组</span>
+          <span id="listMeta">–</span>
         </div>
         <div class="remindbar" id="remindBar" hidden>
           <span id="remindText">提醒</span>
@@ -1436,7 +1436,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     <!-- 设置 -->
     <div class="sheet" id="setSheet">
       <div class="grab"></div>
-      <div class="sh-hd"><h2>设置</h2><span class="vtag">v6.46</span></div>
+      <div class="sh-hd"><h2>设置</h2><span class="vtag">v6.47</span></div>
       <div class="setbody">
         <div class="setlabel">训练设置</div>
         <div class="setrows">
@@ -1454,7 +1454,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
           <button class="srow" id="openRemind" data-ic="assignment"><span class="ico"></span><span class="lbl">训练提醒</span><span class="val" id="remindVal">开</span></button>
           <button class="srow" id="clearLogs" data-ic="delete"><span class="ico"></span><span class="lbl">清除训练记录</span><span class="val plain">全部删除</span></button>
           <button class="srow" id="openBackup" data-ic="cloud_done"><span class="ico"></span><span class="lbl">数据备份</span><span class="val" id="backupVal">iCloud</span></button>
-          <button class="srow" id="openRel" data-ic="checklist"><span class="ico"></span><span class="lbl">更新记录</span><span class="val">v6.46</span></button>
+          <button class="srow" id="openRel" data-ic="checklist"><span class="ico"></span><span class="lbl">更新记录</span><span class="val">v6.47</span></button>
         </div>
       </div>
     </div>
@@ -3302,7 +3302,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   }
 
   /* ---------- 启动版本比对（同热量账本） ---------- */
-  var APP_VERSION = 'v6.46';
+  var APP_VERSION = 'v6.47';
   fetch('./version.txt?t=' + Date.now(), { cache: 'no-store' })
     .then(function(r){ return r.ok ? r.text() : ''; })
     .then(function(v){
@@ -3324,6 +3324,10 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
   /* ---------- 更新记录 ---------- */
   var RELEASES = [
+    { v:'v6.47', d:'11-08', items:[
+      '修「缓冲界面显示 4/3 · 还差 2 天」：那是页面骨架里写死的假数字，在脚本算完之前先显示；现在一律显示横杠（–），算完才出真数',
+      '同样改成横杠的：日期、今天·腿、本周容量、连续打卡、动作组数'
+    ]},
     { v:'v6.46', d:'11-08', items:[
       '打卡热力去掉「今天」那圈白边：只靠格子的颜色深浅表达，不再额外描边'
     ]},
