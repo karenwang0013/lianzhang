@@ -668,7 +668,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 /* ---------- 弹层：玻璃 + 46 圆角（实测 #nutSheet） ---------- */
 .sheet{
   position:absolute;left:var(--dock-w);right:var(--dock-w);
-  top:0;bottom:0;margin:auto 0;height:fit-content;z-index:41;
+  top:auto;bottom:10px;height:fit-content;z-index:41;
   opacity:0;pointer-events:none;
   transform:translateY(102%);
   border-radius:calc(var(--dock-h) / 2);
@@ -682,7 +682,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   padding:32px 0 0;
   transform:translateY(102%);
   transition:transform .34s cubic-bezier(.22,.8,.3,1),opacity .22s ease;
-  max-height:calc(100% - 120px);overflow-y:auto;
+  max-height:calc(100% - 96px);overflow-y:auto;
   scrollbar-width:none;-ms-overflow-style:none;
 }
 .sheet::-webkit-scrollbar{width:0;height:0;display:none}
@@ -768,8 +768,8 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 .sheet .cta+.cta{margin-top:9px}
 
 /* 动作详情 */
-.sheet#exSheet{position:fixed;top:0;bottom:0;margin:auto 0;height:fit-content;left:10px;right:10px;
-  max-height:calc(100% - 120px);overflow-y:auto;transform:translateY(110%)}
+.sheet#exSheet{position:fixed;top:auto;bottom:10px;height:fit-content;left:10px;right:10px;
+  max-height:calc(100% - 96px);overflow-y:auto;transform:translateY(110%)}
 #exSheet.on{transform:none}
 #exSheet{padding-top:14px}
 .exdetail{display:flex;flex-direction:column;margin-top:0}
@@ -1003,7 +1003,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 /* 图标弹层自己的一套：贴屏幕底、左右留 20px（原来内容贴圆角边，字被切）、底部留出安全区 */
 /* 真机上百分比 max-height 不生效（完成按钮掉到屏幕外、内容不裁剪也不滚），
    改成 top+bottom 撑出确定高度：这样它才真的成为一个能滚的容器 */
-#iconSheet{padding:32px 20px 24px;max-height:calc(100% - 120px);
+#iconSheet{padding:32px 20px 24px;max-height:calc(100% - 96px);
   display:flex;flex-direction:column;overflow:hidden}
 #iconSheet .hint{margin-bottom:0}
 #iconSheet .ibody{flex:1 1 auto;min-height:0;overflow-y:auto;padding-top:18px;
@@ -1078,7 +1078,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
     <div class="statusbg" aria-hidden="true"></div>
     <div class="topbar">
-      <div class="brand">训练<span>账本</span><i class="btag">v6.24</i></div>
+      <div class="brand">训练<span>账本</span><i class="btag">v6.25</i></div>
       <div class="topactions">
         <button class="topbtn topicon" id="reloadTop" aria-label="强制更新" title="强制更新">
           <svg viewBox="0 -960 960 960" aria-hidden="true"><path d="M480-160q-134 0-227-93t-93-227q0-134 93-227t227-93q69 0 132 28.5T720-690v-70q0-17 11.5-28.5T760-800q17 0 28.5 11.5T800-760v200q0 17-11.5 28.5T760-520H560q-17 0-28.5-11.5T520-560q0-17 11.5-28.5T560-600h128q-32-56-87.5-88T480-720q-100 0-170 70t-70 170q0 100 70 170t170 70q68 0 124.5-34.5T692-367q8-14 22.5-19.5t29.5-.5q16 5 23 21t-1 30q-41 80-117 128t-169 48Z"/></svg>
@@ -1387,7 +1387,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     <!-- 设置 -->
     <div class="sheet" id="setSheet">
       <div class="grab"></div>
-      <div class="sh-hd"><h2>设置</h2><span class="vtag">v6.24</span></div>
+      <div class="sh-hd"><h2>设置</h2><span class="vtag">v6.25</span></div>
       <div class="setbody">
         <div class="setlabel">训练设置</div>
         <div class="setrows">
@@ -1405,7 +1405,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
           <button class="srow" id="openRemind" data-ic="assignment"><span class="ico"></span><span class="lbl">训练提醒</span><span class="val" id="remindVal">开</span></button>
           <button class="srow" id="clearLogs" data-ic="delete"><span class="ico"></span><span class="lbl">清除训练记录</span><span class="val plain">全部删除</span></button>
           <button class="srow" id="openBackup" data-ic="cloud_done"><span class="ico"></span><span class="lbl">数据备份</span><span class="val" id="backupVal">iCloud</span></button>
-          <button class="srow" id="openRel" data-ic="checklist"><span class="ico"></span><span class="lbl">更新记录</span><span class="val">v6.24</span></button>
+          <button class="srow" id="openRel" data-ic="checklist"><span class="ico"></span><span class="lbl">更新记录</span><span class="val">v6.25</span></button>
         </div>
       </div>
     </div>
@@ -3216,7 +3216,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   }
 
   /* ---------- 启动版本比对（同热量账本） ---------- */
-  var APP_VERSION = 'v6.24';
+  var APP_VERSION = 'v6.25';
   fetch('./version.txt?t=' + Date.now(), { cache: 'no-store' })
     .then(function(r){ return r.ok ? r.text() : ''; })
     .then(function(v){
@@ -3238,6 +3238,10 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
   /* ---------- 更新记录 ---------- */
   var RELEASES = [
+    { v:'v6.25', d:'11-08', items:[
+      '卡牌不再上下居中：改成底边和 Dock 底边齐平（左右各离边 10、圆角 45 = Dock 高度的一半），内容从底部往上长，超高才内部滚动',
+      '设置、图标、数据备份、更新记录、训练提醒、练过的日子、选项、动作卡、加动作 全部按这套对齐，和热量账本的弹层一致'
+    ]},
     { v:'v6.24', d:'11-08', items:[
       '所有卡牌改成屏幕垂直居中（设置、图标、数据备份、更新记录、训练提醒、练过的日子、选项、动作卡、加动作、动作重量），内容超高才占满并内部滚动',
       '记录页新增「周小结 / 月小结」：本周或本月练了几天、几组、多少容量，跟计划比多少，再给一句能执行的建议；饮食和体重以热量账本为准'
