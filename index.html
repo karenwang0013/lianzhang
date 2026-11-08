@@ -775,7 +775,12 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   border-right:1.5px solid var(--muted2);border-bottom:1.5px solid var(--muted2);
   transform:rotate(45deg);transition:transform .2s ease,margin .2s ease}
 .exname.open .chev{transform:rotate(-135deg);margin-top:1px}
-.expickwrap{position:relative;display:inline-flex;justify-content:center}
+.expickwrap{position:relative;display:inline-flex;align-items:center;gap:10px;justify-content:center}
+.exside{width:30px;height:30px;flex:none;display:grid;place-items:center;border-radius:9px;
+  border:1px solid var(--line);background-color:rgba(255,255,255,.04);color:rgba(242,244,242,.7);
+  font-family:inherit;font-size:15px;line-height:1;cursor:pointer;padding:0}
+.exside:active{background:rgba(255,255,255,.1);transform:scale(.94)}
+.exside:disabled{opacity:.25;pointer-events:none}
 .expicklist{display:none;position:absolute;left:50%;transform:translateX(-50%);
   top:calc(100% + 6px);z-index:9;
   min-width:100%;width:max-content;max-width:min(240px,76vw);
@@ -784,7 +789,8 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   max-height:min(260px,40vh);overflow-y:auto;-webkit-overflow-scrolling:touch;
   scrollbar-width:none}
 .expicklist::-webkit-scrollbar{display:none}
-#exSheet.picking .expicklist{display:block}
+/* 下拉不再使用：换成名字两侧的 ‹ › */
+#exSheet.picking .expicklist{display:none}
 .expick{display:flex;align-items:center;justify-content:space-between;gap:12px;white-space:nowrap;
   padding:11px 12px;font-size:13.5px;font-weight:600;color:var(--muted);
   border-top:1px solid rgba(255,255,255,.05);cursor:pointer}
@@ -973,7 +979,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
     <div class="statusbg" aria-hidden="true"></div>
     <div class="topbar">
-      <div class="brand">训练<span>账本</span><i class="btag">v5.67</i></div>
+      <div class="brand">训练<span>账本</span><i class="btag">v5.68</i></div>
       <div class="topactions">
         <button class="topbtn topicon" id="reloadTop" aria-label="强制更新" title="强制更新">
           <svg viewBox="0 -960 960 960" aria-hidden="true"><path d="M480-160q-134 0-227-93t-93-227q0-134 93-227t227-93q69 0 132 28.5T720-690v-70q0-17 11.5-28.5T760-800q17 0 28.5 11.5T800-760v200q0 17-11.5 28.5T760-520H560q-17 0-28.5-11.5T520-560q0-17 11.5-28.5T560-600h128q-32-56-87.5-88T480-720q-100 0-170 70t-70 170q0 100 70 170t170 70q68 0 124.5-34.5T692-367q8-14 22.5-19.5t29.5-.5q16 5 23 21t-1 30q-41 80-117 128t-169 48Z"/></svg>
@@ -1257,7 +1263,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     <!-- 设置 -->
     <div class="sheet" id="setSheet">
       <div class="grab"></div>
-      <div class="sh-hd"><h2>设置</h2><span class="vtag">v5.67</span></div>
+      <div class="sh-hd"><h2>设置</h2><span class="vtag">v5.68</span></div>
       <div class="setbody">
         <div class="setlabel">训练设置</div>
         <div class="setrows">
@@ -1274,7 +1280,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
           <div class="srow" data-ic="monitor_heart"><span class="ico"></span><span class="lbl">Apple 健康</span><span class="sw"></span></div>
           <div class="srow" data-ic="assignment"><span class="ico"></span><span class="lbl">训练提醒</span><span class="sw"></span></div>
           <button class="srow" id="openBackup" data-ic="cloud_done"><span class="ico"></span><span class="lbl">数据备份</span><span class="val" id="backupVal">iCloud</span></button>
-          <button class="srow" id="openRel" data-ic="checklist"><span class="ico"></span><span class="lbl">更新记录</span><span class="val">v5.67</span></button>
+          <button class="srow" id="openRel" data-ic="checklist"><span class="ico"></span><span class="lbl">更新记录</span><span class="val">v5.68</span></button>
         </div>
       </div>
     </div>
@@ -1293,7 +1299,9 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
       <div class="exdetail">
         <div class="exhead">
           <div class="expickwrap">
-            <button class="exname" id="exPickToggle"><b id="exName">平板杠铃卧推</b><i class="grade" id="exGrade">S</i><i class="chev"></i></button>
+            <button class="exside" id="exPrev" aria-label="上一个动作">‹</button>
+            <button class="exname" id="exPickToggle"><b id="exName">平板杠铃卧推</b><i class="grade" id="exGrade">S</i></button>
+            <button class="exside" id="exNext" aria-label="下一个动作">›</button>
             <div class="expicklist" id="exPick"></div>
           </div>
           <div class="exsub"><span>今天 <b id="exDone">0 / 4</b> 组</span><i>·</i><span>休息 <b id="exRest">180 秒</b></span></div>
@@ -2457,9 +2465,21 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     var tb = $('#exPickToggle'); if (tb) tb.classList.toggle('open', !!on);
     if (on) paintPick();
   }
-  $('#exPickToggle').addEventListener('click', function(){
-    setPicking(!$('#exSheet').classList.contains('picking'));
-  });
+  /* 换动作：名字两侧的 ‹ › 直接切，不弹任何面板 */
+  function cyclePick(d){
+    if (!curExId) return;
+    var key = curExId.replace(/[0-9]+$/, ''), idx = parseInt(curExId.replace(/^[a-z]+/, ''), 10) || 0;
+    var names = pickCandidates(key, idx);
+    if (names.length < 2) return;
+    var cur = swappedName(key, idx) || (origOf(key, idx) || {}).n;
+    var i = names.indexOf(cur);
+    if (i < 0) i = 0;
+    var next = names[(i + d + names.length) % names.length];
+    if (next && next !== cur) selectPick(next);
+  }
+  $('#exPrev').addEventListener('click', function(){ cyclePick(-1); });
+  $('#exNext').addEventListener('click', function(){ cyclePick(1); });
+  $('#exPickToggle').addEventListener('click', function(){ cyclePick(1); });
   // 点菜单/名字以外的地方就收起菜单
   document.addEventListener('click', function(ev){
     var sh = $('#exSheet'); if (!sh || !sh.classList.contains('picking')) return;
@@ -2542,7 +2562,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   }
 
   /* ---------- 启动版本比对（同热量账本） ---------- */
-  var APP_VERSION = 'v5.67';
+  var APP_VERSION = 'v5.68';
   fetch('./version.txt?t=' + Date.now(), { cache: 'no-store' })
     .then(function(r){ return r.ok ? r.text() : ''; })
     .then(function(v){
@@ -2564,6 +2584,9 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
   /* ---------- 更新记录 ---------- */
   var RELEASES = [
+    { v:'v5.68', d:'11-08', items:[
+      '换动作不再弹任何东西：动作名两边各一颗 ‹ ›，点一下换到上一个/下一个候选（点名字也往后切）；下面参数、上次重量立刻跟着变'
+    ]},
     { v:'v5.67', d:'11-08', items:[
       '换动作下拉再收：宽度跟着动作名走（实测 118 vs 名字 117.5，不再占满整张卡），去掉边框和投影，只留一层深一点的底把下面的行盖住'
     ]},
