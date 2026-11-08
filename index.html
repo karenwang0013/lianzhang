@@ -856,9 +856,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 .emptycard b{display:block;font-size:14px;font-weight:600}
 .emptycard p{margin:7px 0 0;font-size:11.5px;color:var(--muted2);line-height:1.6}
 .ex.ro{cursor:pointer}
-.daylogcard{padding:4px 16px;max-height:252px;overflow-y:auto;-webkit-overflow-scrolling:touch;
-  scrollbar-width:none;-ms-overflow-style:none}
-.daylogcard::-webkit-scrollbar{width:0;height:0;display:none}
+.dayslist{padding:0 20px 18px}
 .dayrow{display:flex;align-items:center;gap:10px;padding:11px 0;cursor:pointer}
 .dayrow + .dayrow{border-top:1px solid var(--line)}
 .dayrow .dd{flex:1;min-width:0}
@@ -1066,7 +1064,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
     <div class="statusbg" aria-hidden="true"></div>
     <div class="topbar">
-      <div class="brand">训练<span>账本</span><i class="btag">v6.19</i></div>
+      <div class="brand">训练<span>账本</span><i class="btag">v6.20</i></div>
       <div class="topactions">
         <button class="topbtn topicon" id="reloadTop" aria-label="强制更新" title="强制更新">
           <svg viewBox="0 -960 960 960" aria-hidden="true"><path d="M480-160q-134 0-227-93t-93-227q0-134 93-227t227-93q69 0 132 28.5T720-690v-70q0-17 11.5-28.5T760-800q17 0 28.5 11.5T800-760v200q0 17-11.5 28.5T760-520H560q-17 0-28.5-11.5T520-560q0-17 11.5-28.5T560-600h128q-32-56-87.5-88T480-720q-100 0-170 70t-70 170q0 100 70 170t170 70q68 0 124.5-34.5T692-367q8-14 22.5-19.5t29.5-.5q16 5 23 21t-1 30q-41 80-117 128t-169 48Z"/></svg>
@@ -1213,9 +1211,6 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
           <div class="stat"><b id="logMonthVol">0<em>kg</em></b><span>本月容量</span></div>
           <div class="stat"><b id="logPR">0</b><span>PR 纪录</span></div>
         </div>
-
-        <div class="listhead"><h2>练过的日子</h2><span id="dayLogCount">点一行看那天</span></div>
-        <div class="card daylogcard" id="dayLogCard"></div>
 
         <div class="listhead"><h2>每周容量</h2><span>公斤 · 近 8 周</span></div>
         <div class="card">
@@ -1364,7 +1359,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     <!-- 设置 -->
     <div class="sheet" id="setSheet">
       <div class="grab"></div>
-      <div class="sh-hd"><h2>设置</h2><span class="vtag">v6.19</span></div>
+      <div class="sh-hd"><h2>设置</h2><span class="vtag">v6.20</span></div>
       <div class="setbody">
         <div class="setlabel">训练设置</div>
         <div class="setrows">
@@ -1380,9 +1375,10 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
           <div class="srow" data-ic="bolt"><span class="ico"></span><span class="lbl">与热量账本同步</span><span class="sw"></span></div>
           <div class="srow" data-ic="monitor_heart"><span class="ico"></span><span class="lbl">Apple 健康</span><span class="sw"></span></div>
           <button class="srow" id="openRemind" data-ic="assignment"><span class="ico"></span><span class="lbl">训练提醒</span><span class="val" id="remindVal">开</span></button>
+          <button class="srow" id="openDays" data-ic="calendar_month"><span class="ico"></span><span class="lbl">练过的日子</span><span class="val" id="daysVal">0 天</span></button>
           <button class="srow" id="clearLogs" data-ic="delete"><span class="ico"></span><span class="lbl">清除训练记录</span><span class="val plain">全部删除</span></button>
           <button class="srow" id="openBackup" data-ic="cloud_done"><span class="ico"></span><span class="lbl">数据备份</span><span class="val" id="backupVal">iCloud</span></button>
-          <button class="srow" id="openRel" data-ic="checklist"><span class="ico"></span><span class="lbl">更新记录</span><span class="val">v6.19</span></button>
+          <button class="srow" id="openRel" data-ic="checklist"><span class="ico"></span><span class="lbl">更新记录</span><span class="val">v6.20</span></button>
         </div>
       </div>
     </div>
@@ -1392,6 +1388,14 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
       <div class="grab"></div>
       <div class="sh-hd sh-sub"><button class="backbtn" aria-label="返回"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5 8 12l7 7"/></svg></button><h2 id="optTitle">设置</h2></div>
       <div class="optlist" id="optList"></div>
+    </div>
+
+    <!-- 练过的日子 -->
+    <div class="sheet" id="daysSheet">
+      <div class="grab"></div>
+      <div class="sh-hd sh-sub"><button class="backbtn" aria-label="返回"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5 8 12l7 7"/></svg></button><h2>练过的日子</h2><span class="vtag" id="daysTag">0 天</span></div>
+      <p class="hint" style="padding:0 20px">点一行跳到那天；右边「删除」只删那一天，删之前会问一次。</p>
+      <div class="dayslist" id="daysList"></div>
     </div>
 
     <!-- 训练提醒 -->
@@ -2775,6 +2779,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     renderDay();
   });
 
+  $('#openDays').addEventListener('click', function(){ renderDays(); openSheet('#daysSheet'); });
   $('#openRemind').addEventListener('click', function(){ paintRemindRow(); openSheet('#remindSheet'); });
   $('#remindDone').addEventListener('click', closeSheets);
   $('#remSw').addEventListener('click', function(){
@@ -3111,6 +3116,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
    ['#histSheet', ['.grab', '.sh-hd'], ['.cta']],
    ['#libSheet', ['.grab', '.sh-hd', '.hint'], ['.cta']],
    ['#remindSheet', ['.grab', '.sh-hd'], ['.cta']],
+   ['#daysSheet', ['.grab', '.sh-hd', '.hint'], []],
    ['#exSheet', ['.grab'], ['.cta']]].forEach(function(cfg){
     var sh = $(cfg[0]); if (!sh) return;
     var heads = cfg[1], foots = cfg[2], body = null;
@@ -3151,7 +3157,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     sync();
   });
 
-  ['#setSheet','#relSheet','#backupSheet','#histSheet','#libSheet','#iconSheet','#remindSheet'].forEach(function(sel){
+  ['#setSheet','#relSheet','#backupSheet','#histSheet','#libSheet','#iconSheet','#remindSheet','#daysSheet'].forEach(function(sel){
     var el = $(sel); if (el) wireDragClose(el);
   });
 
@@ -3175,7 +3181,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   }
 
   /* ---------- 启动版本比对（同热量账本） ---------- */
-  var APP_VERSION = 'v6.19';
+  var APP_VERSION = 'v6.20';
   fetch('./version.txt?t=' + Date.now(), { cache: 'no-store' })
     .then(function(r){ return r.ok ? r.text() : ''; })
     .then(function(v){
@@ -3197,6 +3203,10 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
   /* ---------- 更新记录 ---------- */
   var RELEASES = [
+    { v:'v6.20', d:'11-08', items:[
+      '「练过的日子」搬到设置里：设置 → 应用与数据 →「练过的日子（N 天）」，点开是一张卡，点一行跳到那天、右边删除只删那天（删前会问）',
+      '记录页不再堆这一长条，页面短了很多'
+    ]},
     { v:'v6.19', d:'11-08', items:[
       '所有删除 / 清除 / 移除都要先确认：移除动作、取消加练（已记的组会被清掉时）、删除某天、清除全部记录、用备份文件恢复，都会先弹一句问你要不要',
       '修「平放的哑铃忽细忽粗」：旋转后的图标超出了画布，两端被裁掉只剩一根细杆；现在按比例缩到画布内，粗细和斜着的那个一致'
@@ -3932,14 +3942,15 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     return { kg: kg, sets: maxSets, d: d };
   }
   function renderDays(){
-    var card = $('#dayLogCard'); if (!card) return;
+    var box = $('#daysList'); if (!box) return;
     var by = {};
     allLogs().forEach(function(l){ (by[l.d] = by[l.d] || []).push(l); });
     var ds = Object.keys(by).sort().reverse();
-    var cnt = $('#dayLogCount');
-    if (!ds.length){ card.innerHTML = '<p class="emptyline">还没有训练记录</p>'; if (cnt) cnt.textContent = '点一行看那天'; return; }
-    if (cnt) cnt.textContent = '共 ' + ds.length + ' 天 · 卡里滑';
-    card.innerHTML = ds.slice(0, 30).map(function(d){
+    var dv = $('#daysVal'), tg = $('#daysTag');
+    if (dv) dv.textContent = ds.length ? ds.length + ' 天' : '还没记录';
+    if (tg) tg.textContent = ds.length + ' 天';
+    if (!ds.length){ box.innerHTML = '<p class="emptyline">还没有训练记录</p>'; return; }
+    box.innerHTML = ds.map(function(d){
       var a = by[d], vol = 0, names = [];
       a.forEach(function(l){
         vol += (l.kg || 0) * (l.reps || 0);
@@ -3950,7 +3961,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
         '<small>' + a.length + ' 组 · ' + uVol(vol).toLocaleString('en-US') + ' ' + uName() + ' · ' +
         names.slice(0, 3).join(' / ') + (names.length > 3 ? ' 等' : '') + '</small></div>' +
         '<button class="dbtn" data-del="' + d + '">删除</button></div>';
-    }).join('') + (ds.length > 30 ? '<p class="emptyline">只列最近 30 天</p>' : '');
+    }).join('');
   }
 
   function paintLog(){
@@ -4107,8 +4118,8 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     if (row) openHist(row.dataset.n);
   });
 
-  /* 记录页「练过的日子」：点行看那天，点删除只删那天 */
-  $('#dayLogCard').addEventListener('click', function(e){
+  /* 设置 →「练过的日子」：点行看那天，点删除只删那天 */
+  $('#daysList').addEventListener('click', function(e){
     var b = e.target.closest('.dbtn');
     if (b){
       var d = b.dataset.del;
@@ -4117,7 +4128,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
       return;
     }
     var row = e.target.closest('.dayrow');
-    if (row){ setTab('today'); selectDay(row.dataset.d); }
+    if (row){ closeSheets(); setTab('today'); selectDay(row.dataset.d); }
   });
 
   /* 加动作 */
