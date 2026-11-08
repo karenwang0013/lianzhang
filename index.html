@@ -1066,7 +1066,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
     <div class="statusbg" aria-hidden="true"></div>
     <div class="topbar">
-      <div class="brand">训练<span>账本</span><i class="btag">v6.14</i></div>
+      <div class="brand">训练<span>账本</span><i class="btag">v6.15</i></div>
       <div class="topactions">
         <button class="topbtn topicon" id="reloadTop" aria-label="强制更新" title="强制更新">
           <svg viewBox="0 -960 960 960" aria-hidden="true"><path d="M480-160q-134 0-227-93t-93-227q0-134 93-227t227-93q69 0 132 28.5T720-690v-70q0-17 11.5-28.5T760-800q17 0 28.5 11.5T800-760v200q0 17-11.5 28.5T760-520H560q-17 0-28.5-11.5T520-560q0-17 11.5-28.5T560-600h128q-32-56-87.5-88T480-720q-100 0-170 70t-70 170q0 100 70 170t170 70q68 0 124.5-34.5T692-367q8-14 22.5-19.5t29.5-.5q16 5 23 21t-1 30q-41 80-117 128t-169 48Z"/></svg>
@@ -1364,7 +1364,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     <!-- 设置 -->
     <div class="sheet" id="setSheet">
       <div class="grab"></div>
-      <div class="sh-hd"><h2>设置</h2><span class="vtag">v6.14</span></div>
+      <div class="sh-hd"><h2>设置</h2><span class="vtag">v6.15</span></div>
       <div class="setbody">
         <div class="setlabel">训练设置</div>
         <div class="setrows">
@@ -1382,7 +1382,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
           <button class="srow" id="openRemind" data-ic="assignment"><span class="ico"></span><span class="lbl">训练提醒</span><span class="val" id="remindVal">开</span></button>
           <button class="srow" id="clearLogs" data-ic="delete"><span class="ico"></span><span class="lbl">清除训练记录</span><span class="val plain">全部删除</span></button>
           <button class="srow" id="openBackup" data-ic="cloud_done"><span class="ico"></span><span class="lbl">数据备份</span><span class="val" id="backupVal">iCloud</span></button>
-          <button class="srow" id="openRel" data-ic="checklist"><span class="ico"></span><span class="lbl">更新记录</span><span class="val">v6.14</span></button>
+          <button class="srow" id="openRel" data-ic="checklist"><span class="ico"></span><span class="lbl">更新记录</span><span class="val">v6.15</span></button>
         </div>
       </div>
     </div>
@@ -3157,7 +3157,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   }
 
   /* ---------- 启动版本比对（同热量账本） ---------- */
-  var APP_VERSION = 'v6.14';
+  var APP_VERSION = 'v6.15';
   fetch('./version.txt?t=' + Date.now(), { cache: 'no-store' })
     .then(function(r){ return r.ok ? r.text() : ''; })
     .then(function(v){
@@ -3179,6 +3179,9 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
   /* ---------- 更新记录 ---------- */
   var RELEASES = [
+    { v:'v6.15', d:'11-08', items:[
+      '记录页「动作重量」只列真正练过的动作，按最近一次倒序；计划里有但没练过的不再占位（没记录时显示「还没有动作记录」）'
+    ]},
     { v:'v6.14', d:'11-08', items:[
       '底部「完成本组」实时跟着变：全部做完变灰「这个动作已练完」，之后再加一组、或撤掉一组，立刻变回红色「完成本组」',
       '撤销一组后，弹层里的「已完成 / 计划」也立刻更新（之前会停在旧数字）'
@@ -3937,17 +3940,12 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     }
     var prCard = $('#prCard');
     if (prCard){
-      var names = [], seen = {};
-      daysOf(splitDays).forEach(function(d){
-        if (d[1] === 'rest') return;
-        (EX[d[1]] || []).forEach(function(e){ if (!seen[e.n]){ seen[e.n] = 1; names.push(e.n); } });
-      });
-      allLogs().forEach(function(l){ if (!seen[l.n]){ seen[l.n] = 1; names.push(l.n); } });
+      var names = loggedNames();        /* 只列真正练过的，计划里有但没练过的不占地方 */
       names.sort(function(a, b){
         var A = lastWeightOf(a), B = lastWeightOf(b);
         return String(B ? B.d : '').localeCompare(String(A ? A.d : ''));
       });
-      prCard.innerHTML = names.map(function(n){
+      prCard.innerHTML = names.length ? names.map(function(n){
         var lw = lastWeightOf(n), pr = prOf(n);
         var right = pr
           ? '<i class="rec">纪录</i><b>' + (pr.kg ? uVal(pr.kg) + '<em>' + uName() + '</em>' : pr.sets + '<em>组</em>') + '</b>'
@@ -3955,7 +3953,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
         return '<div class="pr"' + (lw ? ' data-n="' + n + '"' : '') + '>' +
           '<div class="nm">' + n + '<small>' + (lw ? shortDate(lw.d) + ' · 最近 ' + (lw.kg ? uTxt(lw.kg) : '自重') : '没记录') + '</small></div>' +
           '<div class="val">' + right + '</div></div>';
-      }).join('');
+      }).join('') : '<p class="emptyline">还没有动作记录</p>';
     }
   }
 
