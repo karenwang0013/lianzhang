@@ -1218,7 +1218,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   margin-right:-20px !important;
 }
 /* 各个 sheet 自己的 max-height / padding 在整页模式下放开 */
-#iconSheet.page{padding-bottom:0 !important}   /* 底部按钮区自己贴到屏幕底 */
+#iconSheet.page{padding-bottom:0 !important;max-height:none !important;height:100% !important}   /* 底部按钮区自己贴到屏幕底 */
 #setSheet.page,#backupSheet.page,#relSheet.page,#remindSheet.page,#daysSheet.page,#optSheet.page{
   max-height:none;height:100%;
   padding-top:calc(var(--safe-t) + 14px);
