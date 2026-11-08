@@ -668,7 +668,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 /* ---------- 弹层：玻璃 + 46 圆角（实测 #nutSheet） ---------- */
 .sheet{
   position:absolute;left:var(--dock-w);right:var(--dock-w);
-  top:var(--sheet-top,104px);bottom:auto;z-index:41;
+  top:0;bottom:0;margin:auto 0;height:fit-content;z-index:41;
   opacity:0;pointer-events:none;
   transform:translateY(102%);
   border-radius:calc(var(--dock-h) / 2);
@@ -682,7 +682,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   padding:32px 0 0;
   transform:translateY(102%);
   transition:transform .34s cubic-bezier(.22,.8,.3,1),opacity .22s ease;
-  max-height:calc(100% - var(--sheet-top,104px) - 24px);overflow-y:auto;
+  max-height:calc(100% - 120px);overflow-y:auto;
   scrollbar-width:none;-ms-overflow-style:none;
 }
 .sheet::-webkit-scrollbar{width:0;height:0;display:none}
@@ -768,8 +768,8 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 .sheet .cta+.cta{margin-top:9px}
 
 /* 动作详情 */
-.sheet#exSheet{position:fixed;top:auto;bottom:10px;left:10px;right:10px;
-  max-height:calc(100% - 96px);overflow-y:auto;transform:translateY(110%)}
+.sheet#exSheet{position:fixed;top:0;bottom:0;margin:auto 0;height:fit-content;left:10px;right:10px;
+  max-height:calc(100% - 120px);overflow-y:auto;transform:translateY(110%)}
 #exSheet.on{transform:none}
 #exSheet{padding-top:14px}
 .exdetail{display:flex;flex-direction:column;margin-top:0}
@@ -860,6 +860,17 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 .emptycard p{margin:7px 0 0;font-size:11.5px;color:var(--muted2);line-height:1.6}
 .ex.ro{cursor:pointer}
 .logdayscard{padding:2px 4px;margin:14px 0 4px}
+/* 周小结 / 月小结 */
+.sumcard{padding:14px 16px}
+.sumchips{display:flex;gap:8px;margin:0 0 12px}
+.sumline{display:flex;align-items:baseline;justify-content:space-between;gap:10px;padding:8px 0;
+  border-top:1px solid var(--line);font-size:13px}
+.sumline:first-child{border-top:0;padding-top:0}
+.sumline b{font-size:14px;font-weight:650;font-variant-numeric:tabular-nums}
+.sumline i{font-style:normal;flex:none;font-size:11.5px;color:var(--muted2)}
+.sumadv{margin:12px 0 0;padding:11px 12px;border-radius:12px;font-size:12px;line-height:1.65;
+  background-color:rgba(228,0,43,.10);border:1px solid rgba(228,0,43,.22);color:var(--text)}
+.sumnote{margin:9px 0 0;font-size:11px;line-height:1.6;color:var(--muted2)}
 .dayslist{padding:0 20px 18px}
 .dayrow{display:flex;align-items:center;gap:10px;padding:11px 0;cursor:pointer}
 .dayrow + .dayrow{border-top:1px solid var(--line)}
@@ -992,7 +1003,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 /* 图标弹层自己的一套：贴屏幕底、左右留 20px（原来内容贴圆角边，字被切）、底部留出安全区 */
 /* 真机上百分比 max-height 不生效（完成按钮掉到屏幕外、内容不裁剪也不滚），
    改成 top+bottom 撑出确定高度：这样它才真的成为一个能滚的容器 */
-#iconSheet{top:96px;bottom:10px;max-height:none;height:auto;padding:32px 20px 24px;
+#iconSheet{padding:32px 20px 24px;max-height:calc(100% - 120px);
   display:flex;flex-direction:column;overflow:hidden}
 #iconSheet .hint{margin-bottom:0}
 #iconSheet .ibody{flex:1 1 auto;min-height:0;overflow-y:auto;padding-top:18px;
@@ -1009,7 +1020,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   clip-path:inset(calc(var(--pinpad,12px) / 2) 0 calc(var(--pinbottom,0px) / 2) 0)}
 .sheet.pinhead > .pinbody::-webkit-scrollbar{display:none}
 .sheet.pinhead > .pinfoot{flex:0 0 auto}
-#backupSheet{top:auto;bottom:10px;max-height:calc(100% - 120px);padding:32px 20px 24px}
+#backupSheet{padding:32px 20px 24px}
 #backupSheet .hint{padding:0}
 #backupSheet .cta{position:static;width:100%;margin-top:12px;padding:15px}
 #backupAt{margin:14px 0 0;padding:10px 12px;border-top:0;border-radius:12px;
@@ -1067,7 +1078,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
     <div class="statusbg" aria-hidden="true"></div>
     <div class="topbar">
-      <div class="brand">训练<span>账本</span><i class="btag">v6.23</i></div>
+      <div class="brand">训练<span>账本</span><i class="btag">v6.24</i></div>
       <div class="topactions">
         <button class="topbtn topicon" id="reloadTop" aria-label="强制更新" title="强制更新">
           <svg viewBox="0 -960 960 960" aria-hidden="true"><path d="M480-160q-134 0-227-93t-93-227q0-134 93-227t227-93q69 0 132 28.5T720-690v-70q0-17 11.5-28.5T760-800q17 0 28.5 11.5T800-760v200q0 17-11.5 28.5T760-520H560q-17 0-28.5-11.5T520-560q0-17 11.5-28.5T560-600h128q-32-56-87.5-88T480-720q-100 0-170 70t-70 170q0 100 70 170t170 70q68 0 124.5-34.5T692-367q8-14 22.5-19.5t29.5-.5q16 5 23 21t-1 30q-41 80-117 128t-169 48Z"/></svg>
@@ -1213,6 +1224,16 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
           <div class="stat"><b id="logStreak">0</b><span>连续天数</span></div>
           <div class="stat"><b id="logMonthVol">0<em>kg</em></b><span>本月容量</span></div>
           <div class="stat"><b id="logPR">0</b><span>PR 纪录</span></div>
+        </div>
+
+        <div class="listhead"><h2 id="sumTitle">周小结</h2><span id="sumRange">本周</span></div>
+        <div class="card sumcard">
+          <div class="sumchips">
+            <button class="chip on" data-sum="wk">本周</button>
+            <button class="chip" data-sum="mo">本月</button>
+          </div>
+          <div id="sumBody"></div>
+          <p class="sumnote">饮食与体重以热量账本为准（当前体重 64.9 kg）；这里按训练记录给建议。</p>
         </div>
 
         <div class="card logdayscard">
@@ -1366,7 +1387,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     <!-- 设置 -->
     <div class="sheet" id="setSheet">
       <div class="grab"></div>
-      <div class="sh-hd"><h2>设置</h2><span class="vtag">v6.23</span></div>
+      <div class="sh-hd"><h2>设置</h2><span class="vtag">v6.24</span></div>
       <div class="setbody">
         <div class="setlabel">训练设置</div>
         <div class="setrows">
@@ -1384,7 +1405,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
           <button class="srow" id="openRemind" data-ic="assignment"><span class="ico"></span><span class="lbl">训练提醒</span><span class="val" id="remindVal">开</span></button>
           <button class="srow" id="clearLogs" data-ic="delete"><span class="ico"></span><span class="lbl">清除训练记录</span><span class="val plain">全部删除</span></button>
           <button class="srow" id="openBackup" data-ic="cloud_done"><span class="ico"></span><span class="lbl">数据备份</span><span class="val" id="backupVal">iCloud</span></button>
-          <button class="srow" id="openRel" data-ic="checklist"><span class="ico"></span><span class="lbl">更新记录</span><span class="val">v6.23</span></button>
+          <button class="srow" id="openRel" data-ic="checklist"><span class="ico"></span><span class="lbl">更新记录</span><span class="val">v6.24</span></button>
         </div>
       </div>
     </div>
@@ -2785,6 +2806,14 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     renderDay();
   });
 
+  $$('.sumchips .chip').forEach(function(b){
+    b.addEventListener('click', function(){
+      if (b.dataset.sum === sumMode) return;
+      sumMode = b.dataset.sum;
+      $$('.sumchips .chip').forEach(function(x){ x.classList.toggle('on', x.dataset.sum === sumMode); });
+      paintSum();
+    });
+  });
   $('#openDays').addEventListener('click', function(){ renderDays(); openSheet('#daysSheet'); });
   $('#openRemind').addEventListener('click', function(){ paintRemindRow(); openSheet('#remindSheet'); });
   $('#remindDone').addEventListener('click', closeSheets);
@@ -3187,7 +3216,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   }
 
   /* ---------- 启动版本比对（同热量账本） ---------- */
-  var APP_VERSION = 'v6.23';
+  var APP_VERSION = 'v6.24';
   fetch('./version.txt?t=' + Date.now(), { cache: 'no-store' })
     .then(function(r){ return r.ok ? r.text() : ''; })
     .then(function(v){
@@ -3209,6 +3238,10 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
   /* ---------- 更新记录 ---------- */
   var RELEASES = [
+    { v:'v6.24', d:'11-08', items:[
+      '所有卡牌改成屏幕垂直居中（设置、图标、数据备份、更新记录、训练提醒、练过的日子、选项、动作卡、加动作、动作重量），内容超高才占满并内部滚动',
+      '记录页新增「周小结 / 月小结」：本周或本月练了几天、几组、多少容量，跟计划比多少，再给一句能执行的建议；饮食和体重以热量账本为准'
+    ]},
     { v:'v6.23', d:'11-08', items:[
       '卡牌里的返回箭头放大到和热量账本一样（24×24 的图标、2.2 描边、圆头圆角），标题字距也对齐成 0.3'
     ]},
@@ -3957,6 +3990,65 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     if (!kg) return { kg: 0, sets: maxSets, d: maxSetDay };
     return { kg: kg, sets: maxSets, d: d };
   }
+  /* ---------- 周小结 / 月小结：按训练记录算，给一句能执行的建议 ---------- */
+  var sumMode = 'wk';
+  function sumStats(mode){
+    var today = todayISO();
+    var from = mode === 'wk' ? mondayISO(today) : today.slice(0, 8) + '01';
+    var logs = allLogs().filter(function(l){ return l.d >= from && l.d <= today; });
+    var daySet = {}, vol = 0;
+    logs.forEach(function(l){ daySet[l.d] = 1; vol += (l.kg || 0) * (l.reps || 0); });
+    var planSets = 0, planDays = 0;
+    daysOf(splitDays).forEach(function(d){
+      if (d[1] !== 'rest'){ planSets += totalSets(d[1]); planDays++; }
+    });
+    var weeks = mode === 'wk' ? 1 : Math.max(1, ((new Date(today + 'T00:00:00') - new Date(from + 'T00:00:00')) / 604800000) + 0.2);
+    var out = {
+      mode: mode, days: Object.keys(daySet).length, sets: logs.length, vol: vol,
+      planSets: Math.round(planSets * (mode === 'wk' ? 1 : weeks)),
+      planDays: Math.round(planDays * (mode === 'wk' ? 1 : weeks)),
+      weeks: weeks
+    };
+    if (mode === 'mo'){
+      var pm = from; var d0 = new Date(pm + 'T00:00:00'); d0.setMonth(d0.getMonth() - 1);
+      var pFrom = isoOf(d0), pTo = isoMinus(from, 1), pv = 0;
+      allLogs().forEach(function(l){ if (l.d >= pFrom && l.d <= pTo) pv += (l.kg || 0) * (l.reps || 0); });
+      out.prevVol = Math.round(pv);
+    }
+    return out;
+  }
+  function sumAdvice(st){
+    if (!st.sets) return '这段还没有记录：先按计划练一次，有数据才谈得上调整。';
+    var r = st.planSets ? st.sets / st.planSets : 0, t = '';
+    if (st.days < st.planDays) t += '少练了 ' + Math.max(1, st.planDays - st.days) + ' 天；';
+    if (r < 0.4) t += '容量只到计划的 ' + Math.round(r * 100) + '%，先把次数补齐，别急着加重量。';
+    else if (r < 0.8) t += '容量 ' + Math.round(r * 100) + '%，差一点，优先补组数和次数。';
+    else if (r <= 1.15) t += '容量和计划齐平，可以按渐进超负荷加 2.5 kg。';
+    else t += '容量超计划 ' + Math.round(r * 100) + '%，注意恢复，别把下周练崩。';
+    return t;
+  }
+  function paintSum(){
+    var st = sumStats(sumMode);
+    var ttl = $('#sumTitle'), rg = $('#sumRange'), box = $('#sumBody');
+    if (!box) return;
+    if (ttl) ttl.textContent = sumMode === 'wk' ? '周小结' : '月小结';
+    if (rg) rg.textContent = sumMode === 'wk' ? '本周' : '本月';
+    var rows = '';
+    rows += '<div class="sumline"><b>' + st.days + ' 天</b><i>训练 · 计划 ' + st.planDays + ' 天</i></div>';
+    rows += '<div class="sumline"><b>' + st.sets + ' 组</b><i>组数 · 计划 ' + st.planSets + ' 组</i></div>';
+    rows += '<div class="sumline"><b>' + uVol(st.vol).toLocaleString('en-US') + ' ' + uName() + '</b><i>训练容量</i></div>';
+    if (sumMode === 'mo'){
+      var avg = (st.days / st.weeks);
+      var line = '平均每周 ' + avg.toFixed(1) + ' 次';
+      if (st.prevVol) {
+        var d = Math.round((st.vol - st.prevVol) / st.prevVol * 100);
+        line += ' · 容量比上月 ' + (d >= 0 ? '+' : '') + d + '%';
+      }
+      rows += '<div class="sumline"><b>' + line + '</b><i>节奏</i></div>';
+    }
+    box.innerHTML = rows + '<div class="sumadv">' + sumAdvice(st) + '</div>';
+  }
+
   function renderDays(){
     var box = $('#daysList'); if (!box) return;
     var by = {};
@@ -3983,6 +4075,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   function paintLog(){
     var days = trainedDays();
     renderDays();
+    paintSum();
     var lt = $('#logTotal'); if (lt) lt.textContent = '累计 ' + days.length + ' 次训练';
     var ls2 = $('#logStreak'); if (ls2) ls2.textContent = streakDays();
     var mv = monthVolume(), mvEl = $('#logMonthVol');
