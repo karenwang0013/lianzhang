@@ -1066,7 +1066,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
     <div class="statusbg" aria-hidden="true"></div>
     <div class="topbar">
-      <div class="brand">训练<span>账本</span><i class="btag">v6.18</i></div>
+      <div class="brand">训练<span>账本</span><i class="btag">v6.19</i></div>
       <div class="topactions">
         <button class="topbtn topicon" id="reloadTop" aria-label="强制更新" title="强制更新">
           <svg viewBox="0 -960 960 960" aria-hidden="true"><path d="M480-160q-134 0-227-93t-93-227q0-134 93-227t227-93q69 0 132 28.5T720-690v-70q0-17 11.5-28.5T760-800q17 0 28.5 11.5T800-760v200q0 17-11.5 28.5T760-520H560q-17 0-28.5-11.5T520-560q0-17 11.5-28.5T560-600h128q-32-56-87.5-88T480-720q-100 0-170 70t-70 170q0 100 70 170t170 70q68 0 124.5-34.5T692-367q8-14 22.5-19.5t29.5-.5q16 5 23 21t-1 30q-41 80-117 128t-169 48Z"/></svg>
@@ -1364,7 +1364,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     <!-- 设置 -->
     <div class="sheet" id="setSheet">
       <div class="grab"></div>
-      <div class="sh-hd"><h2>设置</h2><span class="vtag">v6.18</span></div>
+      <div class="sh-hd"><h2>设置</h2><span class="vtag">v6.19</span></div>
       <div class="setbody">
         <div class="setlabel">训练设置</div>
         <div class="setrows">
@@ -1382,7 +1382,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
           <button class="srow" id="openRemind" data-ic="assignment"><span class="ico"></span><span class="lbl">训练提醒</span><span class="val" id="remindVal">开</span></button>
           <button class="srow" id="clearLogs" data-ic="delete"><span class="ico"></span><span class="lbl">清除训练记录</span><span class="val plain">全部删除</span></button>
           <button class="srow" id="openBackup" data-ic="cloud_done"><span class="ico"></span><span class="lbl">数据备份</span><span class="val" id="backupVal">iCloud</span></button>
-          <button class="srow" id="openRel" data-ic="checklist"><span class="ico"></span><span class="lbl">更新记录</span><span class="val">v6.18</span></button>
+          <button class="srow" id="openRel" data-ic="checklist"><span class="ico"></span><span class="lbl">更新记录</span><span class="val">v6.19</span></button>
         </div>
       </div>
     </div>
@@ -1504,7 +1504,10 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   ];
   /* 每个位置：先放「对得上这一栏意思」的，再把整库剩下的接在后面 —— 既能全选，又不会四栏长得一模一样 */
   /* 有些图标靠旋转得到另一种形态（Material 里只有斜的） */
-  var ICON_T = { fitness_flat:'rotate(-45 480 -480)', exercise_flat:'rotate(45 480 -480)' };
+  var ICON_T = {
+    fitness_flat:'translate(480 -480) rotate(-45) scale(.75) translate(-480 480)',
+    exercise_flat:'translate(480 -480) rotate(45) scale(.75) translate(-480 480)'
+  };
   function iconPath(name, fallback){
     var t = ICON_T[name];
     return '<path d="' + (ICONS[name] || fallback || '') + '"' + (t ? ' transform="' + t + '"' : '') + '/>';
@@ -3172,7 +3175,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   }
 
   /* ---------- 启动版本比对（同热量账本） ---------- */
-  var APP_VERSION = 'v6.18';
+  var APP_VERSION = 'v6.19';
   fetch('./version.txt?t=' + Date.now(), { cache: 'no-store' })
     .then(function(r){ return r.ok ? r.text() : ''; })
     .then(function(v){
@@ -3194,6 +3197,10 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
   /* ---------- 更新记录 ---------- */
   var RELEASES = [
+    { v:'v6.19', d:'11-08', items:[
+      '所有删除 / 清除 / 移除都要先确认：移除动作、取消加练（已记的组会被清掉时）、删除某天、清除全部记录、用备份文件恢复，都会先弹一句问你要不要',
+      '修「平放的哑铃忽细忽粗」：旋转后的图标超出了画布，两端被裁掉只剩一根细杆；现在按比例缩到画布内，粗细和斜着的那个一致'
+    ]},
     { v:'v6.18', d:'11-08', items:[
       '「今日」图标多了两个平放版本：杠铃·平放、哑铃·平放（同一张谷歌实心素材旋转 45°，不是我手画的）',
       '全部图标都是 Material Symbols 实心（fill）版，没有空心/线条版；顺带把「沙袋」改回它本来的样子「拳套」、「壶铃」改成「负重」'
@@ -3744,6 +3751,10 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   $('#backupFile').addEventListener('change', function(e){
     var f = e.target.files && e.target.files[0];
     if (!f) return;
+    if (!window.confirm('用这个备份覆盖现在的全部记录？不能撤回。')){
+      e.target.value = '';
+      return;
+    }
     f.text().then(function(txt){
       try{
         importBackup(txt);
@@ -4078,12 +4089,13 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     if (row && curEx) openHist(curEx.n);
   });
   $('#cancelAdhoc').addEventListener('click', function(){
-    /* 取消加练 = 这场不做了：把今天这场加练已经记的组一起清掉，不留半截记录 */
+    /* 取消加练 = 这场不做了：把今天这场加练已经记的组一起清掉，不留半截记录（先确认） */
     var iso = todayISO(), k = adhocKey;
-    if (k && store.logs && store.logs.length){
-      var n0 = store.logs.length;
-      store.logs = store.logs.filter(function(l){ return !(l.d === iso && l.k === k); });
-      if (store.logs.length !== n0) saveStore();
+    var hit = k ? allLogs().filter(function(l){ return l.d === iso && l.k === k; }).length : 0;
+    if (hit && !window.confirm('取消加练会把今天这场已记的 ' + hit + ' 组一起清掉，确定？')) return;
+    if (hit){
+      store.logs = allLogs().filter(function(l){ return !(l.d === iso && l.k === k); });
+      saveStore();
     }
     adhoc = false; adhocKey = '';
     renderDay();
@@ -4132,6 +4144,8 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     if (!d) return;
     ev.stopPropagation(); ev.preventDefault();
     var iso = todayISO(), list = (store.extra && store.extra[iso]) || [];
+    var item = list[+d.dataset.del];
+    if (!window.confirm('把「' + (item ? item.n : '这个动作') + '」从今天移除？')) return;
     list.splice(+d.dataset.del, 1); saveStore();
     if (todayKey) renderToday(todayKey); else renderDay();
     paintAll();
