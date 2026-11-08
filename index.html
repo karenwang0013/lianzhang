@@ -704,12 +704,15 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 .grab{position:absolute;top:4px;left:50%;transform:translateX(-50%);width:65px;height:4px;border-radius:2px;background:rgba(255,255,255,.16);margin:0;z-index:3;cursor:pointer}
 .sh-hd{display:flex;align-items:baseline;justify-content:space-between;margin:0 0 4px;padding:0 20px}
 /* 子页标题行：左边返回、右边标题（同热量账本 .mehead） */
-.sh-hd.sh-sub{align-items:center;justify-content:flex-start;gap:8px;margin:0 0 6px;padding:0 18px 0 8px}
-.sh-hd.sh-sub h2{font-size:23px;margin-left:auto;letter-spacing:.2px}
+.sh-hd.sh-sub{align-items:center;justify-content:flex-start;gap:6px;margin:0 -13px 6px;padding:0 15px 0 7px}
+.sh-hd.sh-sub h2{font-size:24px;margin-left:auto;letter-spacing:.2px}
 .sh-hd.sh-sub .vtag{flex:none}
-.backbtn{width:40px;height:40px;flex:none;display:grid;place-items:center;border:0;background:none;
-  color:var(--text);cursor:pointer;padding:0;border-radius:10px}
-.backbtn svg{width:21px;height:21px;display:block}
+/* 这几张卡左右没有 20 内边距，头部自己补，保证返回键 25、标题右 357（同热量账本） */
+#relSheet .sh-hd.sh-sub,#daysSheet .sh-hd.sh-sub,#optSheet .sh-hd.sh-sub{
+  margin:0 0 6px;padding:0 23px 0 15px}
+.backbtn{width:30px;height:30px;flex:none;display:grid;place-items:center;border:0;background:none;
+  color:var(--text);cursor:pointer;padding:0;border-radius:9px}
+.backbtn svg{width:20px;height:20px;display:block}
 .backbtn:active{opacity:.6}
 .sheet h2{margin:0;font-size:21px;font-weight:700;letter-spacing:-.025em}
 .vtag{font-size:11px;color:var(--text);font-weight:600;letter-spacing:.02em;
@@ -1006,7 +1009,6 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 .sheet.pinhead > .pinbody::-webkit-scrollbar{display:none}
 .sheet.pinhead > .pinfoot{flex:0 0 auto}
 #backupSheet{top:auto;bottom:10px;max-height:calc(100% - 120px);padding:32px 20px 24px}
-#backupSheet .sh-hd{padding:0}
 #backupSheet .hint{padding:0}
 #backupSheet .cta{position:static;width:100%;margin-top:12px;padding:15px}
 #backupAt{margin:14px 0 0;padding:10px 12px;border-top:0;border-radius:12px;
@@ -1064,7 +1066,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
     <div class="statusbg" aria-hidden="true"></div>
     <div class="topbar">
-      <div class="brand">训练<span>账本</span><i class="btag">v6.20</i></div>
+      <div class="brand">训练<span>账本</span><i class="btag">v6.21</i></div>
       <div class="topactions">
         <button class="topbtn topicon" id="reloadTop" aria-label="强制更新" title="强制更新">
           <svg viewBox="0 -960 960 960" aria-hidden="true"><path d="M480-160q-134 0-227-93t-93-227q0-134 93-227t227-93q69 0 132 28.5T720-690v-70q0-17 11.5-28.5T760-800q17 0 28.5 11.5T800-760v200q0 17-11.5 28.5T760-520H560q-17 0-28.5-11.5T520-560q0-17 11.5-28.5T560-600h128q-32-56-87.5-88T480-720q-100 0-170 70t-70 170q0 100 70 170t170 70q68 0 124.5-34.5T692-367q8-14 22.5-19.5t29.5-.5q16 5 23 21t-1 30q-41 80-117 128t-169 48Z"/></svg>
@@ -1359,7 +1361,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     <!-- 设置 -->
     <div class="sheet" id="setSheet">
       <div class="grab"></div>
-      <div class="sh-hd"><h2>设置</h2><span class="vtag">v6.20</span></div>
+      <div class="sh-hd"><h2>设置</h2><span class="vtag">v6.21</span></div>
       <div class="setbody">
         <div class="setlabel">训练设置</div>
         <div class="setrows">
@@ -1378,7 +1380,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
           <button class="srow" id="openDays" data-ic="calendar_month"><span class="ico"></span><span class="lbl">练过的日子</span><span class="val" id="daysVal">0 天</span></button>
           <button class="srow" id="clearLogs" data-ic="delete"><span class="ico"></span><span class="lbl">清除训练记录</span><span class="val plain">全部删除</span></button>
           <button class="srow" id="openBackup" data-ic="cloud_done"><span class="ico"></span><span class="lbl">数据备份</span><span class="val" id="backupVal">iCloud</span></button>
-          <button class="srow" id="openRel" data-ic="checklist"><span class="ico"></span><span class="lbl">更新记录</span><span class="val">v6.20</span></button>
+          <button class="srow" id="openRel" data-ic="checklist"><span class="ico"></span><span class="lbl">更新记录</span><span class="val">v6.21</span></button>
         </div>
       </div>
     </div>
@@ -3181,7 +3183,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   }
 
   /* ---------- 启动版本比对（同热量账本） ---------- */
-  var APP_VERSION = 'v6.20';
+  var APP_VERSION = 'v6.21';
   fetch('./version.txt?t=' + Date.now(), { cache: 'no-store' })
     .then(function(r){ return r.ok ? r.text() : ''; })
     .then(function(v){
@@ -3203,6 +3205,10 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
   /* ---------- 更新记录 ---------- */
   var RELEASES = [
+    { v:'v6.21', d:'11-08', items:[
+      '子页头条位置按热量账本实测对齐：返回箭头离左 25（30×30）、标题 24px 靠右到 357，箭头和标题中线齐平',
+      '图标 / 数据备份 / 更新记录 / 训练提醒 / 练过的日子 / 选项 六张卡现在位置完全一致（之前每张偏得不一样）'
+    ]},
     { v:'v6.20', d:'11-08', items:[
       '「练过的日子」搬到设置里：设置 → 应用与数据 →「练过的日子（N 天）」，点开是一张卡，点一行跳到那天、右边删除只删那天（删前会问）',
       '记录页不再堆这一长条，页面短了很多'
