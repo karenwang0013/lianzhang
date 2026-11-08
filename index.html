@@ -260,10 +260,14 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 /* ---------- 进度环（照热量账本：232px / r84 / stroke 13） ---------- */
 .ringwrap{position:relative;width:232px;height:232px;margin:0 auto 4px}
 .ringwrap svg{transform:rotate(-90deg);display:block;width:232px;height:232px}
-/* 超过计划天数：整环发光 + 数字和文案变亮色 */
-.ringwrap.over .ring-fg{filter:drop-shadow(0 0 9px rgba(228,0,43,.75))}
+/* 达标（刚好练满）：数字/文案变亮 + 一圈柔光 */
+.ringwrap.done .ring-fg{filter:drop-shadow(0 0 7px rgba(228,0,43,.55))}
+.ringwrap.done #weekDays{color:var(--lime)}
+.ringwrap.done .rgap{color:var(--lime);font-weight:650}
+/* 超额：更强的光 + 文案加粗 */
+.ringwrap.over .ring-fg{filter:drop-shadow(0 0 12px rgba(228,0,43,.9))}
 .ringwrap.over #weekDays{color:var(--lime)}
-.ringwrap.over .rgap{color:var(--lime)}
+.ringwrap.over .rgap{color:var(--lime);font-weight:700}
 .ring-bg{fill:none;stroke:#2b2523;stroke-width:13}
 .ring-rim{
   fill:none;stroke:url(#rimGrad);stroke-width:14.6;stroke-linecap:round;
@@ -1092,7 +1096,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
     <div class="statusbg" aria-hidden="true"></div>
     <div class="topbar">
-      <div class="brand">训练<span>账本</span><i class="btag">v6.34</i></div>
+      <div class="brand">训练<span>账本</span><i class="btag">v6.35</i></div>
       <div class="topactions">
         <button class="topbtn topicon" id="reloadTop" aria-label="强制更新" title="强制更新">
           <svg viewBox="0 -960 960 960" aria-hidden="true"><path d="M480-160q-134 0-227-93t-93-227q0-134 93-227t227-93q69 0 132 28.5T720-690v-70q0-17 11.5-28.5T760-800q17 0 28.5 11.5T800-760v200q0 17-11.5 28.5T760-520H560q-17 0-28.5-11.5T520-560q0-17 11.5-28.5T560-600h128q-32-56-87.5-88T480-720q-100 0-170 70t-70 170q0 100 70 170t170 70q68 0 124.5-34.5T692-367q8-14 22.5-19.5t29.5-.5q16 5 23 21t-1 30q-41 80-117 128t-169 48Z"/></svg>
@@ -1376,7 +1380,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     <!-- 设置 -->
     <div class="sheet" id="setSheet">
       <div class="grab"></div>
-      <div class="sh-hd"><h2>设置</h2><span class="vtag">v6.34</span></div>
+      <div class="sh-hd"><h2>设置</h2><span class="vtag">v6.35</span></div>
       <div class="setbody">
         <div class="setlabel">训练设置</div>
         <div class="setrows">
@@ -1394,7 +1398,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
           <button class="srow" id="openRemind" data-ic="assignment"><span class="ico"></span><span class="lbl">训练提醒</span><span class="val" id="remindVal">开</span></button>
           <button class="srow" id="clearLogs" data-ic="delete"><span class="ico"></span><span class="lbl">清除训练记录</span><span class="val plain">全部删除</span></button>
           <button class="srow" id="openBackup" data-ic="cloud_done"><span class="ico"></span><span class="lbl">数据备份</span><span class="val" id="backupVal">iCloud</span></button>
-          <button class="srow" id="openRel" data-ic="checklist"><span class="ico"></span><span class="lbl">更新记录</span><span class="val">v6.34</span></button>
+          <button class="srow" id="openRel" data-ic="checklist"><span class="ico"></span><span class="lbl">更新记录</span><span class="val">v6.35</span></button>
         </div>
       </div>
     </div>
@@ -3222,7 +3226,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   }
 
   /* ---------- 启动版本比对（同热量账本） ---------- */
-  var APP_VERSION = 'v6.34';
+  var APP_VERSION = 'v6.35';
   fetch('./version.txt?t=' + Date.now(), { cache: 'no-store' })
     .then(function(r){ return r.ok ? r.text() : ''; })
     .then(function(v){
@@ -3244,6 +3248,9 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
   /* ---------- 更新记录 ---------- */
   var RELEASES = [
+    { v:'v6.35', d:'11-08', items:[
+      '圆圈三种状态分开做：没练满（白数字 + 还差 N 天）/ 刚好练满（数字变红、环带一圈柔光、本周已完成 ✓）/ 超额（4/3、已超 N 天、整环强发光）'
+    ]},
     { v:'v6.34', d:'11-08', items:[
       '删掉「加动作」卡右上角「练完就记」这句废话',
       '加动作新增「有氧」分组：跑步机 / 椭圆机 / 动感单车 / 划船机 / 跳绳 / 爬楼机 / 快走（坡度）/ 游泳，按分钟记（1 组 = 一次有氧），休息日也能加',
@@ -3979,8 +3986,10 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     var wd = $('#weekDays'); if (wd) wd.textContent = dn;
     var wp = $('#weekPlan'); if (wp) wp.textContent = n;
     var wg = $('#weekGap');
-    if (wg) wg.textContent = dn > n ? ('已超 ' + (dn - n) + ' 天') : (dn === n ? '本周已完成' : ('还差 ' + (n - dn) + ' 天'));
-    var rw = ringFg.closest('.ringwrap'); if (rw) rw.classList.toggle('over', dn > n);
+    if (wg) wg.textContent = dn > n ? ('已超 ' + (dn - n) + ' 天')
+      : (dn === n ? '本周已完成 ✓' : ('还差 ' + (n - dn) + ' 天'));
+    var rw = ringFg.closest('.ringwrap');
+    if (rw){ rw.classList.toggle('done', dn === n); rw.classList.toggle('over', dn > n); }
     var frac = n ? Math.min(1, dn / n) : 0;
     ringFg.style.strokeDashoffset = C * (1 - frac);
     ringRim.style.strokeDashoffset = C * (1 - frac);
