@@ -1066,7 +1066,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
     <div class="statusbg" aria-hidden="true"></div>
     <div class="topbar">
-      <div class="brand">训练<span>账本</span><i class="btag">v6.11</i></div>
+      <div class="brand">训练<span>账本</span><i class="btag">v6.12</i></div>
       <div class="topactions">
         <button class="topbtn topicon" id="reloadTop" aria-label="强制更新" title="强制更新">
           <svg viewBox="0 -960 960 960" aria-hidden="true"><path d="M480-160q-134 0-227-93t-93-227q0-134 93-227t227-93q69 0 132 28.5T720-690v-70q0-17 11.5-28.5T760-800q17 0 28.5 11.5T800-760v200q0 17-11.5 28.5T760-520H560q-17 0-28.5-11.5T520-560q0-17 11.5-28.5T560-600h128q-32-56-87.5-88T480-720q-100 0-170 70t-70 170q0 100 70 170t170 70q68 0 124.5-34.5T692-367q8-14 22.5-19.5t29.5-.5q16 5 23 21t-1 30q-41 80-117 128t-169 48Z"/></svg>
@@ -1364,7 +1364,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     <!-- 设置 -->
     <div class="sheet" id="setSheet">
       <div class="grab"></div>
-      <div class="sh-hd"><h2>设置</h2><span class="vtag">v6.11</span></div>
+      <div class="sh-hd"><h2>设置</h2><span class="vtag">v6.12</span></div>
       <div class="setbody">
         <div class="setlabel">训练设置</div>
         <div class="setrows">
@@ -1382,7 +1382,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
           <button class="srow" id="openRemind" data-ic="assignment"><span class="ico"></span><span class="lbl">训练提醒</span><span class="val" id="remindVal">开</span></button>
           <button class="srow" id="clearLogs" data-ic="delete"><span class="ico"></span><span class="lbl">清除训练记录</span><span class="val plain">全部删除</span></button>
           <button class="srow" id="openBackup" data-ic="cloud_done"><span class="ico"></span><span class="lbl">数据备份</span><span class="val" id="backupVal">iCloud</span></button>
-          <button class="srow" id="openRel" data-ic="checklist"><span class="ico"></span><span class="lbl">更新记录</span><span class="val">v6.11</span></button>
+          <button class="srow" id="openRel" data-ic="checklist"><span class="ico"></span><span class="lbl">更新记录</span><span class="val">v6.12</span></button>
         </div>
       </div>
     </div>
@@ -1428,7 +1428,6 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
         <div class="exrow2"><span>次数</span><span class="kgstep"><button class="kgbtn" id="repDown" aria-label="减一次">−</button><span class="kgbox"><b id="exRep">6–8 次</b></span><button class="kgbtn" id="repUp" aria-label="加一次">+</button></span></div>
         <div class="exrow2"><span>重量</span><span class="kgstep"><button class="kgbtn" id="kgDown" aria-label="减重量">−</button><span class="kgbox"><input id="exKg" type="number" inputmode="decimal" step="0.5" min="0" max="999" placeholder="自重" aria-label="重量"><button type="button" id="exKgUnit" aria-label="切换重量单位">kg</button></span><button class="kgbtn" id="kgUp" aria-label="加重量">+</button></span></div>
         <p class="exnote" id="exNote">复合动作，留 1–2 次余力</p>
-        <p class="exhint">组数减 1 → 重量 +2.5%、次数 −1；重量变动 ≥5% → 次数 ±1</p>
         <div id="exHist" class="exhist"></div>
       </div>
       <div class="expicklist" id="exPick"></div>
@@ -1791,11 +1790,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     var v = exvOf(curEx);
     var sets = Math.max(1, Math.min(8, v.sets + delta));
     if (sets === v.sets) return;
-    syncing = true;
-    savePlan(sets, v.rep);
-    setKg(kgOf(curEx) * (delta < 0 ? 1.025 : 0.975));
-    savePlan(sets, shiftRep(exvOf(curEx).rep, delta < 0 ? -1 : 1));
-    syncing = false;
+    savePlan(sets, v.rep);          /* 只改组数：重量、次数都不动 */
     afterPlanChange();
   }
   function applyRep(delta){
@@ -1850,18 +1845,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     var v = Math.round((before + delta) * 10) / 10;
     if (v < 0) v = 0;
     setKg(v);
-    coupleRep(before, v);
     afterPlanChange();
-  }
-  /* 重量变了 5% 以上 → 次数跟着 −1 / +1（重量↑次数↓） */
-  function coupleRep(before, after){
-    if (!curEx || syncing) return;
-    if (!before || !after || before === after) return;
-    var r = after / before;
-    if (r >= 1.05 || r <= 0.95){
-      var v = exvOf(curEx);
-      savePlan(v.sets, shiftRep(v.rep, r >= 1.05 ? -1 : 1));
-    }
   }
   /* 直接手输重量：输入即存，卡片和本周容量跟着变 */
   function commitKg(raw){
@@ -1872,7 +1856,6 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     var kg = Math.min(999, Math.round(uToKg(v) * 10) / 10);     /* 输入按当前单位，存回 kg */
     var before = kgOf(curEx);
     store.weights[curEx.n] = kg;
-    coupleRep(before, kg);
     var loadEl = $('.ex[data-ex="' + curExId + '"] .exload');
     if (loadEl) loadEl.textContent = kg ? uTxt(kg) : '自重';
     afterPlanChange();
@@ -3163,7 +3146,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   }
 
   /* ---------- 启动版本比对（同热量账本） ---------- */
-  var APP_VERSION = 'v6.11';
+  var APP_VERSION = 'v6.12';
   fetch('./version.txt?t=' + Date.now(), { cache: 'no-store' })
     .then(function(r){ return r.ok ? r.text() : ''; })
     .then(function(v){
@@ -3185,6 +3168,10 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
   /* ---------- 更新记录 ---------- */
   var RELEASES = [
+    { v:'v6.12', d:'11-08', items:[
+      '组数 / 次数 / 重量 各自独立调：改一个不再自动带动另外两个（之前改「组数」会自动改重量和次数、改「重量」会自动改次数）',
+      '建议值就静静写在下方的建议框里，只有点「用建议」才会套到上面'
+    ]},
     { v:'v6.11', d:'11-08', items:[
       '「练过的日子」改成一张固定高的卡：只露 4 天，其余在卡里滑，练得再多记录页也不会越拉越长；标题右边显示「共 N 天 · 卡里滑」'
     ]},
