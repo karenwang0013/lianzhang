@@ -371,11 +371,14 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 .exload{font-size:12px;font-weight:600;color:var(--muted);font-variant-numeric:tabular-nums;white-space:nowrap}
 .exmeta{margin:5px 0 10px;font-size:11.5px;color:var(--muted2);letter-spacing:.01em}
 .sets{display:flex;align-items:center;gap:7px}
-.undobtn{border:1px solid var(--line);border-radius:8px;background-color:rgba(255,255,255,.05);
-  color:rgba(242,244,242,.66);font-family:inherit;font-size:10.5px;font-weight:600;
-  padding:2px 7px;margin-left:4px;cursor:pointer;line-height:1.4}
-.undobtn:active{background:rgba(255,255,255,.12)}
-.undobtn[hidden]{display:none}
+.finishrow{display:flex;align-items:stretch;gap:8px;margin-top:8px}
+.finishminus{flex:0 0 58px;border-radius:18px;border:1px solid var(--line);
+  background-color:rgba(255,255,255,.05);color:var(--text);font-family:inherit;
+  font-size:22px;font-weight:600;line-height:1;cursor:pointer;
+  transition:transform .16s,background .2s,opacity .2s}
+.finishminus:active{background:rgba(255,255,255,.12);transform:scale(.96)}
+.finishminus:disabled{opacity:.28;pointer-events:none}
+.finishrow .cta{flex:1 1 auto;margin-top:0}
 /* 点击动画：热量账本 .btn/.topbtn 同一套 */
 .dot{
   position:relative;
@@ -987,7 +990,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
     <div class="statusbg" aria-hidden="true"></div>
     <div class="topbar">
-      <div class="brand">训练<span>账本</span><i class="btag">v5.80</i></div>
+      <div class="brand">训练<span>账本</span><i class="btag">v5.81</i></div>
       <div class="topactions">
         <button class="topbtn topicon" id="reloadTop" aria-label="强制更新" title="强制更新">
           <svg viewBox="0 -960 960 960" aria-hidden="true"><path d="M480-160q-134 0-227-93t-93-227q0-134 93-227t227-93q69 0 132 28.5T720-690v-70q0-17 11.5-28.5T760-800q17 0 28.5 11.5T800-760v200q0 17-11.5 28.5T760-520H560q-17 0-28.5-11.5T520-560q0-17 11.5-28.5T560-600h128q-32-56-87.5-88T480-720q-100 0-170 70t-70 170q0 100 70 170t170 70q68 0 124.5-34.5T692-367q8-14 22.5-19.5t29.5-.5q16 5 23 21t-1 30q-41 80-117 128t-169 48Z"/></svg>
@@ -1271,7 +1274,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     <!-- 设置 -->
     <div class="sheet" id="setSheet">
       <div class="grab"></div>
-      <div class="sh-hd"><h2>设置</h2><span class="vtag">v5.80</span></div>
+      <div class="sh-hd"><h2>设置</h2><span class="vtag">v5.81</span></div>
       <div class="setbody">
         <div class="setlabel">训练设置</div>
         <div class="setrows">
@@ -1288,7 +1291,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
           <div class="srow" data-ic="monitor_heart"><span class="ico"></span><span class="lbl">Apple 健康</span><span class="sw"></span></div>
           <div class="srow" data-ic="assignment"><span class="ico"></span><span class="lbl">训练提醒</span><span class="sw"></span></div>
           <button class="srow" id="openBackup" data-ic="cloud_done"><span class="ico"></span><span class="lbl">数据备份</span><span class="val" id="backupVal">iCloud</span></button>
-          <button class="srow" id="openRel" data-ic="checklist"><span class="ico"></span><span class="lbl">更新记录</span><span class="val">v5.80</span></button>
+          <button class="srow" id="openRel" data-ic="checklist"><span class="ico"></span><span class="lbl">更新记录</span><span class="val">v5.81</span></button>
         </div>
       </div>
     </div>
@@ -1309,7 +1312,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
           <div class="exheadrow">
             <button class="exname" id="exPickToggle"><i class="grade" id="exGrade">S</i><b id="exName">平板杠铃卧推</b><i class="chev"></i></button>
           </div>
-          <div class="exsub"><span>今天 <b id="exDone">0 / 4</b> 组</span><i>·</i><span>休息 <b id="exRest">180 秒</b></span><button class="undobtn" id="undoSet" hidden>撤销一组</button></div>
+          <div class="exsub"><span>今天 <b id="exDone">0 / 4</b> 组</span><i>·</i><span>休息 <b id="exRest">180 秒</b></span></div>
         </div>
         <div class="exrow2"><span>组数</span><span class="kgstep"><button class="kgbtn" id="setDown" aria-label="减一组">−</button><span class="kgbox"><b id="exSets">4 组</b></span><button class="kgbtn" id="setUp" aria-label="加一组">+</button></span></div>
         <div class="exrow2"><span>次数</span><span class="kgstep"><button class="kgbtn" id="repDown" aria-label="减一次">−</button><span class="kgbox"><b id="exRep">6–8 次</b></span><button class="kgbtn" id="repUp" aria-label="加一次">+</button></span></div>
@@ -1321,7 +1324,10 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
       <div class="expicklist" id="exPick"></div>
       <button class="cta ghost pickback" id="pickBack">取消</button>
       <div class="exsug" id="exSug"><span class="sugt"></span><button class="sugbtn" id="useSug">用建议</button></div>
-      <button class="cta" id="finishHere">完成本组</button>
+      <div class="finishrow">
+        <button class="finishminus" id="undoSet" aria-label="撤销一组">−</button>
+        <button class="cta" id="finishHere">完成本组</button>
+      </div>
     </div>
 
     <!-- 动作重量记录 -->
@@ -1553,7 +1559,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     renderSets();
     paintAll();
     $('#exDone').textContent = $$('.dot.on', ex).length + ' / ' + total;
-    var ub = $('#undoSet'); if (ub) ub.hidden = $$('.dot.on', ex).length === 0;
+    var ub = $('#undoSet'); if (ub) ub.disabled = $$('.dot.on', ex).length === 0;
     paintHere(ex);
   }
 
@@ -1588,7 +1594,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     var kv = kgOf(arr); $('#exKg').value = kv ? kv : '';
     $('#exRest').textContent = arr.rest + ' 秒';
     $('#exDone').textContent = Math.min(on, all) + ' / ' + all;
-    var ub = $('#undoSet'); if (ub) ub.hidden = !on;
+    var ub = $('#undoSet'); if (ub) ub.disabled = !on;
     $('#exNote').textContent = arr.g === 'S'
       ? '复合动作，留 1–2 次余力'
       : (arr.g === 'A' ? '辅助动作，补目标肌群容量' : '收尾动作，控制节奏别甩');
@@ -1712,7 +1718,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     renderSets();
     paintAll();
     $('#exDone').textContent = $$('.dot.on', ex).length + ' / ' + dots.length;
-    this.hidden = $$('.dot.on', ex).length === 0;
+    this.disabled = $$('.dot.on', ex).length === 0;
     paintHere(ex);
   });
 
@@ -2650,7 +2656,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
    ['#backupSheet', ['.grab', '.sh-hd', '.hint'], []],
    ['#histSheet', ['.grab', '.sh-hd'], ['.cta']],
    ['#libSheet', ['.grab', '.sh-hd', '.hint'], ['.cta']],
-   ['#exSheet', ['.grab'], ['.cta']]].forEach(function(cfg){
+   ['#exSheet', ['.grab'], ['.finishrow']]].forEach(function(cfg){
     var sh = $(cfg[0]); if (!sh) return;
     var heads = cfg[1], foots = cfg[2], body = null;
     var kids = Array.prototype.slice.call(sh.children);
@@ -2714,7 +2720,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   }
 
   /* ---------- 启动版本比对（同热量账本） ---------- */
-  var APP_VERSION = 'v5.80';
+  var APP_VERSION = 'v5.81';
   fetch('./version.txt?t=' + Date.now(), { cache: 'no-store' })
     .then(function(r){ return r.ok ? r.text() : ''; })
     .then(function(v){
@@ -2736,6 +2742,9 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
   /* ---------- 更新记录 ---------- */
   var RELEASES = [
+    { v:'v5.81', d:'11-08', items:[
+      '撤销改成和「完成本组」并排的一颗「−」：完成本组 = +1 组，左边那颗 − = 撤一组；0 组时 − 自动置灰，不再是一条单独的文字链'
+    ]},
     { v:'v5.80', d:'11-08', items:[
       '有前进就有后退：动作卡「今天 X 组」旁边新增「撤销一组」，点一下撤掉最后一组（圆点、今天合计、日志同步回退），撤到 0 组时按钮自己隐藏',
       '今日卡片上的小圆点本来就能点第二下取消（点了会变亮，再点一下变暗），顺手把它的可点范围放大了（视觉没变）'
