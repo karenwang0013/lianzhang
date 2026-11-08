@@ -355,8 +355,6 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   transition:width .45s cubic-bezier(.33,1.02,.3,1)}
 
 /* 分化选择：并进 AI 卡里的一排分段控件 */
-.traindays{display:flex;gap:5px;margin:14px 0 0}
-.tdchip{flex:1;padding:8px 0;border-radius:10px;border:1px solid var(--line);
   background-color:rgba(255,255,255,.035);font-family:inherit;font-size:12px;font-weight:600;
   color:var(--muted2);cursor:pointer;transition:background .2s,color .2s,transform .16s}
 .tdchip.on{background-color:rgba(228,0,43,.16);border-color:rgba(228,0,43,.34);color:var(--lime)}
@@ -833,6 +831,14 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 .emptycard b{display:block;font-size:14px;font-weight:600}
 .emptycard p{margin:7px 0 0;font-size:11.5px;color:var(--muted2);line-height:1.6}
 .ex.ro{cursor:pointer}
+.adhocbar{display:flex;align-items:center;justify-content:space-between;gap:10px;
+  margin:0 2px 10px;padding:8px 12px;border-radius:12px;
+  background-color:rgba(228,0,43,.10);border:1px solid rgba(228,0,43,.28);
+  font-size:12px;color:rgba(242,244,242,.86);letter-spacing:.01em}
+.adhocbar[hidden]{display:none}
+.adhocbar button{border:1px solid rgba(228,0,43,.4);border-radius:9px;background-color:rgba(228,0,43,.14);
+  color:var(--lime);font-family:inherit;font-size:11.5px;font-weight:650;padding:4px 10px;cursor:pointer}
+.adhocbar button:active{transform:scale(.95)}
 
 /* 加动作 */
 .addbtn{display:block;width:100%;margin:12px 0 0;padding:13px;border-radius:16px;
@@ -995,7 +1001,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
     <div class="statusbg" aria-hidden="true"></div>
     <div class="topbar">
-      <div class="brand">训练<span>账本</span><i class="btag">v5.87</i></div>
+      <div class="brand">训练<span>账本</span><i class="btag">v5.88</i></div>
       <div class="topactions">
         <button class="topbtn todaypill" id="goToday2" hidden>回到今天</button>
         <button class="topbtn topicon" id="reloadTop" aria-label="强制更新" title="强制更新">
@@ -1071,6 +1077,10 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
           <h2 id="listTitle">今天的动作</h2>
           <span id="listMeta">17 有效组 · 0 垃圾容量</span>
         </div>
+        <div class="adhocbar" id="adhocBar" hidden>
+          <span id="adhocText">今天加练</span>
+          <button id="cancelAdhoc">取消加练</button>
+        </div>
 
         <div id="exList"></div>
         <button class="addbtn" id="addExBtn">＋ 加动作</button>
@@ -1081,7 +1091,6 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
         <div class="card aicard">
           <div class="aihd"><span class="tag">✦ AI · 3 天前更新</span><span class="planmeta" id="planEyebrow">3 练 / 周 · 共 8 周</span></div>
           <h2 id="splitName">三分化 · 推拉腿</h2>
-          <div class="traindays" id="trainDays"></div>
           <div class="splpick" id="splitPick">
             <button class="sp" data-n="2">2 天</button>
             <button class="sp on" data-n="3">3 天</button>
@@ -1281,7 +1290,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     <!-- 设置 -->
     <div class="sheet" id="setSheet">
       <div class="grab"></div>
-      <div class="sh-hd"><h2>设置</h2><span class="vtag">v5.87</span></div>
+      <div class="sh-hd"><h2>设置</h2><span class="vtag">v5.88</span></div>
       <div class="setbody">
         <div class="setlabel">训练设置</div>
         <div class="setrows">
@@ -1298,7 +1307,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
           <div class="srow" data-ic="monitor_heart"><span class="ico"></span><span class="lbl">Apple 健康</span><span class="sw"></span></div>
           <div class="srow" data-ic="assignment"><span class="ico"></span><span class="lbl">训练提醒</span><span class="sw"></span></div>
           <button class="srow" id="openBackup" data-ic="cloud_done"><span class="ico"></span><span class="lbl">数据备份</span><span class="val" id="backupVal">iCloud</span></button>
-          <button class="srow" id="openRel" data-ic="checklist"><span class="ico"></span><span class="lbl">更新记录</span><span class="val">v5.87</span></button>
+          <button class="srow" id="openRel" data-ic="checklist"><span class="ico"></span><span class="lbl">更新记录</span><span class="val">v5.88</span></button>
         </div>
       </div>
     </div>
@@ -2169,39 +2178,12 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
   var splitDays = 3;
   var WKN = ['周一','周二','周三','周四','周五','周六','周日'];
-  var trainDayIdx = (store && Array.isArray(store.train) && store.train.length)
-    ? store.train.slice() : [0,2,4];      /* 0=周一 … 6=周日，可自己改 */
 
   function splitSeq(n){
     return SPLITS[n].days.filter(function(d){ return d[1] !== 'rest'; }).map(function(d){ return d[1]; });
   }
-  function defaultDays(n){
-    var need = splitSeq(n).length, cand = [0,2,4,1,3,5,6], out = [];
-    for (var i = 0; i < cand.length && out.length < need; i++) out.push(cand[i]);
-    return out.sort(function(a, b){ return a - b; });
-  }
-  function ensureTrainDays(n){
-    var need = splitSeq(n).length;
-    if (!Array.isArray(trainDayIdx) || trainDayIdx.length !== need) trainDayIdx = defaultDays(n);
-  }
-  /* 把「这套分化的动作顺序」铺到选中的星期上 */
-  function daysOf(n){
-    ensureTrainDays(n);
-    var seq = splitSeq(n), out = [], k = 0;
-    for (var i = 0; i < 7; i++){
-      if (trainDayIdx.indexOf(i) >= 0 && k < seq.length) out.push([WKN[i], seq[k++]]);
-      else out.push([WKN[i], 'rest']);
-    }
-    return out;
-  }
-  function paintTrainDays(){
-    var box = $('#trainDays'); if (!box) return;
-    ensureTrainDays(splitDays);
-    box.innerHTML = WKN.map(function(w, i){
-      return '<button class="tdchip' + (trainDayIdx.indexOf(i) >= 0 ? ' on' : '') + '" data-d="' + i + '">' +
-        w.replace('周', '') + '</button>';
-    }).join('');
-  }
+  /* 这一周每天练什么（现在固定按分化自带的安排） */
+  function daysOf(n){ return SPLITS[n].days; }
 
   var viewISO = todayISO();
   var todayKey = '';
@@ -2306,7 +2288,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
         $('#listMeta').textContent = '恢复';
         $('#exList').innerHTML = '<div class="card emptycard"><b>今天休息</b>' +
           '<p>恢复：8,000 步 + 拉伸。想看别的日子，点上面那排星期。</p>' +
-          '<button class="cta inline ghost" id="trainAny">今天照样练一次</button></div>';
+          '<button class="cta inline ghost" id="trainAny">照练</button></div>';
       } else {
         todayKey = key;
         $('#todayName').textContent = TITLE[key][0];
@@ -2317,7 +2299,9 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
       todayKey = '';
       renderPastDay(iso);
     }
+    if (isToday && !key) adhoc = false;
     setSub();
+    paintAdhoc();
     paintHero();
   }
 
@@ -2362,6 +2346,18 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     renderDay();
   }
 
+  /* 休息日临时加练的状态（只在本次打开期间有效，刷新回休息日） */
+  var adhoc = false;
+  function paintAdhoc(){
+    var bar = $('#adhocBar'); if (!bar) return;
+    var on = adhoc && !!todayKey;
+    bar.hidden = !on;
+    if (on){
+      var t = $('#adhocText');
+      if (t) t.textContent = '今天加练 · ' + (TITLE[todayKey] ? TITLE[todayKey][0] : '');
+    }
+  }
+
   /* 休息日也想练：按最近的那个训练日开一次（记录仍记在今天） */
   function trainAnyway(){
     var days = daysOf(splitDays), idx = wdIdx(todayISO()), pick = '';
@@ -2370,10 +2366,12 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
       if (days[i][1] !== 'rest') pick = days[i][1];
     }
     if (!pick) return;
+    adhoc = true;
     todayKey = pick;
     $('#todayName').textContent = TITLE[pick][0];
     $('#todayEn').textContent = TITLE[pick][1];
     renderToday(pick);
+    paintAdhoc();
   }
 
   function renderWeek(n){
@@ -2414,7 +2412,6 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     splitDays = n;
     $$('#splitPick .sp').forEach(function(b){ b.classList.toggle('on', +b.dataset.n === n); });
     $('#splitName').textContent = SPLITS[n].label;
-    paintTrainDays();
     renderWeek(n);
     renderDay();
     paintAll();
@@ -2457,25 +2454,6 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   $('#openRel').addEventListener('click', function(){ renderRel(); openSheet('#relSheet'); });
   $('#reloadTop').addEventListener('click', function(){
     location.replace(location.pathname + '?v=' + Date.now());
-  });
-
-  $('#trainDays').addEventListener('click', function(e){
-    var b = e.target.closest('.tdchip'); if (!b) return;
-    var d = +b.dataset.d, need = splitSeq(splitDays).length;
-    var i = trainDayIdx.indexOf(d);
-    if (i >= 0){
-      if (trainDayIdx.length <= need) return;   /* 已经是最少天数，不许再减 */
-      trainDayIdx.splice(i, 1);
-    } else {
-      trainDayIdx.push(d);
-      while (trainDayIdx.length > need) trainDayIdx.shift();  /* 顶掉最早选的那天 */
-    }
-    trainDayIdx.sort(function(a, b2){ return a - b2; });
-    store.train = trainDayIdx; saveStore();
-    paintTrainDays();
-    renderWeek(splitDays);
-    renderDay();
-    paintAll();
   });
 
   $('#splitPick').addEventListener('click', function(e){
@@ -2814,7 +2792,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   }
 
   /* ---------- 启动版本比对（同热量账本） ---------- */
-  var APP_VERSION = 'v5.87';
+  var APP_VERSION = 'v5.88';
   fetch('./version.txt?t=' + Date.now(), { cache: 'no-store' })
     .then(function(r){ return r.ok ? r.text() : ''; })
     .then(function(v){
@@ -2836,6 +2814,11 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
   /* ---------- 更新记录 ---------- */
   var RELEASES = [
+    { v:'v5.88', d:'11-08', items:[
+      '去掉计划页的「训练日」选择（那套按星期的排法不做了），只保留今日的临时加练',
+      '「今天照样练一次」改名「照练」',
+      '点「照练」以后，列表上方会出现一条「今天加练 · 推」+「取消加练」，点取消就回到休息日，不会留下半场训练'
+    ]},
     { v:'v5.87', d:'11-08', items:[
       '计划页新增「训练日」：一排 一~日 七个格子，点哪天就把哪天子设成训练日（保持和分化需要天数一致，点新的顶掉最早选的），存本地、刷新不丢',
       '今日 / 计划 / 记录 全部按你选的训练日走：比如选 五/六/日，一周就是 周五推、周六拉、周日腿，周一到周四休息（不再是固定周一周三周五）'
@@ -3572,6 +3555,10 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   $('#exHist').addEventListener('click', function(e){
     var row = e.target.closest('.ehrow');
     if (row && curEx) openHist(curEx.n);
+  });
+  $('#cancelAdhoc').addEventListener('click', function(){
+    adhoc = false;
+    renderDay();
   });
   $('#exList').addEventListener('click', function(e){
     if (e.target.closest('#trainAny')){ trainAnyway(); return; }
