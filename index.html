@@ -4036,6 +4036,11 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     d.settings = d.settings || {};
     delete d.settings.gitee_token;
     d.updatedAt = new Date().toISOString();
+    /* 临时诊断：把真实视口写进云端，用来定位「横屏内容挤在中间」 */
+    var vv = window.visualViewport || {};
+    d.diag = { iw:innerWidth, ih:innerHeight, dpr:devicePixelRatio, sw:screen.width, sh:screen.height,
+      vw:vv.width, vh:vv.height, ua:(navigator.userAgent||'').slice(0,80),
+      ts:new Date().toISOString() };
     return { app:'训练账本', v:1, updatedAt:d.updatedAt, data:d };
   }
 
