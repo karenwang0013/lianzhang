@@ -293,16 +293,23 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 .stats3 .v small{font-size:10px;color:var(--muted2);font-weight:400;margin-left:5px;letter-spacing:0;vertical-align:2px}
 
 /* 卡片首行：日期 + 今天完成组数 */
-.topline{display:flex;align-items:center;gap:8px}
-.topline .d-main{font-size:14px;font-weight:650;color:var(--text);letter-spacing:-.01em}
-.topline .d-wd{font-size:13px;color:var(--muted);font-weight:500}
-.topline .dset{margin-left:auto;font-size:11px;color:var(--muted2);font-variant-numeric:tabular-nums}
-.topline .dset b{color:var(--text);font-weight:600}
-.wkbtn{width:24px;height:24px;flex:none;display:grid;place-items:center;border:0;border-radius:8px;
-  background:transparent;color:var(--muted2);font-family:inherit;font-size:15px;line-height:1;
-  cursor:pointer;padding:0;transition:background .2s,color .2s}
-.wkbtn:active{background:rgba(255,255,255,.09);color:var(--text)}
-.wkbtn:disabled{opacity:.25;pointer-events:none}
+/* 日期行：置于第一张卡上方、水平居中（同热量账本） */
+.daterow{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:0 2px 12px}
+.daterow .dmain{flex:1;min-width:0;display:flex;flex-direction:column;align-items:center;gap:3px}
+.daterow .dmain b{font-size:17px;font-weight:650;letter-spacing:.2px;color:var(--text)}
+.daterow .dline{display:flex;align-items:center;gap:7px;min-height:17px}
+.daterow .dline i{font-style:normal;font-size:11px;color:var(--muted2);letter-spacing:.02em;
+  font-variant-numeric:tabular-nums;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.gotoday{flex:none;font-family:inherit;font-size:10.5px;font-weight:600;color:var(--lime);
+  background-color:rgba(228,0,43,.12);border:1px solid rgba(228,0,43,.32);border-radius:9px;
+  padding:2px 7px;cursor:pointer;line-height:1.35}
+.gotoday[hidden]{display:none}
+.wkbtn{width:34px;height:34px;flex:none;display:grid;place-items:center;border-radius:12px;
+  background-color:rgba(255,255,255,.05);border:1px solid var(--line);
+  color:rgba(242,244,242,.82);font-family:inherit;font-size:17px;line-height:1;
+  cursor:pointer;padding:0;transition:background .2s,transform .16s}
+.wkbtn:active{background:rgba(255,255,255,.1);transform:scale(.94)}
+.wkbtn:disabled{opacity:.3;pointer-events:none}
 
 .wd-day{flex:1;display:flex;flex-direction:column;align-items:center;gap:5px;border:0;background:transparent;
   padding:6px 0 3px;border-radius:11px;font-family:inherit;cursor:pointer;
@@ -623,9 +630,8 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
 /* ---------- 遮罩 ---------- */
 .mask{
-  position:absolute;inset:0;background:rgba(0,0,0,.55);
-  -webkit-backdrop-filter:blur(5px) saturate(1.15);
-  backdrop-filter:blur(5px) saturate(1.15);
+  position:absolute;inset:0;background:rgba(0,0,0,.66);
+  -webkit-backdrop-filter:none;backdrop-filter:none;
   opacity:0;pointer-events:none;transition:opacity .3s;z-index:40;
 }
 .mask.on{opacity:1;pointer-events:auto}
@@ -765,16 +771,15 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   border-right:1.5px solid var(--muted2);border-bottom:1.5px solid var(--muted2);
   transform:rotate(45deg);transition:transform .2s ease,margin .2s ease}
 .exname.open .chev{transform:rotate(-135deg);margin-top:1px}
-.expicklist{display:none;position:absolute;left:50%;top:calc(100% + 6px);z-index:7;
-  transform:translateX(-50%);
-  min-width:180px;width:max-content;max-width:min(260px,72vw);border-radius:13px;
-  overflow:hidden;background:rgba(24,27,25,.97);border:1px solid rgba(255,255,255,.13);
-  box-shadow:0 14px 32px rgba(0,0,0,.55);backdrop-filter:blur(14px);
-  max-height:min(216px,34vh);overflow-y:auto;-webkit-overflow-scrolling:touch}
+.expicklist{display:none;width:100%;margin-top:4px;border-top:1px solid var(--line);
+  max-height:min(300px,40vh);overflow-y:auto;-webkit-overflow-scrolling:touch;
+  scrollbar-width:none}
+.expicklist::-webkit-scrollbar{display:none}
 #exSheet.picking .expicklist{display:block}
+#exSheet.picking .exsub{display:none}
 .expick{display:flex;align-items:center;justify-content:space-between;gap:12px;white-space:nowrap;
-  padding:9px 13px;font-size:13px;font-weight:600;color:var(--muted);
-  border-top:1px solid rgba(255,255,255,.07);cursor:pointer}
+  padding:11px 2px;font-size:13.5px;font-weight:600;color:var(--muted);
+  border-top:1px solid rgba(255,255,255,.06);cursor:pointer}
 .expick:first-child{border-top:0}
 .expick.on{color:var(--lime)}
 .expick.on::after{content:"✓";font-size:12px;color:var(--lime)}
@@ -937,7 +942,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
     <div class="statusbg" aria-hidden="true"></div>
     <div class="topbar">
-      <div class="brand">训练<span>账本</span><i class="btag">v5.57</i></div>
+      <div class="brand">训练<span>账本</span><i class="btag">v5.58</i></div>
       <div class="topactions">
         <button class="topbtn topicon" id="reloadTop" aria-label="强制更新" title="强制更新">
           <svg viewBox="0 -960 960 960" aria-hidden="true"><path d="M480-160q-134 0-227-93t-93-227q0-134 93-227t227-93q69 0 132 28.5T720-690v-70q0-17 11.5-28.5T760-800q17 0 28.5 11.5T800-760v200q0 17-11.5 28.5T760-520H560q-17 0-28.5-11.5T520-560q0-17 11.5-28.5T560-600h128q-32-56-87.5-88T480-720q-100 0-170 70t-70 170q0 100 70 170t170 70q68 0 124.5-34.5T692-367q8-14 22.5-19.5t29.5-.5q16 5 23 21t-1 30q-41 80-117 128t-169 48Z"/></svg>
@@ -952,13 +957,16 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
       <!-- ============ 今日 ============ -->
       <section class="view on" data-view="today">
-        <div class="card herocard">
-          <div class="topline">
-            <button class="wkbtn" id="wkPrev" aria-label="上一周">‹</button>
-            <span class="d-main" id="dMain">11月8日</span><span class="d-wd" id="dWd">周日</span>
-            <button class="wkbtn" id="wkNext" aria-label="下一周">›</button>
-            <span class="dset" id="dset"><b id="doneSets">0</b> / <span id="todayTotal">17</span> 组</span>
+        <div class="daterow">
+          <button class="wkbtn" id="wkPrev" aria-label="上一周">‹</button>
+          <div class="dmain">
+            <b id="dMain">11月8日</b>
+            <span class="dline"><i id="dSub">今天 · 休息日</i><button class="gotoday" id="goToday" hidden>回到今天</button></span>
           </div>
+          <button class="wkbtn" id="wkNext" aria-label="下一周">›</button>
+        </div>
+
+        <div class="card herocard">
 
           <div class="ringwrap">
             <svg viewBox="0 0 200 200" width="232" height="232">
@@ -1221,7 +1229,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     <!-- 设置 -->
     <div class="sheet" id="setSheet">
       <div class="grab"></div>
-      <div class="sh-hd"><h2>设置</h2><span class="vtag">v5.57</span></div>
+      <div class="sh-hd"><h2>设置</h2><span class="vtag">v5.58</span></div>
       <div class="setbody">
         <div class="setlabel">训练设置</div>
         <div class="setrows">
@@ -1238,7 +1246,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
           <div class="srow" data-ic="monitor_heart"><span class="ico"></span><span class="lbl">Apple 健康</span><span class="sw"></span></div>
           <div class="srow" data-ic="assignment"><span class="ico"></span><span class="lbl">训练提醒</span><span class="sw"></span></div>
           <button class="srow" id="openBackup" data-ic="cloud_done"><span class="ico"></span><span class="lbl">数据备份</span><span class="val" id="backupVal">iCloud</span></button>
-          <button class="srow" id="openRel" data-ic="checklist"><span class="ico"></span><span class="lbl">更新记录</span><span class="val">v5.57</span></button>
+          <button class="srow" id="openRel" data-ic="checklist"><span class="ico"></span><span class="lbl">更新记录</span><span class="val">v5.58</span></button>
         </div>
       </div>
     </div>
@@ -1469,8 +1477,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
       $('.setcount', ex).textContent = n + '/' + dots.length;
       done += n; total += dots.length;
     });
-    var ds = $('#doneSets'); if (ds) ds.textContent = done;
-    var tt = $('#todayTotal'); if (tt) tt.textContent = total;
+    setSub();
     paintStrip();
   }
 
@@ -1583,7 +1590,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
       }
       $('#exDone').textContent = Math.min(onCount, v.sets) + ' / ' + v.sets;
     }
-    $('#todayTotal').textContent = todaySets(todayKey);
+    setSub();
     $('#listMeta').textContent = todaySets(todayKey) + ' 有效组 · 0 垃圾容量';
   }
   function afterPlanChange(){
@@ -1914,7 +1921,6 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     var t = TITLE[key];
     $('#todayName').textContent = t[0];
     $('#todayEn').textContent = t[1];
-    $('#todayTotal').textContent = todaySets(key);
 
     var html = '';
     dayEx(key).forEach(function(e, i){
@@ -1937,6 +1943,32 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     renderSets();
   }
 
+  /* 日期行下面的小字：今天 · 腿 · 2/17 组 / 周五 · 没记录 / 周六 · 计划 17 组 */
+  function setSub(){
+    var iso = viewISO, isToday = iso === todayISO(), t = '';
+    $('#dMain').textContent = isoDisplay(iso);
+    if (isToday){
+      t = '今天';
+      if (todayKey){
+        var done = document.querySelectorAll('#exList .dot.on').length;
+        t += ' · ' + TITLE[todayKey][0] + ' · ' + done + '/' + todaySets(todayKey) + ' 组';
+      } else {
+        t += ' · 休息日';
+      }
+    } else {
+      t = '周' + WD_CN[wdIdx(iso)];
+      if (iso > todayISO()){
+        var k2 = keyForISO(iso);
+        t += ' · ' + (k2 ? '计划 ' + totalSets(k2) + ' 组' : '休息日');
+      } else {
+        var lg = allLogs().filter(function(l){ return l.d === iso; });
+        t += lg.length ? ' · ' + lg.length + ' 组' : ' · 没记录';
+      }
+    }
+    $('#dSub').textContent = t;
+    $('#goToday').hidden = isToday;
+  }
+
   /* 周条：本周 7 天，可点；有记录的点亮，今天带「今天」色 */
   function paintStrip(){
     var mon = mondayISO(viewISO), html = '';
@@ -1953,8 +1985,6 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   /* 看某一天：今天=可操作；过去=当天真实记录；休息日=休息卡 */
   function renderDay(){
     var iso = viewISO, isToday = iso === todayISO(), key = keyForISO(iso);
-    $('#dMain').textContent = isoDisplay(iso);
-    $('#dWd').textContent = '周' + WD_CN[wdIdx(iso)];
     $('#kToday').textContent = isToday ? '今天' : '那天';
     $('#wkNext').disabled = mondayISO(iso) >= mondayISO(todayISO());
     paintStrip();
@@ -1963,7 +1993,6 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
       $('#listTitle').textContent = '今天的动作';
       if (!key){
         todayKey = '';
-        $('#dset').innerHTML = '休息日';
         $('#todayName').textContent = '休';
         $('#todayEn').textContent = 'REST';
         $('#listMeta').textContent = '恢复';
@@ -1972,7 +2001,6 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
           '<button class="cta inline ghost" id="trainAny">今天照样练一次</button></div>';
       } else {
         todayKey = key;
-        $('#dset').innerHTML = '<b id="doneSets">0</b> / <span id="todayTotal">0</span> 组';
         $('#todayName').textContent = TITLE[key][0];
         $('#todayEn').textContent = TITLE[key][1];
         renderToday(key);
@@ -1981,6 +2009,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
       todayKey = '';
       renderPastDay(iso);
     }
+    setSub();
     paintHero();
   }
 
@@ -1991,7 +2020,6 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     $('#listTitle').textContent = '周' + WD_CN[wdIdx(iso)] + (future ? '的计划 · ' : '的动作 · ') + shortDate(iso);
     if (!logs.length){
       var key = keyForISO(iso), plan = key ? dayEx(key) : [];
-      $('#dset').innerHTML = !plan.length ? '休息日' : (future ? '计划 ' + totalSets(key) + ' 组' : '没记录');
       $('#todayName').textContent = plan.length ? TITLE[key][0] : '休';
       $('#todayEn').textContent = plan.length ? TITLE[key][1] : 'REST';
       $('#listMeta').textContent = plan.length ? '原计划 ' + totalSets(key) + ' 组' : '休息日';
@@ -2011,7 +2039,6 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
       o.vol += (l.kg || 0) * (l.reps || 0);
       vol += (l.kg || 0) * (l.reps || 0);
     });
-    $('#dset').innerHTML = '<b>' + logs.length + '</b> 组';
     $('#listMeta').textContent = logs.length + ' 组 · ' + Math.round(vol).toLocaleString('en-US') + ' kg';
     $('#exList').innerHTML = order.map(function(n){
       var o = by[n];
@@ -2036,7 +2063,6 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     }
     if (!pick) return;
     todayKey = pick;
-    $('#dset').innerHTML = '<b id="doneSets">0</b> / <span id="todayTotal">0</span> 组';
     $('#todayName').textContent = TITLE[pick][0];
     $('#todayEn').textContent = TITLE[pick][1];
     renderToday(pick);
@@ -2133,6 +2159,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     if (b) selectDay(b.dataset.iso);
   });
   $('#wkPrev').addEventListener('click', function(){ selectDay(isoMinus(viewISO, 7)); });
+  $('#goToday').addEventListener('click', function(){ selectDay(todayISO()); });
   $('#wkNext').addEventListener('click', function(){
     if (mondayISO(viewISO) >= mondayISO(todayISO())) return;
     selectDay(isoMinus(viewISO, -7));
@@ -2329,7 +2356,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     if (todayKey) renderToday(todayKey); else renderDay();
     fillEx();
     paintWeekVol();
-    if (todayKey && $('#todayTotal')) $('#todayTotal').textContent = todaySets(todayKey);
+    if (todayKey) setSub();
   }
   function setPicking(on){
     var sh = $('#exSheet'); if (!sh) return;
@@ -2421,7 +2448,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   }
 
   /* ---------- 启动版本比对（同热量账本） ---------- */
-  var APP_VERSION = 'v5.57';
+  var APP_VERSION = 'v5.58';
   fetch('./version.txt?t=' + Date.now(), { cache: 'no-store' })
     .then(function(r){ return r.ok ? r.text() : ''; })
     .then(function(v){
@@ -2443,6 +2470,12 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
   /* ---------- 更新记录 ---------- */
   var RELEASES = [
+    { v:'v5.58', d:'11-08', items:[
+      '日期从卡牌里挪到第一张卡上方、居中（17px），上面不再空一大块；下面是「今天 · 腿 · 0/17 组」这类小字',
+      '回看以前的日子时，日期旁边出现「回到今天」，点一下直接回来',
+      '换动作的下拉不再是浮在上面的小框：点动作名，名字下面直接一行行展开，没有底色/圆角/阴影',
+      '点设置、点动作时的背景改成和热量账本一样：只变暗（66% 黑），不再做高斯模糊'
+    ]},
     { v:'v5.57', d:'11-08', items:[
       '日期跟手机真实日期走（不再永远显示 11月7日 周五）；今天是休息日就显示休息',
       '今天那张卡上面那排星期现在能点：点哪天就看哪天的记录，左右箭头可以翻周',
