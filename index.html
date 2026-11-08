@@ -1524,7 +1524,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
           <button class="srow" id="iconRow" data-ic="palette"><span class="ico"></span><span class="lbl">App 图标</span><span class="val">更换图标</span></button>
           <button class="srow" id="openBackup" data-ic="cloud_done"><span class="ico"></span><span class="lbl">数据备份</span><span class="val" id="backupVal">iCloud</span></button>
           <div class="srow" data-ic="monitor_heart"><span class="ico"></span><span class="lbl">Apple 健康</span><span class="sw"></span></div>
-          <button class="srow" id="openRemind" data-ic="assignment"><span class="ico"></span><span class="lbl">训练提醒</span></button>
+          <button class="srow" id="openRemind" data-ic="assignment"><span class="ico"></span><span class="lbl">训练提醒</span><span class="val" id="remindVal">开</span></button>
           <button class="srow" id="clearLogs" data-ic="delete"><span class="ico"></span><span class="lbl">清除训练记录</span><span class="val plain">全部删除</span></button>
           <button class="srow" id="openRel" data-ic="checklist"><span class="ico"></span><span class="lbl">更新记录</span><span class="val">v6.48</span></button>
         </div>
@@ -1548,7 +1548,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     <!-- 训练提醒 -->
     <div class="sheet" id="remindSheet">
       <div class="grab"></div>
-      <div class="sh-hd sh-sub"><button class="backbtn" aria-label="返回"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5 8 12l7 7"/></svg></button><h2>训练提醒</h2><span class="vtag" id="remindTag">开</span></div>
+      <div class="sh-hd sh-sub"><button class="backbtn" aria-label="返回"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5 8 12l7 7"/></svg></button><h2>训练提醒</h2></div>
       <div class="rembody">
         <div class="remrow"><span>开启提醒</span><span class="sw" id="remSw"></span></div>
         <p class="remnote" id="remNote">正在读取你的记录…</p>
@@ -2920,7 +2920,8 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     return { gap: gap, med: med, sets7: sets7, planned: planned, days: days.length };
   }
   function paintRemindRow(){
-    var tag = $('#remindTag'); if (tag) tag.textContent = remindSummary();
+    /* 子页标题右边不再显示「开/关」；设置列表里那行显示 */
+    var v = $('#remindVal'); if (v) v.textContent = remindSummary();
     var sw = $('#remSw'); if (sw) sw.classList.toggle('off', !remindCfg().on);
     var note = $('#remNote');
     if (note){
