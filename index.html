@@ -1201,8 +1201,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   background:none;border:0;border-radius:0;margin:0 0 10px;padding:0;
 }
 /* 这三张自己有 20 的左右内边距，标题栏要反推回卡牌边线（16），否则返回键会跑到 36 */
-#iconSheet.page .sh-hd,
-#backupSheet.page .sh-hd,
+/* 只有提醒页还保留 20 的内边距，标题栏要反推回 16；图标/备份已经是 0 内边距，不能再推 */
 #remindSheet.page .sh-hd{
   margin-left:-20px !important;
   margin-right:-20px !important;
