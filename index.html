@@ -200,6 +200,11 @@ body{
 
 .head{padding:0 0 16px}
 
+/* 页面标题：一行（标题 + 右侧说明），不做成大标题占半屏 */
+.pagehd{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin:2px 2px 14px}
+.pagehd h1{font-size:26px;line-height:1.1;font-weight:700;letter-spacing:-.03em}
+.pagehd span{font-size:11px;color:var(--muted2);font-variant-numeric:tabular-nums;white-space:nowrap}
+
 .eyebrow{
   font-size:11px;font-weight:600;letter-spacing:.14em;
   color:var(--muted2);text-transform:uppercase;margin-bottom:9px;
@@ -454,6 +459,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 }
 .aicard h2{margin:0;font-size:20px;font-weight:700;letter-spacing:-.03em}
 .aicard p{margin:8px 0 0;font-size:12.5px;color:var(--muted);line-height:1.65}
+.aicard .whyline{margin:10px 0 0;font-size:11px;color:var(--muted2);line-height:1.5}
 .why{display:flex;flex-wrap:wrap;gap:6px;margin-top:13px}
 .why span{
   font-size:10.5px;color:rgba(242,244,242,.72);
@@ -531,6 +537,9 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 }
 .bar:last-child i{background:var(--lime)}
 .bar span{font-size:9.5px;color:var(--muted2);font-variant-numeric:tabular-nums}
+/* 没有数据时不要把 126px 的空图画出来 */
+.bars.empty{display:block;height:auto}
+.emptyline{margin:0;padding:8px 0;font-size:11.5px;color:var(--muted2);text-align:center}
 .bar:last-child span{color:var(--lime)}
 
 .pr{display:flex;align-items:center;justify-content:space-between;padding:12px 0}
@@ -549,6 +558,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 .heat i.l2{background:rgba(228,0,43,.42)}
 .heat i.l3{background:rgba(228,0,43,.68)}
 .heat i.l4{background:var(--lime)}
+.heat.empty{display:block}
 
 /* ---------- 我的 ---------- */
 .profile{display:flex;align-items:center;gap:12px;padding:2px 0 16px}
@@ -704,11 +714,13 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 .sheet#exSheet{position:fixed;top:auto;bottom:10px;left:10px;right:10px;
   max-height:calc(100% - 96px);overflow-y:auto;transform:translateY(110%)}
 #exSheet.on{transform:none}
-.exdetail{display:flex;flex-direction:column;margin-top:8px}
+#exSheet{padding-top:14px}
+.exdetail{display:flex;flex-direction:column;margin-top:0}
 .exrow2{display:flex;justify-content:space-between;align-items:center;padding:0;
   min-height:54px;border-top:1px solid var(--line);font-size:14px}
 .exrow2:first-child{border-top:0}
-.exrow2 span{color:var(--muted2)}
+.exrow2 > span:first-child{color:var(--muted2)}
+.exrow2 .kgbox b{color:var(--text)}
 .exrow2 b{font-weight:600;font-variant-numeric:tabular-nums}
 .kgstep{display:flex;align-items:center;gap:10px;align-self:center}
 .kgbtn{
@@ -721,27 +733,31 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 .kgbtn:active{transform:scale(.92);background:rgba(255,255,255,.12)}
 .kgbox{display:flex;align-items:baseline;gap:4px}
 #exKg{width:64px;background:transparent;border:0;padding:0;color:var(--text);font-family:inherit;
-  font-size:15px;font-weight:600;text-align:right;font-variant-numeric:tabular-nums;-webkit-appearance:none;appearance:none}
+  font-size:14px;font-weight:600;text-align:right;font-variant-numeric:tabular-nums;-webkit-appearance:none;appearance:none}
 #exKg::-webkit-outer-spin-button,#exKg::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
 #exKg::placeholder{color:var(--muted2);font-weight:550}
 #exKgUnit{font-size:12px;color:var(--muted2);font-style:normal}
 .swaptag{display:inline-block;margin-left:6px;padding:1px 6px;border-radius:8px;font-size:10px;font-style:normal;
   color:var(--lime);background:rgba(228,0,43,.14);border:1px solid rgba(228,0,43,.36);vertical-align:middle}
-/* 动作条：左右滑，中间那个就是下面参数对应的动作 */
-/* 动作名：上下滚的滚轮，停在中间那条就是下面参数对应的动作 */
-.exnamerow{align-items:center;padding:12px 0;position:relative}
-.expickbox{position:relative;display:inline-flex}
+/* 动作名：卡牌顶部居中，点它换动作 */
+.exhead{position:relative;display:flex;flex-direction:column;align-items:center;gap:6px;
+  padding:2px 0 14px;border-bottom:1px solid var(--line)}
 .exname{display:inline-flex;align-items:center;gap:6px;border:0;padding:0;background:none;
-  color:#f2f4f2;font-family:inherit;font-size:14px;font-weight:600;line-height:1;
-  font-variant-numeric:tabular-nums;cursor:pointer;max-width:210px}
-.exname b{font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  color:#f2f4f2;font-family:inherit;font-size:19px;font-weight:650;line-height:1.15;
+  letter-spacing:-.02em;font-variant-numeric:tabular-nums;cursor:pointer;max-width:290px}
+.exname b{font-weight:650;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.exsub{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--muted2);
+  letter-spacing:.02em;font-variant-numeric:tabular-nums}
+.exsub b{font-weight:600;color:rgba(242,244,242,.88)}
+.exsub i{font-style:normal;color:rgba(255,255,255,.16)}
 .exgtag{font-style:normal;font-size:10.5px;font-weight:600;color:var(--muted2);letter-spacing:.04em}
 .exname .chev{flex:0 0 auto;width:5px;height:5px;margin-top:-3px;
   border-right:1.5px solid var(--muted2);border-bottom:1.5px solid var(--muted2);
   transform:rotate(45deg);transition:transform .2s ease,margin .2s ease}
 .exname.open .chev{transform:rotate(-135deg);margin-top:1px}
-.expicklist{display:none;position:absolute;right:0;top:calc(100% + 10px);z-index:7;
-  min-width:100%;width:max-content;max-width:min(240px,68vw);border-radius:13px;
+.expicklist{display:none;position:absolute;left:50%;top:calc(100% + 6px);z-index:7;
+  transform:translateX(-50%);
+  min-width:180px;width:max-content;max-width:min(260px,72vw);border-radius:13px;
   overflow:hidden;background:rgba(24,27,25,.97);border:1px solid rgba(255,255,255,.13);
   box-shadow:0 14px 32px rgba(0,0,0,.55);backdrop-filter:blur(14px);
   max-height:min(216px,34vh);overflow-y:auto;-webkit-overflow-scrolling:touch}
@@ -761,16 +777,15 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 .swapopt.on .swl b,.swapopt.on .swr{color:var(--lime)}
 .exsug{margin:12px 0 0;padding:11px 13px;border-radius:14px;background:rgba(228,0,43,.10);
   border:1px solid rgba(228,0,43,.28);display:flex;align-items:center;gap:10px}
-.exsug{margin:14px 0 12px}
+.exsug{margin:16px 0 0}
 .exsug .sugt{flex:1 1 auto;min-width:0;font-size:11.5px;line-height:1.45;color:rgba(242,244,242,.88)}
 .exsug .sugt b{font-weight:700;color:#fff;font-variant-numeric:tabular-nums}
 .exsug .sugt i{font-style:normal;display:block;margin-top:2px;font-size:10.5px;color:var(--muted2)}
 .sugbtn{flex:0 0 auto;height:30px;padding:0 12px;border-radius:10px;border:1px solid rgba(228,0,43,.45);
   background:rgba(228,0,43,.16);color:#fff;font-family:inherit;font-size:11.5px;font-weight:650;cursor:pointer}
 .sugbtn:active{transform:scale(.96)}
-.exhint{margin:9px 0 0;font-size:10.5px;line-height:1.5;color:var(--muted2)}
-.exnote{margin:14px 0 0;padding-top:12px;border-top:1px solid var(--line);
-  font-size:11.5px;color:var(--muted2);line-height:1.7}
+.exhint{margin:6px 0 0;font-size:10.5px;line-height:1.55;color:var(--muted2)}
+.exnote{margin:4px 0 0;font-size:10.5px;line-height:1.55;color:var(--muted2)}
 
 /* 更新记录 */
 .relitem{padding:13px 0;border-bottom:1px solid var(--line)}
@@ -864,7 +879,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   .sheet{left:0;right:0;width:calc(100% - 40px);max-width:560px;margin:0 auto}
   .sh-hd h2{font-size:18px}
   .exrow2{font-size:14px}
-  .exname{font-size:15px}
+  .exname{font-size:21px}
   .expick{font-size:14px}
   .iopt{width:64px}
   .iopts{gap:10px}
@@ -889,7 +904,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
     <div class="statusbg" aria-hidden="true"></div>
     <div class="topbar">
-      <div class="brand">训练<span>账本</span><i class="btag">v5.55</i></div>
+      <div class="brand">训练<span>账本</span><i class="btag">v5.56</i></div>
       <div class="topactions">
         <button class="topbtn topicon" id="reloadTop" aria-label="强制更新" title="强制更新">
           <svg viewBox="0 -960 960 960" aria-hidden="true"><path d="M480-160q-134 0-227-93t-93-227q0-134 93-227t227-93q69 0 132 28.5T720-690v-70q0-17 11.5-28.5T760-800q17 0 28.5 11.5T800-760v200q0 17-11.5 28.5T760-520H560q-17 0-28.5-11.5T520-560q0-17 11.5-28.5T560-600h128q-32-56-87.5-88T480-720q-100 0-170 70t-70 170q0 100 70 170t170 70q68 0 124.5-34.5T692-367q8-14 22.5-19.5t29.5-.5q16 5 23 21t-1 30q-41 80-117 128t-169 48Z"/></svg>
@@ -969,9 +984,9 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
       <!-- ============ 计划 ============ -->
       <section class="view" data-view="plan">
-        <header class="head">
-          <div class="eyebrow" id="planEyebrow">训练周期 · 第 3 周 / 共 8 周</div>
-          <h1>计划 <span class="en">PLAN</span></h1>
+        <header class="pagehd">
+          <h1>计划</h1>
+          <span id="planEyebrow">3 练 / 周 · 共 8 周</span>
         </header>
 
         <div class="listhead"><h2>训练分化</h2><span>AI 推荐 · 可自选</span></div>
@@ -986,13 +1001,8 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
         <div class="card aicard">
           <span class="tag">✦ AI · 3 天前更新</span>
           <h2 id="splitName">三分化 · 推拉腿</h2>
-          <p id="splitDesc">每周 6 练，每个肌群 48 小时恢复窗口。第 3 周为累积周，负荷系数 1.0；第 5 周会自动降到 0.7 做减载。</p>
-          <div class="why">
-            <span>目标 增肌</span>
-            <span>经验 1–2 年</span>
-            <span id="whyDays">每周 6 练</span>
-            <span>商业健身房</span>
-          </div>
+          <p id="splitDesc">每周 3 练 · 4 休 · 第 5 周减载</p>
+          <p class="whyline">目标 增肌 · 经验 1–2 年 · <span id="whyDays">每周 3 练</span> · 商业健身房</p>
         </div>
 
         <div class="card bodycard">
@@ -1028,48 +1038,39 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
       <!-- ============ 记录 ============ -->
       <section class="view" data-view="log">
-        <header class="head">
-          <div class="eyebrow" id="logTotal">累计 128 次训练</div>
-          <h1>记录 <span class="en">LOG</span></h1>
+        <header class="pagehd">
+          <h1>记录</h1>
+          <span id="logTotal">累计 0 次训练</span>
         </header>
 
         <div class="stats">
-          <div class="stat"><b id="logStreak">12</b><span>连续天数</span></div>
-          <div class="stat"><b id="logMonthVol">36.2<em>t</em></b><span>本月容量</span></div>
-          <div class="stat"><b id="logPR">4</b><span>PR 纪录</span></div>
+          <div class="stat"><b id="logStreak">0</b><span>连续天数</span></div>
+          <div class="stat"><b id="logMonthVol">0<em>kg</em></b><span>本月容量</span></div>
+          <div class="stat"><b id="logPR">0</b><span>PR 纪录</span></div>
         </div>
 
         <div class="listhead"><h2>每周容量</h2><span>公斤 · 近 8 周</span></div>
         <div class="card">
-          <div class="bars" id="logBars">
-            <div class="bar"><i style="height:44%"></i><span>W1</span></div>
-            <div class="bar"><i style="height:52%"></i><span>W2</span></div>
-            <div class="bar"><i style="height:49%"></i><span>W3</span></div>
-            <div class="bar"><i style="height:63%"></i><span>W4</span></div>
-            <div class="bar"><i style="height:58%"></i><span>W5</span></div>
-            <div class="bar"><i style="height:74%"></i><span>W6</span></div>
-            <div class="bar"><i style="height:81%"></i><span>W7</span></div>
-            <div class="bar"><i style="height:92%"></i><span>W8</span></div>
-          </div>
+          <div class="bars empty" id="logBars"><p class="emptyline">最近 8 周还没有记录</p></div>
         </div>
 
         <div class="listhead"><h2>个人最好成绩</h2></div>
         <div class="card" id="prCard" style="padding:4px 16px">
           <div class="pr">
-            <div class="nm">硬拉<small>Deadlift · 11/2</small></div>
-            <div class="val"><b>140<em>kg</em></b><i>+5</i></div>
+            <div class="nm">硬拉<small>没记录</small></div>
+            <div class="val"><b>—</b><i class="flat">未练</i></div>
           </div>
           <div class="pr">
-            <div class="nm">深蹲<small>Squat · 10/28</small></div>
-            <div class="val"><b>110<em>kg</em></b><i>+2.5</i></div>
+            <div class="nm">深蹲<small>没记录</small></div>
+            <div class="val"><b>—</b><i class="flat">未练</i></div>
           </div>
           <div class="pr">
-            <div class="nm">卧推<small>Bench · 10/21</small></div>
-            <div class="val"><b>80<em>kg</em></b><i class="flat">持平</i></div>
+            <div class="nm">卧推<small>没记录</small></div>
+            <div class="val"><b>—</b><i class="flat">未练</i></div>
           </div>
           <div class="pr">
-            <div class="nm">引体向上<small>Pull-up · 11/4</small></div>
-            <div class="val"><b>16<em>次</em></b><i>+1</i></div>
+            <div class="nm">引体向上<small>没记录</small></div>
+            <div class="val"><b>—</b><i class="flat">未练</i></div>
           </div>
         </div>
 
@@ -1083,19 +1084,19 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
       <section class="view" data-view="me">
         <div class="profile">
           <div class="avatar">K</div>
-          <div class="pinfo"><b>Karen</b><span>加入 128 天 · 增肌中</span></div>
+          <div class="pinfo"><b>Karen</b></div>
         </div>
 
         <div class="card goalcard">
           <span class="tag">当前目标</span>
           <h2>增肌 · 每周净增 0.25 kg</h2>
-          <p>训练日建议盈余 +300 kcal，休息日 +150 kcal。热量由「热量账本」自动同步，今天还有 420 kcal 额度。</p>
+          <p>训练日 +300 kcal · 休息日 +150 kcal · 今天还剩 420 kcal</p>
         </div>
 
         <div class="card bodycard" style="margin-top:12px">
           <div class="bchead">
-            <span>身体数据 · 与热量账本共用一份</span>
-            <span class="synctime">自动同步</span>
+            <span>身体数据 · 热量账本同步</span>
+            <span class="synctime">自动</span>
           </div>
           <div class="bgrid">
             <div><b>64.9</b><i>体重 kg</i></div>
@@ -1103,7 +1104,6 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
             <div><b>54.0</b><i>去脂体重 kg</i></div>
             <div><b>21.4</b><i>BMI</i></div>
           </div>
-          <p class="bnote">这四个数字是训练的输入：去脂体重决定起始负荷，体脂率决定盈余幅度，BMI 用来卡减载周。在热量账本里改一次体重，这边下一次排课就跟着变。</p>
         </div>
 
         <div class="listhead"><h2>训练统计</h2><span>本地记录 · 真实数据</span></div>
@@ -1201,7 +1201,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     <!-- 设置 -->
     <div class="sheet" id="setSheet">
       <div class="grab"></div>
-      <div class="sh-hd"><h2>设置</h2><span class="vtag">v5.55</span></div>
+      <div class="sh-hd"><h2>设置</h2><span class="vtag">v5.56</span></div>
       <div class="setbody">
         <div class="setlabel">训练设置</div>
         <div class="setrows">
@@ -1218,7 +1218,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
           <div class="srow" data-ic="monitor_heart"><span class="ico"></span><span class="lbl">Apple 健康</span><span class="sw"></span></div>
           <div class="srow" data-ic="assignment"><span class="ico"></span><span class="lbl">训练提醒</span><span class="sw"></span></div>
           <button class="srow" id="openBackup" data-ic="cloud_done"><span class="ico"></span><span class="lbl">数据备份</span><span class="val" id="backupVal">iCloud</span></button>
-          <button class="srow" id="openRel" data-ic="checklist"><span class="ico"></span><span class="lbl">更新记录</span><span class="val">v5.55</span></button>
+          <button class="srow" id="openRel" data-ic="checklist"><span class="ico"></span><span class="lbl">更新记录</span><span class="val">v5.56</span></button>
         </div>
       </div>
     </div>
@@ -1226,18 +1226,18 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
         <!-- 动作详情 -->
     <div class="sheet center" id="exSheet">
       <div class="exdetail">
-        <div class="exrow2 exnamerow"><span>动作</span>
-          <div class="expickbox"><button class="exname" id="exPickToggle"><b id="exName">平板杠铃卧推</b><i class="chev"></i></button>
-          <div class="expicklist" id="exPick"></div></div></div>
+        <div class="exhead">
+          <button class="exname" id="exPickToggle"><b id="exName">平板杠铃卧推</b><i class="chev"></i></button>
+          <div class="exsub"><span>今天 <b id="exDone">0 / 4</b> 组</span><i>·</i><span>休息 <b id="exRest">180 秒</b></span></div>
+          <div class="expicklist" id="exPick"></div>
+        </div>
         <div class="exrow2"><span>组数</span><span class="kgstep"><button class="kgbtn" id="setDown" aria-label="减一组">−</button><span class="kgbox"><b id="exSets">4 组</b></span><button class="kgbtn" id="setUp" aria-label="加一组">+</button></span></div>
         <div class="exrow2"><span>次数</span><span class="kgstep"><button class="kgbtn" id="repDown" aria-label="减一次">−</button><span class="kgbox"><b id="exRep">6–8 次</b></span><button class="kgbtn" id="repUp" aria-label="加一次">+</button></span></div>
         <div class="exrow2"><span>重量</span><span class="kgstep"><button class="kgbtn" id="kgDown" aria-label="减重量">−</button><span class="kgbox"><input id="exKg" type="number" inputmode="decimal" step="0.5" min="0" max="999" placeholder="自重" aria-label="重量"><i id="exKgUnit">kg</i></span><button class="kgbtn" id="kgUp" aria-label="加重量">+</button></span></div>
-        <div class="exrow2"><span>组间休息</span><b id="exRest">150 秒</b></div>
-        <p class="exhint">组数减 1 → 重量 +2.5%、次数 −1（更重的少次）；重量变动 ≥5% → 次数跟着 ±1。</p>
+        <p class="exnote" id="exNote">复合动作，留 1–2 次余力</p>
+        <p class="exhint">组数减 1 → 重量 +2.5%、次数 −1；重量变动 ≥5% → 次数 ±1</p>
         <div id="exHist" class="exhist"></div>
-        <div class="exrow2"><span>今天完成</span><b id="exDone">0 / 4</b></div>
       </div>
-      <p class="exnote" id="exNote">复合动作，排在第一个做。重量以能留 1–2 次余力为准。</p>
       <div class="exsug" id="exSug"><span class="sugt"></span><button class="sugbtn" id="useSug">用建议</button></div>
       <button class="cta" id="finishHere">完成本组</button>
     </div>
@@ -1493,8 +1493,8 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     $('#exRest').textContent = arr.rest + ' 秒';
     $('#exDone').textContent = Math.min(on, all) + ' / ' + all;
     $('#exNote').textContent = arr.g === 'S'
-      ? '复合动作，排在第一个做。重量以能留 1–2 次余力为准。'
-      : (arr.g === 'A' ? '辅助动作，补目标肌群的容量。' : '收尾动作，控制节奏，别甩重量。');
+      ? '复合动作，留 1–2 次余力'
+      : (arr.g === 'A' ? '辅助动作，补目标肌群容量' : '收尾动作，控制节奏别甩');
     if (card) paintHere(card);
     paintExHist(arr);
     paintSug(arr);
@@ -2086,14 +2086,25 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     setTab('plan');
   });
 
-  /* ---------- 热力图 ---------- */
+  /* ---------- 热力图（最近 14 周，按真实训练组数上色） ---------- */
   (function(){
     var box = $('#heat');
-    var lv = [0,1,0,2,3,0,4,1,0,2,4,3,0,2,1,3,4,0,2,1,4,3,0,0,2,4,3,1,0,2,3,4,2,1,0,3,4,2,0,1,3,4,0,2,4,3,1,0,2,3,4,0,1,2,3,4,0,2,1,3,4,2,0,1,3,4,2,3,0,4,2,1,3,4,2,0,3,4,1,2,4,3,0,2,4,3,1,0,3,4,2,4,3,0,2,4,3,1];
+    if (!box) return;
+    var by = {};
+    allLogs().forEach(function(l){ by[l.d] = (by[l.d] || 0) + 1; });
+    if (!Object.keys(by).length){
+      box.classList.add('empty');
+      box.innerHTML = '<p class="emptyline">近 14 周还没有记录</p>';
+      return;
+    }
+    box.classList.remove('empty');
+    var start = mondayISO(isoMinus(todayISO(), 13 * 7));
     var html = '';
-    for (var i=0;i<98;i++){
-      var v = lv[i % lv.length];
-      html += '<i class="' + (v ? 'l'+v : '') + '"></i>';
+    for (var i = 0; i < 98; i++){
+      var d = isoMinus(start, -i);
+      var c = by[d] || 0;
+      var v = c ? (c >= 10 ? 4 : c >= 7 ? 3 : c >= 4 ? 2 : 1) : 0;
+      html += '<i class="' + (v ? 'l' + v : '') + '" title="' + d + ' · ' + c + ' 组"></i>';
     }
     box.innerHTML = html;
   })();
@@ -2257,7 +2268,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   }
 
   /* ---------- 启动版本比对（同热量账本） ---------- */
-  var APP_VERSION = 'v5.55';
+  var APP_VERSION = 'v5.56';
   fetch('./version.txt?t=' + Date.now(), { cache: 'no-store' })
     .then(function(r){ return r.ok ? r.text() : ''; })
     .then(function(v){
@@ -2279,6 +2290,16 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
   /* ---------- 更新记录 ---------- */
   var RELEASES = [
+    { v:'v5.56', d:'11-08', items:[
+      '动作卡：动作名居中到卡牌顶部，点它换动作；「今天 0/4 组 · 休息 180 秒」并到名字下面一行，卡片从 650 高降到 503',
+      '组数/次数/重量的数字原来是灰的、重量还是 15px：统一成白色 14px',
+      '建议条上下间距改成一样（16 / 16，原来上 14、下 28）',
+      '计划/记录页顶：去掉英文 PLAN / LOG 和半屏大标题，压成一行「标题 + 右侧说明」',
+      '计划页：AI 卡 4 个标签并成一行，说明压成一行；身体数据卡不再写长段解释',
+      '记录页：没数据时容量图 / 热力图不再占 300px 空卡，压成一行；PR 去掉 Deadlift / Squat 这些英文',
+      '我的页：删「加入 128 天 · 增肌中」，目标说明压成一行，身体数据删长段解释，训练统计去掉重复的小标题',
+      '热力图改成按真实训练组数上色（原来是写死的假数据）'
+    ]},
     { v:'v5.55', d:'11-08', items:[
       '动作卡改成贴底弹出：行高变大后卡片不再被页面滚动顶到屏幕外'
     ]},
@@ -2683,8 +2704,8 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     var eb = $('#planEyebrow'); if (eb) eb.textContent = n + ' 练 / 周 · 共 8 周';
     var why = $('#whyDays'); if (why) why.textContent = '每周 ' + n + ' 练';
     var sd = $('#splitDesc');
-    if (sd) sd.textContent = n + ' 个训练日 · ' + (7 - n) + ' 个休息日 · 第 5 周减载。本周计划 ' +
-      planVolume().toLocaleString('en-US') + ' kg，已完成 ' + weekVolume().toLocaleString('en-US') + ' kg。';
+    if (sd) sd.textContent = '第 5 周减载 · 本周计划 ' +
+      planVolume().toLocaleString('en-US') + ' kg · 已完成 ' + weekVolume().toLocaleString('en-US') + ' kg';
     var groups = {}, total = 0;
     GROUP_ORDER.forEach(function(g){ groups[g] = 0; });
     sp.days.forEach(function(d){
@@ -2735,17 +2756,21 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     var bars = weekVolumes(8), maxv = 1;
     bars.forEach(function(b){ if (b.v > maxv) maxv = b.v; });
     var barsEl = $('#logBars');
-    if (barsEl) barsEl.innerHTML = bars.map(function(b, i){
-      var h = b.v ? Math.max(6, Math.round(b.v / maxv * 100)) : 3;
-      return '<div class="bar"><i style="height:' + h + '%"></i><span>W' + (i + 1) + '</span></div>';
-    }).join('');
+    var hasVol = bars.some(function(b){ return b.v > 0; });
+    if (barsEl){
+      barsEl.classList.toggle('empty', !hasVol);
+      barsEl.innerHTML = hasVol ? bars.map(function(b, i){
+        var h = b.v ? Math.max(6, Math.round(b.v / maxv * 100)) : 3;
+        return '<div class="bar"><i style="height:' + h + '%"></i><span>W' + (i + 1) + '</span></div>';
+      }).join('') : '<p class="emptyline">最近 8 周还没有记录</p>';
+    }
     var prCard = $('#prCard');
     if (prCard) prCard.innerHTML = PR_LIST.map(function(p){
       var r = prOf(p.n);
-      if (!r) return '<div class="pr"><div class="nm">' + p.label + '<small>' + p.en + ' · 没记录</small></div>' +
+      if (!r) return '<div class="pr"><div class="nm">' + p.label + '<small>没记录</small></div>' +
         '<div class="val"><b>—</b><i class="flat">未练</i></div></div>';
       var unit = r.kg ? 'kg' : '组', val = r.kg || r.sets;
-      return '<div class="pr"><div class="nm">' + p.label + '<small>' + p.en + ' · ' + shortDate(r.d) + '</small></div>' +
+      return '<div class="pr"><div class="nm">' + p.label + '<small>' + shortDate(r.d) + '</small></div>' +
         '<div class="val"><b>' + val + '<em>' + unit + '</em></b><i class="flat">PR</i></div></div>';
     }).join('');
   }
@@ -2759,7 +2784,6 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     if (el){
       var weeks = days.length ? Math.max(1, Math.ceil((new Date(todayISO()) - new Date(days[0] + 'T00:00:00')) / 604800000)) : 0;
       el.innerHTML =
-        '<div class="bchead"><span>训练统计 · 本地记录</span><span class="synctime">自动</span></div>' +
         '<div class="bgrid">' +
           '<div><b>' + days.length + '</b><i>累计训练 次</i></div>' +
           '<div><b>' + (vol >= 1000 ? (vol / 1000).toFixed(1) + '<em>t</em>' : Math.round(vol) + '<em>kg</em>') + '</b><i>累计容量</i></div>' +
@@ -2767,9 +2791,9 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
           '<div><b>' + prCount + '</b><i>有记录 PR</i></div>' +
         '</div>' +
         '<p class="bnote">' + (days.length
-          ? (sets >= 10 ? '平均每周 ' + (sets / weeks).toFixed(1) + ' 组（建议 60–80）' : '记录还不多，练几周后这里给出每周组数趋势') +
-            ' · 平均每次 ' + (sets / days.length).toFixed(1) + ' 组 · 本周已练 ' + trainedThisWeek() + ' 天。'
-          : '还没有训练记录：在「今日」点组数就会记下来，所有数字自动算。') + '</p>';
+          ? (sets >= 10 ? '平均每周 ' + (sets / weeks).toFixed(1) + ' 组 · ' : '') +
+            '平均每次 ' + (sets / days.length).toFixed(1) + ' 组 · 本周已练 ' + trainedThisWeek() + ' 天'
+          : '还没有记录：在「今日」按「完成本组」就会记下来') + '</p>';
     }
     var el2 = $('#meMore');
     if (el2){
