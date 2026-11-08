@@ -1190,8 +1190,8 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 /* 图标页：列表自己滚，两个按钮固定在底部；说明小字删掉 */
 #iconSheet.page{display:flex;flex-direction:column;overflow:hidden}
 #iconSheet.page .ibody{flex:1 1 auto;min-height:0;overflow-y:auto;padding:0;clip-path:none;-webkit-clip-path:none}
-#iconSheet.page .isgroup{background:none;border:0;border-radius:0;margin:0 0 8px;padding:0 16px 6px}
-#iconSheet.page .isghead{padding:14px 0 8px;border-bottom:1px solid var(--line)}
+#iconSheet.page .isgroup{background:none;border:0;border-radius:0;margin:0;padding:0 16px}
+
 #iconSheet.page .islot{display:flex;align-items:center;gap:12px;padding:10px 0;border-top:1px solid var(--line)}
 #iconSheet.page .islot:first-child{border-top:0}
 #iconSheet.page .iopts{flex:1 1 auto;min-width:0;overflow-x:auto;display:flex;gap:8px;padding-right:0;margin-right:-16px}
@@ -1201,7 +1201,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 #iconSheet.page .icfoot{flex:none;display:flex;flex-direction:column;gap:10px;
   padding:12px 22px calc(var(--safe-b) + 30px);
   background:linear-gradient(180deg, rgba(13,15,14,0) 0%, #0d0f0e 38%, #0d0f0e 100%)}
-#iconSheet.page .icfoot .cta{flex:1;margin:0;position:static;width:auto}
+#iconSheet.page .icfoot .cta{flex:1;margin:0;position:static;width:auto;border-radius:26px}
 #iconSheet.page .iconnote{display:none}
 /* 这三张自己有 20 的左右内边距，标题栏要反推回卡牌边线（16），否则返回键会跑到 36 */
 /* 只有提醒页还保留 20 的内边距，标题栏要反推回 16；图标/备份已经是 0 内边距，不能再推 */
@@ -1772,10 +1772,8 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     var nTop = SLOTS.filter(function(s){ return s.group === 'top'; }).length;
     var nTab = SLOTS.filter(function(s){ return !s.group; }).length;
     var nSet = SLOTS.filter(function(s){ return s.group === 'set'; }).length;
-    $('#iconSlots').innerHTML =
-      '<div class="isgroup"><div class="isghead"><b>顶栏</b><em>' + nTop + ' 个位置</em></div>' + topHTML + '</div>' +
-      '<div class="isgroup"><div class="isghead"><b>底部页签</b><em>' + nTab + ' 个位置</em></div>' + tabHTML + '</div>' +
-      '<div class="isgroup"><div class="isghead"><b>设置页</b><em>' + nSet + ' 行</em></div>' + setHTML + '</div>';
+    /* 跟热量账本个性化页同一套：不分组、平铺（页标题下直接是「位置名 + 横滑图标条」） */
+    $('#iconSlots').innerHTML = '<div class="isgroup">' + topHTML + tabHTML + setHTML + '</div>';
   }
 
   /* ---------- 组数状态 ---------- */
