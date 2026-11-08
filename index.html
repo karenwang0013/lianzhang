@@ -132,6 +132,11 @@ body{
 .brand span{color:var(--lime)}
 .brand .btag{font-style:normal;font-size:10px;font-weight:500;color:var(--muted2);margin-left:6px;letter-spacing:normal}
 .topactions{display:flex;gap:6px;align-items:center}
+.todaypill{height:33px;padding:7px 13px;border-radius:11px;font-family:inherit;font-size:12.5px;
+  font-weight:650;letter-spacing:.02em;color:var(--lime);
+  background-color:rgba(228,0,43,.16);border:1px solid rgba(228,0,43,.4);cursor:pointer}
+.todaypill:active{transform:scale(.95);background-color:rgba(228,0,43,.26)}
+.todaypill[hidden]{display:none}
 .topbtn{
   display:inline-flex;align-items:center;justify-content:center;gap:6px;
   height:33px;padding:7px 11px;border-radius:11px;
@@ -350,6 +355,13 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   transition:width .45s cubic-bezier(.33,1.02,.3,1)}
 
 /* 分化选择：并进 AI 卡里的一排分段控件 */
+.traindays{display:flex;gap:5px;margin:14px 0 0}
+.tdchip{flex:1;padding:8px 0;border-radius:10px;border:1px solid var(--line);
+  background-color:rgba(255,255,255,.035);font-family:inherit;font-size:12px;font-weight:600;
+  color:var(--muted2);cursor:pointer;transition:background .2s,color .2s,transform .16s}
+.tdchip.on{background-color:rgba(228,0,43,.16);border-color:rgba(228,0,43,.34);color:var(--lime)}
+.tdchip:active{transform:scale(.95)}
+.tdhint{margin:8px 0 0;font-size:10.5px;color:var(--muted2);letter-spacing:.02em}
 .splpick{display:flex;gap:4px;margin:14px 0 0;padding:4px;border-radius:13px;
   background-color:rgba(2,4,3,.34);border:1px solid var(--line)}
 .sp{flex:1;border:0;background:transparent;border-radius:10px;padding:8px 0;
@@ -983,8 +995,9 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
     <div class="statusbg" aria-hidden="true"></div>
     <div class="topbar">
-      <div class="brand">训练<span>账本</span><i class="btag">v5.84</i></div>
+      <div class="brand">训练<span>账本</span><i class="btag">v5.85</i></div>
       <div class="topactions">
+        <button class="topbtn todaypill" id="goToday2" hidden>回到今天</button>
         <button class="topbtn topicon" id="reloadTop" aria-label="强制更新" title="强制更新">
           <svg viewBox="0 -960 960 960" aria-hidden="true"><path d="M480-160q-134 0-227-93t-93-227q0-134 93-227t227-93q69 0 132 28.5T720-690v-70q0-17 11.5-28.5T760-800q17 0 28.5 11.5T800-760v200q0 17-11.5 28.5T760-520H560q-17 0-28.5-11.5T520-560q0-17 11.5-28.5T560-600h128q-32-56-87.5-88T480-720q-100 0-170 70t-70 170q0 100 70 170t170 70q68 0 124.5-34.5T692-367q8-14 22.5-19.5t29.5-.5q16 5 23 21t-1 30q-41 80-117 128t-169 48Z"/></svg>
         </button>
@@ -1005,7 +1018,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
             </button>
             <div class="dmain">
               <b id="dMain">11月8日</b>
-              <span class="dline"><i id="dSub">今天 · 休息日</i><button class="gotoday" id="goToday" hidden>回到今天</button></span>
+              <span class="dline"><i id="dSub">今天 · 休息日</i></span>
             </div>
             <button class="wkbtn" id="wkNext" aria-label="下一周">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg>
@@ -1068,6 +1081,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
         <div class="card aicard">
           <div class="aihd"><span class="tag">✦ AI · 3 天前更新</span><span class="planmeta" id="planEyebrow">3 练 / 周 · 共 8 周</span></div>
           <h2 id="splitName">三分化 · 推拉腿</h2>
+          <div class="traindays" id="trainDays"></div>
           <div class="splpick" id="splitPick">
             <button class="sp" data-n="2">2 天</button>
             <button class="sp on" data-n="3">3 天</button>
@@ -1267,7 +1281,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     <!-- 设置 -->
     <div class="sheet" id="setSheet">
       <div class="grab"></div>
-      <div class="sh-hd"><h2>设置</h2><span class="vtag">v5.84</span></div>
+      <div class="sh-hd"><h2>设置</h2><span class="vtag">v5.85</span></div>
       <div class="setbody">
         <div class="setlabel">训练设置</div>
         <div class="setrows">
@@ -1284,7 +1298,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
           <div class="srow" data-ic="monitor_heart"><span class="ico"></span><span class="lbl">Apple 健康</span><span class="sw"></span></div>
           <div class="srow" data-ic="assignment"><span class="ico"></span><span class="lbl">训练提醒</span><span class="sw"></span></div>
           <button class="srow" id="openBackup" data-ic="cloud_done"><span class="ico"></span><span class="lbl">数据备份</span><span class="val" id="backupVal">iCloud</span></button>
-          <button class="srow" id="openRel" data-ic="checklist"><span class="ico"></span><span class="lbl">更新记录</span><span class="val">v5.84</span></button>
+          <button class="srow" id="openRel" data-ic="checklist"><span class="ico"></span><span class="lbl">更新记录</span><span class="val">v5.85</span></button>
         </div>
       </div>
     </div>
@@ -1998,7 +2012,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   /* 本周容量 = 本周排的所有有效组 × 每组次数 × 当前重量（重量一改，这个数立刻跟着变） */
   function weekVolume(){
     var v = 0;
-    SPLITS[splitDays].days.forEach(function(d){
+    daysOf(splitDays).forEach(function(d){
       if (d[1] === 'rest') return;
       EX[d[1]].forEach(function(e){ var n2 = normEx(e); v += n2.sets * repMid(n2.rep) * kgOf(n2); });
     });
@@ -2154,13 +2168,47 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   }
 
   var splitDays = 3;
+  var WKN = ['周一','周二','周三','周四','周五','周六','周日'];
+  var trainDayIdx = [0,2,4];              /* 0=周一 … 6=周日，可自己改 */
+
+  function splitSeq(n){
+    return SPLITS[n].days.filter(function(d){ return d[1] !== 'rest'; }).map(function(d){ return d[1]; });
+  }
+  function defaultDays(n){
+    var need = splitSeq(n).length, cand = [0,2,4,1,3,5,6], out = [];
+    for (var i = 0; i < cand.length && out.length < need; i++) out.push(cand[i]);
+    return out.sort(function(a, b){ return a - b; });
+  }
+  function ensureTrainDays(n){
+    var need = splitSeq(n).length;
+    if (!Array.isArray(trainDayIdx) || trainDayIdx.length !== need) trainDayIdx = defaultDays(n);
+  }
+  /* 把「这套分化的动作顺序」铺到选中的星期上 */
+  function daysOf(n){
+    ensureTrainDays(n);
+    var seq = splitSeq(n), out = [], k = 0;
+    for (var i = 0; i < 7; i++){
+      if (trainDayIdx.indexOf(i) >= 0 && k < seq.length) out.push([WKN[i], seq[k++]]);
+      else out.push([WKN[i], 'rest']);
+    }
+    return out;
+  }
+  function paintTrainDays(){
+    var box = $('#trainDays'); if (!box) return;
+    ensureTrainDays(splitDays);
+    box.innerHTML = WKN.map(function(w, i){
+      return '<button class="tdchip' + (trainDayIdx.indexOf(i) >= 0 ? ' on' : '') + '" data-d="' + i + '">' +
+        w.replace('周', '') + '</button>';
+    }).join('');
+  }
+
   var viewISO = todayISO();
   var todayKey = '';
   var WD_CN = ['一','二','三','四','五','六','日'];
 
   function wdIdx(iso){ return (new Date(iso + 'T00:00:00').getDay() + 6) % 7; }
   function keyForISO(iso){
-    var d = SPLITS[splitDays].days[wdIdx(iso)];
+    var d = daysOf(splitDays)[wdIdx(iso)];
     return (d && d[1] !== 'rest') ? d[1] : '';
   }
   function isoDisplay(iso){ var a = String(iso).split('-'); return (+a[1]) + '月' + (+a[2]) + '日'; }
@@ -2238,7 +2286,8 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
       }
     }
     $('#dSub').textContent = t;
-    $('#goToday').hidden = isToday;
+    var g1 = $('#goToday'); if (g1) g1.hidden = isToday;
+    var g2 = $('#goToday2'); if (g2) g2.hidden = isToday;
   }
 
   /* 看某一天：今天=可操作；过去=当天真实记录；休息日=休息卡 */
@@ -2314,7 +2363,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
   /* 休息日也想练：按最近的那个训练日开一次（记录仍记在今天） */
   function trainAnyway(){
-    var days = SPLITS[splitDays].days, idx = wdIdx(todayISO()), pick = '';
+    var days = daysOf(splitDays), idx = wdIdx(todayISO()), pick = '';
     for (var s = 1; s <= 7 && !pick; s++){
       var i = ((idx - s) % 7 + 7) % 7;
       if (days[i][1] !== 'rest') pick = days[i][1];
@@ -2413,7 +2462,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     if (b) setSplit(+b.dataset.n);
   });
   $('#wkPrev').addEventListener('click', function(){ selectDay(isoMinus(viewISO, 1)); });
-  $('#goToday').addEventListener('click', function(){ selectDay(todayISO()); });
+  $('#goToday2').addEventListener('click', function(){ selectDay(todayISO()); });
   $('#wkNext').addEventListener('click', function(){
     if (viewISO >= todayISO()) return;
     selectDay(isoMinus(viewISO, -1));
@@ -2744,7 +2793,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   }
 
   /* ---------- 启动版本比对（同热量账本） ---------- */
-  var APP_VERSION = 'v5.84';
+  var APP_VERSION = 'v5.85';
   fetch('./version.txt?t=' + Date.now(), { cache: 'no-store' })
     .then(function(r){ return r.ok ? r.text() : ''; })
     .then(function(v){
@@ -2766,6 +2815,9 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
   /* ---------- 更新记录 ---------- */
   var RELEASES = [
+    { v:'v5.85', d:'11-08', items:[
+      '「回到今天」从日期下面那颗小字改成顶栏右侧的独立按钮（75×33，红底红字，和刷新/设置同高）；今天时不显示，回看时才出现'
+    ]},
     { v:'v5.84', d:'11-08', items:[
       '去掉那颗难看的 − 按钮：「组数」这一行直接显示「已完成 / 计划」（如 2 / 4 组），点「完成本组」这里的分子 +1，点「组数 −」分子 −1（撤掉最后一组），已经 0 组时再点 − 才减计划组数',
       '标题下面那行只留「休息 180 秒」，不再和组数行重复显示进度'
@@ -3282,11 +3334,11 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     return best ? { kg: best.kg, d: best.d } : null;
   }
   function splitTrainDays(){
-    return SPLITS[splitDays].days.filter(function(d){ return d[1] !== 'rest'; }).length;
+    return daysOf(splitDays).filter(function(d){ return d[1] !== 'rest'; }).length;
   }
   function planVolume(){
     var v = 0;
-    SPLITS[splitDays].days.forEach(function(d){
+    daysOf(splitDays).forEach(function(d){
       if (d[1] === 'rest') return;
       EX[d[1]].forEach(function(e){ var n2 = normEx(e); v += n2.sets * repMid(n2.rep) * kgOf(n2); });
     });
@@ -3378,7 +3430,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     var prCard = $('#prCard');
     if (prCard){
       var names = [], seen = {};
-      SPLITS[splitDays].days.forEach(function(d){
+      daysOf(splitDays).forEach(function(d){
         if (d[1] === 'rest') return;
         (EX[d[1]] || []).forEach(function(e){ if (!seen[e.n]){ seen[e.n] = 1; names.push(e.n); } });
       });
