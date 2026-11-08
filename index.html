@@ -524,11 +524,21 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
 /* 每周有效组数 */
 .volcard{display:flex;flex-direction:column;gap:10px}
-.vol{display:flex;align-items:center;gap:10px}
+.vol{display:flex;align-items:center;gap:9px}
 .vl{width:30px;flex:none;font-size:11px;color:var(--muted)}
-.vbar{flex:1;height:8px;border-radius:4px;background:rgba(255,255,255,.07);overflow:hidden}
+.vbar{position:relative;flex:1;height:8px;border-radius:4px;background:rgba(255,255,255,.07);overflow:hidden}
 .vbar i{display:block;height:100%;border-radius:4px;background:linear-gradient(90deg,rgba(228,0,43,.5),var(--lime))}
-.vv{width:22px;text-align:right;font-size:11.5px;font-weight:600;font-variant-numeric:tabular-nums}
+.vbar.low i{background:rgba(242,244,242,.22)}
+.vbar.high i{background:#FF9F0A}
+.vv{width:20px;text-align:right;font-size:11.5px;font-weight:600;font-variant-numeric:tabular-nums}
+.vst{width:46px;flex:none;text-align:right;font-size:10.5px;font-weight:650;letter-spacing:.02em}
+.vst.ok{color:var(--lime)}
+.vst.low{color:rgba(242,244,242,.45)}
+.vst.high{color:#FF9F0A}
+.volfoot .st{font-weight:650}
+.volfoot .st.ok{color:var(--lime)}
+.volfoot .st.low{color:rgba(242,244,242,.55)}
+.volfoot .st.high{color:#FF9F0A}
 .volfoot{display:flex;justify-content:space-between;font-size:10px;color:var(--muted2);padding-top:10px;border-top:1px solid var(--line);margin-top:1px;letter-spacing:.02em}
 .volfoot b{color:var(--text);font-weight:650}
 
@@ -1078,7 +1088,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
     <div class="statusbg" aria-hidden="true"></div>
     <div class="topbar">
-      <div class="brand">训练<span>账本</span><i class="btag">v6.31</i></div>
+      <div class="brand">训练<span>账本</span><i class="btag">v6.32</i></div>
       <div class="topactions">
         <button class="topbtn topicon" id="reloadTop" aria-label="强制更新" title="强制更新">
           <svg viewBox="0 -960 960 960" aria-hidden="true"><path d="M480-160q-134 0-227-93t-93-227q0-134 93-227t227-93q69 0 132 28.5T720-690v-70q0-17 11.5-28.5T760-800q17 0 28.5 11.5T800-760v200q0 17-11.5 28.5T760-520H560q-17 0-28.5-11.5T520-560q0-17 11.5-28.5T560-600h128q-32-56-87.5-88T480-720q-100 0-170 70t-70 170q0 100 70 170t170 70q68 0 124.5-34.5T692-367q8-14 22.5-19.5t29.5-.5q16 5 23 21t-1 30q-41 80-117 128t-169 48Z"/></svg>
@@ -1184,7 +1194,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
           <p id="splitDesc">每周 3 练 · 4 休 · 第 5 周减载</p>
         </div>
 
-        <div class="listhead"><h2>每周有效组数</h2><span>上限 20 组</span></div>
+        <div class="listhead"><h2>每周有效组数</h2><span>右边看达标</span></div>
         <div class="card volcard" id="volCard">
           <div class="vol"><span class="vl">胸</span><div class="vbar"><i style="width:70%"></i></div><span class="vv">14</span></div>
           <div class="vol"><span class="vl">背</span><div class="vbar"><i style="width:80%"></i></div><span class="vv">16</span></div>
@@ -1362,7 +1372,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     <!-- 设置 -->
     <div class="sheet" id="setSheet">
       <div class="grab"></div>
-      <div class="sh-hd"><h2>设置</h2><span class="vtag">v6.31</span></div>
+      <div class="sh-hd"><h2>设置</h2><span class="vtag">v6.32</span></div>
       <div class="setbody">
         <div class="setlabel">训练设置</div>
         <div class="setrows">
@@ -1380,7 +1390,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
           <button class="srow" id="openRemind" data-ic="assignment"><span class="ico"></span><span class="lbl">训练提醒</span><span class="val" id="remindVal">开</span></button>
           <button class="srow" id="clearLogs" data-ic="delete"><span class="ico"></span><span class="lbl">清除训练记录</span><span class="val plain">全部删除</span></button>
           <button class="srow" id="openBackup" data-ic="cloud_done"><span class="ico"></span><span class="lbl">数据备份</span><span class="val" id="backupVal">iCloud</span></button>
-          <button class="srow" id="openRel" data-ic="checklist"><span class="ico"></span><span class="lbl">更新记录</span><span class="val">v6.31</span></button>
+          <button class="srow" id="openRel" data-ic="checklist"><span class="ico"></span><span class="lbl">更新记录</span><span class="val">v6.32</span></button>
         </div>
       </div>
     </div>
@@ -3186,7 +3196,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   }
 
   /* ---------- 启动版本比对（同热量账本） ---------- */
-  var APP_VERSION = 'v6.31';
+  var APP_VERSION = 'v6.32';
   fetch('./version.txt?t=' + Date.now(), { cache: 'no-store' })
     .then(function(r){ return r.ok ? r.text() : ''; })
     .then(function(v){
@@ -3208,6 +3218,11 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
   /* ---------- 更新记录 ---------- */
   var RELEASES = [
+    { v:'v6.32', d:'11-08', items:[
+      '「每周有效组数」每行都标出状态：✓ 达标（红条）/ 差 N 组（灰条）/ 多 N 组（橙条）',
+      '合计那行也给结论：达标 ✓ / 还差 N 组 / 超 N 组，后面跟着建议区间 60–80',
+      '每个肌群的建议区间：胸 8–20、背 10–22、肩 6–16、股四 8–20、腘绳 4–12、小腿 4–12、手臂 4–14、核心 0–8'
+    ]},
     { v:'v6.31', d:'11-08', items:[
       '计划页去掉和「我的」重复的身体数据卡（体重/体脂/去脂体重/BMI 只在我的页出现一次）',
       '计划页去掉 AI 卡里「目标 · 经验 · 每周 X 练 · 器械」那行（我的页目标和设置里都有）',
@@ -3856,6 +3871,8 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   var MG = { chest:'胸', back:'背', quads:'股四', hamstring:'腘绳', calves:'小腿', glutes:'臀',
              shoulder:'肩', triceps:'手臂', biceps:'手臂', core:'核心', abs:'核心' };
   var GROUP_ORDER = ['胸','背','肩','股四','腘绳','小腿','手臂','核心'];
+  /* 每个肌群每周有效组数的建议区间（低于下限=练少了，高于上限=垃圾容量风险） */
+  var MUS_BAND = { '胸':[8,20], '背':[10,22], '肩':[6,16], '股四':[8,20], '腘绳':[4,12], '小腿':[4,12], '手臂':[4,14], '核心':[0,8] };
 
   function trainedDays(){
     var m = {};
@@ -3952,12 +3969,19 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
         total += e.sets;
       });
     });
+    function band(g){ return MUS_BAND[g] || [0, 20]; }
+    function stateOf(v, b){ return v < b[0] ? 'low' : (v > b[1] ? 'high' : 'ok'); }
+    function labelOf(v, b, st){ return st === 'ok' ? '✓ 达标' : (st === 'low' ? '差 ' + (b[0] - v) : '多 ' + (v - b[1])); }
     var html = GROUP_ORDER.map(function(g){
-      var v = groups[g] || 0;
-      return '<div class="vol"><span class="vl">' + g + '</span><div class="vbar"><i style="width:' +
-        Math.min(100, Math.round(v / 20 * 100)) + '%"></i></div><span class="vv">' + v + '</span></div>';
-    }).join('') +
-      '<div class="volfoot"><span>合计 <b>' + total + '</b> 有效组</span><span>建议区间 60–80</span></div>';
+      var v = groups[g] || 0, b = band(g), st = stateOf(v, b);
+      return '<div class="vol"><span class="vl">' + g + '</span>' +
+        '<div class="vbar ' + st + '"><i style="width:' + Math.min(100, Math.round(v / 20 * 100)) + '%"></i></div>' +
+        '<span class="vv">' + v + '</span>' +
+        '<span class="vst ' + st + '">' + labelOf(v, b, st) + '</span></div>';
+    }).join('');
+    var tb = [60, 80], tst = stateOf(total, tb);
+    html += '<div class="volfoot"><span>合计 <b>' + total + '</b> 有效组</span>' +
+      '<span class="st ' + tst + '">' + (tst === 'ok' ? '达标 ✓' : (tst === 'low' ? '还差 ' + (tb[0] - total) + ' 组' : '超 ' + (total - tb[1]) + ' 组')) + ' · 建议 60–80</span></div>';
     var vc = $('#volCard'); if (vc) vc.innerHTML = html;
   }
 
