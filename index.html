@@ -282,10 +282,11 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 .ringmid .rnum b.tot{color:rgba(255,255,255,.5)}
 .ringmid .rnum .rslash{font-style:normal;font-size:24px;line-height:1;color:rgba(255,255,255,.34);font-weight:400}
 .ringmid .rnum .runit{font-style:normal;font-size:16px;color:var(--muted2);margin-left:2px}
-.daybtn{width:30px;height:30px;flex:none;display:grid;place-items:center;border-radius:9px;
-  background-color:rgba(228,0,43,.14);border:1px solid rgba(228,0,43,.4);
-  color:#fff;cursor:pointer;padding:0;transition:transform .16s,background .2s}
-.daybtn .ico{width:17px;height:17px;fill:currentColor;display:block}
+.daybtn{position:absolute;left:100%;top:50%;transform:translateY(-50%);margin-left:8px;
+  width:19px;height:19px;display:grid;place-items:center;border-radius:6px;
+  background-color:rgba(228,0,43,.14);border:1px solid rgba(228,0,43,.38);
+  color:#fff;cursor:pointer;padding:0;transition:background .2s}
+.daybtn .ico{width:12px;height:12px;fill:currentColor;display:block}
 .daybtn:active{transform:scale(.94);background-color:rgba(228,0,43,.26)}
 .daybtn[hidden]{display:none}
 .ringmid .rgap{font-size:11px;font-weight:600;color:rgba(255,255,255,.8);letter-spacing:.2px;margin-top:12px}
@@ -306,7 +307,8 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 .herocard{padding-top:0}
 .daterow{display:flex;align-items:center;justify-content:space-between;gap:8px;
   margin:0 -9px;padding:7px 0 12px}
-.daterow .dmain{flex:1;min-width:0;display:flex;flex-direction:row;align-items:center;justify-content:center;gap:8px}
+.daterow .dmain{flex:1;min-width:0;display:flex;align-items:center;justify-content:center}
+.dwrap{position:relative;display:inline-flex;align-items:center}
 .daterow .dmain b{font-size:17px;font-weight:650;letter-spacing:.3px;color:var(--text)}
 
 .daterow .dline i{font-style:normal;font-size:11px;color:var(--muted2);letter-spacing:.02em;
@@ -365,13 +367,18 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 .tdchip.on{background-color:rgba(228,0,43,.16);border-color:rgba(228,0,43,.34);color:var(--lime)}
 .tdchip:active{transform:scale(.95)}
 .tdhint{margin:8px 0 0;font-size:10.5px;color:var(--muted2);letter-spacing:.02em}
-.splpick{display:flex;gap:4px;margin:14px 0 0;padding:4px;border-radius:13px;
-  background-color:rgba(2,4,3,.34);border:1px solid var(--line)}
-.sp{flex:1;border:0;background:transparent;border-radius:10px;padding:8px 0;
-  font-family:inherit;font-size:12px;font-weight:600;color:var(--muted2);cursor:pointer;line-height:1.2;
-  transition:background .2s,color .2s,transform .16s cubic-bezier(.2,1.3,.4,1)}
-.sp.on{background-color:rgba(228,0,43,.15);color:var(--lime);box-shadow:inset 0 0 0 1px rgba(228,0,43,.34)}
-.sp:active{transform:scale(.96)}
+.splpick{position:relative;display:flex;margin:14px 0 0;padding:2px;border-radius:999px;
+  background-color:rgba(255,255,255,.05);border:1px solid var(--line);overflow:hidden}
+.splpick .sp{position:relative;z-index:1;flex:1;border:0;background:none;border-radius:999px;
+  padding:9px 0;font-family:inherit;font-size:13px;font-weight:650;color:var(--muted2);
+  cursor:pointer;line-height:1.2;transition:color .25s ease}
+.splpick .sp.on{color:var(--lime);background:transparent}
+.splpick .sp:active{transform:scale(.96)}
+.splpick .seg-lens{position:absolute;left:0;top:0;width:0;height:0;z-index:0;pointer-events:none;
+  border-radius:999px;background-color:rgba(255,255,255,.085);opacity:0;
+  transition:transform .5s cubic-bezier(.33,1.06,.32,1),opacity .2s ease}
+.splpick .seg-lens.on{opacity:1}
+.splpick .seg-lens.noanim{transition:none}
 
 /* ---------- 动作卡：玻璃 + 16 圆角（对应 .meal） ---------- */
 .ex{
@@ -1006,7 +1013,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
     <div class="statusbg" aria-hidden="true"></div>
     <div class="topbar">
-      <div class="brand">训练<span>账本</span><i class="btag">v5.92</i></div>
+      <div class="brand">训练<span>账本</span><i class="btag">v5.93</i></div>
       <div class="topactions">
         <button class="topbtn topicon" id="reloadTop" aria-label="强制更新" title="强制更新">
           <svg viewBox="0 -960 960 960" aria-hidden="true"><path d="M480-160q-134 0-227-93t-93-227q0-134 93-227t227-93q69 0 132 28.5T720-690v-70q0-17 11.5-28.5T760-800q17 0 28.5 11.5T800-760v200q0 17-11.5 28.5T760-520H560q-17 0-28.5-11.5T520-560q0-17 11.5-28.5T560-600h128q-32-56-87.5-88T480-720q-100 0-170 70t-70 170q0 100 70 170t170 70q68 0 124.5-34.5T692-367q8-14 22.5-19.5t29.5-.5q16 5 23 21t-1 30q-41 80-117 128t-169 48Z"/></svg>
@@ -1027,10 +1034,11 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5 8 12l7 7"/></svg>
             </button>
             <div class="dmain">
-              <b id="dMain">11月8日</b>
-              <button class="daybtn" id="goTodayRing" hidden aria-label="回到今天" title="回到今天">
-                <svg class="ico" viewBox="0 -960 960 960" aria-hidden="true"><path/></svg>
-              </button>
+              <span class="dwrap"><b id="dMain">11月8日</b>
+                <button class="daybtn" id="goTodayRing" hidden aria-label="回到今天" title="回到今天">
+                  <svg class="ico" viewBox="0 -960 960 960" aria-hidden="true"><path/></svg>
+                </button>
+              </span>
             </div>
             <button class="wkbtn" id="wkNext" aria-label="下一周">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg>
@@ -1097,6 +1105,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
           <div class="aihd"><span class="tag">✦ AI · 3 天前更新</span><span class="planmeta" id="planEyebrow">3 练 / 周 · 共 8 周</span></div>
           <h2 id="splitName">三分化 · 推拉腿</h2>
           <div class="splpick" id="splitPick">
+            <span class="seg-lens"><span class="lens-body"></span></span>
             <button class="sp" data-n="2">2 天</button>
             <button class="sp on" data-n="3">3 天</button>
             <button class="sp" data-n="4">4 天</button>
@@ -1295,7 +1304,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     <!-- 设置 -->
     <div class="sheet" id="setSheet">
       <div class="grab"></div>
-      <div class="sh-hd"><h2>设置</h2><span class="vtag">v5.92</span></div>
+      <div class="sh-hd"><h2>设置</h2><span class="vtag">v5.93</span></div>
       <div class="setbody">
         <div class="setlabel">训练设置</div>
         <div class="setrows">
@@ -1312,7 +1321,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
           <div class="srow" data-ic="monitor_heart"><span class="ico"></span><span class="lbl">Apple 健康</span><span class="sw"></span></div>
           <div class="srow" data-ic="assignment"><span class="ico"></span><span class="lbl">训练提醒</span><span class="sw"></span></div>
           <button class="srow" id="openBackup" data-ic="cloud_done"><span class="ico"></span><span class="lbl">数据备份</span><span class="val" id="backupVal">iCloud</span></button>
-          <button class="srow" id="openRel" data-ic="checklist"><span class="ico"></span><span class="lbl">更新记录</span><span class="val">v5.92</span></button>
+          <button class="srow" id="openRel" data-ic="checklist"><span class="ico"></span><span class="lbl">更新记录</span><span class="val">v5.93</span></button>
         </div>
       </div>
     </div>
@@ -2413,9 +2422,24 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     });
   }
 
+  function placeSplitLens(noanim){
+    var wrap = $('#splitPick'); if (!wrap) return;
+    var lens = wrap.querySelector('.seg-lens'); if (!lens) return;
+    var btn = wrap.querySelector('.sp.on'); if (!btn) return;
+    if (!btn.offsetWidth) return;                 /* 页面还没显示出来，等切过去再落位 */
+    if (noanim) lens.classList.add('noanim');
+    lens.style.width = btn.offsetWidth + 'px';
+    lens.style.height = btn.offsetHeight + 'px';
+    lens.style.transform = 'translate3d(' + (btn.offsetLeft + 1) + 'px,' + (btn.offsetTop + 1) + 'px,0)';
+    lens.classList.add('on');
+    if (noanim){ void lens.offsetWidth; lens.classList.remove('noanim'); }
+  }
+  window.addEventListener('resize', function(){ placeSplitLens(true); });
+
   function setSplit(n){
     splitDays = n;
     $$('#splitPick .sp').forEach(function(b){ b.classList.toggle('on', +b.dataset.n === n); });
+    placeSplitLens();
     $('#splitName').textContent = SPLITS[n].label;
     renderWeek(n);
     renderDay();
@@ -2441,6 +2465,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     $$('.view').forEach(function(v){ v.classList.toggle('on', v.dataset.view === name); });
     placePill(order.indexOf(name));
     if (name === 'today' && viewISO === todayISO()) renderSets();
+    if (name === 'plan') setTimeout(function(){ placeSplitLens(true); }, 30);
     $('#scroller').classList.toggle('tight', name !== 'today');
     $('#scroller').scrollTop = 0;
   }
@@ -2797,7 +2822,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   }
 
   /* ---------- 启动版本比对（同热量账本） ---------- */
-  var APP_VERSION = 'v5.92';
+  var APP_VERSION = 'v5.93';
   fetch('./version.txt?t=' + Date.now(), { cache: 'no-store' })
     .then(function(r){ return r.ok ? r.text() : ''; })
     .then(function(v){
@@ -2819,6 +2844,10 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
   /* ---------- 更新记录 ---------- */
   var RELEASES = [
+    { v:'v5.93', d:'11-08', items:[
+      '几分化的选择改成热量账本「增肌/维持/减脂」那种胶囊分段：外面一颗胶囊、里面一块会滑过去的实色滑块（停稳 = 白 8.5%，走动 .5s 过冲曲线）',
+      '「回到今天」图标缩到 19×19（和日期字号同高），贴在日期右边；日期位置固定不动，按钮出现/消失不会把日期推来推去'
+    ]},
     { v:'v5.92', d:'11-08', items:[
       '「回到今天」改成图标按钮（日历图标），放在日期右边；设置 → App 图标里新增「回到今天」一栏，图标可选可换',
       '加练不再固定给「最近那次」：按「距离上次练它的天数 + 本周已练组数」算缺口，自动选最该补的那一场，并在加练条里写明原因（如「腿（还没练过）」或「推（距上次 9 天 · 本周 0 组）」）'
@@ -3632,6 +3661,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
   migrateWeights();
   setSplit(3);
+  placeSplitLens(true);
   paintWeekVol();
   paintAll();
   var h = (location.hash || '').replace('#','');
