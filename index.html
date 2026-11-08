@@ -1196,12 +1196,20 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 #iconSheet.page .islot:first-child{border-top:0}
 #iconSheet.page .iopts{flex:1 1 auto;min-width:0;overflow-x:auto;display:flex;gap:8px;padding-right:0;margin-right:-16px}
 #iconSheet.page .islab{flex:0 0 96px;font-size:12.5px;color:var(--muted);font-weight:500;letter-spacing:0;line-height:1.35;margin:0}
-#iconSheet.page .iopt{background:none;border:0}
-#iconSheet.page .iopt.on{background:rgba(228,0,43,.12);border:0;color:var(--lime)}
+/* 图标格子：材质照热量账本个性化页（玻璃底 + edge-gloss 描边） */
+#iconSheet.page .iopt{
+  background-image:linear-gradient(180deg,var(--glass-top) 0%,var(--glass-bot) 100%),var(--edge-gloss);
+  background-origin:border-box;background-clip:padding-box,border-box;
+  border:1px solid transparent;border-radius:12px;
+}
+#iconSheet.page .iopt.on{
+  background-image:linear-gradient(180deg,var(--glass-top) 0%,var(--glass-bot) 100%),var(--edge-gloss);
+  border-color:rgba(228,0,43,.5);color:var(--lime);
+}
 #iconSheet.page .icfoot{flex:none;display:flex;flex-direction:column;gap:10px;
   padding:12px 22px calc(var(--safe-b) + 30px);
   background:linear-gradient(180deg, rgba(13,15,14,0) 0%, #0d0f0e 38%, #0d0f0e 100%)}
-#iconSheet.page .icfoot .cta{flex:1;margin:0;position:static;width:auto;border-radius:26px}
+#iconSheet.page .icfoot .cta{flex:1;margin:0;position:static;width:auto;border-radius:26px;padding:14px;font-size:14px;font-weight:550}
 #iconSheet.page .iconnote{display:none}
 /* 这三张自己有 20 的左右内边距，标题栏要反推回卡牌边线（16），否则返回键会跑到 36 */
 /* 只有提醒页还保留 20 的内边距，标题栏要反推回 16；图标/备份已经是 0 内边距，不能再推 */
