@@ -1096,7 +1096,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
     <div class="statusbg" aria-hidden="true"></div>
     <div class="topbar">
-      <div class="brand">训练<span>账本</span><i class="btag">v6.37</i></div>
+      <div class="brand">训练<span>账本</span><i class="btag">v6.38</i></div>
       <div class="topactions">
         <button class="topbtn topicon" id="reloadTop" aria-label="强制更新" title="强制更新">
           <svg viewBox="0 -960 960 960" aria-hidden="true"><path d="M480-160q-134 0-227-93t-93-227q0-134 93-227t227-93q69 0 132 28.5T720-690v-70q0-17 11.5-28.5T760-800q17 0 28.5 11.5T800-760v200q0 17-11.5 28.5T760-520H560q-17 0-28.5-11.5T520-560q0-17 11.5-28.5T560-600h128q-32-56-87.5-88T480-720q-100 0-170 70t-70 170q0 100 70 170t170 70q68 0 124.5-34.5T692-367q8-14 22.5-19.5t29.5-.5q16 5 23 21t-1 30q-41 80-117 128t-169 48Z"/></svg>
@@ -1202,6 +1202,9 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
           <p id="splitDesc">每周 3 练 · 4 休 · 第 5 周减载</p>
         </div>
 
+        <div class="listhead"><h2>本周排布</h2><span id="weekMeta">6 练 · 1 休</span></div>
+        <div class="card" id="weekCard" style="padding:4px 16px"></div>
+
         <div class="listhead"><h2>每周有效组数</h2></div>
         <div class="card volcard" id="volCard">
           <div class="vol"><span class="vl">胸</span><div class="vbar"><i style="width:70%"></i></div><span class="vv">14</span></div>
@@ -1213,21 +1216,13 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
           <div class="volfoot"><span>合计 <b>71</b> 有效组</span><span>建议区间 60–80</span></div>
         </div>
 
-        <div class="listhead"><h2>本周排布</h2><span id="weekMeta">6 练 · 1 休</span></div>
-        <div class="card" id="weekCard" style="padding:4px 16px"></div>
-
         <button class="cta inline ghost" id="planCta">让 AI 重新规划</button>
       </section>
 
       <!-- ============ 记录 ============ -->
       <section class="view" data-view="log">
         <div class="card logdayscard">
-          <button class="srow" id="openDays"><span class="ico"><svg viewBox="0 -960 960 960"><path d="M180-80q-24 0-42-18t-18-42v-620q0-24 18-42t42-18h65v-28q0-13.6 9-22.8 9-9.2 23.02-9.2t23.5 9.2Q310-861.6 310-848v28h340v-28q0-13.6 9-22.8 9-9.2 23.02-9.2t23.5 9.2Q715-861.6 715-848v28h65q24 0 42 18t18 42v620q0 24-18 42t-42 18H180Zm0-60h600v-430H180v430Zm300-260q-17 0-28.5-11.5T440-440q0-17 11.5-28.5T480-480q17 0 28.5 11.5T520-440q0 17-11.5 28.5T480-400Zm-188.5-11.5Q280-423 280-440t11.5-28.5Q303-480 320-480t28.5 11.5Q360-457 360-440t-11.5 28.5Q337-400 320-400t-28.5-11.5ZM640-400q-17 0-28.5-11.5T600-440q0-17 11.5-28.5T640-480q17 0 28.5 11.5T680-440q0 17-11.5 28.5T640-400ZM480-240q-17 0-28.5-11.5T440-280q0-17 11.5-28.5T480-320q17 0 28.5 11.5T520-280q0 17-11.5 28.5T480-240Zm-188.5-11.5Q280-263 280-280t11.5-28.5Q303-320 320-320t28.5 11.5Q360-297 360-280t-11.5 28.5Q337-240 320-240t-28.5-11.5ZM640-240q-17 0-28.5-11.5T600-280q0-17 11.5-28.5T640-320q17 0 28.5 11.5T680-280q0 17-11.5 28.5T640-240Z"/></svg></span><span class="lbl">锻炼日志</span><span class="val" id="daysVal">0 天</span></button>
-        </div>
-
-        <div class="listhead"><h2>每周容量</h2><span>公斤 · 近 8 周</span></div>
-        <div class="card">
-          <div class="bars empty" id="logBars"><p class="emptyline">最近 8 周还没有记录</p></div>
+          <button class="srow" id="openDays" data-ic="calendar_month"><span class="ico"><svg viewBox="0 -960 960 960"><path d="M180-80q-24 0-42-18t-18-42v-620q0-24 18-42t42-18h65v-28q0-13.6 9-22.8 9-9.2 23.02-9.2t23.5 9.2Q310-861.6 310-848v28h340v-28q0-13.6 9-22.8 9-9.2 23.02-9.2t23.5 9.2Q715-861.6 715-848v28h65q24 0 42 18t18 42v620q0 24-18 42t-42 18H180Zm0-60h600v-430H180v430Zm300-260q-17 0-28.5-11.5T440-440q0-17 11.5-28.5T480-480q17 0 28.5 11.5T520-440q0 17-11.5 28.5T480-400Zm-188.5-11.5Q280-423 280-440t11.5-28.5Q303-480 320-480t28.5 11.5Q360-457 360-440t-11.5 28.5Q337-400 320-400t-28.5-11.5ZM640-400q-17 0-28.5-11.5T600-440q0-17 11.5-28.5T640-480q17 0 28.5 11.5T680-440q0 17-11.5 28.5T640-400ZM480-240q-17 0-28.5-11.5T440-280q0-17 11.5-28.5T480-320q17 0 28.5 11.5T520-280q0 17-11.5 28.5T480-240Zm-188.5-11.5Q280-263 280-280t11.5-28.5Q303-320 320-320t28.5 11.5Q360-297 360-280t-11.5 28.5Q337-240 320-240t-28.5-11.5ZM640-240q-17 0-28.5-11.5T600-280q0-17 11.5-28.5T640-320q17 0 28.5 11.5T680-280q0 17-11.5 28.5T640-240Z"/></svg></span><span class="lbl">锻炼日志</span><span class="val" id="daysVal">0 天</span></button>
         </div>
 
         <div class="listhead"><h2>动作重量</h2></div>
@@ -1250,6 +1245,11 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
           </div>
         </div>
 
+        <div class="listhead"><h2>每周容量</h2><span>公斤 · 近 8 周</span></div>
+        <div class="card">
+          <div class="bars empty" id="logBars"><p class="emptyline">最近 8 周还没有记录</p></div>
+        </div>
+
         <div class="listhead"><h2>打卡热力</h2><span>近 14 周</span></div>
         <div class="card">
           <div class="heat" id="heat"></div>
@@ -1258,11 +1258,20 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
       <!-- ============ 我的 ============ -->
       <section class="view" data-view="me">
-        <div class="card goalcard">
-          <span class="tag">当前目标</span>
-          <h2>增肌 · 每周净增 0.25 kg</h2>
-          <p>训练日 +300 kcal · 休息日 +150 kcal · 今天还剩 420 kcal</p>
+        <div class="listhead"><h2 id="sumTitle">周小结</h2></div>
+        <div class="card sumcard">
+          <div class="splpick sumpick" id="sumPick">
+            <span class="seg-lens"><span class="lens-body"></span></span>
+            <button class="sp on" data-sum="wk">本周</button>
+            <button class="sp" data-sum="mo">本月</button>
+          </div>
+          <div id="sumBody"></div>
+          <p class="sumnote">以上全部按你真实的训练记录算（组数 vs 计划、少练天数、最弱的肌群），每次打开都会重算。饮食和体重这 App 没有数据，去热量账本看。</p>
         </div>
+
+
+                <div class="listhead"><h2>训练统计</h2></div>
+        <div class="card" id="meStats" style="padding:14px 16px"></div>
 
         <div class="card bodycard" style="margin-top:12px">
           <div class="bchead">
@@ -1277,22 +1286,13 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
           </div>
         </div>
 
-        <div class="listhead"><h2>训练统计</h2></div>
-        <div class="card" id="meStats" style="padding:14px 16px"></div>
-
-        <div class="listhead"><h2 id="sumTitle">周小结</h2></div>
-        <div class="card sumcard">
-          <div class="splpick sumpick" id="sumPick">
-            <span class="seg-lens"><span class="lens-body"></span></span>
-            <button class="sp on" data-sum="wk">本周</button>
-            <button class="sp" data-sum="mo">本月</button>
-          </div>
-          <div id="sumBody"></div>
-          <p class="sumnote">饮食与体重以热量账本为准（当前体重 64.9 kg）；这里按训练记录给建议。</p>
+        <div class="card goalcard">
+          <span class="tag">当前目标</span>
+          <h2>增肌 · 每周净增 0.25 kg</h2>
+          <p>训练日 +300 kcal · 休息日 +150 kcal · 今天还剩 420 kcal</p>
         </div>
 
-
-        </section>
+</section>
 
     </div>
 
@@ -1381,7 +1381,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     <!-- 设置 -->
     <div class="sheet" id="setSheet">
       <div class="grab"></div>
-      <div class="sh-hd"><h2>设置</h2><span class="vtag">v6.37</span></div>
+      <div class="sh-hd"><h2>设置</h2><span class="vtag">v6.38</span></div>
       <div class="setbody">
         <div class="setlabel">训练设置</div>
         <div class="setrows">
@@ -1399,7 +1399,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
           <button class="srow" id="openRemind" data-ic="assignment"><span class="ico"></span><span class="lbl">训练提醒</span><span class="val" id="remindVal">开</span></button>
           <button class="srow" id="clearLogs" data-ic="delete"><span class="ico"></span><span class="lbl">清除训练记录</span><span class="val plain">全部删除</span></button>
           <button class="srow" id="openBackup" data-ic="cloud_done"><span class="ico"></span><span class="lbl">数据备份</span><span class="val" id="backupVal">iCloud</span></button>
-          <button class="srow" id="openRel" data-ic="checklist"><span class="ico"></span><span class="lbl">更新记录</span><span class="val">v6.37</span></button>
+          <button class="srow" id="openRel" data-ic="checklist"><span class="ico"></span><span class="lbl">更新记录</span><span class="val">v6.38</span></button>
         </div>
       </div>
     </div>
@@ -1549,9 +1549,11 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
   /* 设置页每一行前面的小图标也单独可换（不是只有下面 4 个 tab） */
   var SET_ROWS = $$('#setSheet .srow[data-ic]');
+  /* 页面里带 data-ic 的行也要能换图标；追加在最后，避免打乱已存的 set0…set11 */
+  var LOG_ROW = $('#openDays[data-ic]'); if (LOG_ROW) SET_ROWS = SET_ROWS.concat([LOG_ROW]);
   var SET_DEFAULTS = SET_ROWS.map(function(r){ return r.dataset.ic; });
   /* 每个设置行也各自一套「对得上这行意思」的候选（key = 该行原本的 data-ic） */
-  var SET_CUR = {"event_note":["event_repeat","repeat","calendar_view_week","autorenew","event_available","today","date_range","all_inclusive","calendar_month","schedule"],"fitness_center":["fitness_center","exercise","sports_gymnastics","rowing","sports_martial_arts","monitor_weight","weight","sports_tennis","directions_bike","pool"],"badge":["workspace_premium","military_tech","school","grade","emoji_events","verified","star","trending_up","query_stats","sports_score"],"timeline":["timer","hourglass_bottom","schedule","av_timer","more_time","timelapse","speed","alarm"],"palette":["palette","apps","grid_view","dashboard","category","widgets","auto_awesome","brush","style","layers"],"bolt":["sync","sync_alt","cached","cloud_sync","refresh","cloud_done","compare_arrows","swap_vert","autorenew","update"],"monitor_heart":["monitor_heart","favorite","health_and_safety","ecg_heart","cardiology","bedtime","water_drop","air","nutrition","fitness_center"],"assignment":["notifications","notifications_active","alarm","alarm_on","campaign","ring_volume","notification_add","mark_email_unread","event_repeat","task_alt"],"delete":["delete","task_alt","checklist","history","new_releases","system_update","update","article","info","bookmarks"],"checklist":["history","new_releases","system_update","update","article","published_with_changes","task_alt","bookmarks","info","verified"]};
+  var SET_CUR = {"event_note":["event_repeat","repeat","calendar_view_week","autorenew","event_available","today","date_range","all_inclusive","calendar_month","schedule"],"fitness_center":["fitness_center","exercise","sports_gymnastics","rowing","sports_martial_arts","monitor_weight","weight","sports_tennis","directions_bike","pool"],"badge":["workspace_premium","military_tech","school","grade","emoji_events","verified","star","trending_up","query_stats","sports_score"],"timeline":["timer","hourglass_bottom","schedule","av_timer","more_time","timelapse","speed","alarm"],"palette":["palette","apps","grid_view","dashboard","category","widgets","auto_awesome","brush","style","layers"],"bolt":["sync","sync_alt","cached","cloud_sync","refresh","cloud_done","compare_arrows","swap_vert","autorenew","update"],"monitor_heart":["monitor_heart","favorite","health_and_safety","ecg_heart","cardiology","bedtime","water_drop","air","nutrition","fitness_center"],"assignment":["notifications","notifications_active","alarm","alarm_on","campaign","ring_volume","notification_add","mark_email_unread","event_repeat","task_alt"],"delete":["delete","task_alt","checklist","history","new_releases","system_update","update","article","info","bookmarks"],"calendar_month":["calendar_month","event_note","calendar_today","date_range","view_week","history","schedule","edit_calendar","event_available","article"],"checklist":["history","new_releases","system_update","update","article","published_with_changes","task_alt","bookmarks","info","verified"]};
   SET_ROWS.forEach(function(r, i){
     var key = 'set' + i;
     var lblEl = r.querySelector('.lbl');
@@ -3230,7 +3232,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   }
 
   /* ---------- 启动版本比对（同热量账本） ---------- */
-  var APP_VERSION = 'v6.37';
+  var APP_VERSION = 'v6.38';
   fetch('./version.txt?t=' + Date.now(), { cache: 'no-store' })
     .then(function(r){ return r.ok ? r.text() : ''; })
     .then(function(v){
@@ -3252,6 +3254,11 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
   /* ---------- 更新记录 ---------- */
   var RELEASES = [
+    { v:'v6.38', d:'11-08', items:[
+      '三个页面按重要性重排：计划 = AI 卡 → 本周排布 → 每周有效组数；记录 = 锻炼日志 → 动作重量 → 每周容量 → 打卡热力；我的 = 周/月小结 → 训练统计 → 身体数据 → 当前目标',
+      '小结的建议改成真算：组数 vs 计划、少练天数、最弱肌群（对比各肌群建议下限）；底部说明写明「按真实训练记录每次重算，饮食和体重这 App 没有数据」',
+      '「锻炼日志」那一行的图标现在可以在设置 → 图标里换（以后新增板块的图标也会一起进这里）'
+    ]},
     { v:'v6.37', d:'11-08', items:[
       '周小结 / 月小结搬到「我的」页（训练统计下面），记录页只留 锻炼日志 / 每周容量 / 动作重量 / 打卡热力'
     ]},
@@ -4078,11 +4085,20 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
       if (d[1] !== 'rest'){ planSets += totalSets(d[1]); planDays++; }
     });
     var weeks = mode === 'wk' ? 1 : Math.max(1, ((new Date(today + 'T00:00:00') - new Date(from + 'T00:00:00')) / 604800000) + 0.2);
+    var byGroup = {}, planGroups = {};
+    logs.forEach(function(l){
+      var g = MG[l.m] || '核心';
+      byGroup[g] = (byGroup[g] || 0) + 1;
+    });
+    daysOf(splitDays).forEach(function(d){
+      if (d[1] === 'rest') return;
+      (EX[d[1]] || []).forEach(function(e){ planGroups[MG[e.m] || '核心'] = 1; });
+    });
     var out = {
       mode: mode, days: Object.keys(daySet).length, sets: logs.length, vol: vol,
       planSets: Math.round(planSets * (mode === 'wk' ? 1 : weeks)),
       planDays: Math.round(planDays * (mode === 'wk' ? 1 : weeks)),
-      weeks: weeks
+      weeks: weeks, byGroup: byGroup, planGroups: planGroups
     };
     if (mode === 'mo'){
       var pm = from; var d0 = new Date(pm + 'T00:00:00'); d0.setMonth(d0.getMonth() - 1);
@@ -4094,13 +4110,25 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   }
   function sumAdvice(st){
     if (!st.sets) return '这段还没有记录：先按计划练一次，有数据才谈得上调整。';
-    var r = st.planSets ? st.sets / st.planSets : 0, t = '';
-    if (st.days < st.planDays) t += '少练了 ' + Math.max(1, st.planDays - st.days) + ' 天；';
-    if (r < 0.4) t += '容量只到计划的 ' + Math.round(r * 100) + '%，先把次数补齐，别急着加重量。';
-    else if (r < 0.8) t += '容量 ' + Math.round(r * 100) + '%，差一点，优先补组数和次数。';
-    else if (r <= 1.15) t += '容量和计划齐平，可以按渐进超负荷加 2.5 kg。';
-    else t += '容量超计划 ' + Math.round(r * 100) + '%，注意恢复，别把下周练崩。';
-    return t;
+    var t = [];
+    if (st.days < st.planDays) t.push('少练 ' + (st.planDays - st.days) + ' 天');
+    var pct = st.planSets ? Math.round(st.sets / st.planSets * 100) : 0;
+    if (pct < 40) t.push('组数只到计划的 ' + pct + '%');
+    else if (pct < 80) t.push('组数到计划的 ' + pct + '%');
+    else if (pct <= 115) t.push('组数和计划齐平');
+    else t.push('组数超计划 ' + pct + '%');
+    /* 哪个肌群这期练得最少（对比建议下限 × 周数） */
+    var weak = GROUP_ORDER.filter(function(g){
+      if (!st.planGroups[g]) return false;
+      var want = (MUS_BAND[g] ? MUS_BAND[g][0] : 0) * st.weeks;
+      return (st.byGroup[g] || 0) < want;
+    }).sort(function(a, b){ return (st.byGroup[a] || 0) - (st.byGroup[b] || 0); }).slice(0, 2);
+    var tail;
+    if (pct < 80 && weak.length) tail = '优先补 ' + weak.join('、') + ' 的组数。';
+    else if (pct > 115) tail = '下次先稳住，别再往上加量。';
+    else if (weak.length) tail = weak.join('、') + ' 还差一点，下次各多练 1–2 组。';
+    else tail = '可以按渐进超负荷走：主项加 2.5 kg，次数别掉。';
+    return t.join('；') + '；' + tail;
   }
   function paintSum(){
     var st = sumStats(sumMode);
