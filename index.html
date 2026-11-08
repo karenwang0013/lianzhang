@@ -3046,7 +3046,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
       if (!active || !el) return;
       var t = e.touches[0]; if (!t) return;
       var mx = t.clientX - sx, my = Math.abs(t.clientY - sy);
-      if (my > 70) { active = false; el.style.transition = ''; el.style.transform = ''; return; }
+      if (my > 90) { active = false; el.style.transition = ''; el.style.transform = ''; return; }
       dx = Math.max(0, mx);
       el.style.transform = 'translateX(' + dx + 'px)';
     }, { passive: true });
@@ -3054,7 +3054,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
       if (!active || !el) return;
       active = false;
       var target = el; el = null;
-      if (dx > 72){
+      if (dx > 56){
         target.style.transition = 'transform .2s ease-out';
         target.style.transform = 'translateX(100%)';
         setTimeout(function(){ resetStyle(target); goBack(); }, 210);
