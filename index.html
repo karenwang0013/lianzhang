@@ -1129,12 +1129,10 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   .listhead h2{font-size:13px}
   .listhead span{font-size:12px}
 }
-/* iPad / 手机横屏：整列更宽一档（900），字号再大一点 */
+/* iPad / 手机横屏：内容铺满屏幕宽度（不再居中成一条窄列、两边留大片空白） */
 @media (min-width:700px) and (orientation:landscape){
-  .topbar{padding-left:max(24px, calc((100vw - 900px) / 2 + 18px));
-    padding-right:max(24px, calc((100vw - 900px) / 2 + 18px))}
-  .scroller{padding-left:max(18px, calc((100vw - 900px) / 2));
-    padding-right:max(18px, calc((100vw - 900px) / 2))}
+  .topbar{padding-left:24px;padding-right:24px}
+  .scroller{padding-left:24px;padding-right:24px}
   .ringwrap,.ringwrap svg{width:300px;height:300px}
   .ringmid .rnum b{font-size:62px}
 }
