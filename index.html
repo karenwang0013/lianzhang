@@ -282,18 +282,6 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 .ringmid .rnum b.tot{color:rgba(255,255,255,.5)}
 .ringmid .rnum .rslash{font-style:normal;font-size:24px;line-height:1;color:rgba(255,255,255,.34);font-weight:400}
 .ringmid .rnum .runit{font-style:normal;font-size:16px;color:var(--muted2);margin-left:2px}
-/* 回到今天：绝对定位塞进「日期 → 圆环」那段空隙里，不占布局、不推圆环 */
-.retrow{position:absolute;left:0;right:0;bottom:-3px;display:flex;justify-content:center;
-  margin:0;pointer-events:none}
-.retrow[hidden]{display:none}
-.retrow .daybtn{pointer-events:auto}
-.daybtn{
-  height:18px;padding:0 8px;display:inline-flex;align-items:center;justify-content:center;
-  border-radius:8px;background-color:rgba(228,0,43,.14);border:1px solid rgba(228,0,43,.38);
-  color:#fff;font-family:inherit;font-size:10.5px;font-weight:600;letter-spacing:.01em;
-  white-space:nowrap;cursor:pointer;transition:background .2s}
-.daybtn:active{transform:scale(.94);background-color:rgba(228,0,43,.26)}
-.daybtn[hidden]{display:none}
 .ringmid .rgap{font-size:11px;font-weight:600;color:rgba(255,255,255,.8);letter-spacing:.2px;margin-top:12px}
 
 /* 三宫格（同热量账本的三格） */
@@ -312,7 +300,10 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 .herocard{padding-top:0}
 .daterow{position:relative;display:flex;align-items:center;justify-content:space-between;gap:8px;
   margin:0 -9px;padding:7px 0 12px}
-.daterow .dmain{flex:1;min-width:0;display:flex;align-items:center;justify-content:center}
+.daterow .dmain{flex:1;min-width:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px}
+.daterow .dline{display:flex;align-items:center;gap:7px;min-height:16px}
+.daterow .dline i{font-style:normal;font-size:11px;color:var(--muted2);letter-spacing:.02em;
+  font-variant-numeric:tabular-nums;white-space:nowrap}
 .dwrap{position:relative;display:inline-flex;align-items:center}
 .daterow .dmain b{font-size:17px;font-weight:650;letter-spacing:.3px;color:var(--text)}
 
@@ -1045,7 +1036,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
     <div class="statusbg" aria-hidden="true"></div>
     <div class="topbar">
-      <div class="brand">训练<span>账本</span><i class="btag">v6.03</i></div>
+      <div class="brand">训练<span>账本</span><i class="btag">v6.04</i></div>
       <div class="topactions">
         <button class="topbtn topicon" id="reloadTop" aria-label="强制更新" title="强制更新">
           <svg viewBox="0 -960 960 960" aria-hidden="true"><path d="M480-160q-134 0-227-93t-93-227q0-134 93-227t227-93q69 0 132 28.5T720-690v-70q0-17 11.5-28.5T760-800q17 0 28.5 11.5T800-760v200q0 17-11.5 28.5T760-520H560q-17 0-28.5-11.5T520-560q0-17 11.5-28.5T560-600h128q-32-56-87.5-88T480-720q-100 0-170 70t-70 170q0 100 70 170t170 70q68 0 124.5-34.5T692-367q8-14 22.5-19.5t29.5-.5q16 5 23 21t-1 30q-41 80-117 128t-169 48Z"/></svg>
@@ -1067,13 +1058,11 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
             </button>
             <div class="dmain">
               <span class="dwrap"><b id="dMain">11月8日</b></span>
+              <span class="dline"><i id="dSub">今天</i></span>
             </div>
             <button class="wkbtn" id="wkNext" aria-label="下一周">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg>
             </button>
-            <div class="retrow" id="retRow" hidden>
-              <button class="daybtn" id="goTodayRing">回到今天</button>
-            </div>
           </div>
 
           <div class="ringwrap">
@@ -1339,7 +1328,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     <!-- 设置 -->
     <div class="sheet" id="setSheet">
       <div class="grab"></div>
-      <div class="sh-hd"><h2>设置</h2><span class="vtag">v6.03</span></div>
+      <div class="sh-hd"><h2>设置</h2><span class="vtag">v6.04</span></div>
       <div class="setbody">
         <div class="setlabel">训练设置</div>
         <div class="setrows">
@@ -1356,7 +1345,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
           <div class="srow" data-ic="monitor_heart"><span class="ico"></span><span class="lbl">Apple 健康</span><span class="sw"></span></div>
           <button class="srow" id="openRemind" data-ic="assignment"><span class="ico"></span><span class="lbl">训练提醒</span><span class="val" id="remindVal">开</span></button>
           <button class="srow" id="openBackup" data-ic="cloud_done"><span class="ico"></span><span class="lbl">数据备份</span><span class="val" id="backupVal">iCloud</span></button>
-          <button class="srow" id="openRel" data-ic="checklist"><span class="ico"></span><span class="lbl">更新记录</span><span class="val">v6.03</span></button>
+          <button class="srow" id="openRel" data-ic="checklist"><span class="ico"></span><span class="lbl">更新记录</span><span class="val">v6.04</span></button>
         </div>
       </div>
     </div>
@@ -2322,8 +2311,28 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
   /* 日期行下面的小字：今天 · 腿 · 2/17 组 / 周五 · 没记录 / 周六 · 计划 17 组 */
   function setSub(){
-    $('#dMain').textContent = isoDisplay(viewISO);
-    var rr = $('#retRow'); if (rr) rr.hidden = (viewISO === todayISO());
+    var iso = viewISO, isToday = iso === todayISO(), t = '';
+    $('#dMain').textContent = isoDisplay(iso);
+    if (isToday){
+      t = '今天';
+      if (todayKey){
+        var done = document.querySelectorAll('#exList .dot.on').length;
+        var total = document.querySelectorAll('#exList .dot').length;
+        t += ' · ' + TITLE[todayKey][0] + ' · ' + done + '/' + total + ' 组';
+      } else {
+        t += ' · 休息日';
+      }
+    } else {
+      t = '周' + WD_CN[wdIdx(iso)];
+      if (iso > todayISO()){
+        var k2 = keyForISO(iso);
+        t += ' · ' + (k2 ? '计划 ' + totalSets(k2) + ' 组' : '休息日');
+      } else {
+        var lg = allLogs().filter(function(l){ return l.d === iso; });
+        t += lg.length ? ' · ' + lg.length + ' 组' : ' · 没记录';
+      }
+    }
+    var ds = $('#dSub'); if (ds) ds.textContent = t;
   }
 
   /* 看某一天：今天=可操作；过去=当天真实记录；休息日=休息卡 */
@@ -2671,8 +2680,16 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     if (b) setSplit(+b.dataset.n);
   });
   $('#wkPrev').addEventListener('click', function(){ selectDay(isoMinus(viewISO, 1)); });
-  $('#goTodayRing').addEventListener('click', function(){ selectDay(todayISO()); });
+  var wkHold = null, wkHeld = false;
+  $('#wkNext').addEventListener('pointerdown', function(){
+    wkHeld = false;
+    wkHold = setTimeout(function(){ wkHeld = true; selectDay(todayISO()); }, 550);
+  });
+  ['pointerup','pointercancel','pointerleave'].forEach(function(ev){
+    $('#wkNext').addEventListener(ev, function(){ clearTimeout(wkHold); });
+  });
   $('#wkNext').addEventListener('click', function(){
+    if (wkHeld){ wkHeld = false; return; }         /* 长按已经回到今天，不再前进一天 */
     if (viewISO >= todayISO()) return;
     selectDay(isoMinus(viewISO, -1));
   });
@@ -3003,7 +3020,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   }
 
   /* ---------- 启动版本比对（同热量账本） ---------- */
-  var APP_VERSION = 'v6.03';
+  var APP_VERSION = 'v6.04';
   fetch('./version.txt?t=' + Date.now(), { cache: 'no-store' })
     .then(function(r){ return r.ok ? r.text() : ''; })
     .then(function(v){
@@ -3025,6 +3042,10 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
   /* ---------- 更新记录 ---------- */
   var RELEASES = [
+    { v:'v6.04', d:'11-08', items:[
+      '去掉「回到今天」按钮：改成**长按右边的箭头**（0.55 秒）回到今天，短按还是下一天',
+      '日期下面那行小字恢复：今天显示「今天 · 腿 · 0/23 组」，回看显示「周三 · 没记录 / 计划 17 组」'
+    ]},
     { v:'v6.03', d:'11-08', items:[
       '子页头部改成热量账本那样：返回箭头在最左、标题靠最右（之前我把标题紧挨着箭头，做错了）',
       '基础设置能点了：每周训练频率 / 可用器械 / 训练经验 / 单次时长上限，点开是一列选项、当前值打勾；选「X 天」会直接切到对应分化，其它三项记住你的选择'
