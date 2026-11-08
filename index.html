@@ -122,8 +122,7 @@ body{
 /* ---------- 顶栏 ---------- */
 .topbar{
   position:absolute;top:0;left:0;right:0;z-index:42;
-  height:calc(51px + var(--safe-t));
-  padding:var(--safe-t) 18px 0;
+  padding:calc(var(--safe-t) + 3px) 18px 13px;
   display:flex;align-items:center;justify-content:space-between;
   background:#0d0f0e;
 }
@@ -190,7 +189,7 @@ body{
 .scroller{
   position:relative;z-index:1;
   flex:1;overflow-y:auto;overflow-x:hidden;
-  padding:calc(51px + var(--safe-t) + 13px) var(--page-pad) 140px;
+  padding:calc(var(--topbar-h, 44px) + 13px) var(--page-pad) 140px;
   -webkit-overflow-scrolling:touch;
   overscroll-behavior-y:contain;
   scrollbar-width:none;
@@ -927,13 +926,13 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 /* iPad / 桌面：内容列 720 居中，Dock 加宽加高一档，弹层居中限宽 */
 @media (min-width:700px){
   :root{--dock-h:104px;--page-pad:24px}
-  .topbar{height:calc(28px + var(--safe-t));padding:var(--safe-t) max(24px, calc((100vw - 720px) / 2 + 24px)) 0}
+  .topbar{padding:calc(var(--safe-t) + 2px) max(24px, calc((100vw - 720px) / 2 + 24px)) 10px}
   .brand{font-size:24px}
   .topbtn{height:38px;padding:8px 13px;border-radius:12px;font-size:14px}
   .topbtn .ico, .topbtn svg{width:20px;height:20px}
   .scroller{padding-left:max(24px, calc((100vw - 720px) / 2));
     padding-right:max(24px, calc((100vw - 720px) / 2));
-    padding-top:calc(28px + var(--safe-t) + 22px);padding-bottom:calc(var(--dock-h) + 60px)}
+    padding-top:calc(var(--topbar-h, 44px) + 22px);padding-bottom:calc(var(--dock-h) + 60px)}
   .scroller.tight{padding-bottom:calc(var(--dock-h) + 52px)}
   h1{font-size:48px}
   .sub{font-size:14px}
@@ -970,7 +969,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
     <div class="statusbg" aria-hidden="true"></div>
     <div class="topbar">
-      <div class="brand">训练<span>账本</span><i class="btag">v5.63</i></div>
+      <div class="brand">训练<span>账本</span><i class="btag">v5.64</i></div>
       <div class="topactions">
         <button class="topbtn topicon" id="reloadTop" aria-label="强制更新" title="强制更新">
           <svg viewBox="0 -960 960 960" aria-hidden="true"><path d="M480-160q-134 0-227-93t-93-227q0-134 93-227t227-93q69 0 132 28.5T720-690v-70q0-17 11.5-28.5T760-800q17 0 28.5 11.5T800-760v200q0 17-11.5 28.5T760-520H560q-17 0-28.5-11.5T520-560q0-17 11.5-28.5T560-600h128q-32-56-87.5-88T480-720q-100 0-170 70t-70 170q0 100 70 170t170 70q68 0 124.5-34.5T692-367q8-14 22.5-19.5t29.5-.5q16 5 23 21t-1 30q-41 80-117 128t-169 48Z"/></svg>
@@ -1259,7 +1258,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     <!-- 设置 -->
     <div class="sheet" id="setSheet">
       <div class="grab"></div>
-      <div class="sh-hd"><h2>设置</h2><span class="vtag">v5.63</span></div>
+      <div class="sh-hd"><h2>设置</h2><span class="vtag">v5.64</span></div>
       <div class="setbody">
         <div class="setlabel">训练设置</div>
         <div class="setrows">
@@ -1276,7 +1275,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
           <div class="srow" data-ic="monitor_heart"><span class="ico"></span><span class="lbl">Apple 健康</span><span class="sw"></span></div>
           <div class="srow" data-ic="assignment"><span class="ico"></span><span class="lbl">训练提醒</span><span class="sw"></span></div>
           <button class="srow" id="openBackup" data-ic="cloud_done"><span class="ico"></span><span class="lbl">数据备份</span><span class="val" id="backupVal">iCloud</span></button>
-          <button class="srow" id="openRel" data-ic="checklist"><span class="ico"></span><span class="lbl">更新记录</span><span class="val">v5.63</span></button>
+          <button class="srow" id="openRel" data-ic="checklist"><span class="ico"></span><span class="lbl">更新记录</span><span class="val">v5.64</span></button>
         </div>
       </div>
     </div>
@@ -2536,7 +2535,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   }
 
   /* ---------- 启动版本比对（同热量账本） ---------- */
-  var APP_VERSION = 'v5.63';
+  var APP_VERSION = 'v5.64';
   fetch('./version.txt?t=' + Date.now(), { cache: 'no-store' })
     .then(function(r){ return r.ok ? r.text() : ''; })
     .then(function(v){
@@ -2558,6 +2557,9 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
   /* ---------- 更新记录 ---------- */
   var RELEASES = [
+    { v:'v5.64', d:'11-08', items:[
+      '顶栏改成热量账本的上下留白（上 3 / 下 13，高度按内容算），状态栏到「训练账本」的间隙不再比热量账本大'
+    ]},
     { v:'v5.63', d:'11-08', items:[
       '记录页那个标签改成「纪录」（破纪录那个纪录）',
       '删掉日期下面那排星期选择条（上面已经有日期 + 左右箭头，重复）；左右箭头改成前一天 / 后一天',
@@ -3242,6 +3244,12 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
   /* ---------- 初始化 ---------- */
   SLOTS.forEach(function(s){ paintTab(s.key); });
+  function syncTopbarH(){
+    var tb = document.querySelector('.topbar');
+    if (tb) document.documentElement.style.setProperty('--topbar-h', Math.round(tb.getBoundingClientRect().height) + 'px');
+  }
+  syncTopbarH();
+  window.addEventListener('resize', syncTopbarH);
   window.addEventListener('resize', function(){
     placePill(order.indexOf($('.tab.on') ? $('.tab.on').dataset.tab : 'today'));
   });
