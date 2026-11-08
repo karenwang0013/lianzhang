@@ -1633,7 +1633,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
         <div class="cblk">
           <div class="cbhd"><b>自动同步</b></div>
           <p class="chint">填一个 Gitee 私人令牌，之后每次记录都会自动传到 <code>calorie-ledger-data</code> 仓库的 <code>training.json</code>。换设备时在那边填同一个令牌，点「开启同步」。</p>
-          <input class="cin" id="cloudToken" placeholder="Gitee 私人令牌" autocomplete="off" autocapitalize="off" spellcheck="false">
+          <input class="cin" id="cloudToken" type="password" placeholder="Gitee 私人令牌" autocomplete="off" autocapitalize="off" spellcheck="false">
           <div class="btnrow2">
             <button class="cta" id="cloudSave">开启同步</button>
             <button class="cta ghost" id="cloudNow">立即同步</button>
@@ -4165,7 +4165,12 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   function paintCloud(){
     var on = !!cloudToken(), t = (store.settings || {}).cloudSyncedAt || '';
     var v = $('#backupVal'); if (v) v.textContent = on ? '自动同步中' : 'iCloud';
-    var inp = $('#cloudToken'); if (inp && document.activeElement !== inp) inp.value = cloudToken();
+    var inp = $('#cloudToken');
+    if (inp && document.activeElement !== inp){
+      /* 不把 key 显示出来：已保存就只提示，不回填明文 */
+      inp.value = '';
+      inp.placeholder = on ? '已填写（需要更换再输入）' : 'Gitee 私人令牌';
+    }
     cloudSetState(on ? (t ? ('上次同步：' + t) : '还没同步过') : '还没同步过');
   }
 
@@ -4272,7 +4277,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   $('#cloudSave').addEventListener('click', function(){
     var t = ($('#cloudToken').value || '').trim();
     store.settings = store.settings || {};
-    store.settings.gitee_token = t;
+    if (t) store.settings.gitee_token = t;   /* 留空 = 保持原来已保存的，不作废 */
     try { localStorage.setItem(LSK, JSON.stringify(store)); } catch(e){}
     paintCloud();
     cloudSync(true);
