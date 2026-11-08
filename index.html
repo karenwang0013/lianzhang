@@ -880,7 +880,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 .logdayscard{padding:2px 4px;margin:14px 0 4px}
 /* 周小结 / 月小结 */
 .sumcard{padding:14px 16px}
-.sumchips{display:flex;gap:8px;margin:0 0 12px}
+.sumpick{margin:2px 0 12px}
 .sumline{display:flex;align-items:baseline;justify-content:space-between;gap:10px;padding:8px 0;
   border-top:1px solid var(--line);font-size:13px}
 .sumline:first-child{border-top:0;padding-top:0}
@@ -1096,7 +1096,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
     <div class="statusbg" aria-hidden="true"></div>
     <div class="topbar">
-      <div class="brand">训练<span>账本</span><i class="btag">v6.35</i></div>
+      <div class="brand">训练<span>账本</span><i class="btag">v6.36</i></div>
       <div class="topactions">
         <button class="topbtn topicon" id="reloadTop" aria-label="强制更新" title="强制更新">
           <svg viewBox="0 -960 960 960" aria-hidden="true"><path d="M480-160q-134 0-227-93t-93-227q0-134 93-227t227-93q69 0 132 28.5T720-690v-70q0-17 11.5-28.5T760-800q17 0 28.5 11.5T800-760v200q0 17-11.5 28.5T760-520H560q-17 0-28.5-11.5T520-560q0-17 11.5-28.5T560-600h128q-32-56-87.5-88T480-720q-100 0-170 70t-70 170q0 100 70 170t170 70q68 0 124.5-34.5T692-367q8-14 22.5-19.5t29.5-.5q16 5 23 21t-1 30q-41 80-117 128t-169 48Z"/></svg>
@@ -1223,9 +1223,10 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
       <section class="view" data-view="log">
         <div class="listhead first"><h2 id="sumTitle">周小结</h2></div>
         <div class="card sumcard">
-          <div class="sumchips">
-            <button class="chip on" data-sum="wk">本周</button>
-            <button class="chip" data-sum="mo">本月</button>
+          <div class="splpick sumpick" id="sumPick">
+            <span class="seg-lens"><span class="lens-body"></span></span>
+            <button class="sp on" data-sum="wk">本周</button>
+            <button class="sp" data-sum="mo">本月</button>
           </div>
           <div id="sumBody"></div>
           <p class="sumnote">饮食与体重以热量账本为准（当前体重 64.9 kg）；这里按训练记录给建议。</p>
@@ -1380,7 +1381,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     <!-- 设置 -->
     <div class="sheet" id="setSheet">
       <div class="grab"></div>
-      <div class="sh-hd"><h2>设置</h2><span class="vtag">v6.35</span></div>
+      <div class="sh-hd"><h2>设置</h2><span class="vtag">v6.36</span></div>
       <div class="setbody">
         <div class="setlabel">训练设置</div>
         <div class="setrows">
@@ -1398,7 +1399,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
           <button class="srow" id="openRemind" data-ic="assignment"><span class="ico"></span><span class="lbl">训练提醒</span><span class="val" id="remindVal">开</span></button>
           <button class="srow" id="clearLogs" data-ic="delete"><span class="ico"></span><span class="lbl">清除训练记录</span><span class="val plain">全部删除</span></button>
           <button class="srow" id="openBackup" data-ic="cloud_done"><span class="ico"></span><span class="lbl">数据备份</span><span class="val" id="backupVal">iCloud</span></button>
-          <button class="srow" id="openRel" data-ic="checklist"><span class="ico"></span><span class="lbl">更新记录</span><span class="val">v6.35</span></button>
+          <button class="srow" id="openRel" data-ic="checklist"><span class="ico"></span><span class="lbl">更新记录</span><span class="val">v6.36</span></button>
         </div>
       </div>
     </div>
@@ -2672,8 +2673,8 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     });
   }
 
-  function placeSplitLens(noanim){
-    var wrap = $('#splitPick'); if (!wrap) return;
+  function placeLens(sel, noanim){
+    var wrap = typeof sel === 'string' ? $(sel) : sel; if (!wrap) return;
     var lens = wrap.querySelector('.seg-lens'); if (!lens) return;
     var btn = wrap.querySelector('.sp.on'); if (!btn) return;
     if (!btn.offsetWidth) return;                 /* 页面还没显示出来，等切过去再落位 */
@@ -2686,7 +2687,8 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     lens.classList.add('on');
     if (noanim){ void lens.offsetWidth; lens.classList.remove('noanim'); }
   }
-  window.addEventListener('resize', function(){ placeSplitLens(true); });
+  function placeSplitLens(noanim){ placeLens('#splitPick', noanim); }
+  window.addEventListener('resize', function(){ placeSplitLens(true); placeLens('#sumPick', true); });
 
   function setSplit(n){
     splitDays = n;
@@ -2717,6 +2719,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     $$('.view').forEach(function(v){ v.classList.toggle('on', v.dataset.view === name); });
     placePill(order.indexOf(name));
     if (name === 'today' && viewISO === todayISO()) renderSets();
+    if (name === 'log') setTimeout(function(){ placeLens('#sumPick', true); }, 30);
     if (name === 'plan') setTimeout(function(){ placeSplitLens(true); }, 30);
     $('#scroller').classList.toggle('tight', name !== 'today');
     $('#scroller').scrollTop = 0;
@@ -2816,11 +2819,12 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     renderDay();
   });
 
-  $$('.sumchips .chip').forEach(function(b){
+  $$('#sumPick .sp').forEach(function(b){
     b.addEventListener('click', function(){
       if (b.dataset.sum === sumMode) return;
       sumMode = b.dataset.sum;
-      $$('.sumchips .chip').forEach(function(x){ x.classList.toggle('on', x.dataset.sum === sumMode); });
+      $$('#sumPick .sp').forEach(function(x){ x.classList.toggle('on', x.dataset.sum === sumMode); });
+      placeLens('#sumPick');
       paintSum();
     });
   });
@@ -3226,7 +3230,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   }
 
   /* ---------- 启动版本比对（同热量账本） ---------- */
-  var APP_VERSION = 'v6.35';
+  var APP_VERSION = 'v6.36';
   fetch('./version.txt?t=' + Date.now(), { cache: 'no-store' })
     .then(function(r){ return r.ok ? r.text() : ''; })
     .then(function(v){
@@ -3248,6 +3252,9 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
   /* ---------- 更新记录 ---------- */
   var RELEASES = [
+    { v:'v6.36', d:'11-08', items:[
+      '周小结 / 月小结的切换按钮改成和「几分化」一样的胶囊分段：选中项有个滑动的亮块，点哪边块滑到哪边'
+    ]},
     { v:'v6.35', d:'11-08', items:[
       '圆圈三种状态分开做：没练满（白数字 + 还差 N 天）/ 刚好练满（数字变红、环带一圈柔光、本周已完成 ✓）/ 超额（4/3、已超 N 天、整环强发光）'
     ]},
