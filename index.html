@@ -4330,7 +4330,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     renderIconSheet();
     openSheet('#iconSheet');
   });
-  $('#iconDone').addEventListener('click', closeSheets);
+  var _icDone = $('#iconDone'); if (_icDone) _icDone.addEventListener('click', closeSheets);
   /* 点顶部那条小横杠 = 收起（跟别的抽屉一样往下滑走，不再是一点就消失找不到原因） */
   $$('#iconSheet .grab').forEach(function(g){ g.addEventListener('click', closeSheets); });
   $('#iconReset').addEventListener('click', function(){
