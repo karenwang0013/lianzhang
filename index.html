@@ -3024,7 +3024,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
   /* 整页返回手势：从屏幕左边缘往右滑 = 返回；页面跟手右移，松手过了阈值就滑出去 */
   (function(){
-    var sx = 0, sy = 0, active = false, el = null, dx = 0;
+    var sx = 0, sy = 0, active = false, el = null, dx = 0, t0 = 0;
     function pageEl(){
       var all = document.querySelectorAll('.sheet.page.on');
       return all.length ? all[all.length - 1] : null;   /* 最上面那一层 */
@@ -3039,7 +3039,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     document.addEventListener('touchstart', function(e){
       var all = document.querySelectorAll('.sheet.page.on'); el = all.length ? all[all.length - 1] : null; if (!el) return;
       var t = e.touches[0]; if (!t || t.clientX > 26) return;
-      active = true; sx = t.clientX; sy = t.clientY; dx = 0;
+      active = true; sx = t.clientX; sy = t.clientY; dx = 0; t0 = Date.now();
       el.style.transition = 'none';
     }, { passive: true });
     document.addEventListener('touchmove', function(e){
@@ -3054,7 +3054,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
       if (!active || !el) return;
       active = false;
       var target = el; el = null;
-      if (dx > 56){
+      if (dx > 56 || (dx > 26 && Date.now() - t0 < 300)){
         target.style.transition = 'transform .2s ease-out';
         target.style.transform = 'translateX(100%)';
         setTimeout(function(){ resetStyle(target); goBack(); }, 210);
