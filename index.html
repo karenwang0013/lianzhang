@@ -232,7 +232,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 /* 动作效率等级 */
 .grade{
   font-size:9.5px;font-weight:800;letter-spacing:.04em;
-  padding:2px 6px;border-radius:6px;margin-left:7px;vertical-align:1px;
+  padding:2px 6px;border-radius:6px;margin-right:7px;vertical-align:1px;
   background:rgba(228,0,43,.12);color:var(--lime);
 }
 .grade.a{background:rgba(110,168,255,.14);color:var(--blue)}
@@ -977,7 +977,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
     <div class="statusbg" aria-hidden="true"></div>
     <div class="topbar">
-      <div class="brand">训练<span>账本</span><i class="btag">v5.74</i></div>
+      <div class="brand">训练<span>账本</span><i class="btag">v5.75</i></div>
       <div class="topactions">
         <button class="topbtn topicon" id="reloadTop" aria-label="强制更新" title="强制更新">
           <svg viewBox="0 -960 960 960" aria-hidden="true"><path d="M480-160q-134 0-227-93t-93-227q0-134 93-227t227-93q69 0 132 28.5T720-690v-70q0-17 11.5-28.5T760-800q17 0 28.5 11.5T800-760v200q0 17-11.5 28.5T760-520H560q-17 0-28.5-11.5T520-560q0-17 11.5-28.5T560-600h128q-32-56-87.5-88T480-720q-100 0-170 70t-70 170q0 100 70 170t170 70q68 0 124.5-34.5T692-367q8-14 22.5-19.5t29.5-.5q16 5 23 21t-1 30q-41 80-117 128t-169 48Z"/></svg>
@@ -1261,7 +1261,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     <!-- 设置 -->
     <div class="sheet" id="setSheet">
       <div class="grab"></div>
-      <div class="sh-hd"><h2>设置</h2><span class="vtag">v5.74</span></div>
+      <div class="sh-hd"><h2>设置</h2><span class="vtag">v5.75</span></div>
       <div class="setbody">
         <div class="setlabel">训练设置</div>
         <div class="setrows">
@@ -1278,7 +1278,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
           <div class="srow" data-ic="monitor_heart"><span class="ico"></span><span class="lbl">Apple 健康</span><span class="sw"></span></div>
           <div class="srow" data-ic="assignment"><span class="ico"></span><span class="lbl">训练提醒</span><span class="sw"></span></div>
           <button class="srow" id="openBackup" data-ic="cloud_done"><span class="ico"></span><span class="lbl">数据备份</span><span class="val" id="backupVal">iCloud</span></button>
-          <button class="srow" id="openRel" data-ic="checklist"><span class="ico"></span><span class="lbl">更新记录</span><span class="val">v5.74</span></button>
+          <button class="srow" id="openRel" data-ic="checklist"><span class="ico"></span><span class="lbl">更新记录</span><span class="val">v5.75</span></button>
         </div>
       </div>
     </div>
@@ -1297,7 +1297,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
       <div class="exdetail">
         <div class="exhead">
           <div class="exheadrow">
-            <button class="exname" id="exPickToggle"><b id="exName">平板杠铃卧推</b><i class="grade" id="exGrade">S</i><i class="chev"></i></button>
+            <button class="exname" id="exPickToggle"><i class="grade" id="exGrade">S</i><b id="exName">平板杠铃卧推</b><i class="chev"></i></button>
           </div>
           <div class="exsub"><span>今天 <b id="exDone">0 / 4</b> 组</span><i>·</i><span>休息 <b id="exRest">180 秒</b></span></div>
         </div>
@@ -2111,7 +2111,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
       var load = ekg ? ekg + ' kg' : '自重';
       var gcls = e.g === 'A' ? ' a' : (e.g === 'B' ? ' b' : '');
       html += '<article class="ex" data-ex="' + key + i + '" data-rest="' + e.rest + '">' +
-        '<div class="exrow"><h3>' + e.n + '<i class="grade' + gcls + '">' + (e.g || 'B') + '</i>' +
+        '<div class="exrow"><h3><i class="grade' + gcls + '">' + (e.g || 'B') + '</i>' + e.n +
           (e.orig ? '<i class="swaptag">换</i>' : '') + '</h3>' +
         '<span class="exload">' + load + '</span></div>' +
         '<p class="exmeta">' + e.sets + ' 组 × ' + e.rep + ' 次 · 休息 ' + e.rest + ' 秒' +
@@ -2125,7 +2125,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
       for (var k = 0; k < e.sets; k++) dots += '<button class="dot"></button>';
       var ekg = kgOf(e);
       html += '<article class="ex extra" data-ex="x' + i + '">' +
-        '<div class="exrow"><h3>' + e.n + '<i class="grade b">' + (e.g || 'B') + '</i><i class="swaptag">加</i></h3>' +
+        '<div class="exrow"><h3><i class="grade b">' + (e.g || 'B') + '</i>' + e.n + '<i class="swaptag">加</i></h3>' +
         '<span class="exload">' + (ekg ? ekg + ' kg' : '自重') + '</span></div>' +
         '<p class="exmeta">' + e.sets + ' 组 × ' + e.rep + ' 次 · 休息 ' + e.rest + ' 秒' +
           (lastWeightOf(e.n) ? ' · 上次 ' + lastWeightOf(e.n).kg + ' kg' : '') + '</p>' +
@@ -2268,7 +2268,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
       var rows = acts.map(function(a){
         var gcls = a.g === 'A' ? ' a' : (a.g === 'B' ? ' b' : '');
         var lw = lastWeightOf(a.n);
-        return '<div class="exi"><span>' + a.n + '</span><span class="grade' + gcls + '">' + a.g + '</span>' +
+        return '<div class="exi"><span><i class="grade' + gcls + '">' + a.g + '</i>' + a.n + '</span>' +
           '<span class="exr"><em class="exlast">' + (lw ? lw.kg + ' kg' : '没练过') + '</em>' +
           '<b>' + a.sets + ' × ' + a.rep + '</b></span></div>';
       }).join('');
@@ -2638,7 +2638,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   }
 
   /* ---------- 启动版本比对（同热量账本） ---------- */
-  var APP_VERSION = 'v5.74';
+  var APP_VERSION = 'v5.75';
   fetch('./version.txt?t=' + Date.now(), { cache: 'no-store' })
     .then(function(r){ return r.ok ? r.text() : ''; })
     .then(function(v){
@@ -2660,6 +2660,9 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
   /* ---------- 更新记录 ---------- */
   var RELEASES = [
+    { v:'v5.75', d:'11-08', items:[
+      '动作评级挪到名称左边（今日动作卡 / 动作卡标题 / 计划的本周排布三处一致）'
+    ]},
     { v:'v5.74', d:'11-08', items:[
       '清掉一次早期遗留的离谱重量（之前「用建议」存下的 80kg / 120kg 这类，远超体重模型 1.5 倍的），之后一律按体重模型给值；以后再手动改的重量不会被清'
     ]},
