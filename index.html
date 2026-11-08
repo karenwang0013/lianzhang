@@ -283,7 +283,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 .ringmid .rnum .rslash{font-style:normal;font-size:24px;line-height:1;color:rgba(255,255,255,.34);font-weight:400}
 .ringmid .rnum .runit{font-style:normal;font-size:16px;color:var(--muted2);margin-left:2px}
 /* 回到今天：绝对定位塞进「日期 → 圆环」那段空隙里，不占布局、不推圆环 */
-.retrow{position:absolute;left:0;right:0;bottom:-4px;display:flex;justify-content:center;
+.retrow{position:absolute;left:0;right:0;bottom:-3px;display:flex;justify-content:center;
   margin:0;pointer-events:none}
 .retrow[hidden]{display:none}
 .retrow .daybtn{pointer-events:auto}
@@ -1029,7 +1029,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
     <div class="statusbg" aria-hidden="true"></div>
     <div class="topbar">
-      <div class="brand">训练<span>账本</span><i class="btag">v5.99</i></div>
+      <div class="brand">训练<span>账本</span><i class="btag">v6.00</i></div>
       <div class="topactions">
         <button class="topbtn topicon" id="reloadTop" aria-label="强制更新" title="强制更新">
           <svg viewBox="0 -960 960 960" aria-hidden="true"><path d="M480-160q-134 0-227-93t-93-227q0-134 93-227t227-93q69 0 132 28.5T720-690v-70q0-17 11.5-28.5T760-800q17 0 28.5 11.5T800-760v200q0 17-11.5 28.5T760-520H560q-17 0-28.5-11.5T520-560q0-17 11.5-28.5T560-600h128q-32-56-87.5-88T480-720q-100 0-170 70t-70 170q0 100 70 170t170 70q68 0 124.5-34.5T692-367q8-14 22.5-19.5t29.5-.5q16 5 23 21t-1 30q-41 80-117 128t-169 48Z"/></svg>
@@ -1323,7 +1323,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     <!-- 设置 -->
     <div class="sheet" id="setSheet">
       <div class="grab"></div>
-      <div class="sh-hd"><h2>设置</h2><span class="vtag">v5.99</span></div>
+      <div class="sh-hd"><h2>设置</h2><span class="vtag">v6.00</span></div>
       <div class="setbody">
         <div class="setlabel">训练设置</div>
         <div class="setrows">
@@ -1340,7 +1340,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
           <div class="srow" data-ic="monitor_heart"><span class="ico"></span><span class="lbl">Apple 健康</span><span class="sw"></span></div>
           <button class="srow" id="openRemind" data-ic="assignment"><span class="ico"></span><span class="lbl">训练提醒</span><span class="val" id="remindVal">开</span></button>
           <button class="srow" id="openBackup" data-ic="cloud_done"><span class="ico"></span><span class="lbl">数据备份</span><span class="val" id="backupVal">iCloud</span></button>
-          <button class="srow" id="openRel" data-ic="checklist"><span class="ico"></span><span class="lbl">更新记录</span><span class="val">v5.99</span></button>
+          <button class="srow" id="openRel" data-ic="checklist"><span class="ico"></span><span class="lbl">更新记录</span><span class="val">v6.00</span></button>
         </div>
       </div>
     </div>
@@ -2941,7 +2941,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   }
 
   /* ---------- 启动版本比对（同热量账本） ---------- */
-  var APP_VERSION = 'v5.99';
+  var APP_VERSION = 'v6.00';
   fetch('./version.txt?t=' + Date.now(), { cache: 'no-store' })
     .then(function(r){ return r.ok ? r.text() : ''; })
     .then(function(v){
@@ -2963,6 +2963,9 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
   /* ---------- 更新记录 ---------- */
   var RELEASES = [
+    { v:'v6.00', d:'11-08', items:[
+      '「回到今天」上下间隙重算：这次不用文字框、改用截图逐像素量（日期墨迹底 97.5、圆环可见外沿 133.5），按钮 107–125，上下 9.5 / 8.5'
+    ]},
     { v:'v5.99', d:'11-08', items:[
       '「回到今天」用绝对定位塞进「日期 → 圆环」那段空隙，日期和圆环都不动（卡高、环顶、日期位置实测完全不变）；上下间隙 6 / 7，按圆环实际可见外沿算的',
       '训练提醒改成只看开关、不用你设数字：多久算「太久没练」按你平时两倍间隔判断（如平时每 2 天练一次 → 超过 4 天提醒），「练太多」按本周组数超过计划 110% 判断，「练太少」按低于计划 40% 判断'
