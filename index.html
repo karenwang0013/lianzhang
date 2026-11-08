@@ -282,11 +282,12 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 .ringmid .rnum b.tot{color:rgba(255,255,255,.5)}
 .ringmid .rnum .rslash{font-style:normal;font-size:24px;line-height:1;color:rgba(255,255,255,.34);font-weight:400}
 .ringmid .rnum .runit{font-style:normal;font-size:16px;color:var(--muted2);margin-left:2px}
-.ringtoday{margin:8px auto 0;padding:5px 12px;border-radius:10px;font-family:inherit;
-  font-size:11.5px;font-weight:650;letter-spacing:.02em;color:var(--lime);
-  background-color:rgba(228,0,43,.14);border:1px solid rgba(228,0,43,.4);cursor:pointer}
-.ringtoday:active{transform:scale(.95)}
-.ringtoday[hidden]{display:none}
+.daybtn{width:30px;height:30px;flex:none;display:grid;place-items:center;border-radius:9px;
+  background-color:rgba(228,0,43,.14);border:1px solid rgba(228,0,43,.4);
+  color:#fff;cursor:pointer;padding:0;transition:transform .16s,background .2s}
+.daybtn .ico{width:17px;height:17px;fill:currentColor;display:block}
+.daybtn:active{transform:scale(.94);background-color:rgba(228,0,43,.26)}
+.daybtn[hidden]{display:none}
 .ringmid .rgap{font-size:11px;font-weight:600;color:rgba(255,255,255,.8);letter-spacing:.2px;margin-top:12px}
 
 /* 三宫格（同热量账本的三格） */
@@ -305,9 +306,9 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 .herocard{padding-top:0}
 .daterow{display:flex;align-items:center;justify-content:space-between;gap:8px;
   margin:0 -9px;padding:7px 0 12px}
-.daterow .dmain{flex:1;min-width:0;display:flex;flex-direction:column;align-items:center;gap:3px}
+.daterow .dmain{flex:1;min-width:0;display:flex;flex-direction:row;align-items:center;justify-content:center;gap:8px}
 .daterow .dmain b{font-size:17px;font-weight:650;letter-spacing:.3px;color:var(--text)}
-.daterow .dmain{gap:8px}
+
 .daterow .dline i{font-style:normal;font-size:11px;color:var(--muted2);letter-spacing:.02em;
   font-variant-numeric:tabular-nums;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .gotoday{flex:none;font-family:inherit;font-size:10.5px;font-weight:600;color:var(--lime);
@@ -1005,7 +1006,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
     <div class="statusbg" aria-hidden="true"></div>
     <div class="topbar">
-      <div class="brand">训练<span>账本</span><i class="btag">v5.91</i></div>
+      <div class="brand">训练<span>账本</span><i class="btag">v5.92</i></div>
       <div class="topactions">
         <button class="topbtn topicon" id="reloadTop" aria-label="强制更新" title="强制更新">
           <svg viewBox="0 -960 960 960" aria-hidden="true"><path d="M480-160q-134 0-227-93t-93-227q0-134 93-227t227-93q69 0 132 28.5T720-690v-70q0-17 11.5-28.5T760-800q17 0 28.5 11.5T800-760v200q0 17-11.5 28.5T760-520H560q-17 0-28.5-11.5T520-560q0-17 11.5-28.5T560-600h128q-32-56-87.5-88T480-720q-100 0-170 70t-70 170q0 100 70 170t170 70q68 0 124.5-34.5T692-367q8-14 22.5-19.5t29.5-.5q16 5 23 21t-1 30q-41 80-117 128t-169 48Z"/></svg>
@@ -1027,7 +1028,9 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
             </button>
             <div class="dmain">
               <b id="dMain">11月8日</b>
-              <button class="ringtoday" id="goTodayRing" hidden>回到今天</button>
+              <button class="daybtn" id="goTodayRing" hidden aria-label="回到今天" title="回到今天">
+                <svg class="ico" viewBox="0 -960 960 960" aria-hidden="true"><path/></svg>
+              </button>
             </div>
             <button class="wkbtn" id="wkNext" aria-label="下一周">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg>
@@ -1292,7 +1295,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     <!-- 设置 -->
     <div class="sheet" id="setSheet">
       <div class="grab"></div>
-      <div class="sh-hd"><h2>设置</h2><span class="vtag">v5.91</span></div>
+      <div class="sh-hd"><h2>设置</h2><span class="vtag">v5.92</span></div>
       <div class="setbody">
         <div class="setlabel">训练设置</div>
         <div class="setrows">
@@ -1309,7 +1312,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
           <div class="srow" data-ic="monitor_heart"><span class="ico"></span><span class="lbl">Apple 健康</span><span class="sw"></span></div>
           <div class="srow" data-ic="assignment"><span class="ico"></span><span class="lbl">训练提醒</span><span class="sw"></span></div>
           <button class="srow" id="openBackup" data-ic="cloud_done"><span class="ico"></span><span class="lbl">数据备份</span><span class="val" id="backupVal">iCloud</span></button>
-          <button class="srow" id="openRel" data-ic="checklist"><span class="ico"></span><span class="lbl">更新记录</span><span class="val">v5.91</span></button>
+          <button class="srow" id="openRel" data-ic="checklist"><span class="ico"></span><span class="lbl">更新记录</span><span class="val">v5.92</span></button>
         </div>
       </div>
     </div>
@@ -1439,11 +1442,14 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     { key:'top0', label:'强制刷新', sel:'#reloadTop path',
       opts:['autorenew','refresh','sync','cached','update','cloud_sync','published_with_changes','swap_vert'] },
     { key:'top1', label:'设置', sel:'#openSet path',
-      opts:['settings','palette','apps','widgets','grid_view','dashboard','category','layers'] }
+      opts:['settings','palette','apps','widgets','grid_view','dashboard','category','layers'] },
+    { key:'top2', label:'回到今天', sel:'#goTodayRing .ico path', def:'today',
+      opts:['today','calendar_today','event_available','schedule','date_range','history','autorenew','refresh'] }
   ];
   TOP_SLOTS.forEach(function(s){
     var el = document.querySelector(s.sel);
     s.d0 = el ? el.getAttribute('d') : '';
+    if ((!s.d0 || s.d0 === 'null') && s.def && ICONS[s.def]) s.d0 = ICONS[s.def];
     var hit = Object.keys(ICONS).filter(function(n){ return ICONS[n] === s.d0; })[0];
     if (!hit){ ICONS['top_' + s.key] = s.d0; ICON_LABELS['top_' + s.key] = s.label; hit = 'top_' + s.key; }
     s.opts = s.opts.filter(function(n){ return ICONS[n]; });
@@ -2327,30 +2333,49 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   }
 
   /* 休息日临时加练的状态（只在本次打开期间有效，刷新回休息日） */
-  var adhoc = false;
+  var adhoc = false, adhocWhy = '';
   function paintAdhoc(){
     var bar = $('#adhocBar'); if (!bar) return;
     var on = adhoc && !!todayKey;
     bar.hidden = !on;
     if (on){
       var t = $('#adhocText');
-      if (t) t.textContent = '今天加练 · ' + (TITLE[todayKey] ? TITLE[todayKey][0] : '');
+      if (t) t.textContent = '今天加练 · ' + (TITLE[todayKey] ? TITLE[todayKey][0] : '') +
+        (adhocWhy ? '（' + adhocWhy + '）' : '');
     }
   }
 
   /* 休息日也想练：按最近的那个训练日开一次（记录仍记在今天） */
+  /* 加练选哪一场：按「最近一次练它的日期 + 本周已练组数」算缺口，选最该补的那场 */
+  function pickAdhocSession(){
+    var seq = splitSeq(splitDays), today = todayISO(), weekAgo = isoMinus(today, 6);
+    var best = null;
+    seq.forEach(function(k){
+      var names = (EX[k] || []).map(function(e){ return e.n; });
+      var last = '', setsWeek = 0, vol = 0;
+      allLogs().forEach(function(l){
+        if (names.indexOf(l.n) < 0) return;
+        if (l.d > last) last = l.d;
+        if (l.d >= weekAgo){ setsWeek++; vol += (l.kg || 0) * (l.reps || 0); }
+      });
+      var gap = last ? Math.round((new Date(today + 'T00:00:00') - new Date(last + 'T00:00:00')) / 86400000) : 99;
+      var score = gap * 10 - setsWeek;
+      if (!best || score > best.score) best = { key:k, gap:gap, setsWeek:setsWeek, score:score, last:last };
+    });
+    return best;
+  }
+
   function trainAnyway(){
-    var days = daysOf(splitDays), idx = wdIdx(todayISO()), pick = '';
-    for (var s = 1; s <= 7 && !pick; s++){
-      var i = ((idx - s) % 7 + 7) % 7;
-      if (days[i][1] !== 'rest') pick = days[i][1];
-    }
+    var pick = pickAdhocSession();
     if (!pick) return;
     adhoc = true;
-    todayKey = pick;
-    $('#todayName').textContent = TITLE[pick][0];
-    $('#todayEn').textContent = TITLE[pick][1];
-    renderToday(pick);
+    adhocWhy = pick.gap >= 99
+      ? '还没练过'
+      : ('距上次 ' + pick.gap + ' 天 · 本周 ' + pick.setsWeek + ' 组');
+    todayKey = pick.key;
+    $('#todayName').textContent = TITLE[pick.key][0];
+    $('#todayEn').textContent = TITLE[pick.key][1];
+    renderToday(pick.key);
     paintAdhoc();
   }
 
@@ -2772,7 +2797,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   }
 
   /* ---------- 启动版本比对（同热量账本） ---------- */
-  var APP_VERSION = 'v5.91';
+  var APP_VERSION = 'v5.92';
   fetch('./version.txt?t=' + Date.now(), { cache: 'no-store' })
     .then(function(r){ return r.ok ? r.text() : ''; })
     .then(function(v){
@@ -2794,6 +2819,10 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
   /* ---------- 更新记录 ---------- */
   var RELEASES = [
+    { v:'v5.92', d:'11-08', items:[
+      '「回到今天」改成图标按钮（日历图标），放在日期右边；设置 → App 图标里新增「回到今天」一栏，图标可选可换',
+      '加练不再固定给「最近那次」：按「距离上次练它的天数 + 本周已练组数」算缺口，自动选最该补的那一场，并在加练条里写明原因（如「腿（还没练过）」或「推（距上次 9 天 · 本周 0 组）」）'
+    ]},
     { v:'v5.91', d:'11-08', items:[
       '圆环里的斜杠改回垂直居中（不再掉到数字脚下）',
       '「0 / 3」两个数字一样大，但后面的总数用弱一档的灰（和之前一样不是实白），只有已完成那个是实白',
