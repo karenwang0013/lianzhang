@@ -837,6 +837,8 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 .librow em{font-style:normal;font-size:11px;color:var(--muted2);white-space:nowrap}
 .librow:active{opacity:.65}
 #libSheet{padding-bottom:20px}
+#libSheet .pinfoot{border-top:1px solid rgba(255,255,255,.12);padding-top:14px;margin-top:12px}
+#libSheet .pinbody{padding-bottom:4px}
 
 /* 动作重量记录 */
 .histsum{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:8px 20px 2px}
@@ -977,7 +979,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
     <div class="statusbg" aria-hidden="true"></div>
     <div class="topbar">
-      <div class="brand">训练<span>账本</span><i class="btag">v5.77</i></div>
+      <div class="brand">训练<span>账本</span><i class="btag">v5.78</i></div>
       <div class="topactions">
         <button class="topbtn topicon" id="reloadTop" aria-label="强制更新" title="强制更新">
           <svg viewBox="0 -960 960 960" aria-hidden="true"><path d="M480-160q-134 0-227-93t-93-227q0-134 93-227t227-93q69 0 132 28.5T720-690v-70q0-17 11.5-28.5T760-800q17 0 28.5 11.5T800-760v200q0 17-11.5 28.5T760-520H560q-17 0-28.5-11.5T520-560q0-17 11.5-28.5T560-600h128q-32-56-87.5-88T480-720q-100 0-170 70t-70 170q0 100 70 170t170 70q68 0 124.5-34.5T692-367q8-14 22.5-19.5t29.5-.5q16 5 23 21t-1 30q-41 80-117 128t-169 48Z"/></svg>
@@ -1261,7 +1263,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     <!-- 设置 -->
     <div class="sheet" id="setSheet">
       <div class="grab"></div>
-      <div class="sh-hd"><h2>设置</h2><span class="vtag">v5.77</span></div>
+      <div class="sh-hd"><h2>设置</h2><span class="vtag">v5.78</span></div>
       <div class="setbody">
         <div class="setlabel">训练设置</div>
         <div class="setrows">
@@ -1278,7 +1280,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
           <div class="srow" data-ic="monitor_heart"><span class="ico"></span><span class="lbl">Apple 健康</span><span class="sw"></span></div>
           <div class="srow" data-ic="assignment"><span class="ico"></span><span class="lbl">训练提醒</span><span class="sw"></span></div>
           <button class="srow" id="openBackup" data-ic="cloud_done"><span class="ico"></span><span class="lbl">数据备份</span><span class="val" id="backupVal">iCloud</span></button>
-          <button class="srow" id="openRel" data-ic="checklist"><span class="ico"></span><span class="lbl">更新记录</span><span class="val">v5.77</span></button>
+          <button class="srow" id="openRel" data-ic="checklist"><span class="ico"></span><span class="lbl">更新记录</span><span class="val">v5.78</span></button>
         </div>
       </div>
     </div>
@@ -1896,7 +1898,14 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     '引体向上':0.00, '坐姿绳索划船':0.55, '单臂哑铃划船':0.28, '杠铃划船':0.60,
     '坐姿哑铃推肩':0.14, '哑铃侧平举':0.075, '面拉':0.22,
     '绳索下压':0.35, '哑铃弯举':0.13, '锤式弯举':0.13,
-    '腿弯举':0.35, '站姿提踵':1.00, '坐姿提踵':0.70, '卷腹':0.00
+    '腿弯举':0.35, '站姿提踵':1.00, '坐姿提踵':0.70, '卷腹':0.00,
+    '哑铃卧推':0.22, '上斜杠铃卧推':0.50, '器械推胸':0.55, '史密斯卧推':0.55,
+    '绳索夹胸':0.20, '俯卧撑':0.00,
+    '高位下拉':0.60, '杠铃划船':0.55, 'T杠划船':0.55, '直臂下压':0.20, '辅助引体':0.00,
+    '杠铃推举':0.40, '器械推肩':0.35, '绳索侧平举':0.06, '反向飞鸟':0.06, '俯身飞鸟':0.06,
+    '哈克深蹲':1.30, '史密斯深蹲':0.85, '高脚杯深蹲':0.40, '保加利亚分腿蹲':0.28,
+    '臀桥':1.10, '髋外展':0.45, '腿举提踵':1.60, '坐姿腿弯举':0.30,
+    '窄距卧推':0.55, '哑铃颈后臂屈伸':0.14, '绳索弯举':0.13, '牧师凳弯举':0.13
   };
   /* 次数区间 → 用多少 % 的 1RM */
   function pctForReps(rep){
@@ -2042,11 +2051,45 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
                  shoulder:'肩', triceps:'手臂', biceps:'手臂', core:'核心' };
     var seen = {}, groups = {};
     var all = [].concat(EX.push, EX.pull, EX.legs, EX.upper, EX.lower, EX.full, [
+      /* 核心 */
       { n:'卷腹', g:'B', sets:3, rep:'15–20', kg:0, rest:45, m:'core' },
       { n:'悬垂举腿', g:'B', sets:3, rep:'10–12', kg:0, rest:60, m:'core' },
       { n:'俄罗斯转体', g:'B', sets:3, rep:'20', kg:5, rest:45, m:'core' },
       { n:'仰卧抬腿', g:'B', sets:3, rep:'12–15', kg:0, rest:45, m:'core' },
-      { n:'健腹轮', g:'A', sets:3, rep:'10', kg:0, rest:60, m:'core' }
+      { n:'健腹轮', g:'A', sets:3, rep:'10', kg:0, rest:60, m:'core' },
+      /* 胸 */
+      { n:'哑铃卧推', g:'A', sets:3, rep:'8–10', kg:22, rest:120, m:'chest' },
+      { n:'上斜杠铃卧推', g:'A', sets:3, rep:'8–10', kg:50, rest:120, m:'chest' },
+      { n:'器械推胸', g:'A', sets:3, rep:'10–12', kg:40, rest:90, m:'chest' },
+      { n:'史密斯卧推', g:'A', sets:3, rep:'8–10', kg:50, rest:120, m:'chest' },
+      { n:'绳索夹胸', g:'B', sets:3, rep:'12–15', kg:15, rest:60, m:'chest' },
+      { n:'俯卧撑', g:'B', sets:3, rep:'12–20', kg:0, rest:60, m:'chest' },
+      /* 背 */
+      { n:'高位下拉', g:'A', sets:3, rep:'10–12', kg:40, rest:90, m:'back' },
+      { n:'杠铃划船', g:'A', sets:3, rep:'8–10', kg:40, rest:90, m:'back' },
+      { n:'T杠划船', g:'A', sets:3, rep:'10', kg:35, rest:90, m:'back' },
+      { n:'直臂下压', g:'B', sets:3, rep:'12–15', kg:20, rest:60, m:'back' },
+      { n:'辅助引体', g:'A', sets:3, rep:'8–10', kg:0, rest:90, m:'back' },
+      /* 肩 */
+      { n:'杠铃推举', g:'A', sets:3, rep:'6–8', kg:30, rest:120, m:'shoulder' },
+      { n:'器械推肩', g:'A', sets:3, rep:'10–12', kg:25, rest:90, m:'shoulder' },
+      { n:'绳索侧平举', g:'B', sets:3, rep:'15', kg:5, rest:45, m:'shoulder' },
+      { n:'反向飞鸟', g:'B', sets:3, rep:'15', kg:8, rest:45, m:'shoulder' },
+      { n:'俯身飞鸟', g:'B', sets:3, rep:'15', kg:8, rest:45, m:'shoulder' },
+      /* 腿 */
+      { n:'哈克深蹲', g:'A', sets:3, rep:'10–12', kg:90, rest:120, m:'quads' },
+      { n:'史密斯深蹲', g:'A', sets:3, rep:'8–10', kg:60, rest:120, m:'quads' },
+      { n:'高脚杯深蹲', g:'A', sets:3, rep:'10–12', kg:30, rest:90, m:'quads' },
+      { n:'保加利亚分腿蹲', g:'A', sets:3, rep:'10–12', kg:20, rest:90, m:'quads' },
+      { n:'臀桥', g:'A', sets:3, rep:'10–12', kg:70, rest:90, m:'glutes' },
+      { n:'髋外展', g:'B', sets:3, rep:'15', kg:30, rest:45, m:'glutes' },
+      { n:'腿举提踵', g:'B', sets:3, rep:'15–20', kg:80, rest:45, m:'calves' },
+      { n:'坐姿腿弯举', g:'B', sets:3, rep:'12', kg:30, rest:60, m:'hamstring' },
+      /* 手臂 */
+      { n:'窄距卧推', g:'A', sets:3, rep:'8–10', kg:35, rest:90, m:'triceps' },
+      { n:'哑铃颈后臂屈伸', g:'B', sets:3, rep:'12', kg:12, rest:60, m:'triceps' },
+      { n:'绳索弯举', g:'B', sets:3, rep:'12', kg:15, rest:60, m:'biceps' },
+      { n:'牧师凳弯举', g:'B', sets:3, rep:'12', kg:15, rest:60, m:'biceps' }
     ]);
     all.forEach(function(e){
       if (seen[e.n]) return;
@@ -2642,7 +2685,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   }
 
   /* ---------- 启动版本比对（同热量账本） ---------- */
-  var APP_VERSION = 'v5.77';
+  var APP_VERSION = 'v5.78';
   fetch('./version.txt?t=' + Date.now(), { cache: 'no-store' })
     .then(function(r){ return r.ok ? r.text() : ''; })
     .then(function(v){
@@ -2664,6 +2707,10 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
   /* ---------- 更新记录 ---------- */
   var RELEASES = [
+    { v:'v5.78', d:'11-08', items:[
+      '加动作的库扩到 51 个：核心 5 / 胸 9 / 背 8 / 腿 14 / 肩 8 / 手臂 7（补了高位下拉、器械推胸、器械推肩、哈克深蹲、史密斯深蹲、保加利亚分腿蹲、臀桥、髋外展、窄距卧推、牧师凳弯举等健身房常见器械动作）',
+      '加动作弹层底部：列表和「关闭」之间加分隔线 + 12px 间距，不再糊在一起'
+    ]},
     { v:'v5.77', d:'11-08', items:[
       '修「加动作」弹层错乱：页面滚动后打开弹层，日期行已经滚出屏幕，算出来的弹层上沿变成负数（-382），卡片被撑到屏幕外面。现在按内容坐标算并做了下限保护',
       '同一个 bug 影响所有弹层（在页面滚动后点设置、更新记录也会错乱），一并修好'
