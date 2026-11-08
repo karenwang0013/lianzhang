@@ -854,7 +854,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   background-color:rgba(110,168,255,.10);border:1px solid rgba(110,168,255,.28);
   font-size:12px;color:rgba(242,244,242,.9);line-height:1.45}
 .remindbar[hidden]{display:none}
-.remindbar button{border:1px solid rgba(110,168,255,.4);border-radius:9px;background-color:rgba(110,168,255,.14);
+.remindbar button{white-space:nowrap;flex:none;border:1px solid rgba(110,168,255,.4);border-radius:9px;background-color:rgba(110,168,255,.14);
   color:var(--blue);font-family:inherit;font-size:11.5px;font-weight:650;padding:4px 10px;cursor:pointer;flex:none}
 .rembody{padding:0 20px}
 .remrow{display:flex;align-items:center;justify-content:space-between;padding:12px 0;
@@ -868,6 +868,8 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 .optrow.on{color:var(--lime)}
 .optrow.on::after{content:"✓";font-size:13px;color:var(--lime)}
 .optrow:active{opacity:.7}
+.adhocbar>span{flex:1 1 auto;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.adhocbar button{white-space:nowrap;flex:none}
 .adhocbar{display:flex;align-items:center;justify-content:space-between;gap:10px;
   margin:0 2px 10px;padding:8px 12px;border-radius:12px;
   background-color:rgba(228,0,43,.10);border:1px solid rgba(228,0,43,.28);
@@ -1040,7 +1042,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
     <div class="statusbg" aria-hidden="true"></div>
     <div class="topbar">
-      <div class="brand">训练<span>账本</span><i class="btag">v6.05</i></div>
+      <div class="brand">训练<span>账本</span><i class="btag">v6.06</i></div>
       <div class="topactions">
         <button class="topbtn topicon" id="reloadTop" aria-label="强制更新" title="强制更新">
           <svg viewBox="0 -960 960 960" aria-hidden="true"><path d="M480-160q-134 0-227-93t-93-227q0-134 93-227t227-93q69 0 132 28.5T720-690v-70q0-17 11.5-28.5T760-800q17 0 28.5 11.5T800-760v200q0 17-11.5 28.5T760-520H560q-17 0-28.5-11.5T520-560q0-17 11.5-28.5T560-600h128q-32-56-87.5-88T480-720q-100 0-170 70t-70 170q0 100 70 170t170 70q68 0 124.5-34.5T692-367q8-14 22.5-19.5t29.5-.5q16 5 23 21t-1 30q-41 80-117 128t-169 48Z"/></svg>
@@ -1335,7 +1337,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     <!-- 设置 -->
     <div class="sheet" id="setSheet">
       <div class="grab"></div>
-      <div class="sh-hd"><h2>设置</h2><span class="vtag">v6.05</span></div>
+      <div class="sh-hd"><h2>设置</h2><span class="vtag">v6.06</span></div>
       <div class="setbody">
         <div class="setlabel">训练设置</div>
         <div class="setrows">
@@ -1352,7 +1354,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
           <div class="srow" data-ic="monitor_heart"><span class="ico"></span><span class="lbl">Apple 健康</span><span class="sw"></span></div>
           <button class="srow" id="openRemind" data-ic="assignment"><span class="ico"></span><span class="lbl">训练提醒</span><span class="val" id="remindVal">开</span></button>
           <button class="srow" id="openBackup" data-ic="cloud_done"><span class="ico"></span><span class="lbl">数据备份</span><span class="val" id="backupVal">iCloud</span></button>
-          <button class="srow" id="openRel" data-ic="checklist"><span class="ico"></span><span class="lbl">更新记录</span><span class="val">v6.05</span></button>
+          <button class="srow" id="openRel" data-ic="checklist"><span class="ico"></span><span class="lbl">更新记录</span><span class="val">v6.06</span></button>
         </div>
       </div>
     </div>
@@ -2423,8 +2425,8 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     bar.hidden = !on;
     if (on){
       var t = $('#adhocText');
-      if (t) t.textContent = '今天加练 · ' + (TITLE[todayKey] ? TITLE[todayKey][0] : '') +
-        (adhocWhy ? '（' + adhocWhy + '）' : '');
+      if (t) t.textContent = '加练 · ' + (TITLE[todayKey] ? TITLE[todayKey][0] : '') +
+        (adhocWhy ? ' · ' + adhocWhy : '');
     }
   }
 
@@ -2465,10 +2467,8 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     else if (ratio <= 0.2) adhocScale = 1.15;
     else adhocScale = 1;
 
-    var basis = pick.gap >= 99 ? '还没练过' : ('距上次 ' + pick.gap + ' 天');
-    var adjTxt = adhocScale < 1 ? '最近练得多 → 减量'
-               : (adhocScale > 1 ? '最近没怎么练 → 加量' : '正常量');
-    adhocWhy = basis + ' · 本周 ' + sets7 + ' 组 / 计划 ' + planned + ' 组 · ' + adjTxt;
+    var adjTxt = adhocScale < 1 ? ' · 减量' : (adhocScale > 1 ? ' · 加量' : '');
+    adhocWhy = sets7 + '/' + planned + ' 组' + adjTxt;
 
     todayKey = pick.key;
     $('#todayName').textContent = TITLE[pick.key][0];
@@ -3027,7 +3027,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   }
 
   /* ---------- 启动版本比对（同热量账本） ---------- */
-  var APP_VERSION = 'v6.05';
+  var APP_VERSION = 'v6.06';
   fetch('./version.txt?t=' + Date.now(), { cache: 'no-store' })
     .then(function(r){ return r.ok ? r.text() : ''; })
     .then(function(v){
@@ -3049,6 +3049,10 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
   /* ---------- 更新记录 ---------- */
   var RELEASES = [
+    { v:'v6.06', d:'11-08', items:[
+      '加练条文案压成一行：「加练 · 推 · 0/61 组 · 加量」，长了就省略号，不再自动换行',
+      '条里的按钮统一不折行（「取消加练」「知道了」这类以后都不会被挤成两行）'
+    ]},
     { v:'v6.05', d:'11-08', items:[
       '训练提醒弹层：左右/底部留 20，完成按钮不再贴卡边（实测离底 21）',
       '设置行右侧的值照热量账本：颜色 --muted2 → --muted（#8b938c）、字号 15 → 13.5，箭头颜色同步',
