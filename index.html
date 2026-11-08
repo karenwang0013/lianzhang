@@ -1175,6 +1175,9 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 .sheet.page:not(.on){display:none}
 .sheet.page .grab{display:none}
 .sheet.page > .pinbody{border-radius:0}
+/* 子页标题紧挨返回箭头（同热量账本）；设置主页仍是「左返回、右设置+版本号」 */
+.sheet.page .sh-hd h2{margin-left:0}
+#setSheet.page .sh-hd h2{margin-left:auto}
 /* 标题栏跟卡牌左右对齐（卡牌外边距 16）；所有子页统一，不许各写一套 */
 .sheet.page .sh-hd,
 .sheet.page .sh-hd.sh-sub{
