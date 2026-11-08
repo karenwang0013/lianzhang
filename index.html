@@ -977,7 +977,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
     <div class="statusbg" aria-hidden="true"></div>
     <div class="topbar">
-      <div class="brand">训练<span>账本</span><i class="btag">v5.73</i></div>
+      <div class="brand">训练<span>账本</span><i class="btag">v5.74</i></div>
       <div class="topactions">
         <button class="topbtn topicon" id="reloadTop" aria-label="强制更新" title="强制更新">
           <svg viewBox="0 -960 960 960" aria-hidden="true"><path d="M480-160q-134 0-227-93t-93-227q0-134 93-227t227-93q69 0 132 28.5T720-690v-70q0-17 11.5-28.5T760-800q17 0 28.5 11.5T800-760v200q0 17-11.5 28.5T760-520H560q-17 0-28.5-11.5T520-560q0-17 11.5-28.5T560-600h128q-32-56-87.5-88T480-720q-100 0-170 70t-70 170q0 100 70 170t170 70q68 0 124.5-34.5T692-367q8-14 22.5-19.5t29.5-.5q16 5 23 21t-1 30q-41 80-117 128t-169 48Z"/></svg>
@@ -1261,7 +1261,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     <!-- 设置 -->
     <div class="sheet" id="setSheet">
       <div class="grab"></div>
-      <div class="sh-hd"><h2>设置</h2><span class="vtag">v5.73</span></div>
+      <div class="sh-hd"><h2>设置</h2><span class="vtag">v5.74</span></div>
       <div class="setbody">
         <div class="setlabel">训练设置</div>
         <div class="setrows">
@@ -1278,7 +1278,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
           <div class="srow" data-ic="monitor_heart"><span class="ico"></span><span class="lbl">Apple 健康</span><span class="sw"></span></div>
           <div class="srow" data-ic="assignment"><span class="ico"></span><span class="lbl">训练提醒</span><span class="sw"></span></div>
           <button class="srow" id="openBackup" data-ic="cloud_done"><span class="ico"></span><span class="lbl">数据备份</span><span class="val" id="backupVal">iCloud</span></button>
-          <button class="srow" id="openRel" data-ic="checklist"><span class="ico"></span><span class="lbl">更新记录</span><span class="val">v5.73</span></button>
+          <button class="srow" id="openRel" data-ic="checklist"><span class="ico"></span><span class="lbl">更新记录</span><span class="val">v5.74</span></button>
         </div>
       </div>
     </div>
@@ -1855,6 +1855,21 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   function saveStore(){ try { localStorage.setItem(LSK, JSON.stringify(store)); } catch(e){} try { autoSnap(); } catch(e){} }
   /* 重量按动作名存，这样同一动作在「推」「上肢」两个方案里共用一个重量 */
   if (!store.exv) store.exv = {};
+  /* 一次性清掉早期遗留的离谱重量（80/120 这种远超体重模型的）；初始化最后才跑 */
+  function migrateWeights(){
+    if (store.mig73) return;
+    if (store.weights){
+      Object.keys(store.weights).forEach(function(n){
+        var w = store.weights[n];
+        if (!w) return;
+        var sg = suggestFor({ n: n, sets: 3, rep: '10', kg: 0 });
+        if (!sg || !sg.kg) return;
+        if (w > sg.kg * 1.25 || w < sg.kg * 0.55) delete store.weights[n];
+      });
+    }
+    store.mig73 = true;
+    saveStore();
+  }
   function kgOf(ex){
     var w = store.weights[ex.n];
     if (w != null) return w;                 /* 自己改过就听她的 */
@@ -2623,7 +2638,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   }
 
   /* ---------- 启动版本比对（同热量账本） ---------- */
-  var APP_VERSION = 'v5.73';
+  var APP_VERSION = 'v5.74';
   fetch('./version.txt?t=' + Date.now(), { cache: 'no-store' })
     .then(function(r){ return r.ok ? r.text() : ''; })
     .then(function(v){
@@ -2645,6 +2660,9 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
   /* ---------- 更新记录 ---------- */
   var RELEASES = [
+    { v:'v5.74', d:'11-08', items:[
+      '清掉一次早期遗留的离谱重量（之前「用建议」存下的 80kg / 120kg 这类，远超体重模型 1.5 倍的），之后一律按体重模型给值；以后再手动改的重量不会被清'
+    ]},
     { v:'v5.73', d:'11-08', items:[
       '建议重量真正落到卡片上：没手动改过重量时，动作卡和今日卡片直接显示体重模型算出的重量（深蹲 80 → 52.5、RDL 70 → 47.5、腿举 120 → 92.5、腿弯举 35 → 17.5）',
       '「本周计划容量」跟着真实重量重算：21,688 → 13,946 kg'
@@ -3379,6 +3397,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     placePill(order.indexOf($('.tab.on') ? $('.tab.on').dataset.tab : 'today'));
   });
   if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+  migrateWeights();
   setSplit(3);
   paintWeekVol();
   paintAll();
