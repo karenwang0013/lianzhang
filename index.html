@@ -282,13 +282,15 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 .ringmid .rnum b.tot{color:rgba(255,255,255,.5)}
 .ringmid .rnum .rslash{font-style:normal;font-size:24px;line-height:1;color:rgba(255,255,255,.34);font-weight:400}
 .ringmid .rnum .runit{font-style:normal;font-size:16px;color:var(--muted2);margin-left:2px}
-/* 回到今天：放在日期与圆环之间的空隙里，居中 */
-.retrow{display:flex;justify-content:center;margin:6px 0 8px}
+/* 回到今天：绝对定位塞进「日期 → 圆环」那段空隙里，不占布局、不推圆环 */
+.retrow{position:absolute;left:0;right:0;bottom:-4px;display:flex;justify-content:center;
+  margin:0;pointer-events:none}
 .retrow[hidden]{display:none}
+.retrow .daybtn{pointer-events:auto}
 .daybtn{
-  height:24px;padding:0 11px;display:inline-flex;align-items:center;justify-content:center;
+  height:18px;padding:0 8px;display:inline-flex;align-items:center;justify-content:center;
   border-radius:8px;background-color:rgba(228,0,43,.14);border:1px solid rgba(228,0,43,.38);
-  color:#fff;font-family:inherit;font-size:11.5px;font-weight:600;letter-spacing:.01em;
+  color:#fff;font-family:inherit;font-size:10.5px;font-weight:600;letter-spacing:.01em;
   white-space:nowrap;cursor:pointer;transition:background .2s}
 .daybtn:active{transform:scale(.94);background-color:rgba(228,0,43,.26)}
 .daybtn[hidden]{display:none}
@@ -308,7 +310,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 /* 卡片首行：日期 + 今天完成组数 */
 /* 日期行：卡牌里第一行（几何照热量账本 .daterow / .arrow） */
 .herocard{padding-top:0}
-.daterow{display:flex;align-items:center;justify-content:space-between;gap:8px;
+.daterow{position:relative;display:flex;align-items:center;justify-content:space-between;gap:8px;
   margin:0 -9px;padding:7px 0 12px}
 .daterow .dmain{flex:1;min-width:0;display:flex;align-items:center;justify-content:center}
 .dwrap{position:relative;display:inline-flex;align-items:center}
@@ -856,8 +858,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 .rembody{padding:0 20px}
 .remrow{display:flex;align-items:center;justify-content:space-between;padding:12px 0;
   border-top:1px solid var(--line);font-size:14px}
-.remlab{margin:14px 0 8px;font-size:11px;color:var(--muted2);letter-spacing:.04em}
-.remchips .chip{padding:7px 13px;font-size:12.5px}
+.remnote{margin:14px 0 0;font-size:11.5px;color:var(--muted2);line-height:1.6}
 .adhocbar{display:flex;align-items:center;justify-content:space-between;gap:10px;
   margin:0 2px 10px;padding:8px 12px;border-radius:12px;
   background-color:rgba(228,0,43,.10);border:1px solid rgba(228,0,43,.28);
@@ -1028,7 +1029,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
     <div class="statusbg" aria-hidden="true"></div>
     <div class="topbar">
-      <div class="brand">训练<span>账本</span><i class="btag">v5.98</i></div>
+      <div class="brand">训练<span>账本</span><i class="btag">v5.99</i></div>
       <div class="topactions">
         <button class="topbtn topicon" id="reloadTop" aria-label="强制更新" title="强制更新">
           <svg viewBox="0 -960 960 960" aria-hidden="true"><path d="M480-160q-134 0-227-93t-93-227q0-134 93-227t227-93q69 0 132 28.5T720-690v-70q0-17 11.5-28.5T760-800q17 0 28.5 11.5T800-760v200q0 17-11.5 28.5T760-520H560q-17 0-28.5-11.5T520-560q0-17 11.5-28.5T560-600h128q-32-56-87.5-88T480-720q-100 0-170 70t-70 170q0 100 70 170t170 70q68 0 124.5-34.5T692-367q8-14 22.5-19.5t29.5-.5q16 5 23 21t-1 30q-41 80-117 128t-169 48Z"/></svg>
@@ -1054,10 +1055,9 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
             <button class="wkbtn" id="wkNext" aria-label="下一周">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg>
             </button>
-          </div>
-
-          <div class="retrow" id="retRow" hidden>
-            <button class="daybtn" id="goTodayRing">回到今天</button>
+            <div class="retrow" id="retRow" hidden>
+              <button class="daybtn" id="goTodayRing">回到今天</button>
+            </div>
           </div>
 
           <div class="ringwrap">
@@ -1323,7 +1323,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     <!-- 设置 -->
     <div class="sheet" id="setSheet">
       <div class="grab"></div>
-      <div class="sh-hd"><h2>设置</h2><span class="vtag">v5.98</span></div>
+      <div class="sh-hd"><h2>设置</h2><span class="vtag">v5.99</span></div>
       <div class="setbody">
         <div class="setlabel">训练设置</div>
         <div class="setrows">
@@ -1340,7 +1340,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
           <div class="srow" data-ic="monitor_heart"><span class="ico"></span><span class="lbl">Apple 健康</span><span class="sw"></span></div>
           <button class="srow" id="openRemind" data-ic="assignment"><span class="ico"></span><span class="lbl">训练提醒</span><span class="val" id="remindVal">开</span></button>
           <button class="srow" id="openBackup" data-ic="cloud_done"><span class="ico"></span><span class="lbl">数据备份</span><span class="val" id="backupVal">iCloud</span></button>
-          <button class="srow" id="openRel" data-ic="checklist"><span class="ico"></span><span class="lbl">更新记录</span><span class="val">v5.98</span></button>
+          <button class="srow" id="openRel" data-ic="checklist"><span class="ico"></span><span class="lbl">更新记录</span><span class="val">v5.99</span></button>
         </div>
       </div>
     </div>
@@ -1350,12 +1350,9 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
       <div class="grab"></div>
       <div class="sh-hd"><h2>训练提醒</h2><span class="vtag" id="remindTag">开</span></div>
       <div class="rembody">
-        <p class="hint" style="padding:0">两种情况会提醒你：<b>太久没练</b>和<b>一周练太多</b>。提醒会出现在今日页顶部，只在本机，不需要联网。</p>
+        <p class="hint" style="padding:0">只用一个开关。多久算「太久没练」、多少算「练太多」，由系统按你自己的记录判断，不用你设。</p>
         <div class="remrow"><span>开启提醒</span><span class="sw" id="remSw"></span></div>
-        <div class="remlab">多久没练就提醒</div>
-        <div class="chips remchips" id="restChips"></div>
-        <div class="remlab">本周练到多少组提示「够多了」</div>
-        <div class="chips remchips" id="maxChips"></div>
+        <p class="remnote" id="remNote">正在读取你的记录…</p>
       </div>
       <button class="cta ghost" id="remindDone">完成</button>
     </div>
@@ -2537,41 +2534,57 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   });
   /* ---------- 训练提醒（本机提醒，和热量账本同一套「条件 → 提醒」思路） ---------- */
   function remindCfg(){
-    var d = { on: true, rest: 5, max: 80 };
-    var v = store.remind || {};
-    if (typeof v.on === 'boolean') d.on = v.on;
-    if (v.rest) d.rest = v.rest;
-    if (v.max) d.max = v.max;
-    return d;
+    return { on: (store.remind && typeof store.remind.on === 'boolean') ? store.remind.on : true };
   }
-  function remindSummary(){
-    var c = remindCfg();
-    return c.on ? (c.rest + ' 天 / ' + c.max + ' 组') : '关';
+  function remindSummary(){ return remindCfg().on ? '开' : '关'; }
+  /* 自动判据：按她自己最近的训练间隔 / 计划量来定，不让她设数字 */
+  function remindStats(){
+    var days = trainedDays();
+    var gaps = [];
+    for (var i = 1; i < days.length; i++){
+      gaps.push(Math.round((new Date(days[i] + 'T00:00:00') - new Date(days[i-1] + 'T00:00:00')) / 86400000));
+    }
+    gaps = gaps.filter(function(g){ return g > 0; }).slice(-12);
+    var med = 2;
+    if (gaps.length){
+      var sorted = gaps.slice().sort(function(a,b){ return a-b; });
+      med = sorted[Math.floor(sorted.length / 2)];
+    }
+    var last = days.length ? days[days.length - 1] : '';
+    var gap = last ? Math.round((new Date(todayISO() + 'T00:00:00') - new Date(last + 'T00:00:00')) / 86400000) : 999;
+    var weekAgo = isoMinus(todayISO(), 6);
+    var sets7 = allLogs().filter(function(l){ return l.d >= weekAgo; }).length;
+    var planned = 0;
+    daysOf(splitDays).forEach(function(d){ if (d[1] !== 'rest') planned += totalSets(d[1]); });
+    return { gap: gap, med: med, sets7: sets7, planned: planned, days: days.length };
   }
   function paintRemindRow(){
     var el = $('#remindVal'); if (el) el.textContent = remindSummary();
-    var tag = $('#remindTag'); if (tag) tag.textContent = remindCfg().on ? '开' : '关';
+    var tag = $('#remindTag'); if (tag) tag.textContent = remindSummary();
     var sw = $('#remSw'); if (sw) sw.classList.toggle('off', !remindCfg().on);
-    var rc = $('#restChips'), mc = $('#maxChips');
-    if (rc) rc.innerHTML = [3,5,7,10].map(function(n){
-      return '<button class="chip' + (remindCfg().rest === n ? ' on' : '') + '" data-rest="' + n + '">' + n + ' 天</button>';
-    }).join('');
-    if (mc) mc.innerHTML = [60,80,100].map(function(n){
-      return '<button class="chip' + (remindCfg().max === n ? ' on' : '') + '" data-max="' + n + '">' + n + ' 组</button>';
-    }).join('');
+    var note = $('#remNote');
+    if (note){
+      var st = remindStats();
+      note.textContent = st.days
+        ? ('你平时大约每 ' + st.med + ' 天练一次；本周 ' + st.sets7 + ' 组，计划一周 ' + st.planned + ' 组。')
+        : '还没有训练记录，练过几次之后就会按你的节奏判断。';
+    }
   }
   function checkReminder(){
     var c = remindCfg();
     var bar = $('#remindBar'), txt = $('#remindText');
     if (!bar || !txt) return;
     if (!c.on || store.remindShown === todayISO()){ bar.hidden = true; return; }
-    var days = trainedDays(), last = days.length ? days[days.length - 1] : '';
-    var gap = last ? Math.round((new Date(todayISO() + 'T00:00:00') - new Date(last + 'T00:00:00')) / 86400000) : 999;
-    var weekAgo = isoMinus(todayISO(), 6);
-    var sets7 = allLogs().filter(function(l){ return l.d >= weekAgo; }).length;
-    var msg = '';
-    if (gap >= c.rest) msg = gap > 900 ? '还没有训练记录，今天练一次？' : ('已经 ' + gap + ' 天没练了，今天动一动？');
-    else if (sets7 >= c.max) msg = '本周已经练了 ' + sets7 + ' 组，够了，注意恢复。';
+    var st = remindStats(), msg = '';
+    var restLimit = Math.max(3, Math.round(st.med * 2));
+    if (st.gap >= restLimit){
+      msg = st.gap > 900 ? '还没有训练记录，今天练一次？'
+        : ('已经 ' + st.gap + ' 天没练了' + (st.med ? '（你平时每 ' + st.med + ' 天一次）' : '') + '，今天动一动？');
+    } else if (st.sets7 > st.planned * 1.1){
+      msg = '本周已经练了 ' + st.sets7 + ' 组，超过计划（' + st.planned + ' 组），注意恢复。';
+    } else if (st.days && st.sets7 < st.planned * 0.4 && st.gap < restLimit){
+      msg = '本周只练了 ' + st.sets7 + ' 组（计划 ' + st.planned + ' 组），找一天补一补？';
+    }
     bar.hidden = !msg;
     txt.textContent = msg;
   }
@@ -2579,14 +2592,6 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   $('#remindDone').addEventListener('click', closeSheets);
   $('#remSw').addEventListener('click', function(){
     var c = remindCfg(); c.on = !c.on; store.remind = c; saveStore(); paintRemindRow(); checkReminder();
-  });
-  $('#restChips').addEventListener('click', function(e){
-    var b = e.target.closest('[data-rest]'); if (!b) return;
-    var c = remindCfg(); c.rest = +b.dataset.rest; store.remind = c; saveStore(); paintRemindRow(); checkReminder();
-  });
-  $('#maxChips').addEventListener('click', function(e){
-    var b = e.target.closest('[data-max]'); if (!b) return;
-    var c = remindCfg(); c.max = +b.dataset.max; store.remind = c; saveStore(); paintRemindRow(); checkReminder();
   });
   $('#remindClose').addEventListener('click', function(){
     store.remindShown = todayISO(); saveStore();
@@ -2936,7 +2941,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   }
 
   /* ---------- 启动版本比对（同热量账本） ---------- */
-  var APP_VERSION = 'v5.98';
+  var APP_VERSION = 'v5.99';
   fetch('./version.txt?t=' + Date.now(), { cache: 'no-store' })
     .then(function(r){ return r.ok ? r.text() : ''; })
     .then(function(v){
@@ -2958,6 +2963,10 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
   /* ---------- 更新记录 ---------- */
   var RELEASES = [
+    { v:'v5.99', d:'11-08', items:[
+      '「回到今天」用绝对定位塞进「日期 → 圆环」那段空隙，日期和圆环都不动（卡高、环顶、日期位置实测完全不变）；上下间隙 6 / 7，按圆环实际可见外沿算的',
+      '训练提醒改成只看开关、不用你设数字：多久算「太久没练」按你平时两倍间隔判断（如平时每 2 天练一次 → 超过 4 天提醒），「练太多」按本周组数超过计划 110% 判断，「练太少」按低于计划 40% 判断'
+    ]},
     { v:'v5.98', d:'11-08', items:[
       '设置里「训练提醒」能点开了：开关 + 「多久没练提醒」（3/5/7/10 天）+ 「本周练到多少组提醒」（60/80/100 组）',
       '两种提醒都会显示在今日页顶部：「已经 8 天没练了，今天动一动？」「本周已经练了 90 组，够了，注意恢复。」，点「知道了」当天不再出现',
