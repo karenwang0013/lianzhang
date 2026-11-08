@@ -282,11 +282,11 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 .ringmid .rnum b.tot{color:rgba(255,255,255,.5)}
 .ringmid .rnum .rslash{font-style:normal;font-size:24px;line-height:1;color:rgba(255,255,255,.34);font-weight:400}
 .ringmid .rnum .runit{font-style:normal;font-size:16px;color:var(--muted2);margin-left:2px}
-.daybtn{position:absolute;left:100%;top:50%;transform:translateY(-50%);margin-left:8px;
-  width:19px;height:19px;display:grid;place-items:center;border-radius:6px;
+.daybtn{position:absolute;left:100%;top:50%;transform:translateY(-50%);margin-left:10px;
+  width:24px;height:24px;display:grid;place-items:center;border-radius:8px;
   background-color:rgba(228,0,43,.14);border:1px solid rgba(228,0,43,.38);
   color:#fff;cursor:pointer;padding:0;transition:background .2s}
-.daybtn .ico{width:12px;height:12px;fill:currentColor;display:block}
+.daybtn .ico{width:14px;height:14px;fill:currentColor;display:block}
 .daybtn:active{transform:scale(.94);background-color:rgba(228,0,43,.26)}
 .daybtn[hidden]{display:none}
 .ringmid .rgap{font-size:11px;font-weight:600;color:rgba(255,255,255,.8);letter-spacing:.2px;margin-top:12px}
@@ -1013,7 +1013,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
     <div class="statusbg" aria-hidden="true"></div>
     <div class="topbar">
-      <div class="brand">训练<span>账本</span><i class="btag">v5.94</i></div>
+      <div class="brand">训练<span>账本</span><i class="btag">v5.95</i></div>
       <div class="topactions">
         <button class="topbtn topicon" id="reloadTop" aria-label="强制更新" title="强制更新">
           <svg viewBox="0 -960 960 960" aria-hidden="true"><path d="M480-160q-134 0-227-93t-93-227q0-134 93-227t227-93q69 0 132 28.5T720-690v-70q0-17 11.5-28.5T760-800q17 0 28.5 11.5T800-760v200q0 17-11.5 28.5T760-520H560q-17 0-28.5-11.5T520-560q0-17 11.5-28.5T560-600h128q-32-56-87.5-88T480-720q-100 0-170 70t-70 170q0 100 70 170t170 70q68 0 124.5-34.5T692-367q8-14 22.5-19.5t29.5-.5q16 5 23 21t-1 30q-41 80-117 128t-169 48Z"/></svg>
@@ -1065,7 +1065,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
             </svg>
             <div class="ringmid">
               <span class="rlbl">本周</span>
-              <span class="rnum"><b id="weekDays">4</b><i class="rslash">/</i><b id="weekPlan" class="tot">3</b><i class="runit">天</i></span>
+              <span class="rnum"><b id="weekDays">4</b><i class="rslash">/</i><b id="weekPlan" class="tot">3</b></span>
               <span class="rgap" id="weekGap">还差 2 天</span>
             </div>
           </div>
@@ -1304,7 +1304,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     <!-- 设置 -->
     <div class="sheet" id="setSheet">
       <div class="grab"></div>
-      <div class="sh-hd"><h2>设置</h2><span class="vtag">v5.94</span></div>
+      <div class="sh-hd"><h2>设置</h2><span class="vtag">v5.95</span></div>
       <div class="setbody">
         <div class="setlabel">训练设置</div>
         <div class="setrows">
@@ -1321,7 +1321,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
           <div class="srow" data-ic="monitor_heart"><span class="ico"></span><span class="lbl">Apple 健康</span><span class="sw"></span></div>
           <div class="srow" data-ic="assignment"><span class="ico"></span><span class="lbl">训练提醒</span><span class="sw"></span></div>
           <button class="srow" id="openBackup" data-ic="cloud_done"><span class="ico"></span><span class="lbl">数据备份</span><span class="val" id="backupVal">iCloud</span></button>
-          <button class="srow" id="openRel" data-ic="checklist"><span class="ico"></span><span class="lbl">更新记录</span><span class="val">v5.94</span></button>
+          <button class="srow" id="openRel" data-ic="checklist"><span class="ico"></span><span class="lbl">更新记录</span><span class="val">v5.95</span></button>
         </div>
       </div>
     </div>
@@ -1620,7 +1620,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     curEx = arr;
     var card = $('.ex[data-ex="' + id + '"]');
     var on = card ? $$('.dot.on', card).length : 0;
-    var all = arr.sets;
+    var all = card ? $$('.dot', card).length : arr.sets;
     $('#exName').textContent = arr.n;
     var gEl = $('#exGrade');
     if (gEl){
@@ -1628,7 +1628,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
       gEl.className = 'grade' + (arr.g === 'A' ? ' a' : (arr.g === 'B' ? ' b' : ''));
     }
     var exv = exvOf(arr);
-    $('#exSets').textContent = Math.min(on, all) + ' / ' + exv.sets + ' 组';
+    $('#exSets').textContent = Math.min(on, all) + ' / ' + all + ' 组';
     $('#exRep').textContent = exv.rep + ' 次';
     var kv = kgOf(arr); $('#exKg').value = kv ? kv : '';
     $('#exRest').textContent = arr.rest + ' 秒';
@@ -2226,10 +2226,15 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     $('#todayName').textContent = t[0];
     $('#todayEn').textContent = t[1];
 
-    var html = '';
+    var html = '', renderedSets = 0;
     dayEx(key).forEach(function(e, i){
+      var useSets = e.sets;
+      if (adhoc && key === adhocKey){
+        useSets = Math.max(2, Math.min(e.sets + 1, Math.round(e.sets * adhocScale)));
+      }
+      renderedSets += useSets;
       var dots = '';
-      for (var k = 0; k < e.sets; k++) dots += '<button class="dot"></button>';
+      for (var k = 0; k < useSets; k++) dots += '<button class="dot"></button>';
       var ekg = kgOf(e);
       var load = ekg ? ekg + ' kg' : '自重';
       var gcls = e.g === 'A' ? ' a' : (e.g === 'B' ? ' b' : '');
@@ -2240,7 +2245,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
         '<p class="exmeta">' + e.sets + ' 组 × ' + e.rep + ' 次 · 休息 ' + e.rest + ' 秒' +
           (lastWeightOf(e.n) ? ' · 上次 ' + lastWeightOf(e.n).kg + ' kg' : '') +
           (e.orig ? ' · 已换：原「' + e.orig + '」' : '') + '</p>' +
-        '<div class="sets">' + dots + '<span class="setcount">0/' + e.sets + '</span></div>' +
+        '<div class="sets">' + dots + '<span class="setcount">0/' + useSets + '</span></div>' +
         '</article>';
     });
     extrasToday().forEach(function(e, i){
@@ -2257,7 +2262,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
         '</article>';
     });
     $('#exList').innerHTML = html;
-    var all = todaySets(key) + extrasToday().reduce(function(a, e){ return a + e.sets; }, 0);
+    var all = renderedSets + extrasToday().reduce(function(a, e){ return a + e.sets; }, 0);
     $('#listMeta').textContent = all + ' 有效组 · 0 垃圾容量';
     renderSets();
   }
@@ -2342,7 +2347,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   }
 
   /* 休息日临时加练的状态（只在本次打开期间有效，刷新回休息日） */
-  var adhoc = false, adhocWhy = '';
+  var adhoc = false, adhocWhy = '', adhocScale = 1, adhocKey = '';
   function paintAdhoc(){
     var bar = $('#adhocBar'); if (!bar) return;
     var on = adhoc && !!todayKey;
@@ -2378,9 +2383,24 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     var pick = pickAdhocSession();
     if (!pick) return;
     adhoc = true;
-    adhocWhy = pick.gap >= 99
-      ? '还没练过'
-      : ('距上次 ' + pick.gap + ' 天 · 本周 ' + pick.setsWeek + ' 组');
+    adhocKey = pick.key;
+
+    /* 最近 7 天练了多少组 vs 计划一周的组数 → 决定这场加练要加量还是减量 */
+    var weekAgo = isoMinus(todayISO(), 6);
+    var sets7 = allLogs().filter(function(l){ return l.d >= weekAgo; }).length;
+    var planned = 0;
+    daysOf(splitDays).forEach(function(d){ if (d[1] !== 'rest') planned += totalSets(d[1]); });
+    var ratio = planned ? sets7 / planned : 0;
+    if (ratio >= 1.05) adhocScale = 0.75;
+    else if (ratio >= 0.75) adhocScale = 0.9;
+    else if (ratio <= 0.2) adhocScale = 1.15;
+    else adhocScale = 1;
+
+    var basis = pick.gap >= 99 ? '还没练过' : ('距上次 ' + pick.gap + ' 天');
+    var adjTxt = adhocScale < 1 ? '最近练得多 → 减量'
+               : (adhocScale > 1 ? '最近没怎么练 → 加量' : '正常量');
+    adhocWhy = basis + ' · 本周 ' + sets7 + ' 组 / 计划 ' + planned + ' 组 · ' + adjTxt;
+
     todayKey = pick.key;
     $('#todayName').textContent = TITLE[pick.key][0];
     $('#todayEn').textContent = TITLE[pick.key][1];
@@ -2824,7 +2844,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   }
 
   /* ---------- 启动版本比对（同热量账本） ---------- */
-  var APP_VERSION = 'v5.94';
+  var APP_VERSION = 'v5.95';
   fetch('./version.txt?t=' + Date.now(), { cache: 'no-store' })
     .then(function(r){ return r.ok ? r.text() : ''; })
     .then(function(v){
@@ -2846,6 +2866,11 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
   /* ---------- 更新记录 ---------- */
   var RELEASES = [
+    { v:'v5.95', d:'11-08', items:[
+      '圆环里去掉「天」字（下面已经有「还差 X 天」），「0 / 3」现在真正居中',
+      '「回到今天」图标 19 → 24px（图标 14），还是贴在日期右边、日期不动',
+      '加练按最近训练量自动定这场练多少：最近 7 天超过计划量 → 每个动作 ×0.75（19 组变 13）；接近计划 → ×0.9；几乎没练 → ×1.15（主项 4→5 组）；加练条上写明「本周 66 组 / 计划 61 组 · 最近练得多 → 减量」'
+    ]},
     { v:'v5.94', d:'11-08', items:[
       '修分段滑块的上下间隙：之前按 offsetTop+1 落位，滑块比选中格低 1px（上 4 / 下 1.6），现在按真实矩形算，实测上 3 / 下 3，四边完全贴合'
     ]},
