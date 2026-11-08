@@ -990,7 +990,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
     <div class="statusbg" aria-hidden="true"></div>
     <div class="topbar">
-      <div class="brand">训练<span>账本</span><i class="btag">v5.81</i></div>
+      <div class="brand">训练<span>账本</span><i class="btag">v5.82</i></div>
       <div class="topactions">
         <button class="topbtn topicon" id="reloadTop" aria-label="强制更新" title="强制更新">
           <svg viewBox="0 -960 960 960" aria-hidden="true"><path d="M480-160q-134 0-227-93t-93-227q0-134 93-227t227-93q69 0 132 28.5T720-690v-70q0-17 11.5-28.5T760-800q17 0 28.5 11.5T800-760v200q0 17-11.5 28.5T760-520H560q-17 0-28.5-11.5T520-560q0-17 11.5-28.5T560-600h128q-32-56-87.5-88T480-720q-100 0-170 70t-70 170q0 100 70 170t170 70q68 0 124.5-34.5T692-367q8-14 22.5-19.5t29.5-.5q16 5 23 21t-1 30q-41 80-117 128t-169 48Z"/></svg>
@@ -1274,7 +1274,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     <!-- 设置 -->
     <div class="sheet" id="setSheet">
       <div class="grab"></div>
-      <div class="sh-hd"><h2>设置</h2><span class="vtag">v5.81</span></div>
+      <div class="sh-hd"><h2>设置</h2><span class="vtag">v5.82</span></div>
       <div class="setbody">
         <div class="setlabel">训练设置</div>
         <div class="setrows">
@@ -1291,7 +1291,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
           <div class="srow" data-ic="monitor_heart"><span class="ico"></span><span class="lbl">Apple 健康</span><span class="sw"></span></div>
           <div class="srow" data-ic="assignment"><span class="ico"></span><span class="lbl">训练提醒</span><span class="sw"></span></div>
           <button class="srow" id="openBackup" data-ic="cloud_done"><span class="ico"></span><span class="lbl">数据备份</span><span class="val" id="backupVal">iCloud</span></button>
-          <button class="srow" id="openRel" data-ic="checklist"><span class="ico"></span><span class="lbl">更新记录</span><span class="val">v5.81</span></button>
+          <button class="srow" id="openRel" data-ic="checklist"><span class="ico"></span><span class="lbl">更新记录</span><span class="val">v5.82</span></button>
         </div>
       </div>
     </div>
@@ -2555,27 +2555,52 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   })();
 
   /* ---------- 弹层下滑关闭（热量账本同一套） ---------- */
+  /* 下滑关闭：只有从顶部那条横杠（±16px 竖向、±60px 横向）开始拖才生效，
+     和在卡片正文里往下滚是两件事（热量账本同款判定） */
   function wireDragClose(sh){
-    var startY = 0, dy = 0, dragging = false;
+    if (sh.dataset.dragWired) return;
+    sh.dataset.dragWired = '1';
+    var y0 = 0, x0 = 0, dy = 0, dragging = false, armed = false, horiz = false;
+    function inGrabZone(x, y){
+      var g = sh.querySelector('.grab');
+      if (!g) return (y - sh.getBoundingClientRect().top) <= 34;
+      var gr = g.getBoundingClientRect();
+      return y >= gr.top - 16 && y <= gr.bottom + 16 && x >= gr.left - 60 && x <= gr.right + 60;
+    }
     sh.addEventListener('touchstart', function(e){
-      if (sh.scrollTop > 0) return;
-      var pb = sh.querySelector('.pinbody');
-      if (pb && pb.scrollTop > 0) return;
-      startY = e.touches[0].clientY; dragging = true; dy = 0;
-      sh.style.transition = 'none';
-    }, { passive: true });
+      if (!sh.classList.contains('on')) return;
+      var t0 = e.touches[0];
+      y0 = t0.clientY; x0 = t0.clientX; dy = 0; dragging = false; horiz = false;
+      armed = inGrabZone(t0.clientX, t0.clientY);
+    }, { passive: true, capture: true });
     sh.addEventListener('touchmove', function(e){
-      if (!dragging) return;
-      dy = Math.max(0, e.touches[0].clientY - startY);
-      sh.style.transform = 'translateY(' + dy + 'px)';
-    }, { passive: true });
-    sh.addEventListener('touchend', function(){
-      if (!dragging) return;
+      if (!armed || !sh.classList.contains('on')) return;
+      if (!dragging){
+        var dx0 = Math.abs(e.touches[0].clientX - x0);
+        var dy0 = Math.abs(e.touches[0].clientY - y0);
+        if (dx0 > 12 && dx0 > dy0){ horiz = true; armed = false; return; }
+      }
+      if (horiz) return;
+      var d = e.touches[0].clientY - y0;
+      if (d <= 0){ if(!dragging) return; dy = 0; sh.style.transform = ''; return; }
+      dy = d;
+      if (dy > 2){
+        dragging = true;
+        sh.style.transition = 'none';
+        sh.style.transform = 'translateY(' + dy + 'px)';
+        if (e.cancelable) e.preventDefault();
+      }
+    }, { passive: false, capture: true });
+    function end(){
+      if (!dragging){ dy = 0; return; }
       dragging = false;
       sh.style.transition = '';
       sh.style.transform = '';
-      if (dy > 90) closeSheets();
-    });
+      if (dy > 96) closeSheets();
+      dy = 0;
+    }
+    sh.addEventListener('touchend', end);
+    sh.addEventListener('touchcancel', end);
   }
   function paintRows(){
     SET_ROWS.forEach(function(r, i){
@@ -2720,7 +2745,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   }
 
   /* ---------- 启动版本比对（同热量账本） ---------- */
-  var APP_VERSION = 'v5.81';
+  var APP_VERSION = 'v5.82';
   fetch('./version.txt?t=' + Date.now(), { cache: 'no-store' })
     .then(function(r){ return r.ok ? r.text() : ''; })
     .then(function(v){
@@ -2742,6 +2767,10 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
   /* ---------- 更新记录 ---------- */
   var RELEASES = [
+    { v:'v5.82', d:'11-08', items:[
+      '下滑关闭改成只在「顶部横杠」那一小块生效（横杠上下各 16px、左右各 60px 容错）；卡片正文/列表里怎么往下拖都不会把卡拖走或关掉，和热量账本同一套判定',
+      '横向滑动（比如滑列表）不会被误判成关闭手势'
+    ]},
     { v:'v5.81', d:'11-08', items:[
       '撤销改成和「完成本组」并排的一颗「−」：完成本组 = +1 组，左边那颗 − = 撤一组；0 组时 − 自动置灰，不再是一条单独的文字链'
     ]},
