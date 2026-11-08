@@ -132,11 +132,6 @@ body{
 .brand span{color:var(--lime)}
 .brand .btag{font-style:normal;font-size:10px;font-weight:500;color:var(--muted2);margin-left:6px;letter-spacing:normal}
 .topactions{display:flex;gap:6px;align-items:center}
-.todaypill{height:33px;padding:7px 13px;border-radius:11px;font-family:inherit;font-size:12.5px;
-  font-weight:650;letter-spacing:.02em;color:var(--lime);
-  background-color:rgba(228,0,43,.16);border:1px solid rgba(228,0,43,.4);cursor:pointer}
-.todaypill:active{transform:scale(.95);background-color:rgba(228,0,43,.26)}
-.todaypill[hidden]{display:none}
 .topbtn{
   display:inline-flex;align-items:center;justify-content:center;gap:6px;
   height:33px;padding:7px 11px;border-radius:11px;
@@ -282,7 +277,13 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 }
 .ringmid .rlbl{font-size:11px;letter-spacing:.2em;color:var(--muted);font-weight:500}
 .ringmid b{font-size:56px;font-weight:500;letter-spacing:-1.5px;line-height:.96;font-variant-numeric:tabular-nums;margin-top:2px}
-.ringmid .rsub{font-size:12px;color:var(--muted2);letter-spacing:.02em;margin-top:-1px}
+.ringmid .rnum{display:flex;align-items:baseline;gap:7px}
+.ringmid .rsub{font-size:15px;color:var(--muted2);letter-spacing:.02em;font-style:normal}
+.ringtoday{margin-top:16px;padding:6px 13px;border-radius:10px;font-family:inherit;
+  font-size:11.5px;font-weight:650;letter-spacing:.02em;color:var(--lime);
+  background-color:rgba(228,0,43,.14);border:1px solid rgba(228,0,43,.4);cursor:pointer}
+.ringtoday:active{transform:scale(.95)}
+.ringtoday[hidden]{display:none}
 .ringmid .rgap{font-size:11px;font-weight:600;color:rgba(255,255,255,.8);letter-spacing:.2px;margin-top:12px}
 
 /* 三宫格（同热量账本的三格） */
@@ -1001,9 +1002,8 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
     <div class="statusbg" aria-hidden="true"></div>
     <div class="topbar">
-      <div class="brand">训练<span>账本</span><i class="btag">v5.88</i></div>
+      <div class="brand">训练<span>账本</span><i class="btag">v5.89</i></div>
       <div class="topactions">
-        <button class="topbtn todaypill" id="goToday2" hidden>回到今天</button>
         <button class="topbtn topicon" id="reloadTop" aria-label="强制更新" title="强制更新">
           <svg viewBox="0 -960 960 960" aria-hidden="true"><path d="M480-160q-134 0-227-93t-93-227q0-134 93-227t227-93q69 0 132 28.5T720-690v-70q0-17 11.5-28.5T760-800q17 0 28.5 11.5T800-760v200q0 17-11.5 28.5T760-520H560q-17 0-28.5-11.5T520-560q0-17 11.5-28.5T560-600h128q-32-56-87.5-88T480-720q-100 0-170 70t-70 170q0 100 70 170t170 70q68 0 124.5-34.5T692-367q8-14 22.5-19.5t29.5-.5q16 5 23 21t-1 30q-41 80-117 128t-169 48Z"/></svg>
         </button>
@@ -1051,9 +1051,9 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
             </svg>
             <div class="ringmid">
               <span class="rlbl">本周</span>
-              <b id="weekDays">4</b>
-              <span class="rsub" id="weekTotal">/ 6 天</span>
+              <span class="rnum"><b id="weekDays">4</b><i class="rsub" id="weekTotal">/ 6 天</i></span>
               <span class="rgap" id="weekGap">还差 2 天</span>
+              <button class="ringtoday" id="goTodayRing" hidden>回到今天</button>
             </div>
           </div>
 
@@ -1290,7 +1290,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     <!-- 设置 -->
     <div class="sheet" id="setSheet">
       <div class="grab"></div>
-      <div class="sh-hd"><h2>设置</h2><span class="vtag">v5.88</span></div>
+      <div class="sh-hd"><h2>设置</h2><span class="vtag">v5.89</span></div>
       <div class="setbody">
         <div class="setlabel">训练设置</div>
         <div class="setrows">
@@ -1307,7 +1307,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
           <div class="srow" data-ic="monitor_heart"><span class="ico"></span><span class="lbl">Apple 健康</span><span class="sw"></span></div>
           <div class="srow" data-ic="assignment"><span class="ico"></span><span class="lbl">训练提醒</span><span class="sw"></span></div>
           <button class="srow" id="openBackup" data-ic="cloud_done"><span class="ico"></span><span class="lbl">数据备份</span><span class="val" id="backupVal">iCloud</span></button>
-          <button class="srow" id="openRel" data-ic="checklist"><span class="ico"></span><span class="lbl">更新记录</span><span class="val">v5.88</span></button>
+          <button class="srow" id="openRel" data-ic="checklist"><span class="ico"></span><span class="lbl">更新记录</span><span class="val">v5.89</span></button>
         </div>
       </div>
     </div>
@@ -2270,7 +2270,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     }
     $('#dSub').textContent = t;
     var g1 = $('#goToday'); if (g1) g1.hidden = isToday;
-    var g2 = $('#goToday2'); if (g2) g2.hidden = isToday;
+    var g2 = $('#goTodayRing'); if (g2) g2.hidden = isToday;
   }
 
   /* 看某一天：今天=可操作；过去=当天真实记录；休息日=休息卡 */
@@ -2461,7 +2461,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     if (b) setSplit(+b.dataset.n);
   });
   $('#wkPrev').addEventListener('click', function(){ selectDay(isoMinus(viewISO, 1)); });
-  $('#goToday2').addEventListener('click', function(){ selectDay(todayISO()); });
+  $('#goTodayRing').addEventListener('click', function(){ selectDay(todayISO()); });
   $('#wkNext').addEventListener('click', function(){
     if (viewISO >= todayISO()) return;
     selectDay(isoMinus(viewISO, -1));
@@ -2792,7 +2792,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   }
 
   /* ---------- 启动版本比对（同热量账本） ---------- */
-  var APP_VERSION = 'v5.88';
+  var APP_VERSION = 'v5.89';
   fetch('./version.txt?t=' + Date.now(), { cache: 'no-store' })
     .then(function(r){ return r.ok ? r.text() : ''; })
     .then(function(v){
@@ -2814,6 +2814,10 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
   /* ---------- 更新记录 ---------- */
   var RELEASES = [
+    { v:'v5.89', d:'11-08', items:[
+      '圆环里的「0 / 3 天」改成左右一行（大数字 + 小字 / 3 天），不再上下叠',
+      '「回到今天」挪进圆环里（回看历史时才出现），顶栏那颗删掉'
+    ]},
     { v:'v5.88', d:'11-08', items:[
       '去掉计划页的「训练日」选择（那套按星期的排法不做了），只保留今日的临时加练',
       '「今天照样练一次」改名「照练」',
