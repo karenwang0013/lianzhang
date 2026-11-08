@@ -2987,6 +2987,32 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     b.addEventListener('click', function(){ openSheet('#setSheet'); });
   });
 
+  /* 整页返回手势：从屏幕左边缘往右滑 = 返回（子页回设置，设置回原页面） */
+  (function(){
+    var sx = 0, sy = 0, active = false;
+    function pageBack(){
+      var sh = document.querySelector('.sheet.page.on');
+      if (!sh) return;
+      if (sh.id === 'setSheet') closeSheets();
+      else openSheet('#setSheet');
+    }
+    document.addEventListener('touchstart', function(e){
+      if (!document.querySelector('.sheet.page.on')) return;
+      var t = e.touches[0];
+      if (!t || t.clientX > 26) return;
+      active = true; sx = t.clientX; sy = t.clientY;
+    }, { passive: true });
+    document.addEventListener('touchmove', function(e){
+      if (!active) return;
+      var t = e.touches[0]; if (!t) return;
+      var dx = t.clientX - sx, dy = Math.abs(t.clientY - sy);
+      if (dy > 70) { active = false; return; }
+      if (dx > 72) { active = false; pageBack(); }
+    }, { passive: true });
+    document.addEventListener('touchend', function(){ active = false; }, { passive: true });
+    document.addEventListener('touchcancel', function(){ active = false; }, { passive: true });
+  })();
+
   /* 基础设置：点行 → 选一个值 */
   var SET_OPTS = {
     '每周训练频率': ['2 天','3 天','4 天','5 天','6 天'],
