@@ -1262,7 +1262,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
     <div class="statusbg" aria-hidden="true"></div>
     <div class="topbar">
-      <div class="brand">训练<span>账本</span><i class="btag">v6.61</i></div>
+      <div class="brand">训练<span>账本</span><i class="btag">v6.62</i></div>
       <div class="topactions">
         <button class="topbtn topicon" id="reloadTop" aria-label="强制更新" title="强制更新">
           <svg viewBox="0 -960 960 960" aria-hidden="true"><path d="M480-160q-134 0-227-93t-93-227q0-134 93-227t227-93q69 0 132 28.5T720-690v-70q0-17 11.5-28.5T760-800q17 0 28.5 11.5T800-760v200q0 17-11.5 28.5T760-520H560q-17 0-28.5-11.5T520-560q0-17 11.5-28.5T560-600h128q-32-56-87.5-88T480-720q-100 0-170 70t-70 170q0 100 70 170t170 70q68 0 124.5-34.5T692-367q8-14 22.5-19.5t29.5-.5q16 5 23 21t-1 30q-41 80-117 128t-169 48Z"/></svg>
@@ -1552,7 +1552,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     <!-- 设置 -->
     <div class="sheet" id="setSheet">
       <div class="grab"></div>
-      <div class="sh-hd sh-sub"><button class="backbtn" id="setBack" aria-label="返回"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5 8 12l7 7"/></svg></button><h2>设置</h2><span class="vtag">v6.61</span></div>
+      <div class="sh-hd sh-sub"><button class="backbtn" id="setBack" aria-label="返回"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5 8 12l7 7"/></svg></button><h2>设置</h2><span class="vtag">v6.62</span></div>
       <div class="setbody">
         <div class="setlabel">训练设置</div>
         <div class="setrows">
@@ -1568,7 +1568,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
           <button class="srow" id="openBackup" data-ic="cloud_done"><span class="ico"></span><span class="lbl">数据备份</span><span class="val" id="backupVal">iCloud</span></button>
           <div class="srow" data-ic="monitor_heart"><span class="ico"></span><span class="lbl">Apple 健康</span><span class="sw"></span></div>
           <button class="srow" id="openRemind" data-ic="assignment"><span class="ico"></span><span class="lbl">训练提醒</span><span class="val" id="remindVal">开</span></button>
-          <button class="srow" id="openRel" data-ic="checklist"><span class="ico"></span><span class="lbl">更新记录</span><span class="val">v6.61</span></button>
+          <button class="srow" id="openRel" data-ic="checklist"><span class="ico"></span><span class="lbl">更新记录</span><span class="val">v6.62</span></button>
         </div>
       </div>
     </div>
@@ -1608,6 +1608,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
     <!-- 动作详情 -->
     <div class="sheet center" id="exSheet">
+      <div class="grab"></div>
       <div class="exdetail">
         <div class="exhead">
           <div class="exheadrow">
@@ -3504,7 +3505,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     sync();
   });
 
-  ['#setSheet','#relSheet','#backupSheet','#histSheet','#libSheet','#iconSheet','#remindSheet','#daysSheet'].forEach(function(sel){
+  ['#setSheet','#relSheet','#backupSheet','#histSheet','#libSheet','#iconSheet','#remindSheet','#daysSheet','#exSheet'].forEach(function(sel){
     var el = $(sel); if (el) wireDragClose(el);
   });
 
@@ -3528,7 +3529,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   }
 
   /* ---------- 启动版本比对（同热量账本） ---------- */
-  var APP_VERSION = 'v6.61';
+  var APP_VERSION = 'v6.62';
   fetch('./version.txt?t=' + Date.now(), { cache: 'no-store' })
     .then(function(r){ return r.ok ? r.text() : ''; })
     .then(function(v){
@@ -3550,6 +3551,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
   /* ---------- 更新记录 ---------- */
   var RELEASES = [
+    { v:'v6.62', d:'11-09', items:['动作详情卡：补上顶部的横杠','动作详情卡：可以按住横杠下滑关闭了']},
     { v:'v6.61', d:'11-09', items:['动作详情：动作名离牌顶的空隙 27 → 15（跟热量账本记录卡一个量级）','动作详情底部「完成本组」改成热量账本那颗小药丸：高 50 / 圆角 26 / 15px']},
     { v:'v6.60', d:'11-09', items:['底部卡牌不再悬浮：动作库 / 历史 / 面板等贴左右边 + 贴底，只留上圆角 46']},
     { v:'v6.59', d:'11-09', items:['Dock 选中胶囊与 Dock 条之间的缝隙 3.5 → 5（胶囊 51 高、宽 = 格宽 − 8，四边相等）']},
