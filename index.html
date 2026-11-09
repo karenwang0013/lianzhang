@@ -1119,9 +1119,11 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
      不在 Dock 上沿被切。底部间隙 = --dock-b，露出的是画布（红色辉光），不是黑条。 */
   .dock{position:fixed;left:0;right:0;bottom:var(--dock-b);margin:0 auto;
     width:min(780px, calc(100% - 16px));max-width:780px;padding:0 18px;border-radius:var(--dock-r)}
-  /* 药丸跟 Dock 同心：内圆 = Dock 圆角 − 留白（iPad 上 18−8=10；跟热量账本取同一个下限 12） */
-  .pill{border-radius:12px}
-  .pill.press .pillbody{border-radius:13px}
+  /* v6.69：iPad 上胶囊必须跟格子等高、垂直居中 —— 之前 iPad 条高 104、格子 88，
+     胶囊却还是手机的 51 高（top:4），结果胶囊浮在格子上半截，看着像错位。
+     现在高度 = 条高 − 16（= 格子高）、top 8、正胶囊（半径 = 高度一半），和手机同一套比例。 */
+  .pill{top:8px;height:calc(var(--dock-h) - 16px);border-radius:calc((var(--dock-h) - 16px) / 2)}
+  .pill.press .pillbody{border-radius:inherit}
   .tab{height:calc(var(--dock-h) - 16px);gap:4px}
   .tab .ico{width:38px;height:38px}
   .tab span{font-size:14px;letter-spacing:.2px}
@@ -1270,7 +1272,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
     <div class="statusbg" aria-hidden="true"></div>
     <div class="topbar">
-      <div class="brand">训练<span>账本</span><i class="btag">v6.68</i></div>
+      <div class="brand">训练<span>账本</span><i class="btag">v6.69</i></div>
       <div class="topactions">
         <button class="topbtn topicon" id="reloadTop" aria-label="强制更新" title="强制更新">
           <svg viewBox="0 -960 960 960" aria-hidden="true"><path d="M480-160q-134 0-227-93t-93-227q0-134 93-227t227-93q69 0 132 28.5T720-690v-70q0-17 11.5-28.5T760-800q17 0 28.5 11.5T800-760v200q0 17-11.5 28.5T760-520H560q-17 0-28.5-11.5T520-560q0-17 11.5-28.5T560-600h128q-32-56-87.5-88T480-720q-100 0-170 70t-70 170q0 100 70 170t170 70q68 0 124.5-34.5T692-367q8-14 22.5-19.5t29.5-.5q16 5 23 21t-1 30q-41 80-117 128t-169 48Z"/></svg>
@@ -1560,7 +1562,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     <!-- 设置 -->
     <div class="sheet" id="setSheet">
       <div class="grab"></div>
-      <div class="sh-hd sh-sub"><button class="backbtn" id="setBack" aria-label="返回"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5 8 12l7 7"/></svg></button><h2>设置</h2><span class="vtag">v6.68</span></div>
+      <div class="sh-hd sh-sub"><button class="backbtn" id="setBack" aria-label="返回"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5 8 12l7 7"/></svg></button><h2>设置</h2><span class="vtag">v6.69</span></div>
       <div class="setbody">
         <div class="setlabel">训练设置</div>
         <div class="setrows">
@@ -1577,7 +1579,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
           <button class="srow" id="openBackup" data-ic="cloud_done"><span class="ico"></span><span class="lbl">数据备份</span><span class="val" id="backupVal">iCloud</span></button>
           <div class="srow" data-ic="monitor_heart"><span class="ico"></span><span class="lbl">Apple 健康</span><span class="sw"></span></div>
           <button class="srow" id="openRemind" data-ic="assignment"><span class="ico"></span><span class="lbl">训练提醒</span><span class="val" id="remindVal">开</span></button>
-          <button class="srow" id="openRel" data-ic="checklist"><span class="ico"></span><span class="lbl">更新记录</span><span class="val">v6.68</span></button>
+          <button class="srow" id="openRel" data-ic="checklist"><span class="ico"></span><span class="lbl">更新记录</span><span class="val">v6.69</span></button>
         </div>
       </div>
     </div>
@@ -3677,7 +3679,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   }
 
   /* ---------- 启动版本比对（同热量账本） ---------- */
-  var APP_VERSION = 'v6.68';
+  var APP_VERSION = 'v6.69';
   fetch('./version.txt?t=' + Date.now(), { cache: 'no-store' })
     .then(function(r){ return r.ok ? r.text() : ''; })
     .then(function(v){
@@ -3699,6 +3701,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
   /* ---------- 更新记录 ---------- */
   var RELEASES = [
+    { v:'v6.69', d:'11-09', items:['修：iPad 上 Dock 的胶囊和格子对不齐 —— iPad 条高 104、格子 88，胶囊却还是手机的 51 高（贴条顶），看着像浮在上半截。现在高度 = 条高 − 16、垂直居中、正胶囊，和手机同一套比例']},
     { v:'v6.68', d:'11-09', items:['改：设置页布局照「热量账本」——分组标题 12px/400 灰字、组与组之间去掉那条分隔线和 36px 空隙、行分隔线改成从图标右侧起、图标 22→21、顶部标题行左右 18 / 间距 9']},
     { v:'v6.67', d:'11-09', items:['修：撤掉的组（或删掉的记录）会被云端同步拉回来 —— cloudMerge 按 id 取并集，远端那条一直还在。现在删的时候留一个「墓碑」id，合并时墓碑优先，删了就真的删了','说明：只影响「删过又被拉回来」这一类，其余同步行为（并集、本地优先）不变']},
     { v:'v6.66', d:'11-09', items:['撤掉一组后，「近 7 天已练」「最近几次」立刻重算，不再显示旧数字']},
