@@ -471,8 +471,8 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
 /* 选中块：胶囊（圆角 = 高度一半），比 Dock 高度扁一档 —— 材质与颜色照热量账本 */
 .pill{
-  position:absolute;left:7px;top:2.5px;   /* v6.55：上下间隙均等（条 61 / 胶囊 54 / 边框 1 → 2.5+1=3.5） */
-  height:54px;border-radius:27px;   /* v6.54：App Store 胶囊 54 高、正胶囊 */
+  position:absolute;left:7px;top:4px;   /* v6.59：四边留白 5（条 61 / 胶囊 51 / 边框 1 → 4+1=5） */
+  height:51px;border-radius:25.5px;   /* v6.59：胶囊 51 高、正胶囊 */
   transition:left .62s cubic-bezier(.33,1.06,.32,1),width .42s cubic-bezier(.33,1.06,.32,1);
   pointer-events:none;
 }
@@ -1258,7 +1258,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
     <div class="statusbg" aria-hidden="true"></div>
     <div class="topbar">
-      <div class="brand">训练<span>账本</span><i class="btag">v6.58</i></div>
+      <div class="brand">训练<span>账本</span><i class="btag">v6.59</i></div>
       <div class="topactions">
         <button class="topbtn topicon" id="reloadTop" aria-label="强制更新" title="强制更新">
           <svg viewBox="0 -960 960 960" aria-hidden="true"><path d="M480-160q-134 0-227-93t-93-227q0-134 93-227t227-93q69 0 132 28.5T720-690v-70q0-17 11.5-28.5T760-800q17 0 28.5 11.5T800-760v200q0 17-11.5 28.5T760-520H560q-17 0-28.5-11.5T520-560q0-17 11.5-28.5T560-600h128q-32-56-87.5-88T480-720q-100 0-170 70t-70 170q0 100 70 170t170 70q68 0 124.5-34.5T692-367q8-14 22.5-19.5t29.5-.5q16 5 23 21t-1 30q-41 80-117 128t-169 48Z"/></svg>
@@ -1548,7 +1548,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     <!-- 设置 -->
     <div class="sheet" id="setSheet">
       <div class="grab"></div>
-      <div class="sh-hd sh-sub"><button class="backbtn" id="setBack" aria-label="返回"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5 8 12l7 7"/></svg></button><h2>设置</h2><span class="vtag">v6.58</span></div>
+      <div class="sh-hd sh-sub"><button class="backbtn" id="setBack" aria-label="返回"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5 8 12l7 7"/></svg></button><h2>设置</h2><span class="vtag">v6.59</span></div>
       <div class="setbody">
         <div class="setlabel">训练设置</div>
         <div class="setrows">
@@ -1564,7 +1564,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
           <button class="srow" id="openBackup" data-ic="cloud_done"><span class="ico"></span><span class="lbl">数据备份</span><span class="val" id="backupVal">iCloud</span></button>
           <div class="srow" data-ic="monitor_heart"><span class="ico"></span><span class="lbl">Apple 健康</span><span class="sw"></span></div>
           <button class="srow" id="openRemind" data-ic="assignment"><span class="ico"></span><span class="lbl">训练提醒</span><span class="val" id="remindVal">开</span></button>
-          <button class="srow" id="openRel" data-ic="checklist"><span class="ico"></span><span class="lbl">更新记录</span><span class="val">v6.58</span></button>
+          <button class="srow" id="openRel" data-ic="checklist"><span class="ico"></span><span class="lbl">更新记录</span><span class="val">v6.59</span></button>
         </div>
       </div>
     </div>
@@ -2900,10 +2900,10 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     /* 留白必须四边相等：药丸宽度 = 格子宽 + 2×(实际内边距 − 留白)。
        以前 pad 写死 12，iPad 断点里 .dock 的内边距是 18 → 左右留白 14、上下 7，看着不对称。 */
     var b = dk.clientLeft;
-    /* v6.58：胶囊四边留白必须相等 —— 宽 = 格宽 − 5（左右各内缩 2.5，加 1px 边框 = 视觉 3.5，和上下一样） */
-    var w = r.width - 5;
+    /* v6.59：四边留白 5（内缩 4 + 1px 边框）—— 用户口径「App Store 的间隙没这么小」 */
+    var w = r.width - 8;
     lens.style.width = w + 'px';
-    var raw = r.left - d.left - b + 2.5;
+    var raw = r.left - d.left - b + 4;
     var maxL = d.width - b * 2 - w;   /* 不超过条内沿 */
     lens.style.left = Math.max(0, Math.min(raw, maxL)) + 'px';
   }
@@ -3524,7 +3524,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   }
 
   /* ---------- 启动版本比对（同热量账本） ---------- */
-  var APP_VERSION = 'v6.58';
+  var APP_VERSION = 'v6.59';
   fetch('./version.txt?t=' + Date.now(), { cache: 'no-store' })
     .then(function(r){ return r.ok ? r.text() : ''; })
     .then(function(v){
@@ -3546,6 +3546,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
   /* ---------- 更新记录 ---------- */
   var RELEASES = [
+    { v:'v6.59', d:'11-09', items:['Dock 选中胶囊与 Dock 条之间的缝隙 3.5 → 5（胶囊 51 高、宽 = 格宽 − 8，四边相等）']},
     { v:'v6.58', d:'11-09', items:['Dock 选中胶囊四边留白一律 3.5：宽 = 格宽 − 5（原来格宽 + 10，第一格/最后一格会顶到条边、左右不均）']},
     { v:'v6.57', d:'11-09', items:['修：Dock 改尺寸后弹层（动作库/历史/添加记录）被带着变窄、圆角变方，改回左右 10 / 离底 10 / 圆角 45']},
     { v:'v6.56', d:'11-09', items:['Dock 材质回到 v6.53 那颗白玻璃（不再上主题色）：静止 .085、按住/滑动 .18','只保留尺寸与屏幕间距照 App Store：条 61 高、左右 25、离底 22、胶囊 54']},
