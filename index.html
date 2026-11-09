@@ -900,6 +900,10 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 .sugbtn:active{transform:scale(.96)}
 .exhint{margin:6px 0 0;font-size:10.5px;line-height:1.55;color:var(--muted2)}
 .exnote{margin:4px 0 0;font-size:10.5px;line-height:1.55;color:var(--muted2)}
+/* v6.65 动作详情：按动作类型给的多行建议（有氧=心率/参数/消耗/频率，力量=休息/RIR/容量/双进阶/1RM） */
+.extips{margin:9px 0 0;display:flex;flex-direction:column;gap:4px}
+.extips .tip{font-size:10.5px;line-height:1.5;color:var(--muted2)}
+.extips .tip b{font-weight:650;color:rgba(242,244,242,.92);font-variant-numeric:tabular-nums}
 
 /* 空态卡 / 只读动作行 */
 .emptycard{padding:18px 16px}
@@ -1262,7 +1266,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
     <div class="statusbg" aria-hidden="true"></div>
     <div class="topbar">
-      <div class="brand">训练<span>账本</span><i class="btag">v6.64</i></div>
+      <div class="brand">训练<span>账本</span><i class="btag">v6.65</i></div>
       <div class="topactions">
         <button class="topbtn topicon" id="reloadTop" aria-label="强制更新" title="强制更新">
           <svg viewBox="0 -960 960 960" aria-hidden="true"><path d="M480-160q-134 0-227-93t-93-227q0-134 93-227t227-93q69 0 132 28.5T720-690v-70q0-17 11.5-28.5T760-800q17 0 28.5 11.5T800-760v200q0 17-11.5 28.5T760-520H560q-17 0-28.5-11.5T520-560q0-17 11.5-28.5T560-600h128q-32-56-87.5-88T480-720q-100 0-170 70t-70 170q0 100 70 170t170 70q68 0 124.5-34.5T692-367q8-14 22.5-19.5t29.5-.5q16 5 23 21t-1 30q-41 80-117 128t-169 48Z"/></svg>
@@ -1552,13 +1556,14 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     <!-- 设置 -->
     <div class="sheet" id="setSheet">
       <div class="grab"></div>
-      <div class="sh-hd sh-sub"><button class="backbtn" id="setBack" aria-label="返回"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5 8 12l7 7"/></svg></button><h2>设置</h2><span class="vtag">v6.64</span></div>
+      <div class="sh-hd sh-sub"><button class="backbtn" id="setBack" aria-label="返回"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5 8 12l7 7"/></svg></button><h2>设置</h2><span class="vtag">v6.65</span></div>
       <div class="setbody">
         <div class="setlabel">训练设置</div>
         <div class="setrows">
           <button class="srow" data-ic="event_note"><span class="ico"></span><span class="lbl">每周训练频率</span><span class="val">6 天</span></button>
           <button class="srow" data-ic="fitness_center"><span class="ico"></span><span class="lbl">可用器械</span><span class="val">商业健身房</span></button>
           <button class="srow" data-ic="badge"><span class="ico"></span><span class="lbl">训练经验</span><span class="val">1–2 年</span></button>
+          <button class="srow" id="openAge" data-ic="person"><span class="ico"></span><span class="lbl">年龄</span><span class="val" id="ageVal">未填</span></button>
           <button class="srow" data-ic="timeline"><span class="ico"></span><span class="lbl">单次时长上限</span><span class="val">60 分钟</span></button>
         </div>
 
@@ -1568,7 +1573,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
           <button class="srow" id="openBackup" data-ic="cloud_done"><span class="ico"></span><span class="lbl">数据备份</span><span class="val" id="backupVal">iCloud</span></button>
           <div class="srow" data-ic="monitor_heart"><span class="ico"></span><span class="lbl">Apple 健康</span><span class="sw"></span></div>
           <button class="srow" id="openRemind" data-ic="assignment"><span class="ico"></span><span class="lbl">训练提醒</span><span class="val" id="remindVal">开</span></button>
-          <button class="srow" id="openRel" data-ic="checklist"><span class="ico"></span><span class="lbl">更新记录</span><span class="val">v6.64</span></button>
+          <button class="srow" id="openRel" data-ic="checklist"><span class="ico"></span><span class="lbl">更新记录</span><span class="val">v6.65</span></button>
         </div>
       </div>
     </div>
@@ -1620,6 +1625,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
         <div class="exrow2"><span>次数</span><span class="kgstep"><button class="kgbtn" id="repDown" aria-label="减一次">−</button><span class="kgbox"><b id="exRep">6–8 次</b></span><button class="kgbtn" id="repUp" aria-label="加一次">+</button></span></div>
         <div class="exrow2"><span>重量</span><span class="kgstep"><button class="kgbtn" id="kgDown" aria-label="减重量">−</button><span class="kgbox"><input id="exKg" type="number" inputmode="decimal" step="0.5" min="0" max="999" placeholder="自重" aria-label="重量"><button type="button" id="exKgUnit" aria-label="切换重量单位">kg</button></span><button class="kgbtn" id="kgUp" aria-label="加重量">+</button></span></div>
         <p class="exnote" id="exNote">复合动作，留 1–2 次余力</p>
+        <div class="extips" id="exTips"></div>
         <div id="exHist" class="exhist"></div>
       </div>
       <div class="expicklist" id="exPick"></div>
@@ -1974,12 +1980,15 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     $('#exKgUnit').textContent = uName();
     $('#exRest').textContent = arr.rest ? (arr.rest + ' 秒') : '有氧';
     $('#exDone').textContent = Math.min(on, all) + ' / ' + all;
+    /* v6.65：有氧不显示这句（说的是力量的分工），力量这句只说动作属性，余力建议在下方 tips 里 */
+    $('#exNote').style.display = exKind(arr) === 'cardio' ? 'none' : '';
     $('#exNote').textContent = arr.g === 'S'
-      ? '复合动作，留 1–2 次余力'
+      ? '复合动作，多关节发力'
       : (arr.g === 'A' ? '辅助动作，补目标肌群容量' : '收尾动作，控制节奏别甩');
     if (card) paintHere(card);
     paintExHist(arr);
     paintSug(arr);
+    paintTips(arr);                                  /* v6.65：多行建议 */
   }
 
   /* 建议值：体重/经验/上次记录 → 组数·次数·重量 */
@@ -1990,6 +1999,83 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
       ? '建议 <b>' + s.rep + '</b><i>按动作库基线（' + BODY.exp + '经验）</i>'
       : '建议 <b>' + s.sets + ' 组 × ' + s.rep + ' 次 · ' + (s.kg ? uTxt(s.kg) : '自重') + '</b>' +
         '<i>' + s.why + '</i>';
+  }
+  /* ---------- v6.65 动作建议（多行） ---------- */
+  var CARDIO_TIPS = {
+    '跑步机': { met: 9.8, how: '配速 8.0–9.5 km/h · 坡度 0–2%' },
+    '椭圆机': { met: 5.5, how: '阻力 8–10 档 · 步频 130–140' },
+    '动感单车': { met: 7.0, how: '阻力中档 · 踏频 80–90 rpm' },
+    '划船机': { met: 7.0, how: '500m 配速 2:15–2:30 · 桨频 22–24' },
+    '跳绳': { met: 12.3, how: '每组 60–90 秒 · 组间歇 30 秒' },
+    '爬楼机': { met: 8.8, how: '速度 60–70 步/分' },
+    '快走（坡度）': { met: 6.0, how: '坡度 8–12% · 速度 5.0–5.5 km/h' },
+    '游泳': { met: 8.0, how: '自由泳 4×100 m，或连续游 20 分钟' }
+  };
+  function goalOf(){ return (typeof pick !== 'undefined' && pick.goal) || '增肌'; }
+  function ageOf(){ return (store.prof && +store.prof.age) || 0; }
+  function hrRange(lo, hi){
+    var a = ageOf(); if (!a) return null;
+    var max = 220 - a; return [Math.round(max * lo), Math.round(max * hi)];
+  }
+  function tipsCardio(ex){
+    var c = CARDIO_TIPS[ex.n] || { met: 7.0, how: '' };
+    var min = repMid(exvOf(ex).rep) || 20, goal = goalOf(), out = [];
+    var dur = goal === '减脂' ? '30–45 分钟（Zone 2，全程能说话）'
+      : goal === '力量' ? '10–15 分钟（热身/放松，别抢恢复）'
+      : goal === '塑形' ? '25–35 分钟（中低强度）'
+      : '20–30 分钟（低强度，先保力量恢复）';
+    out.push('时长 <b>' + dur + '</b>');
+    var hr = hrRange(0.60, 0.70);
+    out.push(hr ? '心率 <b>' + hr[0] + '–' + hr[1] + ' 次/分</b>（Zone 2 燃脂 · 按 ' + (220 - ageOf()) + ' 最大心率）'
+                : '心率：设置里填「年龄」后自动给 Zone 2 区间（最大心率 60–70%）');
+    if (c.how) out.push('参数 ' + c.how);
+    out.push('消耗 <b>≈ ' + Math.round(c.met * 3.5 * BODY.kg / 200 * min) + ' kcal</b>（' + min + ' 分钟 · MET ' + c.met + '）');
+    out.push('频率 每周 <b>2–3 次 Zone 2 + 1 次 HIIT</b>，跟腿部力量日错开');
+    return out;
+  }
+  function weekSetsOf(name){
+    var from = isoMinus(todayISO(), 6), n = 0;
+    allLogs().forEach(function(l){ if (l.n === name && l.d >= from) n++; });
+    return n;
+  }
+  function planSetsOf(name){
+    var n = 0;
+    daysOf(splitDays).forEach(function(d){
+      if (d[1] === 'rest') return;
+      EX[d[1]].forEach(function(e){ var x = normEx(e); if (x.n === name) n += x.sets; });
+    });
+    return n;
+  }
+  function lastSetOf(name){
+    var best = null;
+    allLogs().forEach(function(l){ if (l.n === name && l.kg > 0 && (!best || l.t > best.t)) best = l; });
+    return best;
+  }
+  function tipsStrength(ex){
+    var rep = exvOf(ex).rep, goal = goalOf(), g = ex.g || 'B', out = [];
+    var rest = goal === '力量' ? (g === 'S' ? '180–300 秒（3–5 分钟）' : '120–180 秒')
+      : goal === '减脂' || goal === '塑形' ? (g === 'S' ? '60–90 秒' : '45–75 秒')
+      : (g === 'S' ? '120–180 秒' : (g === 'A' ? '90–120 秒' : '60–90 秒'));
+    out.push('休息 <b>' + rest + '</b>（' + goal + ' · 现在 ' + (ex.rest || 0) + ' 秒）');
+    out.push('留 <b>' + (g === 'S' ? '1–2 次余力' : '0–1 次余力') + '</b>（想练力量就再留 1 次，想冲力竭就留 0 次）');
+    var done = weekSetsOf(ex.n), planN = planSetsOf(ex.n);
+    if (planN) out.push('近 7 天已练 <b>' + done + ' / ' + planN + ' 组</b>' + (done >= planN ? '（够了，别堆垃圾容量）' : '（还差 ' + (planN - done) + ' 组）'));
+    var hi = repHigh(rep);
+    out.push('双进阶 先把 <b>' + rep + '</b> 做满 <b>' + hi + ' 次</b>，下次再 +2.5 kg');
+    var ls = lastSetOf(ex.n);
+    if (ls && ls.reps) out.push('估算 1RM <b>≈ ' + (Math.round(ls.kg * (1 + ls.reps / 30) * 2) / 2) + ' kg</b>（上次 ' + ls.kg + ' kg × ' + Math.round(ls.reps) + ' 次）');
+    return out;
+  }
+  function repHigh(rep){
+    var m = String(rep).match(/^\s*(\d+)\s*[–\-~]\s*(\d+)\s*$/);
+    if (m) return +m[2];
+    var n = parseFloat(rep); return isNaN(n) ? 8 : Math.round(n);
+  }
+  function paintTips(ex){
+    var box = $('#exTips'); if (!box) return;
+    if (!ex){ box.innerHTML = ''; return; }
+    var list = exKind(ex) === 'cardio' ? tipsCardio(ex) : tipsStrength(ex);
+    box.innerHTML = list.map(function(t){ return '<div class="tip">' + t + '</div>'; }).join('');
   }
   function shiftRep(rep, d){
     var m = String(rep).match(/^(\d+)\s*[–\-~]\s*(\d+)$/);
@@ -2048,6 +2134,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
     }
     setSub();
+    paintTips(curEx);
     $('#listMeta').textContent = todaySets(todayKey) + ' 有效组';
   }
   function afterPlanChange(){
@@ -3068,6 +3155,18 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
   $('#openSet').addEventListener('click', function(){ openSheet('#setSheet'); });
   $('#openRel').addEventListener('click', function(){ renderRel(); openSheet('#relSheet'); });
+  /* v6.65：年龄（只用来算心率区间，存在本机） */
+  function paintAgeRow(){ var v = $('#ageVal'); if (v) v.textContent = ageOf() ? (ageOf() + ' 岁') : '未填'; }
+  $('#openAge').addEventListener('click', function(){
+    var cur = ageOf() ? String(ageOf()) : '';
+    var raw = window.prompt('你的年龄（只用来算心率区间）', cur);
+    if (raw == null) return;
+    var a = parseInt(String(raw).replace(/[^0-9]/g, ''), 10);
+    if (!a || a < 10 || a > 90){ return; }
+    store.prof = store.prof || {}; store.prof.age = a; saveStore();
+    paintAgeRow(); paintTips(curEx);
+  });
+  paintAgeRow();
   $$('.sh-hd.sh-sub .backbtn').forEach(function(b){
     b.addEventListener('click', function(){ openSheet('#setSheet'); });
   });
@@ -3561,7 +3660,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   }
 
   /* ---------- 启动版本比对（同热量账本） ---------- */
-  var APP_VERSION = 'v6.64';
+  var APP_VERSION = 'v6.65';
   fetch('./version.txt?t=' + Date.now(), { cache: 'no-store' })
     .then(function(r){ return r.ok ? r.text() : ''; })
     .then(function(v){
@@ -3583,6 +3682,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
   /* ---------- 更新记录 ---------- */
   var RELEASES = [
+    { v:'v6.65', d:'11-09', items:['动作建议加厚：有氧给心率区间 / 器械参数 / 消耗 kcal / 周频率','力量给组间休息 / 留余力 / 近 7 天容量 / 双进阶 / 估算 1RM','设置里加「年龄」（只用来算心率区间）','有氧卡不再显示力量那句动作分工说明']},
     { v:'v6.64', d:'11-09', items:['动作卡按类型给字段：有氧只填时长，不再显示组数/重量','有氧时长 ±5 分钟；建议值也只给时长']},
     { v:'v6.63', d:'11-09', items:['动作详情卡：横杠挪到顶部空隙的正中']},
     { v:'v6.62', d:'11-09', items:['动作详情卡：补上顶部的横杠','动作详情卡：可以按住横杠下滑关闭了']},
