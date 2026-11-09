@@ -1252,7 +1252,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
     <div class="statusbg" aria-hidden="true"></div>
     <div class="topbar">
-      <div class="brand">训练<span>账本</span><i class="btag">v6.50</i></div>
+      <div class="brand">训练<span>账本</span><i class="btag">v6.51</i></div>
       <div class="topactions">
         <button class="topbtn topicon" id="reloadTop" aria-label="强制更新" title="强制更新">
           <svg viewBox="0 -960 960 960" aria-hidden="true"><path d="M480-160q-134 0-227-93t-93-227q0-134 93-227t227-93q69 0 132 28.5T720-690v-70q0-17 11.5-28.5T760-800q17 0 28.5 11.5T800-760v200q0 17-11.5 28.5T760-520H560q-17 0-28.5-11.5T520-560q0-17 11.5-28.5T560-600h128q-32-56-87.5-88T480-720q-100 0-170 70t-70 170q0 100 70 170t170 70q68 0 124.5-34.5T692-367q8-14 22.5-19.5t29.5-.5q16 5 23 21t-1 30q-41 80-117 128t-169 48Z"/></svg>
@@ -1542,7 +1542,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     <!-- 设置 -->
     <div class="sheet" id="setSheet">
       <div class="grab"></div>
-      <div class="sh-hd sh-sub"><button class="backbtn" id="setBack" aria-label="返回"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5 8 12l7 7"/></svg></button><h2>设置</h2><span class="vtag">v6.50</span></div>
+      <div class="sh-hd sh-sub"><button class="backbtn" id="setBack" aria-label="返回"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5 8 12l7 7"/></svg></button><h2>设置</h2><span class="vtag">v6.51</span></div>
       <div class="setbody">
         <div class="setlabel">训练设置</div>
         <div class="setrows">
@@ -1559,7 +1559,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
           <div class="srow" data-ic="monitor_heart"><span class="ico"></span><span class="lbl">Apple 健康</span><span class="sw"></span></div>
           <button class="srow" id="openRemind" data-ic="assignment"><span class="ico"></span><span class="lbl">训练提醒</span><span class="val" id="remindVal">开</span></button>
           <button class="srow" id="clearLogs" data-ic="delete"><span class="ico"></span><span class="lbl">清除训练记录</span><span class="val plain">全部删除</span></button>
-          <button class="srow" id="openRel" data-ic="checklist"><span class="ico"></span><span class="lbl">更新记录</span><span class="val">v6.50</span></button>
+          <button class="srow" id="openRel" data-ic="checklist"><span class="ico"></span><span class="lbl">更新记录</span><span class="val">v6.51</span></button>
         </div>
       </div>
     </div>
@@ -3045,7 +3045,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
       var all = document.querySelectorAll('.sheet.page.on');
       return all.length ? all[all.length - 1] : null;   /* 最上面那一层 */
     }
-    function resetStyle(e){ if (!e) return; e.style.transition = ''; e.style.transform = ''; }
+    function resetStyle(e){ if (!e) return; e.style.transition = ''; e.style.transform = ''; e.style.opacity = ''; }
     function goBack(){
       var sh = pageEl();
       if (!sh) return;
@@ -3062,21 +3062,25 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
       if (!active || !el) return;
       var t = e.touches[0]; if (!t) return;
       var mx = t.clientX - sx, my = Math.abs(t.clientY - sy);
-      if (my > 90) { active = false; el.style.transition = ''; el.style.transform = ''; return; }
+      if (my > 90) { active = false; el.style.transition = ''; el.style.transform = ''; el.style.opacity = ''; return; }
       dx = Math.max(0, mx);
       el.style.transform = 'translateX(' + dx + 'px)';
+      /* 跟手变淡：热量账本同一套数值（滑到底最多淡到 .55） */
+      el.style.opacity = String(Math.max(0.55, 1 - dx / 700));
     }, { passive: true });
     document.addEventListener('touchend', function(){
       if (!active || !el) return;
       active = false;
       var target = el; el = null;
       if (dx > 56 || (dx > 26 && Date.now() - t0 < 300)){
-        target.style.transition = 'transform .2s ease-out';
+        target.style.transition = 'transform .2s ease-out, opacity .2s ease-out';
         target.style.transform = 'translateX(100%)';
+        target.style.opacity = '0';
         setTimeout(function(){ resetStyle(target); goBack(); }, 210);
       } else {
-        target.style.transition = 'transform .18s ease-out';
+        target.style.transition = 'transform .18s ease-out, opacity .18s ease-out';
         target.style.transform = 'translateX(0)';
+        target.style.opacity = '';
         setTimeout(function(){ resetStyle(target); }, 200);
       }
       dx = 0;
@@ -3338,12 +3342,14 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
       }
       if (horiz) return;
       var d = e.touches[0].clientY - y0;
-      if (d <= 0){ if(!dragging) return; dy = 0; sh.style.transform = ''; return; }
+      if (d <= 0){ if(!dragging) return; dy = 0; sh.style.transform = ''; sh.style.opacity = ''; return; }
       dy = d;
       if (dy > 2){
         dragging = true;
         sh.style.transition = 'none';
         sh.style.transform = 'translateY(' + dy + 'px)';
+        /* 跟手变淡：热量账本同一套数值（拖到底最多淡到 .82，再淡就看不清内容了） */
+        sh.style.opacity = String(Math.max(0.82, 1 - dy / 1600));
         if (e.cancelable) e.preventDefault();
       }
     }, { passive: false, capture: true });
@@ -3352,6 +3358,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
       dragging = false;
       sh.style.transition = '';
       sh.style.transform = '';
+      sh.style.opacity = '';
       if (dy > 96) closeSheets();
       dy = 0;
     }
@@ -3503,7 +3510,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   }
 
   /* ---------- 启动版本比对（同热量账本） ---------- */
-  var APP_VERSION = 'v6.50';
+  var APP_VERSION = 'v6.51';
   fetch('./version.txt?t=' + Date.now(), { cache: 'no-store' })
     .then(function(r){ return r.ok ? r.text() : ''; })
     .then(function(v){
@@ -3525,6 +3532,9 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
   /* ---------- 更新记录 ---------- */
   var RELEASES = [
+    { v:'v6.51', d:'11-09', items:[
+      '弹层「滑动关闭」时跟手变透明：按住顶部横杠下滑、或从左边缘右滑返回，卡片/整页会随手指越来越淡（和热量账本同一套数值，下滑最多淡到 82%、右滑最多淡到 55%），松手回弹或关闭时再淡出'
+    ]},
     { v:'v6.50', d:'11-09', items:[
       '「App 图标」页跟热量账本「个性化」页统一：标题 23px、返回热区 44×44、左右边距 18、行标签字重 400、图标格 58×50、图标下文字 8px',
       '图标页加了「图标」小标题和一行说明（点一下立刻替换；想回出厂那套就点底部「恢复全部默认」）'
