@@ -467,7 +467,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
 /* 选中块：胶囊（圆角 = 高度一半），比 Dock 高度扁一档 —— 材质与颜色照热量账本 */
 .pill{
-  position:absolute;left:7px;top:3.5px;
+  position:absolute;left:7px;top:2.5px;   /* v6.55：上下间隙均等（条 61 / 胶囊 54 / 边框 1 → 2.5+1=3.5） */
   height:54px;border-radius:27px;   /* v6.54：App Store 胶囊 54 高、正胶囊 */
   transition:left .62s cubic-bezier(.33,1.06,.32,1),width .42s cubic-bezier(.33,1.06,.32,1);
   pointer-events:none;
@@ -475,13 +475,13 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 /* 内层只做形变：按下横向撑开、纵向压扁（与热量账本 .dock-lens.press 同一条曲线） */
 .pillbody{
   display:block;position:absolute;inset:0;border-radius:inherit;
-  background:rgba(0,0,0,.42);   /* v6.54：静止 = 深色（App Store 选中胶囊比玻璃条深） */
+  background:rgba(var(--glow-rgb),.14);   /* v6.55：静止 = 主题色淡底（用户口径 2：按各 App 主题色） */
   box-shadow:none;
   transition:transform .24s cubic-bezier(.32,.9,.28,1),border-radius .24s ease,background .18s ease;
 }
 .pill.press .pillbody{
   transform:scale(1.055,.925);border-radius:28px;
-  background:rgba(142,142,147,.32);   /* v6.54：按住/滑动时变浅，一眼看出在动（用户口径 2a） */
+  background:rgba(var(--glow-rgb),.32);   /* v6.55：按住/滑动 = 主题色深一档 */
   /* v11.25：按下时那条径向渐变白删掉（用户 2026-11-07 要求「药丸移动/按下时的渐变白效果全部删除」），
      只保留压扁形变，底色始终是上面那块实色 */
 }
@@ -495,7 +495,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 }
 .tab .ico{width:28px;height:28px;fill:currentColor;display:block}
 .tab span{font-size:10px;font-weight:500;letter-spacing:.1px;line-height:1.2}
-.tab.on{color:#0A84FF}   /* v6.54：选中色照 App Store/系统蓝 */
+.tab.on{color:var(--lime)}   /* v6.55：选中色 = 本 App 主题色（红） */
 
 /* ---------- 视图切换 ---------- */
 .view{display:none;animation:fade .22s ease}
@@ -1252,7 +1252,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
     <div class="statusbg" aria-hidden="true"></div>
     <div class="topbar">
-      <div class="brand">训练<span>账本</span><i class="btag">v6.54</i></div>
+      <div class="brand">训练<span>账本</span><i class="btag">v6.55</i></div>
       <div class="topactions">
         <button class="topbtn topicon" id="reloadTop" aria-label="强制更新" title="强制更新">
           <svg viewBox="0 -960 960 960" aria-hidden="true"><path d="M480-160q-134 0-227-93t-93-227q0-134 93-227t227-93q69 0 132 28.5T720-690v-70q0-17 11.5-28.5T760-800q17 0 28.5 11.5T800-760v200q0 17-11.5 28.5T760-520H560q-17 0-28.5-11.5T520-560q0-17 11.5-28.5T560-600h128q-32-56-87.5-88T480-720q-100 0-170 70t-70 170q0 100 70 170t170 70q68 0 124.5-34.5T692-367q8-14 22.5-19.5t29.5-.5q16 5 23 21t-1 30q-41 80-117 128t-169 48Z"/></svg>
@@ -1542,7 +1542,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     <!-- 设置 -->
     <div class="sheet" id="setSheet">
       <div class="grab"></div>
-      <div class="sh-hd sh-sub"><button class="backbtn" id="setBack" aria-label="返回"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5 8 12l7 7"/></svg></button><h2>设置</h2><span class="vtag">v6.54</span></div>
+      <div class="sh-hd sh-sub"><button class="backbtn" id="setBack" aria-label="返回"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5 8 12l7 7"/></svg></button><h2>设置</h2><span class="vtag">v6.55</span></div>
       <div class="setbody">
         <div class="setlabel">训练设置</div>
         <div class="setrows">
@@ -1558,7 +1558,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
           <button class="srow" id="openBackup" data-ic="cloud_done"><span class="ico"></span><span class="lbl">数据备份</span><span class="val" id="backupVal">iCloud</span></button>
           <div class="srow" data-ic="monitor_heart"><span class="ico"></span><span class="lbl">Apple 健康</span><span class="sw"></span></div>
           <button class="srow" id="openRemind" data-ic="assignment"><span class="ico"></span><span class="lbl">训练提醒</span><span class="val" id="remindVal">开</span></button>
-          <button class="srow" id="openRel" data-ic="checklist"><span class="ico"></span><span class="lbl">更新记录</span><span class="val">v6.54</span></button>
+          <button class="srow" id="openRel" data-ic="checklist"><span class="ico"></span><span class="lbl">更新记录</span><span class="val">v6.55</span></button>
         </div>
       </div>
     </div>
@@ -2899,8 +2899,9 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     lens.style.width = w + 'px';
     /* v6.54：最左/最右那一格的胶囊要贴着 Dock 边（App Store 的选中胶囊也是贴边的），否则会伸出条外面 */
     var raw = r.left - d.left - b + (r.width - w) / 2;
-    var maxL = Math.max(0, d.width - b * 2 - w);
-    lens.style.left = Math.min(Math.max(0, raw), maxL) + 'px';
+    /* v6.55：最左/最右那格跟条外沿齐平（允许压过 1px 边框），否则左边永远多 1px */
+    var maxL = Math.max(-b, d.width - b - w);   /* 右侧也齐平：含 1px 边框 */
+    lens.style.left = Math.min(Math.max(-b, raw), maxL) + 'px';
   }
   var curTab = 'today';
   function placePillNow(){ placePill(order.indexOf(curTab)); }
@@ -3519,7 +3520,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   }
 
   /* ---------- 启动版本比对（同热量账本） ---------- */
-  var APP_VERSION = 'v6.54';
+  var APP_VERSION = 'v6.55';
   fetch('./version.txt?t=' + Date.now(), { cache: 'no-store' })
     .then(function(r){ return r.ok ? r.text() : ''; })
     .then(function(v){
@@ -3541,6 +3542,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
   /* ---------- 更新记录 ---------- */
   var RELEASES = [
+    { v:'v6.55', d:'11-09', items:['Dock 配色改用本 App 主题色：选中图标/文字 = 红，选中胶囊静止淡红、按住/滑动更深一档','选中胶囊间隙对齐：上下各 3.5、左右跟条外沿齐平']},
     { v:'v6.54', d:'11-09', items:['Dock 照 App Store 重做：条 61 高、左右各离屏 25、离底 22、图标 28、字 10；选中胶囊 54 高（圆角=半高）','胶囊停在原地是深色，按住/滑动时变浅；选中的图标和文字用系统蓝 #0A84FF']},
     { v:'v6.53', d:'11-09', items:[
       '滑动关闭不再整张变透明（原来背后的字会透出来、像双曝光）：改成卡片保持实底、只用「糊掉背后那层」，滑出去露出来的部分保持清晰（和热量账本 v11.41 同一套做法）'
