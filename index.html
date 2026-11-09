@@ -1283,7 +1283,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
     <div class="statusbg" aria-hidden="true"></div>
     <div class="topbar">
-      <div class="brand">训练<span>账本</span><i class="btag">v6.72</i></div>
+      <div class="brand">训练<span>账本</span><i class="btag">v6.73</i></div>
       <div class="topactions">
         <button class="topbtn topicon" id="reloadTop" aria-label="强制更新" title="强制更新">
           <svg viewBox="0 -960 960 960" aria-hidden="true"><path d="M480-160q-134 0-227-93t-93-227q0-134 93-227t227-93q69 0 132 28.5T720-690v-70q0-17 11.5-28.5T760-800q17 0 28.5 11.5T800-760v200q0 17-11.5 28.5T760-520H560q-17 0-28.5-11.5T520-560q0-17 11.5-28.5T560-600h128q-32-56-87.5-88T480-720q-100 0-170 70t-70 170q0 100 70 170t170 70q68 0 124.5-34.5T692-367q8-14 22.5-19.5t29.5-.5q16 5 23 21t-1 30q-41 80-117 128t-169 48Z"/></svg>
@@ -1573,7 +1573,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     <!-- 设置 -->
     <div class="sheet" id="setSheet">
       <div class="grab"></div>
-      <div class="sh-hd sh-sub"><button class="backbtn" id="setBack" aria-label="返回"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5 8 12l7 7"/></svg></button><h2>设置</h2><span class="vtag">v6.72</span></div>
+      <div class="sh-hd sh-sub"><button class="backbtn" id="setBack" aria-label="返回"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5 8 12l7 7"/></svg></button><h2>设置</h2><span class="vtag">v6.73</span></div>
       <div class="setbody">
         <div class="setlabel">训练设置</div>
         <div class="setrows">
@@ -1590,7 +1590,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
           <button class="srow" id="openBackup" data-ic="cloud_done"><span class="ico"></span><span class="lbl">数据备份</span><span class="val" id="backupVal">iCloud</span></button>
           <div class="srow" data-ic="monitor_heart"><span class="ico"></span><span class="lbl">Apple 健康</span><span class="sw"></span></div>
           <button class="srow" id="openRemind" data-ic="assignment"><span class="ico"></span><span class="lbl">训练提醒</span><span class="val" id="remindVal">开</span></button>
-          <button class="srow" id="openRel" data-ic="checklist"><span class="ico"></span><span class="lbl">更新记录</span><span class="val">v6.72</span></button>
+          <button class="srow" id="openRel" data-ic="checklist"><span class="ico"></span><span class="lbl">更新记录</span><span class="val">v6.73</span></button>
         </div>
       </div>
     </div>
@@ -3221,13 +3221,29 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     el.style.webkitBackdropFilter = '';
     el.style.backdropFilter = '';
   }
-  /* 整页返回手势：从屏幕左边缘往右滑 = 返回；页面跟手右移，松手过了阈值就滑出去 */
+  /* 整页返回手势（v6.73）：与热量账本 v11.58 同一套 —— CC Park / iOS 原生 interactive pop：
+     当前页 1:1 跟手右移；上一页从 -0.3 屏宽、以 0.3× 速度一起滑入；松手两页同一条曲线收尾。
+     实测：s = 0.3*(dx-W)，收尾 ~0.25s，上一页不变暗、无阴影、两页都不透明。 */
   (function(){
-    var sx = 0, sy = 0, active = false, el = null, dx = 0, t0 = 0;
+    var PAR = 0.3, MS = 260, EASE = 'cubic-bezier(.32,.72,0,1)';
+    var sx = 0, sy = 0, active = false, el = null, dx = 0, t0 = 0, prev = [];
     function pageEl(){
       var all = document.querySelectorAll('.sheet.page.on');
       return all.length ? all[all.length - 1] : null;   /* 最上面那一层 */
     }
+    function W(){ return window.innerWidth || document.documentElement.clientWidth || 375; }
+    /* 当前页下面那一层（「上一页」）：
+       设置主页 → App 首页整体（.topbar + #scroller + .dock）；
+       设置子页 → 它下面那张 .sheet.page.on（设置主页）。 */
+    function prevEls(){
+      if (!el) return [];
+      if (el.id === 'setSheet') return [$('.topbar'), $('#scroller'), $('.dock')].filter(Boolean);
+      var all = document.querySelectorAll('.sheet.page.on');
+      if (all.length > 1) return [all[all.length - 2]];
+      return [];
+    }
+    function put(els, x2){ els.forEach(function(e2){ e2.style.transition = 'none'; e2.style.transform = 'translateX(' + x2 + 'px)'; }); }
+    function dropPrev(){ prev.forEach(function(e2){ e2.style.transition = ''; e2.style.transform = ''; }); prev = []; }
     function resetStyle(e){ if (!e) return; e.style.transition = ''; e.style.transform = ''; e.style.opacity = ''; swipeGlassOff(e); }
     function goBack(){
       var sh = pageEl();
@@ -3238,38 +3254,44 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     document.addEventListener('touchstart', function(e){
       var all = document.querySelectorAll('.sheet.page.on'); el = all.length ? all[all.length - 1] : null; if (!el) return;
       var t = e.touches[0]; if (!t || t.clientX > 26) return;
-      active = true; sx = t.clientX; sy = t.clientY; dx = 0; t0 = Date.now();
+      active = true; sx = t.clientX; sy = t.clientY; dx = 0; t0 = Date.now(); prev = [];
       el.style.transition = 'none';
     }, { passive: true });
     document.addEventListener('touchmove', function(e){
       if (!active || !el) return;
       var t = e.touches[0]; if (!t) return;
       var mx = t.clientX - sx, my = Math.abs(t.clientY - sy);
-      if (my > 90) { active = false; el.style.transition = ''; el.style.transform = ''; el.style.opacity = ''; swipeGlassOff(el); return; }
+      if (my > 90) { active = false; resetStyle(el); dropPrev(); return; }
+      if (!prev.length) { prev = prevEls(); put(prev, -(W() * PAR)); }   /* 起手先摆到 -0.3 屏宽（被当前页整张盖住，看不到跳变） */
       dx = Math.max(0, mx);
       el.style.transform = 'translateX(' + dx + 'px)';
-      /* v6.53：不再整张变透明，改成糊背后那层（热量账本 v11.41 同一套做法） */
-      swipeGlass(el, dx / 420);
+      /* 两页都不透明：上一页现在就露在左边，不能再褪色/模糊（CC Park 也没有变暗层） */
+      swipeGlassOff(el);
+      put(prev, (dx - W()) * PAR);
     }, { passive: true });
     document.addEventListener('touchend', function(){
       if (!active || !el) return;
       active = false;
       var target = el; el = null;
+      var w = W(), ease = 'transform ' + MS + 'ms ' + EASE;
       if (dx > 56 || (dx > 26 && Date.now() - t0 < 300)){
-        target.style.transition = 'transform .2s ease-out, opacity .2s ease-out';
-        target.style.transform = 'translateX(100%)';
-        target.style.opacity = '0';
-        setTimeout(function(){ resetStyle(target); goBack(); }, 210);
+        /* 完成：当前页滑出到 100%，上一页同时归位到 0；不再淡出，免得透出上一页 */
+        target.style.transition = ease;
+        target.style.transform = 'translateX(' + w + 'px)';
+        prev.forEach(function(e2){ e2.style.transition = ease; e2.style.transform = 'translateX(0px)'; });
+        setTimeout(function(){ resetStyle(target); dropPrev(); goBack(); }, MS);
       } else {
-        target.style.transition = 'transform .18s ease-out, opacity .18s ease-out';
+        /* 取消：当前页回 0，上一页退回 -0.3 屏宽，同一条曲线一起收 */
+        target.style.transition = ease;
         target.style.transform = 'translateX(0)';
-        target.style.opacity = '';
-        setTimeout(function(){ resetStyle(target); }, 200);
+        prev.forEach(function(e2){ e2.style.transition = ease; e2.style.transform = 'translateX(' + (-w * PAR) + 'px)'; });
+        setTimeout(function(){ resetStyle(target); dropPrev(); }, MS + 20);
       }
       dx = 0;
     }, { passive: true });
     document.addEventListener('touchcancel', function(){
       if (el) resetStyle(el);
+      dropPrev();
       active = false; el = null; dx = 0;
     }, { passive: true });
   })();
@@ -3694,7 +3716,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   }
 
   /* ---------- 启动版本比对（同热量账本） ---------- */
-  var APP_VERSION = 'v6.72';
+  var APP_VERSION = 'v6.73';
   fetch('./version.txt?t=' + Date.now(), { cache: 'no-store' })
     .then(function(r){ return r.ok ? r.text() : ''; })
     .then(function(v){
@@ -3716,6 +3738,10 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
   /* ---------- 更新记录 ---------- */
   var RELEASES = [
+    { v:'v6.73', d:'11-09', items:[
+      '左缘右滑退出设置 / 退出设置子页：改成 iOS 原生（CC Park 同款）的两页联动 —— 当前页 1:1 跟手右移，上一页（App 首页 / 设置主页）同时从左边滑进来，起始位 −30% 屏宽、速度是当前页的 0.3×，松手两页用同一条 260ms 曲线一起收尾。',
+      '实测 CC Park 录屏：视差 0.299、收尾 0.24~0.25s、上一页不变暗也没有阴影；所以拖动时不再给卡片加半透明 + 模糊（背后露出的就是上一页本身，要清晰）。',
+    ]},
     { v:'v6.72', d:'11-09', items:[
       'iPad 上 Dock 的左右内边距从 18 改成 0、滑块宽 = 格子宽 − 14、x = 格子左 + 7、top 7：滑块在 Dock 里的上下左右留白现在都是 8（之前上下 8、左边 18）。',
       'Dock 离屏幕底 8、左右各 8，与热量账本完全一致。',
