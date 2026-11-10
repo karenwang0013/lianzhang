@@ -1283,7 +1283,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
     <div class="statusbg" aria-hidden="true"></div>
     <div class="topbar">
-      <div class="brand">训练<span>账本</span><i class="btag">v6.74</i></div>
+      <div class="brand">训练<span>账本</span><i class="btag">v6.75</i></div>
       <div class="topactions">
         <button class="topbtn topicon" id="reloadTop" aria-label="强制更新" title="强制更新">
           <svg viewBox="0 -960 960 960" aria-hidden="true"><path d="M480-160q-134 0-227-93t-93-227q0-134 93-227t227-93q69 0 132 28.5T720-690v-70q0-17 11.5-28.5T760-800q17 0 28.5 11.5T800-760v200q0 17-11.5 28.5T760-520H560q-17 0-28.5-11.5T520-560q0-17 11.5-28.5T560-600h128q-32-56-87.5-88T480-720q-100 0-170 70t-70 170q0 100 70 170t170 70q68 0 124.5-34.5T692-367q8-14 22.5-19.5t29.5-.5q16 5 23 21t-1 30q-41 80-117 128t-169 48Z"/></svg>
@@ -1573,7 +1573,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     <!-- 设置 -->
     <div class="sheet" id="setSheet">
       <div class="grab"></div>
-      <div class="sh-hd sh-sub"><button class="backbtn" id="setBack" aria-label="返回"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5 8 12l7 7"/></svg></button><h2>设置</h2><span class="vtag">v6.74</span></div>
+      <div class="sh-hd sh-sub"><button class="backbtn" id="setBack" aria-label="返回"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5 8 12l7 7"/></svg></button><h2>设置</h2><span class="vtag">v6.75</span></div>
       <div class="setbody">
         <div class="setlabel">训练设置</div>
         <div class="setrows">
@@ -1590,7 +1590,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
           <button class="srow" id="openBackup" data-ic="cloud_done"><span class="ico"></span><span class="lbl">数据备份</span><span class="val" id="backupVal">iCloud</span></button>
           <div class="srow" data-ic="monitor_heart"><span class="ico"></span><span class="lbl">Apple 健康</span><span class="sw"></span></div>
           <button class="srow" id="openRemind" data-ic="assignment"><span class="ico"></span><span class="lbl">训练提醒</span><span class="val" id="remindVal">开</span></button>
-          <button class="srow" id="openRel" data-ic="checklist"><span class="ico"></span><span class="lbl">更新记录</span><span class="val">v6.74</span></button>
+          <button class="srow" id="openRel" data-ic="checklist"><span class="ico"></span><span class="lbl">更新记录</span><span class="val">v6.75</span></button>
         </div>
       </div>
     </div>
@@ -1883,7 +1883,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     var i = allLogs().findIndex(function(l){ return l.id === lid; });
     if (on && i < 0){
       allLogs().push({ id: lid, d: todayISO(), k: key, n: ex.n, m: ex.m,
-        kg: kgOf(ex), reps: repMid(ex.rep), p: setIdx, t: Date.now() });
+        kg: kgOf(ex), reps: repMid(ex.rep), u: repUnit(ex.rep), p: setIdx, t: Date.now() });
     } else if (!on && i >= 0){
       allLogs().splice(i, 1);
       markDel(lid);
@@ -1970,8 +1970,15 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     if (setsRow) setsRow.style.display = cardioK ? 'none' : '';
     if (kgRow)   kgRow.style.display   = cardioK ? 'none' : '';
     var lab = repRow ? repRow.firstElementChild : null;
-    if (lab) lab.textContent = cardioK ? '时长' : '次数';
+    if (lab) lab.textContent = (cardioK || isSeconds(e)) ? '时长' : (/米/.test(String(e.rep)) ? '距离' : '次数');
     return kind;
+  }
+  /* v6.75：按秒记的「时长」步进：一次 ±5 秒（10–300 秒） */
+  function shiftSeconds(rep, d){
+    var m = String(rep).match(/(\d+)\s*秒/);
+    if (!m) return rep;
+    var n = Math.max(10, Math.min(300, (+m[1]) + d * 5));
+    return n + ' 秒';
   }
   /* 有氧的「时长」步进：一次 ±5 分钟 */
   function shiftMinutes(rep, d){
@@ -1980,8 +1987,8 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     var n = Math.max(5, Math.min(180, (+m[1]) + d * 5));
     return n + ' 分钟';
   }
-  /* v6.74：按距离记的（rep 带「米」，如农夫行走）也不拼「次」 */
-  function repText(e, rep){ return (exKind(e) === 'cardio' || /米/.test(String(rep))) ? String(rep) : (rep + ' 次'); }
+  /* v6.74：按距离 / 按时间记的（rep 带「米」「秒」，如农夫行走）不拼「次」 */
+  function repText(e, rep){ return (exKind(e) === 'cardio' || /米|秒/.test(String(rep))) ? String(rep) : (rep + ' 次'); }
 
   /* 把「当前这张卡对应的动作」画进弹层（选动作后也复用它） */
   function fillEx(){
@@ -2025,7 +2032,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     var s = suggestFor(ex);
     $('#exSug').querySelector('.sugt').innerHTML = (exKind(ex) === 'cardio')
       ? '建议 <b>' + s.rep + '</b><i>按动作库基线（' + BODY.exp + '经验）</i>'
-      : '建议 <b>' + s.sets + ' 组 × ' + s.rep + (/米/.test(String(s.rep)) ? '' : ' 次') + ' · ' + (s.kg ? uTxt(s.kg) : '自重') + '</b>' +
+      : '建议 <b>' + s.sets + ' 组 × ' + s.rep + (/米|秒/.test(String(s.rep)) ? '' : ' 次') + ' · ' + (s.kg ? uTxt(s.kg) : '自重') + '</b>' +
         '<i>' + s.why + '</i>';
   }
   /* ---------- v6.65 动作建议（多行） ---------- */
@@ -2085,6 +2092,12 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
       : goal === '减脂' || goal === '塑形' ? (g === 'S' ? '60–90 秒' : '45–75 秒')
       : (g === 'S' ? '120–180 秒' : (g === 'A' ? '90–120 秒' : '60–90 秒'));
     out.push('休息 <b>' + rest + '</b>（' + goal + ' · 现在 ' + (ex.rest || 0) + ' 秒）');
+    /* v6.75：按秒记的动作（农夫行走）不走「次数」那套提示 */
+    if (isSeconds(ex)){
+      out.push('按秒记：<b>' + rep + '</b> 走完算一组，重量按每手算，走不动就停');
+      out.push('进阶先加时长（每次 +5 秒），到 <b>90 秒</b>还稳再加重');
+      return out;
+    }
     out.push('留 <b>' + (g === 'S' ? '1–2 次余力' : '0–1 次余力') + '</b>（想练力量就再留 1 次，想冲力竭就留 0 次）');
     var done = weekSetsOf(ex.n), planN = planSetsOf(ex.n);
     if (planN) out.push('近 7 天已练 <b>' + done + ' / ' + planN + ' 组</b>' + (done >= planN ? '（够了，别堆垃圾容量）' : '（还差 ' + (planN - done) + ' 组）'));
@@ -2181,7 +2194,8 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   function applyRep(delta){
     if (!curEx || syncing) return;
     var v = exvOf(curEx);
-    var rep = exKind(curEx) === 'cardio' ? shiftMinutes(v.rep, delta) : shiftRep(v.rep, delta);
+    var rep = exKind(curEx) === 'cardio' ? shiftMinutes(v.rep, delta)
+            : (isSeconds(curEx) ? shiftSeconds(v.rep, delta) : shiftRep(v.rep, delta));
     if (rep === v.rep) return;
     savePlan(v.sets, rep);
     afterPlanChange();
@@ -2399,8 +2413,12 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   function uTxt(kg){ return uVal(kg) + ' ' + uName(); }
   /* 有氧：rep 里带「分钟」的，按时间显示，不拼「次」也不显示休息 0 秒 */
   function isCardio(e){ return !!(e && /分钟/.test(String(e.rep))); }
+  /* v6.75：按秒记的（如农夫行走）—— 有重量，但「次数」那一行其实是时长 */
+  function isSeconds(e){ return !!(e && /秒/.test(String(e.rep))); }
+  /* v6.75：这一条记录的单位（次 / 秒 / 米），写进日志，历史页照着显示 */
+  function repUnit(rep){ return /秒/.test(String(rep)) ? '秒' : (/米/.test(String(rep)) ? '米' : ''); }
   function exMetaTxt(e){
-    var s = (isCardio(e) || /米/.test(String(e.rep))) ? e.rep : (e.sets + ' 组 × ' + e.rep + ' 次');
+    var s = (isCardio(e) || /米|秒/.test(String(e.rep))) ? e.rep : (e.sets + ' 组 × ' + e.rep + ' 次');
     if (e.rest) s += ' · 休息 ' + e.rest + ' 秒';
     return s;
   }
@@ -2618,7 +2636,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
       { n:'俄罗斯转体', g:'B', sets:3, rep:'20', kg:5, rest:45, m:'core' },
       { n:'仰卧抬腿', g:'B', sets:3, rep:'12–15', kg:0, rest:45, m:'core' },
       { n:'健腹轮', g:'A', sets:3, rep:'10', kg:0, rest:60, m:'core' },
-      { n:'农夫行走', g:'A', sets:3, rep:'20–30 米', kg:20, rest:90, m:'core' },
+      { n:'农夫行走', g:'A', sets:3, rep:'40 秒', kg:20, rest:90, m:'core' },
       /* 胸 */
       { n:'哑铃卧推', g:'A', sets:3, rep:'8–10', kg:22, rest:120, m:'chest' },
       { n:'上斜杠铃卧推', g:'A', sets:3, rep:'8–10', kg:50, rest:120, m:'chest' },
@@ -3718,7 +3736,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   }
 
   /* ---------- 启动版本比对（同热量账本） ---------- */
-  var APP_VERSION = 'v6.74';
+  var APP_VERSION = 'v6.75';
   fetch('./version.txt?t=' + Date.now(), { cache: 'no-store' })
     .then(function(r){ return r.ok ? r.text() : ''; })
     .then(function(v){
@@ -3740,8 +3758,12 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
   /* ---------- 更新记录 ---------- */
   var RELEASES = [
+    { v:'v6.75', d:'11-10', items:[
+      '农夫行走改成按时间记：默认 3 组 × 40 秒，每手 20kg，休息 90 秒；详情里「时长」一次 ±5 秒（10–300 秒）。',
+      '按秒记的动作不再显示成「次」：卡片、建议、历史都按秒显示，历史里也不再算「合计 kg」（kg × 秒没意义）；动作提示改成「先加时长、90 秒还稳再加重」。',
+    ]},
     { v:'v6.74', d:'11-10', items:[
-      '动作库加「农夫行走」（核心组，3 × 20–30 米，每手 20kg 起）：之前库里没有这个动作，加动作只能从已有动作里挑，选不到。',
+      '动作库加「农夫行走」（核心组）：之前库里没有这个动作，加动作只能从已有动作里挑，选不到。',
     ]},
     { v:'v6.73', d:'11-09', items:[
       '左缘右滑退出设置 / 退出设置子页：改成 iOS 原生（CC Park 同款）的两页联动 —— 当前页 1:1 跟手右移，上一页（App 首页 / 设置主页）同时从左边滑进来，起始位 −30% 屏宽、速度是当前页的 0.3×，松手两页用同一条 260ms 曲线一起收尾。',
@@ -5028,10 +5050,14 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     var by = {};
     ls.forEach(function(l){ (by[l.d] = by[l.d] || []).push(l); });
     $('#histList').innerHTML = Object.keys(by).sort().reverse().map(function(d){
-      var a = by[d], kg = 0, vol = 0, reps = 0;
+      var a = by[d], kg = 0, vol = 0, reps = 0, u = a[0].u || '次';
       a.forEach(function(l){ if ((l.kg || 0) > kg) kg = l.kg || 0; vol += (l.kg || 0) * (l.reps || 0); reps = Math.max(reps, l.reps || 0); });
+      /* v6.75：按秒 / 米记的动作不显示「合计 kg」（单位不是次数，乘出来没有意义） */
+      var hm = (u === '次')
+        ? a.length + ' 组 × ' + Math.round(reps) + ' 次 · 合计 ' + uVol(vol).toLocaleString('en-US') + ' ' + uName()
+        : a.length + ' 组 × ' + Math.round(reps) + ' ' + u;
       return '<div class="hrow"><div class="hd"><b>' + shortDate(d) + '</b><span>周' + WD_CN[wdIdx(d)] + '</span></div>' +
-        '<div class="hm">' + a.length + ' 组 × ' + Math.round(reps) + ' 次 · 合计 ' + uVol(vol).toLocaleString('en-US') + ' ' + uName() + '</div>' +
+        '<div class="hm">' + hm + '</div>' +
         '<div class="hv">' + (kg ? uVal(kg) + '<em>' + uName() + '</em>' : '自重') + '</div></div>';
     }).join('');
     openSheet('#histSheet');
