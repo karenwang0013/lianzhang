@@ -1283,7 +1283,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
     <div class="statusbg" aria-hidden="true"></div>
     <div class="topbar">
-      <div class="brand">训练<span>账本</span><i class="btag">v6.73</i></div>
+      <div class="brand">训练<span>账本</span><i class="btag">v6.74</i></div>
       <div class="topactions">
         <button class="topbtn topicon" id="reloadTop" aria-label="强制更新" title="强制更新">
           <svg viewBox="0 -960 960 960" aria-hidden="true"><path d="M480-160q-134 0-227-93t-93-227q0-134 93-227t227-93q69 0 132 28.5T720-690v-70q0-17 11.5-28.5T760-800q17 0 28.5 11.5T800-760v200q0 17-11.5 28.5T760-520H560q-17 0-28.5-11.5T520-560q0-17 11.5-28.5T560-600h128q-32-56-87.5-88T480-720q-100 0-170 70t-70 170q0 100 70 170t170 70q68 0 124.5-34.5T692-367q8-14 22.5-19.5t29.5-.5q16 5 23 21t-1 30q-41 80-117 128t-169 48Z"/></svg>
@@ -1573,7 +1573,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     <!-- 设置 -->
     <div class="sheet" id="setSheet">
       <div class="grab"></div>
-      <div class="sh-hd sh-sub"><button class="backbtn" id="setBack" aria-label="返回"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5 8 12l7 7"/></svg></button><h2>设置</h2><span class="vtag">v6.73</span></div>
+      <div class="sh-hd sh-sub"><button class="backbtn" id="setBack" aria-label="返回"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5 8 12l7 7"/></svg></button><h2>设置</h2><span class="vtag">v6.74</span></div>
       <div class="setbody">
         <div class="setlabel">训练设置</div>
         <div class="setrows">
@@ -1590,7 +1590,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
           <button class="srow" id="openBackup" data-ic="cloud_done"><span class="ico"></span><span class="lbl">数据备份</span><span class="val" id="backupVal">iCloud</span></button>
           <div class="srow" data-ic="monitor_heart"><span class="ico"></span><span class="lbl">Apple 健康</span><span class="sw"></span></div>
           <button class="srow" id="openRemind" data-ic="assignment"><span class="ico"></span><span class="lbl">训练提醒</span><span class="val" id="remindVal">开</span></button>
-          <button class="srow" id="openRel" data-ic="checklist"><span class="ico"></span><span class="lbl">更新记录</span><span class="val">v6.73</span></button>
+          <button class="srow" id="openRel" data-ic="checklist"><span class="ico"></span><span class="lbl">更新记录</span><span class="val">v6.74</span></button>
         </div>
       </div>
     </div>
@@ -1980,7 +1980,8 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     var n = Math.max(5, Math.min(180, (+m[1]) + d * 5));
     return n + ' 分钟';
   }
-  function repText(e, rep){ return exKind(e) === 'cardio' ? String(rep) : (rep + ' 次'); }
+  /* v6.74：按距离记的（rep 带「米」，如农夫行走）也不拼「次」 */
+  function repText(e, rep){ return (exKind(e) === 'cardio' || /米/.test(String(rep))) ? String(rep) : (rep + ' 次'); }
 
   /* 把「当前这张卡对应的动作」画进弹层（选动作后也复用它） */
   function fillEx(){
@@ -2024,7 +2025,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     var s = suggestFor(ex);
     $('#exSug').querySelector('.sugt').innerHTML = (exKind(ex) === 'cardio')
       ? '建议 <b>' + s.rep + '</b><i>按动作库基线（' + BODY.exp + '经验）</i>'
-      : '建议 <b>' + s.sets + ' 组 × ' + s.rep + ' 次 · ' + (s.kg ? uTxt(s.kg) : '自重') + '</b>' +
+      : '建议 <b>' + s.sets + ' 组 × ' + s.rep + (/米/.test(String(s.rep)) ? '' : ' 次') + ' · ' + (s.kg ? uTxt(s.kg) : '自重') + '</b>' +
         '<i>' + s.why + '</i>';
   }
   /* ---------- v6.65 动作建议（多行） ---------- */
@@ -2399,7 +2400,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   /* 有氧：rep 里带「分钟」的，按时间显示，不拼「次」也不显示休息 0 秒 */
   function isCardio(e){ return !!(e && /分钟/.test(String(e.rep))); }
   function exMetaTxt(e){
-    var s = isCardio(e) ? e.rep : (e.sets + ' 组 × ' + e.rep + ' 次');
+    var s = (isCardio(e) || /米/.test(String(e.rep))) ? e.rep : (e.sets + ' 组 × ' + e.rep + ' 次');
     if (e.rest) s += ' · 休息 ' + e.rest + ' 秒';
     return s;
   }
@@ -2617,6 +2618,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
       { n:'俄罗斯转体', g:'B', sets:3, rep:'20', kg:5, rest:45, m:'core' },
       { n:'仰卧抬腿', g:'B', sets:3, rep:'12–15', kg:0, rest:45, m:'core' },
       { n:'健腹轮', g:'A', sets:3, rep:'10', kg:0, rest:60, m:'core' },
+      { n:'农夫行走', g:'A', sets:3, rep:'20–30 米', kg:20, rest:90, m:'core' },
       /* 胸 */
       { n:'哑铃卧推', g:'A', sets:3, rep:'8–10', kg:22, rest:120, m:'chest' },
       { n:'上斜杠铃卧推', g:'A', sets:3, rep:'8–10', kg:50, rest:120, m:'chest' },
@@ -3716,7 +3718,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   }
 
   /* ---------- 启动版本比对（同热量账本） ---------- */
-  var APP_VERSION = 'v6.73';
+  var APP_VERSION = 'v6.74';
   fetch('./version.txt?t=' + Date.now(), { cache: 'no-store' })
     .then(function(r){ return r.ok ? r.text() : ''; })
     .then(function(v){
@@ -3738,6 +3740,9 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
   /* ---------- 更新记录 ---------- */
   var RELEASES = [
+    { v:'v6.74', d:'11-10', items:[
+      '动作库加「农夫行走」（核心组，3 × 20–30 米，每手 20kg 起）：之前库里没有这个动作，加动作只能从已有动作里挑，选不到。',
+    ]},
     { v:'v6.73', d:'11-09', items:[
       '左缘右滑退出设置 / 退出设置子页：改成 iOS 原生（CC Park 同款）的两页联动 —— 当前页 1:1 跟手右移，上一页（App 首页 / 设置主页）同时从左边滑进来，起始位 −30% 屏宽、速度是当前页的 0.3×，松手两页用同一条 260ms 曲线一起收尾。',
       '实测 CC Park 录屏：视差 0.299、收尾 0.24~0.25s、上一页不变暗也没有阴影；所以拖动时不再给卡片加半透明 + 模糊（背后露出的就是上一页本身，要清晰）。',
