@@ -1285,7 +1285,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
     <div class="statusbg" aria-hidden="true"></div>
     <div class="topbar">
-      <div class="brand">训练<span>账本</span><i class="btag">v6.80</i></div>
+      <div class="brand">训练<span>账本</span><i class="btag">v6.81</i></div>
       <div class="topactions">
         <button class="topbtn topicon" id="reloadTop" aria-label="强制更新" title="强制更新">
           <svg viewBox="0 -960 960 960" aria-hidden="true"><path d="M480-160q-134 0-227-93t-93-227q0-134 93-227t227-93q69 0 132 28.5T720-690v-70q0-17 11.5-28.5T760-800q17 0 28.5 11.5T800-760v200q0 17-11.5 28.5T760-520H560q-17 0-28.5-11.5T520-560q0-17 11.5-28.5T560-600h128q-32-56-87.5-88T480-720q-100 0-170 70t-70 170q0 100 70 170t170 70q68 0 124.5-34.5T692-367q8-14 22.5-19.5t29.5-.5q16 5 23 21t-1 30q-41 80-117 128t-169 48Z"/></svg>
@@ -1576,7 +1576,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     <!-- 设置 -->
     <div class="sheet" id="setSheet">
       <div class="grab"></div>
-      <div class="sh-hd sh-sub"><button class="backbtn" id="setBack" aria-label="返回"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5 8 12l7 7"/></svg></button><h2>设置</h2><span class="vtag">v6.80</span></div>
+      <div class="sh-hd sh-sub"><button class="backbtn" id="setBack" aria-label="返回"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5 8 12l7 7"/></svg></button><h2>设置</h2><span class="vtag">v6.81</span></div>
       <div class="setbody">
         <div class="setlabel">训练设置</div>
         <div class="setrows">
@@ -1593,7 +1593,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
           <button class="srow" id="openBackup" data-ic="cloud_done"><span class="ico"></span><span class="lbl">数据备份</span><span class="val" id="backupVal">iCloud</span></button>
           <div class="srow" data-ic="monitor_heart"><span class="ico"></span><span class="lbl">Apple 健康</span><span class="sw"></span></div>
           <button class="srow" id="openRemind" data-ic="assignment"><span class="ico"></span><span class="lbl">训练提醒</span><span class="val" id="remindVal">开</span></button>
-          <button class="srow" id="openRel" data-ic="checklist"><span class="ico"></span><span class="lbl">更新记录</span><span class="val">v6.80</span></button>
+          <button class="srow" id="openRel" data-ic="checklist"><span class="ico"></span><span class="lbl">更新记录</span><span class="val">v6.81</span></button>
         </div>
       </div>
     </div>
@@ -3765,7 +3765,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   }
 
   /* ---------- 启动版本比对（同热量账本） ---------- */
-  var APP_VERSION = 'v6.80';
+  var APP_VERSION = 'v6.81';
   fetch('./version.txt?t=' + Date.now(), { cache: 'no-store' })
     .then(function(r){ return r.ok ? r.text() : ''; })
     .then(function(v){
@@ -3787,6 +3787,9 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
   /* ---------- 更新记录 ---------- */
   var RELEASES = [
+    { v:'v6.81', d:'11-11', items:[
+      '修：计划页那行建议以前只读网页上的镜像文件（比原件晚一天，今天吃的东西还没算进去），原件被限流时也只能用旧数据。现在两个来源都问，用日期更新的那份。'
+    ]},
     { v:'v6.80', d:'11-11', items:[
       '修：计划页那行建议以前先读网页上的镜像文件（比原件晚一天，今天吃的东西还没算进去），现在先读热量账本的原件，读不到才用镜像。'
     ]},
@@ -5238,31 +5241,39 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     if (dietPulling) return;
     dietPulling = true;
     var tk = cloudToken();
-    /* 先读 Gitee 原件（最新），读不到才用页面上的同源镜像（镜像会比原件晚一天） */
+    /* 两个来源都问：① Gitee 原件（最新，但匿名读偶尔被限流）② 页面上的同源镜像（稳，但比原件晚一天）。
+       哪份的 updatedAt 更新就用哪份 —— 不许拿着旧数据给建议。 */
     var urls = [
       'https://gitee.com/api/v5/repos/' + CLOUD.owner + '/' + CLOUD.repo + '/contents/data.json?ref=' + CLOUD.branch +
         '&t=' + Date.now() + (tk ? '&access_token=' + encodeURIComponent(tk) : ''),
       '/calorie-ledger/data.json?t=' + Date.now()
     ];
-    var i = 0;
-    function next(){
-      if (i >= urls.length){ dietPulling = false; return; }
-      var url = urls[i++];
-      cloudFetch(url, {}, 9000).then(function(r){
-        if (!r || !r.ok) return next();
+    var got = [];
+    Promise.all(urls.map(function(url){
+      return cloudFetch(url, {}, 9000).then(function(r){
+        if (!r || !r.ok) return null;
         return r.json().then(function(j){
           var raw = j;
           if (j && j.content && j.encoding) raw = JSON.parse(b64dec(j.content));   /* Gitee 给的是 base64 */
           var sum = dietSummarize(raw);
-          if (!sum) return next();
-          DIET = sum;
-          try { localStorage.setItem(DIET_K, JSON.stringify(sum)); } catch(e){}
-          dietPulling = false;
-          paintDietRec();
+          if (!sum) return null;
+          var ra = raw.updatedAt || (raw.data && raw.data.settings && raw.data.settings.updatedAt) || '';
+          sum.srcAt = Date.parse(ra) || 0;
+          return sum;
         });
-      }).catch(function(){ next(); });
-    }
-    next();
+      }).catch(function(){ return null; });
+    })).then(function(list){
+      dietPulling = false;
+      var best = null;
+      list.forEach(function(s){ if (s && (!best || s.srcAt > best.srcAt)) best = s; });
+      if (!best){
+        /* 两份都读不到：保留上次的缓存，别清空 */
+        return;
+      }
+      DIET = best;
+      try { localStorage.setItem(DIET_K, JSON.stringify(best)); } catch(e){}
+      paintDietRec();
+    });
   }
 
   function dietRec(){
