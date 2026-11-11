@@ -1861,8 +1861,8 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     if (!store.logs) store.logs = [];
     return store.logs;
   }
-  function logsTodayFor(id){
-    var d = todayISO();
+  function logsOn(id, iso){
+    var d = iso || viewISO;
     return allLogs().filter(function(l){ return l.d === d && l.id && l.id.split('|')[1] === id; });
   }
   /* v6.67：删掉的组要留个「墓碑」。云端 logs 是按 id 取并集的（cloudMerge），
@@ -1879,10 +1879,10 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     var idx = parseInt(id.replace(/^[a-z]+/, ''), 10) || 0;
     var ex = (dayEx(key) || [])[idx];   /* 换过动作就记在替代动作名下 */
     if (!ex) return;
-    var lid = todayISO() + '|' + id + '|' + setIdx;
+    var lid = viewISO + '|' + id + '|' + setIdx;
     var i = allLogs().findIndex(function(l){ return l.id === lid; });
     if (on && i < 0){
-      allLogs().push({ id: lid, d: todayISO(), k: key, n: ex.n, m: ex.m,
+      allLogs().push({ id: lid, d: viewISO, k: key, n: ex.n, m: ex.m,
         kg: kgOf(ex), reps: repMid(ex.rep), u: repUnit(ex.rep), p: setIdx, t: Date.now() });
     } else if (!on && i >= 0){
       allLogs().splice(i, 1);
@@ -1897,7 +1897,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
       var id = ex.dataset.ex;
       var dots = $$('.dot', ex);
       if (!dots.length) return;          /* 只读汇总卡（没点）跳过 */
-      var dayLogs = logsTodayFor(id);
+      var dayLogs = logsOn(id);
       var arr = dots.map(function(_, q){ return dayLogs.some(function(l){ return l.p === q; }); });
       var n = 0;
       dots.forEach(function(d,i){
@@ -2132,8 +2132,8 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   }
   var syncing = false;
   function savePlan(sets, rep){
-    if (curEx && curEx.__extra != null && store.extra && store.extra[todayISO()]){
-      var it = store.extra[todayISO()][curEx.__extra];
+    if (curEx && curEx.__extra != null && store.extra && store.extra[viewISO]){
+      var it = store.extra[viewISO][curEx.__extra];
       if (it){ it.sets = sets; it.rep = rep; curEx.sets = sets; curEx.rep = rep; return; }
     }
     store.exv[curEx.n] = { sets: sets, rep: rep };
@@ -2287,6 +2287,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
       var idx = Array.prototype.indexOf.call($$('.dot', ex), dot);
       setOn(id, idx, !dot.classList.contains('on'));
       renderSets();
+      setSub();
       paintHere(ex);
       paintSetsVal();
       paintAll();
@@ -2614,9 +2615,9 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   function swapKey(key, i){ return todayISO() + '|' + key + i; }
   function swappedName(key, i){ return (store.swaps || {})[swapKey(key, i)] || ''; }
   /* 今天这一天的动作表（把被替换的动作换掉），计划页仍按原计划展示 */
-  /* 今天额外加的动作（存在 store.extra[日期]） */
-  function extrasToday(){
-    var list = (store.extra && store.extra[todayISO()]) || [];
+  /* 某一天额外加的动作（存在 store.extra[日期]），默认当前看的那天 */
+  function extrasOn(iso){
+    var list = (store.extra && store.extra[iso || viewISO]) || [];
     return list.map(function(e, i){
       return { n: e.n, g: e.g || 'B', sets: e.sets || 3, rep: e.rep || '10',
                kg: e.kg || 0, rest: (e.rest == null ? (String(e.rep).indexOf('分钟') >= 0 ? 0 : 60) : e.rest),
@@ -2627,7 +2628,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   /* 可加动作的库：训练计划里出现过的 + 核心动作 */
   var EXLIB = (function(){
     var gmap = { chest:'胸', back:'背', quads:'腿', hamstring:'腿', calves:'腿', glutes:'腿',
-                 shoulder:'肩', triceps:'手臂', biceps:'手臂', core:'核心', cardio:'有氧' };
+                 shoulder:'肩', triceps:'手臂', biceps:'手臂', grip:'手臂', core:'核心', cardio:'有氧' };
     var seen = {}, groups = {};
     var all = [].concat(EX.push, EX.pull, EX.legs, EX.upper, EX.lower, EX.full, [
       /* 核心 */
@@ -2636,7 +2637,6 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
       { n:'俄罗斯转体', g:'B', sets:3, rep:'20', kg:5, rest:45, m:'core' },
       { n:'仰卧抬腿', g:'B', sets:3, rep:'12–15', kg:0, rest:45, m:'core' },
       { n:'健腹轮', g:'A', sets:3, rep:'10', kg:0, rest:60, m:'core' },
-      { n:'农夫行走', g:'A', sets:3, rep:'40 秒', kg:20, rest:90, m:'core' },
       /* 胸 */
       { n:'哑铃卧推', g:'A', sets:3, rep:'8–10', kg:22, rest:120, m:'chest' },
       { n:'上斜杠铃卧推', g:'A', sets:3, rep:'8–10', kg:50, rest:120, m:'chest' },
@@ -2670,6 +2670,8 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
       { n:'哑铃颈后臂屈伸', g:'B', sets:3, rep:'12', kg:12, rest:60, m:'triceps' },
       { n:'绳索弯举', g:'B', sets:3, rep:'12', kg:15, rest:60, m:'biceps' },
       { n:'牧师凳弯举', g:'B', sets:3, rep:'12', kg:15, rest:60, m:'biceps' },
+      /* 手臂 · 握力（按秒记，有重量） */
+      { n:'农夫行走', g:'A', sets:3, rep:'40 秒', kg:20, rest:90, m:'grip' },
       /* 有氧（按时间记：1 组 = 一次有氧） */
       { n:'跑步机', g:'B', sets:1, rep:'20 分钟', kg:0, rest:0, m:'cardio' },
       { n:'椭圆机', g:'B', sets:1, rep:'25 分钟', kg:0, rest:0, m:'cardio' },
@@ -2702,7 +2704,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   }
 
   function dayEx(key){
-    if (key === 'x') return extrasToday();
+    if (key === 'x') return extrasOn();
     return (EX[key] || []).map(function(e, i){
       var s = swappedName(key, i), a = s && SUB[s];
       if (!a) return normEx(e);
@@ -2739,7 +2741,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
   function extrasHTML(){
     var html = '';
-    extrasToday().forEach(function(e, i){
+    extrasOn().forEach(function(e, i){
       var dots = '';
       for (var k = 0; k < e.sets; k++) dots += '<button class="dot"></button>';
       var ekg = kgOf(e);
@@ -2778,7 +2780,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
   /* 休息日：只显示自己加进来的动作 */
   function renderExtrasOnly(){
-    var list = extrasToday();
+    var list = extrasOn();
     var all = list.reduce(function(a, e){ return a + e.sets; }, 0);
     $('#exList').innerHTML = extrasHTML();
     $('#listMeta').textContent = all + ' 有效组';
@@ -2815,7 +2817,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     });
     html += extrasHTML();
     $('#exList').innerHTML = html;
-    var all = renderedSets + extrasToday().reduce(function(a, e){ return a + e.sets; }, 0);
+    var all = renderedSets + extrasOn().reduce(function(a, e){ return a + e.sets; }, 0);
     $('#listMeta').textContent = all + ' 有效组';
     renderSets();
   }
@@ -2853,6 +2855,8 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   function renderDay(){
     var iso = viewISO, isToday = iso === todayISO(), key = keyForISO(iso);
     $('#kToday').textContent = isToday ? '今天' : '那天';
+    /* 过去那天也能补记；未来那天不给加（会记成未来日期） */
+    $('#addExBtn').style.display = iso > todayISO() ? 'none' : 'flex';
     $('#wkNext').disabled = iso >= todayISO();
 
     if (isToday){
@@ -2862,7 +2866,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
         $('#todayName').textContent = '休';
         $('#todayEn').textContent = 'REST';
         var todays = allLogs().filter(function(l){ return l.d === iso; });
-        var exs = extrasToday();
+        var exs = extrasOn();
         if (exs.length || todays.length){
           $('#todayName').textContent = todays.length ? '已练' : '加练';
           $('#todayEn').textContent = todays.length ? 'DONE' : 'EXTRA';
@@ -2897,12 +2901,13 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     paintHero();
   }
 
-  /* 过去某天：按真实日志汇总成「那天练了什么」 */
+  /* 过去某天：自己加的动作可以勾，其余按真实日志汇总成「那天练了什么」 */
   function renderPastDay(iso){
     var future = iso > todayISO();
     var logs = allLogs().filter(function(l){ return l.d === iso; });
+    var exs = future ? [] : extrasOn(iso);
     $('#listTitle').textContent = '周' + WD_CN[wdIdx(iso)] + (future ? '的计划 · ' : '的动作 · ') + shortDate(iso);
-    if (!logs.length){
+    if (!logs.length && !exs.length){
       var key = keyForISO(iso), plan = key ? dayEx(key) : [];
       $('#todayName').textContent = plan.length ? TITLE[key][0] : '休';
       $('#todayEn').textContent = plan.length ? TITLE[key][1] : 'REST';
@@ -2923,15 +2928,22 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
       o.vol += (l.kg || 0) * (l.reps || 0);
       vol += (l.kg || 0) * (l.reps || 0);
     });
-    $('#listMeta').innerHTML = logs.length + ' 组 · ' + uVol(vol).toLocaleString('en-US') + ' ' + uName() +
-      ' <button class="dayclear" id="clearDay" data-iso="' + iso + '">清除这天</button>';
-    $('#exList').innerHTML = order.map(function(n){
+    if (logs.length){
+      $('#listMeta').innerHTML = logs.length + ' 组 · ' + uVol(vol).toLocaleString('en-US') + ' ' + uName() +
+        ' <button class="dayclear" id="clearDay" data-iso="' + iso + '">清除这天</button>';
+    } else {
+      $('#todayName').textContent = '加练';
+      $('#todayEn').textContent = 'EXTRA';
+      $('#listMeta').textContent = exs.reduce(function(a, e){ return a + e.sets; }, 0) + ' 有效组';
+    }
+    $('#exList').innerHTML = (exs.length ? extrasHTML() : '') + order.map(function(n){
       var o = by[n];
       return '<article class="ex ro" data-n="' + o.n + '">' +
         '<div class="exrow"><h3>' + o.n + '</h3><span class="exload">' + (o.kg ? uTxt(o.kg) : '自重') + '</span></div>' +
         '<p class="exmeta">' + o.sets + ' 组 × ' + Math.round(o.reps) + ' 次 · 合计 ' + uVol(o.vol).toLocaleString('en-US') + ' ' + uName() + '</p>' +
         '</article>';
     }).join('');
+    renderSets();
   }
 
   function selectDay(iso){
@@ -3736,7 +3748,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   }
 
   /* ---------- 启动版本比对（同热量账本） ---------- */
-  var APP_VERSION = 'v6.75';
+  var APP_VERSION = 'v6.76';
   fetch('./version.txt?t=' + Date.now(), { cache: 'no-store' })
     .then(function(r){ return r.ok ? r.text() : ''; })
     .then(function(v){
@@ -3758,6 +3770,11 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
   /* ---------- 更新记录 ---------- */
   var RELEASES = [
+    { v:'v6.76', d:'11-11', items:[
+      '过去某天也能补记：翻到那天点「＋ 加动作」，加的动作就落在那天（之前只能加进今天，翻回去看不到，像是加不上）。',
+      '补记的组数记在那天，不会跑到今天；那天原本的记录照旧汇总显示。',
+      '农夫行走从「核心」挪到「手臂」（握力 / 前臂），加动作弹层里不再出现在核心下面。'
+    ]},
     { v:'v6.75', d:'11-10', items:[
       '农夫行走改成按时间记：默认 3 组 × 40 秒，每手 20kg，休息 90 秒；详情里「时长」一次 ±5 秒（10–300 秒）。',
       '按秒记的动作不再显示成「次」：卡片、建议、历史都按秒显示，历史里也不再算「合计 kg」（kg × 秒没意义）；动作提示改成「先加时长、90 秒还稳再加重」。',
@@ -5116,7 +5133,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     EXLIB.forEach(function(g){ g.items.forEach(function(x){ if (x.n === name) item = x; }); });
     if (!item) return;
     store.extra = store.extra || {};
-    var iso = todayISO(), list = store.extra[iso] = store.extra[iso] || [];
+    var iso = viewISO, list = store.extra[iso] = store.extra[iso] || [];
     if (!list.some(function(x){ return x.n === name; })){
       list.push({ n:item.n, g:item.g, sets:item.sets, rep:item.rep, kg:item.kg, rest:item.rest, m:item.m });
       saveStore();
@@ -5125,14 +5142,14 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     if (todayKey) renderToday(todayKey); else renderDay();
     paintAll();
   });
-  /* 移除今天加的动作（捕获阶段，先于打开动作卡） */
+  /* 移除这天加的动作（捕获阶段，先于打开动作卡） */
   document.addEventListener('click', function(ev){
     var d = ev.target && ev.target.closest && ev.target.closest('.exdel');
     if (!d) return;
     ev.stopPropagation(); ev.preventDefault();
-    var iso = todayISO(), list = (store.extra && store.extra[iso]) || [];
+    var iso = viewISO, list = (store.extra && store.extra[iso]) || [];
     var item = list[+d.dataset.del];
-    if (!window.confirm('把「' + (item ? item.n : '这个动作') + '」从今天移除？')) return;
+    if (!window.confirm('把「' + (item ? item.n : '这个动作') + '」从这天移除？')) return;
     list.splice(+d.dataset.del, 1); saveStore();
     if (todayKey) renderToday(todayKey); else renderDay();
     paintAll();
