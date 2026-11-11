@@ -1,7 +1,7 @@
 /* 练账 · Service Worker
    目的只有一个：每次打开都拿到最新的 index.html（热量账本同款「网络优先」）。
    只有断网时才回退到缓存，避免 iOS PWA 长期卡在旧版本。 */
-const CACHE = 'lianzhang-v4';
+const CACHE = 'lianzhang-v5';
 
 self.addEventListener('install', () => self.skipWaiting());
 
