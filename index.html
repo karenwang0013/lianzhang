@@ -1285,7 +1285,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
     <div class="statusbg" aria-hidden="true"></div>
     <div class="topbar">
-      <div class="brand">训练<span>账本</span><i class="btag">v6.77</i></div>
+      <div class="brand">训练<span>账本</span><i class="btag">v6.78</i></div>
       <div class="topactions">
         <button class="topbtn topicon" id="reloadTop" aria-label="强制更新" title="强制更新">
           <svg viewBox="0 -960 960 960" aria-hidden="true"><path d="M480-160q-134 0-227-93t-93-227q0-134 93-227t227-93q69 0 132 28.5T720-690v-70q0-17 11.5-28.5T760-800q17 0 28.5 11.5T800-760v200q0 17-11.5 28.5T760-520H560q-17 0-28.5-11.5T520-560q0-17 11.5-28.5T560-600h128q-32-56-87.5-88T480-720q-100 0-170 70t-70 170q0 100 70 170t170 70q68 0 124.5-34.5T692-367q8-14 22.5-19.5t29.5-.5q16 5 23 21t-1 30q-41 80-117 128t-169 48Z"/></svg>
@@ -1576,7 +1576,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     <!-- 设置 -->
     <div class="sheet" id="setSheet">
       <div class="grab"></div>
-      <div class="sh-hd sh-sub"><button class="backbtn" id="setBack" aria-label="返回"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5 8 12l7 7"/></svg></button><h2>设置</h2><span class="vtag">v6.77</span></div>
+      <div class="sh-hd sh-sub"><button class="backbtn" id="setBack" aria-label="返回"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5 8 12l7 7"/></svg></button><h2>设置</h2><span class="vtag">v6.78</span></div>
       <div class="setbody">
         <div class="setlabel">训练设置</div>
         <div class="setrows">
@@ -1593,7 +1593,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
           <button class="srow" id="openBackup" data-ic="cloud_done"><span class="ico"></span><span class="lbl">数据备份</span><span class="val" id="backupVal">iCloud</span></button>
           <div class="srow" data-ic="monitor_heart"><span class="ico"></span><span class="lbl">Apple 健康</span><span class="sw"></span></div>
           <button class="srow" id="openRemind" data-ic="assignment"><span class="ico"></span><span class="lbl">训练提醒</span><span class="val" id="remindVal">开</span></button>
-          <button class="srow" id="openRel" data-ic="checklist"><span class="ico"></span><span class="lbl">更新记录</span><span class="val">v6.77</span></button>
+          <button class="srow" id="openRel" data-ic="checklist"><span class="ico"></span><span class="lbl">更新记录</span><span class="val">v6.78</span></button>
         </div>
       </div>
     </div>
@@ -1877,10 +1877,21 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     store.del[id] = Date.now();
   }
 
+  /* v6.78：加练卡以前拿数组下标当 id（x0/x1），删掉一个后面的卡就整体错位、打过的勾看着像被清空。
+     现在每条卡带固定 u，按 u 反查卡片和它的记录 */
+  function exByDomId(id){
+    var key = id.replace(/[0-9]+$/, '');
+    var idx = parseInt(id.slice(key.length), 10) || 0;
+    if (key === 'x'){
+      var hit = extrasOn().filter(function(e){ return +e.__u === idx; })[0];
+      return hit || null;
+    }
+    return (dayEx(key) || [])[idx] || null;
+  }
+
   function setOn(id, setIdx, on){
     var key = id.replace(/[0-9]+$/, '');
-    var idx = parseInt(id.replace(/^[a-z]+/, ''), 10) || 0;
-    var ex = (dayEx(key) || [])[idx];   /* 换过动作就记在替代动作名下 */
+    var ex = exByDomId(id);   /* 换过动作就记在替代动作名下 */
     if (!ex) return;
     var lid = viewISO + '|' + id + '|' + setIdx;
     var i = allLogs().findIndex(function(l){ return l.id === lid; });
@@ -1950,7 +1961,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
   function openEx(card){
     var id = card.dataset.ex || '';
-    if (!(dayEx(id.replace(/[0-9]+$/, '')) || [])[parseInt(id.replace(/^[a-z]+/, ''), 10) || 0]) return;
+    if (!exByDomId(id)) return;
     curExId = id;
     fillEx();
     paintPick();
@@ -1996,9 +2007,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   /* 把「当前这张卡对应的动作」画进弹层（选动作后也复用它） */
   function fillEx(){
     var id = curExId || '';
-    var key = id.replace(/[0-9]+$/, '');
-    var idx = parseInt(id.replace(/^[a-z]+/, ''), 10) || 0;
-    var arr = (dayEx(key) || [])[idx];
+    var arr = exByDomId(id);
     if (!arr) return;
     curEx = arr;
     var card = $('.ex[data-ex="' + id + '"]');
@@ -2453,6 +2462,15 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     store.mig73 = true;
     saveStore();
   }
+  /* v6.78：老数据没有 u，按当时的下标补上（旧的 x0/x1… 记录正好对得上） */
+  function migrateExtraIds(){
+    if (store.migExU) return;
+    if (store.extra) Object.keys(store.extra).forEach(function(k){
+      (store.extra[k] || []).forEach(function(e, i){ if (e && e.u == null) e.u = i; });
+    });
+    store.migExU = true;
+    saveStore();
+  }
   function kgOf(ex){
     var w = store.weights[ex.n];
     if (w != null) return w;                 /* 自己改过就听她的 */
@@ -2624,7 +2642,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     return list.map(function(e, i){
       return { n: e.n, g: e.g || 'B', sets: e.sets || 3, rep: e.rep || '10',
                kg: e.kg || 0, rest: (e.rest == null ? (String(e.rep).indexOf('分钟') >= 0 ? 0 : 60) : e.rest),
-               m: e.m || 'core', __extra: i };
+               m: e.m || 'core', __extra: i, __u: (e.u == null ? i : e.u) };
     });
   }
 
@@ -2748,13 +2766,13 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
       var dots = '';
       for (var k = 0; k < e.sets; k++) dots += '<button class="dot"></button>';
       var ekg = kgOf(e);
-      html += '<article class="ex extra" data-ex="x' + i + '">' +
+      html += '<article class="ex extra" data-ex="x' + e.__u + '">' +
         '<div class="exrow"><h3><i class="grade b">' + (e.g || 'B') + '</i>' + e.n + '<i class="swaptag">加</i></h3>' +
         '<span class="exload">' + exLoadTxt(e) + '</span></div>' +
         '<p class="exmeta">' + exMetaTxt(e) +
           (lastWeightOf(e.n) ? ' · 上次 ' + uTxt(lastWeightOf(e.n).kg) : '') + '</p>' +
         '<div class="sets">' + dots + '<span class="setcount">0/' + e.sets + '</span>' +
-        '<button class="exdel" data-del="' + i + '" aria-label="移除这个动作">移除</button></div>' +
+        '<button class="exdel" data-del="' + e.__u + '" aria-label="移除这个动作">移除</button></div>' +
         '</article>';
     });
     return html;
@@ -2939,13 +2957,9 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
       $('#todayEn').textContent = 'EXTRA';
       $('#listMeta').textContent = exs.reduce(function(a, e){ return a + e.sets; }, 0) + ' 有效组';
     }
-    $('#exList').innerHTML = (exs.length ? extrasHTML() : '') + order.map(function(n){
-      var o = by[n];
-      return '<article class="ex ro" data-n="' + o.n + '">' +
-        '<div class="exrow"><h3>' + o.n + '</h3><span class="exload">' + (o.kg ? uTxt(o.kg) : '自重') + '</span></div>' +
-        '<p class="exmeta">' + o.sets + ' 组 × ' + Math.round(o.reps) + ' 次 · 合计 ' + uVol(o.vol).toLocaleString('en-US') + ' ' + uName() + '</p>' +
-        '</article>';
-    }).join('');
+    /* v6.78：已经是加练卡的动作用 skip 排掉，否则同一动作在一页里出现两张（一张能点、一张只读） */
+    $('#exList').innerHTML = (exs.length ? extrasHTML() : '') +
+      loggedSummaryHTML(iso, exs.map(function(e){ return e.n; }));
     renderSets();
   }
 
@@ -3751,7 +3765,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   }
 
   /* ---------- 启动版本比对（同热量账本） ---------- */
-  var APP_VERSION = 'v6.77';
+  var APP_VERSION = 'v6.78';
   fetch('./version.txt?t=' + Date.now(), { cache: 'no-store' })
     .then(function(r){ return r.ok ? r.text() : ''; })
     .then(function(v){
@@ -3773,6 +3787,11 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
   /* ---------- 更新记录 ---------- */
   var RELEASES = [
+    { v:'v6.78', d:'11-11', items:[
+      '修：过去某天加了动作，同一个动作会同时出现两张卡（一张能点、一张只读汇总），现在只留能点的那张。',
+      '修：移除加练动作时它打过的组数没跟着删，会剩成一张点不动、也删不掉的只读卡。',
+      '修：加练卡以前按「第几张」编号，删掉一张后面的卡整体错位，打过的勾记到别的动作上、看着像记录全被清空；现在每条卡有固定编号，增删不影响已记的组数（老数据自动补号）。'
+    ]},
     { v:'v6.77', d:'11-11', items:[
       '计划页接着热量账本：把你最近的饮食数据（平均热量、蛋白 g/kg、体重怎么走）读过来，在分化下面给一行建议，并在推荐的那个分化上标「建议」（不自动切，手动点才换）。',
       '建议规则：减脂或蛋白不到 1.6 g/kg → 上限 3 分化，容量先别加；记录不到两周不按频率压天数；增肌且蛋白达标、一周能练 4 次以上才建议 4 分化。',
@@ -5143,7 +5162,9 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     store.extra = store.extra || {};
     var iso = viewISO, list = store.extra[iso] = store.extra[iso] || [];
     if (!list.some(function(x){ return x.n === name; })){
-      list.push({ n:item.n, g:item.g, sets:item.sets, rep:item.rep, kg:item.kg, rest:item.rest, m:item.m });
+      var nu = Date.now();
+      while (list.some(function(x){ return +x.u === nu; })) nu++;
+      list.push({ n:item.n, g:item.g, sets:item.sets, rep:item.rep, kg:item.kg, rest:item.rest, m:item.m, u:nu });
       saveStore();
     }
     closeSheets();
@@ -5156,9 +5177,16 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     if (!d) return;
     ev.stopPropagation(); ev.preventDefault();
     var iso = viewISO, list = (store.extra && store.extra[iso]) || [];
-    var item = list[+d.dataset.del];
+    var u = +d.dataset.del;
+    var idx = list.findIndex(function(x, i){ return +(x.u == null ? i : x.u) === u; });
+    var item = list[idx];
     if (!window.confirm('把「' + (item ? item.n : '这个动作') + '」从这天移除？')) return;
-    list.splice(+d.dataset.del, 1); saveStore();
+    if (idx >= 0) list.splice(idx, 1);
+    /* v6.78：连它的组数记录一起删，不然记录会剩成一张只读卡（点不动、也删不掉） */
+    var pre = iso + '|x' + u + '|';
+    allLogs().forEach(function(l){ if (l && l.id && l.id.indexOf(pre) === 0) markDel(l.id); });
+    store.logs = allLogs().filter(function(l){ return !(l && l.id && l.id.indexOf(pre) === 0); });
+    saveStore();
     if (todayKey) renderToday(todayKey); else renderDay();
     paintAll();
   }, true);
@@ -5284,6 +5312,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   });
   if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
   migrateWeights();
+  migrateExtraIds();
   paintRemindRow();
   setSplit(3);
   placeSplitLens(true);
