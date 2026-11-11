@@ -389,6 +389,8 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   padding:9px 0;font-family:inherit;font-size:13px;font-weight:650;color:var(--muted2);
   cursor:pointer;line-height:1.2;transition:color .25s ease}
 .splpick .sp.on{color:var(--lime);background:transparent}
+.splpick .sp .sptag{margin-left:3px;font-style:normal;font-size:8px;font-weight:700;line-height:1.4;
+  color:#0a0f0c;background:#f2f4f2;border-radius:4px;padding:0 3px;letter-spacing:0}
 .splpick .sp:active{transform:scale(.96)}
 .splpick .seg-lens{position:absolute;left:0;top:0;width:0;height:0;z-index:0;pointer-events:none;
   border-radius:999px;background-color:rgba(255,255,255,.085);opacity:0;
@@ -1283,7 +1285,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
     <div class="statusbg" aria-hidden="true"></div>
     <div class="topbar">
-      <div class="brand">训练<span>账本</span><i class="btag">v6.75</i></div>
+      <div class="brand">训练<span>账本</span><i class="btag">v6.77</i></div>
       <div class="topactions">
         <button class="topbtn topicon" id="reloadTop" aria-label="强制更新" title="强制更新">
           <svg viewBox="0 -960 960 960" aria-hidden="true"><path d="M480-160q-134 0-227-93t-93-227q0-134 93-227t227-93q69 0 132 28.5T720-690v-70q0-17 11.5-28.5T760-800q17 0 28.5 11.5T800-760v200q0 17-11.5 28.5T760-520H560q-17 0-28.5-11.5T520-560q0-17 11.5-28.5T560-600h128q-32-56-87.5-88T480-720q-100 0-170 70t-70 170q0 100 70 170t170 70q68 0 124.5-34.5T692-367q8-14 22.5-19.5t29.5-.5q16 5 23 21t-1 30q-41 80-117 128t-169 48Z"/></svg>
@@ -1387,6 +1389,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
             <button class="sp" data-n="6">6 天</button>
           </div>
           <p id="splitDesc">每周 3 练 · 4 休 · 第 5 周减载</p>
+          <p id="dietRec" hidden></p>
         </div>
 
         <div class="listhead"><h2>本周排布</h2><span id="weekMeta">6 练 · 1 休</span></div>
@@ -1573,7 +1576,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     <!-- 设置 -->
     <div class="sheet" id="setSheet">
       <div class="grab"></div>
-      <div class="sh-hd sh-sub"><button class="backbtn" id="setBack" aria-label="返回"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5 8 12l7 7"/></svg></button><h2>设置</h2><span class="vtag">v6.75</span></div>
+      <div class="sh-hd sh-sub"><button class="backbtn" id="setBack" aria-label="返回"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5 8 12l7 7"/></svg></button><h2>设置</h2><span class="vtag">v6.77</span></div>
       <div class="setbody">
         <div class="setlabel">训练设置</div>
         <div class="setrows">
@@ -1590,7 +1593,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
           <button class="srow" id="openBackup" data-ic="cloud_done"><span class="ico"></span><span class="lbl">数据备份</span><span class="val" id="backupVal">iCloud</span></button>
           <div class="srow" data-ic="monitor_heart"><span class="ico"></span><span class="lbl">Apple 健康</span><span class="sw"></span></div>
           <button class="srow" id="openRemind" data-ic="assignment"><span class="ico"></span><span class="lbl">训练提醒</span><span class="val" id="remindVal">开</span></button>
-          <button class="srow" id="openRel" data-ic="checklist"><span class="ico"></span><span class="lbl">更新记录</span><span class="val">v6.75</span></button>
+          <button class="srow" id="openRel" data-ic="checklist"><span class="ico"></span><span class="lbl">更新记录</span><span class="val">v6.77</span></button>
         </div>
       </div>
     </div>
@@ -3748,7 +3751,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   }
 
   /* ---------- 启动版本比对（同热量账本） ---------- */
-  var APP_VERSION = 'v6.76';
+  var APP_VERSION = 'v6.77';
   fetch('./version.txt?t=' + Date.now(), { cache: 'no-store' })
     .then(function(r){ return r.ok ? r.text() : ''; })
     .then(function(v){
@@ -3770,6 +3773,11 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
   /* ---------- 更新记录 ---------- */
   var RELEASES = [
+    { v:'v6.77', d:'11-11', items:[
+      '计划页接着热量账本：把你最近的饮食数据（平均热量、蛋白 g/kg、体重怎么走）读过来，在分化下面给一行建议，并在推荐的那个分化上标「建议」（不自动切，手动点才换）。',
+      '建议规则：减脂或蛋白不到 1.6 g/kg → 上限 3 分化，容量先别加；记录不到两周不按频率压天数；增肌且蛋白达标、一周能练 4 次以上才建议 4 分化。',
+      '数据来源是热量账本页面上的 data.json（同源，不用令牌），读不到就看上次读到的那份；这条只是建议，不影响你现在的计划。'
+    ]},
     { v:'v6.76', d:'11-11', items:[
       '过去某天也能补记：翻到那天点「＋ 加动作」，加的动作就落在那天（之前只能加进今天，翻回去看不到，像是加不上）。',
       '补记的组数记在那天，不会跑到今天；那天原本的记录照旧汇总显示。',
@@ -5045,7 +5053,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     }).join('');
   }
 
-  function paintAll(){ paintHero(); paintPlan(); paintLog(); paintMe(); }
+  function paintAll(){ paintHero(); paintPlan(); paintLog(); paintMe(); paintDietRec(); }
 
   /* ---------- 动作重量记录（点动作名就看得到每次练了多少） ---------- */
   function openHist(name){
@@ -5155,6 +5163,114 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     paintAll();
   }, true);
 
+  /* ---------- 热量账本 → 分化建议 ----------
+     只读它页面上的 data.json（同源镜像，不需要令牌），读不到才问 Gitee。
+     只取「近 14 天吃了多少 / 蛋白多少 / 体重怎么走」，缓存一份给离线用。 */
+  var DIET = null, DIET_K = 'lz.diet.v1', dietPulling = false;
+  try { var _diet = JSON.parse(localStorage.getItem(DIET_K) || 'null'); if (_diet && _diet.at) DIET = _diet; } catch(e){}
+
+  function dietSummarize(remote){
+    var d = (remote && remote.data) || {};
+    var prof = d.profile || {}, st = d.settings || {}, logs = d.logs || [];
+    var today = todayISO(), from = isoMinus(today, 13);
+    var kc = {}, pt = {};
+    logs.forEach(function(l){
+      var dt = String((l && l.date) || '').slice(0, 10);
+      if (!dt || dt < from || dt > today) return;
+      kc[dt] = (kc[dt] || 0) + (+l.kcal || 0);
+      pt[dt] = (pt[dt] || 0) + (+l.p || 0);
+    });
+    var ds = Object.keys(kc);
+    if (!ds.length) return null;
+    var sk = 0, sp = 0;
+    ds.forEach(function(k){ sk += kc[k]; sp += pt[k] || 0; });
+    var wd = Object.keys(d.weights || {}).sort();
+    var w = wd.length ? +d.weights[wd[wd.length - 1]] : +(prof.weight_kg || 0);
+    var trend = null;
+    if (wd.length >= 2){
+      var a = wd.slice(-14);
+      trend = Math.round((d.weights[a[a.length - 1]] - d.weights[a[0]]) * 10) / 10;
+    }
+    var prot = sp / ds.length;
+    return { at: Date.now(), days: ds.length,
+      kcal: Math.round(sk / ds.length), protein: Math.round(prot),
+      proteinGkg: w ? Math.round(prot / w * 10) / 10 : null,
+      weight: w || null, trendKg: trend,
+      mode: st.diet_mode || 'maintain',
+      deficit: (st.target_override && st.target_override.deficit != null) ? +st.target_override.deficit : null };
+  }
+
+  function pullDietBridge(){
+    if (dietPulling) return;
+    dietPulling = true;
+    var tk = cloudToken();
+    var urls = [
+      '/calorie-ledger/data.json?t=' + Date.now(),
+      'https://gitee.com/api/v5/repos/' + CLOUD.owner + '/' + CLOUD.repo + '/contents/data.json?ref=' + CLOUD.branch +
+        '&t=' + Date.now() + (tk ? '&access_token=' + encodeURIComponent(tk) : '')
+    ];
+    var i = 0;
+    function next(){
+      if (i >= urls.length){ dietPulling = false; return; }
+      var url = urls[i++];
+      cloudFetch(url, {}, 9000).then(function(r){
+        if (!r || !r.ok) return next();
+        return r.json().then(function(j){
+          var raw = j;
+          if (j && j.content && j.encoding) raw = JSON.parse(b64dec(j.content));   /* Gitee 给的是 base64 */
+          var sum = dietSummarize(raw);
+          if (!sum) return next();
+          DIET = sum;
+          try { localStorage.setItem(DIET_K, JSON.stringify(sum)); } catch(e){}
+          dietPulling = false;
+          paintDietRec();
+        });
+      }).catch(function(){ next(); });
+    }
+    next();
+  }
+
+  function dietRec(){
+    if (!DIET) return null;
+    var today = todayISO(), from28 = isoMinus(today, 27), on = {}, first = '';
+    allLogs().forEach(function(l){
+      if (!l.d || l.d > today) return;
+      if (!first || l.d < first) first = l.d;
+      if (l.d >= from28) on[l.d] = 1;
+    });
+    var perWeek = Object.keys(on).length / 4;
+    var span = first ? Math.round((new Date(today + 'T00:00:00') - new Date(first + 'T00:00:00')) / 86400000) + 1 : 0;
+    var thin = span < 14;                       /* 记录不到两周：不按频率压天数，先按 3 天起步 */
+    var n = thin ? 3 : (perWeek >= 4.5 ? 4 : (perWeek >= 2.5 ? 3 : (perWeek < 1.5 ? 2 : 3)));
+    var why = [];
+    if (DIET.mode === 'cut') why.push(DIET.deficit ? '减脂、每天缺口 ' + DIET.deficit : '减脂');
+    if (DIET.proteinGkg != null && DIET.proteinGkg < 1.6) why.push('蛋白只吃到 ' + DIET.proteinGkg + ' g/kg');
+    if (why.length && n > 3) n = 3;
+    if (DIET.mode === 'bulk' && DIET.proteinGkg != null && DIET.proteinGkg >= 1.8 && perWeek >= 4.5) n = 4;
+    var dietFacts = [DIET.days + ' 天平均 ' + DIET.kcal + ' 千卡',
+      '蛋白 ' + DIET.protein + ' g' + (DIET.proteinGkg != null ? '（' + DIET.proteinGkg + ' g/kg）' : '')];
+    var bodyFacts = [];
+    if (DIET.trendKg != null && Math.abs(DIET.trendKg) >= 0.2)
+      bodyFacts.push('体重' + (DIET.trendKg > 0 ? '涨 ' : '降 ') + Math.abs(DIET.trendKg) + ' kg');
+    bodyFacts.push(!first ? '练账还没记录' : (thin ? ('练账记录才 ' + span + ' 天') : ('近 4 周一周练 ' + perWeek.toFixed(1) + ' 次')));
+    return { days: n, diet: dietFacts.join(' · '), body: bodyFacts.join(' · '), why: why, thin: thin };
+  }
+
+  function paintDietRec(){
+    var el = $('#dietRec'); if (!el) return;
+    $$('#splitPick .sp').forEach(function(b){ var t = b.querySelector('.sptag'); if (t) t.remove(); });
+    var rec = dietRec();
+    if (!rec){ el.hidden = true; return; }
+    el.hidden = false;
+    el.innerHTML = '热量账本 · ' + rec.diet + '<br>' + rec.body + '<br>→ 建议 <b>' + rec.days + ' 天</b>' +
+      (SPLITS[rec.days] ? '（' + SPLITS[rec.days].label + '）' : '') +
+      (rec.why.length ? '：' + rec.why.join('、') + '，别加容量' : '');
+    if (+rec.days !== splitDays){
+      var b = $('#splitPick .sp[data-n="' + rec.days + '"]');
+      if (b){ var i = document.createElement('i'); i.className = 'sptag'; i.textContent = '建议'; b.appendChild(i); }
+    }
+  }
+
   /* ---------- 初始化 ---------- */
   SLOTS.forEach(function(s){ paintTab(s.key); });
   function syncTopbarH(){
@@ -5173,6 +5289,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   placeSplitLens(true);
   paintWeekVol();
   paintAll();
+  pullDietBridge();
   var h = (location.hash || '').replace('#','');
   setTab(order.indexOf(h) > -1 ? h : 'today');
   checkReminder();
