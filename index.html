@@ -1285,7 +1285,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
     <div class="statusbg" aria-hidden="true"></div>
     <div class="topbar">
-      <div class="brand">训练<span>账本</span><i class="btag">v6.84</i></div>
+      <div class="brand">训练<span>账本</span><i class="btag">v6.85</i></div>
       <div class="topactions">
         <button class="topbtn topicon" id="reloadTop" aria-label="强制更新" title="强制更新">
           <svg viewBox="0 -960 960 960" aria-hidden="true"><path d="M480-160q-134 0-227-93t-93-227q0-134 93-227t227-93q69 0 132 28.5T720-690v-70q0-17 11.5-28.5T760-800q17 0 28.5 11.5T800-760v200q0 17-11.5 28.5T760-520H560q-17 0-28.5-11.5T520-560q0-17 11.5-28.5T560-600h128q-32-56-87.5-88T480-720q-100 0-170 70t-70 170q0 100 70 170t170 70q68 0 124.5-34.5T692-367q8-14 22.5-19.5t29.5-.5q16 5 23 21t-1 30q-41 80-117 128t-169 48Z"/></svg>
@@ -1576,7 +1576,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     <!-- 设置 -->
     <div class="sheet" id="setSheet">
       <div class="grab"></div>
-      <div class="sh-hd sh-sub"><button class="backbtn" id="setBack" aria-label="返回"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5 8 12l7 7"/></svg></button><h2>设置</h2><span class="vtag">v6.84</span></div>
+      <div class="sh-hd sh-sub"><button class="backbtn" id="setBack" aria-label="返回"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5 8 12l7 7"/></svg></button><h2>设置</h2><span class="vtag">v6.85</span></div>
       <div class="setbody">
         <div class="setlabel">训练设置</div>
         <div class="setrows">
@@ -1593,7 +1593,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
           <button class="srow" id="openBackup" data-ic="cloud_done"><span class="ico"></span><span class="lbl">数据备份</span><span class="val" id="backupVal">iCloud</span></button>
           <div class="srow" data-ic="monitor_heart"><span class="ico"></span><span class="lbl">Apple 健康</span><span class="sw"></span></div>
           <button class="srow" id="openRemind" data-ic="assignment"><span class="ico"></span><span class="lbl">训练提醒</span><span class="val" id="remindVal">开</span></button>
-          <button class="srow" id="openRel" data-ic="checklist"><span class="ico"></span><span class="lbl">更新记录</span><span class="val">v6.84</span></button>
+          <button class="srow" id="openRel" data-ic="checklist"><span class="ico"></span><span class="lbl">更新记录</span><span class="val">v6.85</span></button>
         </div>
       </div>
     </div>
@@ -1909,6 +1909,15 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     saveStore();
   }
 
+  /* v6.85：这一天的记录里没被占用的最小组编号。删过中间某组时编号会留洞，
+     补组要填这个洞，不能拿「已勾几个」当编号（会和占着的编号撞上、setOn 直接什么都不做）。 */
+  function nextFreeP(id){
+    var used = {};
+    logsOn(id).forEach(function(l){ used[l.p] = 1; });
+    var p = 0; while (used[p]) p++;
+    return p;
+  }
+
   function renderSets(){
     var done = 0, total = 0;
     $$('.ex').forEach(function(ex){
@@ -1916,7 +1925,10 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
       var dots = $$('.dot', ex);
       if (!dots.length) return;          /* 只读汇总卡（没点）跳过 */
       var dayLogs = logsOn(id);
-      var arr = dots.map(function(_, q){ return dayLogs.some(function(l){ return l.p === q; }); });
+      /* v6.85：按数量点亮，不再逐编号对齐 —— 删过中间某组时编号会留洞（如 1/2/3 有、0 没了），
+         逐编号对齐会出现「空·满·满·满」这种点不满的样子。 */
+      var cntDone = dayLogs.length;
+      var arr = dots.map(function(_, q){ return q < cntDone; });
       var n = 0;
       dots.forEach(function(d,i){
         var on = !!arr[i];
@@ -1954,8 +1966,9 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   function completeSet(ex){
     var id = ex.dataset.ex;
     var total = $$('.dot', ex).length;
-    var on = $$('.dot.on', ex).length;
-    if (on < total) setOn(id, on, true);
+    /* v6.85：补「最小的空编号」而不是「已勾几个」。删过第 1 组的话，已勾 3 个但编号 1/2/3 都占着，
+       拿 3 去记会和已有那条撞上 → setOn 什么都不做 → 点「完成本组」毫无反应。 */
+    if ($$('.dot.on', ex).length < total) setOn(id, nextFreeP(id), true);
     renderSets();
     paintAll();
     paintSetsVal();
@@ -2224,8 +2237,9 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     var dots = ex ? $$('.dot', ex) : [];
     var last = -1;
     dots.forEach(function(d, i){ if (d.classList.contains('on')) last = i; });
-    if (last >= 0){                       /* 先撤掉最后一组已完成 */
-      setOn(curExId, last, false);
+    if (last >= 0){                       /* 先撤掉最后一组已完成（按最大编号删，编号有洞也不删错） */
+      var psDown = logsOn(curExId).map(function(l){ return l.p; }).sort(function(a, b){ return a - b; });
+      setOn(curExId, psDown[psDown.length - 1], false);
       renderSets();
       paintAll();
       paintSetsVal();
@@ -2300,8 +2314,17 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     if (dot){
       var ex = dot.closest('.ex');
       var id = ex.dataset.ex;
-      var idx = Array.prototype.indexOf.call($$('.dot', ex), dot);
-      setOn(id, idx, !dot.classList.contains('on'));
+      var dotsArr = $$('.dot', ex);
+      var idx = Array.prototype.indexOf.call(dotsArr, dot);
+      var onN = dotsArr.filter(function(d){ return d.classList.contains('on'); }).length;
+      if (idx < onN){
+        /* v6.85：点在已记过的点上 = 撤最后一组（按记录里的最大编号删，编号有洞也不会删错） */
+        var ps = logsOn(id).map(function(l){ return l.p; }).sort(function(a, b){ return a - b; });
+        setOn(id, ps[ps.length - 1], false);
+      } else {
+        /* 点在空点上 = 补下一组（填最小的空编号，不会和已有编号撞上） */
+        setOn(id, nextFreeP(id), true);
+      }
       renderSets();
       setSub();
       paintHere(ex);
@@ -3769,7 +3792,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   }
 
   /* ---------- 启动版本比对（同热量账本） ---------- */
-  var APP_VERSION = 'v6.84';
+  var APP_VERSION = 'v6.85';
   fetch('./version.txt?t=' + Date.now(), { cache: 'no-store' })
     .then(function(r){ return r.ok ? r.text() : ''; })
     .then(function(v){
@@ -3791,6 +3814,11 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
   /* ---------- 更新记录 ---------- */
   var RELEASES = [
+    { v:'v6.85', d:'11-11', items:[
+      '修：填完 3 组再点「完成本组」没反应。原因：删过中间某一组时，组的编号会留洞（如 0 被删、只剩 1/2/3），补组时按「已勾了几个」算编号，正好撞上已存在的编号，程序判定「这条已经有了」就什么都不做。现在改成补最小的空编号。',
+      '修：删过一组以后，卡上的点是「空·满·满·满」这种断开的样式、看着像漏了一组；现在按数量点亮，3 组就是前 3 个点亮。撤组也改成删最后记的那一组，编号有洞也不会删错。',
+      '修正：这版的改动只影响「记组」，已记的组数和重量不变。'
+    ]},
     { v:'v6.84', d:'11-11', items:[
       '修：勾上的组过几秒又自己没了（「填写完组数被清空」）。原因：删过的组会在同步里留一个墓碑，同一个 id 永远拉黑 —— 重新勾上的组下一次同步（4 秒后自动跑）又被删一次。现在记账新时间跟墓碑比，后记的算数。',
       '修：撤掉的组还是照旧不会自己复活（墓碑照样管用），只是不再误杀后来补记的那一组。'
