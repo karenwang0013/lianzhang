@@ -1299,7 +1299,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
     <div class="statusbg" aria-hidden="true"></div>
     <div class="topbar">
-      <div class="brand">训练<span>账本</span><i class="btag">v6.94</i></div>
+      <div class="brand">训练<span>账本</span><i class="btag">v6.95</i></div>
       <div class="topactions">
         <button class="topbtn topicon" id="reloadTop" aria-label="强制更新" title="强制更新">
           <svg viewBox="0 -960 960 960" aria-hidden="true"><path d="M480-160q-134 0-227-93t-93-227q0-134 93-227t227-93q69 0 132 28.5T720-690v-70q0-17 11.5-28.5T760-800q17 0 28.5 11.5T800-760v200q0 17-11.5 28.5T760-520H560q-17 0-28.5-11.5T520-560q0-17 11.5-28.5T560-600h128q-32-56-87.5-88T480-720q-100 0-170 70t-70 170q0 100 70 170t170 70q68 0 124.5-34.5T692-367q8-14 22.5-19.5t29.5-.5q16 5 23 21t-1 30q-41 80-117 128t-169 48Z"/></svg>
@@ -1590,7 +1590,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     <!-- 设置 -->
     <div class="sheet" id="setSheet">
       <div class="grab"></div>
-      <div class="sh-hd sh-sub"><button class="backbtn" id="setBack" aria-label="返回"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5 8 12l7 7"/></svg></button><h2>设置</h2><span class="vtag">v6.94</span></div>
+      <div class="sh-hd sh-sub"><button class="backbtn" id="setBack" aria-label="返回"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5 8 12l7 7"/></svg></button><h2>设置</h2><span class="vtag">v6.95</span></div>
       <div class="setbody">
         <div class="setlabel">训练设置</div>
         <div class="setrows">
@@ -1607,7 +1607,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
           <button class="srow" id="openBackup" data-ic="cloud_done"><span class="ico"></span><span class="lbl">数据备份</span><span class="val" id="backupVal">iCloud</span></button>
           <div class="srow" data-ic="monitor_heart"><span class="ico"></span><span class="lbl">Apple 健康</span><span class="sw"></span></div>
           <button class="srow" id="openRemind" data-ic="assignment"><span class="ico"></span><span class="lbl">训练提醒</span><span class="val" id="remindVal">开</span></button>
-          <button class="srow" id="openRel" data-ic="checklist"><span class="ico"></span><span class="lbl">更新记录</span><span class="val">v6.94</span></button>
+          <button class="srow" id="openRel" data-ic="checklist"><span class="ico"></span><span class="lbl">更新记录</span><span class="val">v6.95</span></button>
         </div>
       </div>
     </div>
@@ -1954,7 +1954,8 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
         if (on) n++;
       });
       ex.classList.toggle('done', n === dots.length && n > 0);
-      var sc = $('.setcount', ex); if (sc) sc.textContent = n + '/' + dots.length;
+      var sc = $('.setcount', ex);
+      if (sc) sc.textContent = ex.classList.contains('cardio') ? (n ? '已完成' : '完成') : (n + '/' + dots.length);
       done += n; total += dots.length;
     });
     setSub();
@@ -2040,7 +2041,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   function shiftMinutes(rep, d){
     var m = String(rep).match(/(\d+)\s*分钟/);
     if (!m) return rep;
-    var n = Math.max(5, Math.min(180, (+m[1]) + d * 5));
+    var n = Math.max(5, Math.min(45, (+m[1]) + d * 5));   /* v6.95：有氧封顶 45 分钟，力量后本来只该 15–20 */
     return n + ' 分钟';
   }
   /* v6.74：按距离 / 按时间记的（rep 带「米」「秒」，如农夫行走）不拼「次」 */
@@ -2109,14 +2110,15 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   function tipsCardio(ex){
     var c = CARDIO_TIPS[ex.n] || { met: 7.0, how: '' };
     var min = repMid(exvOf(ex).rep) || 20, goal = goalOf(), out = [];
-    var dur = goal === '减脂' ? '30–45 分钟（Zone 2，全程能说话）'
+    var dur = goal === '减脂' ? '30–45 分钟 Zone 2（放单独一天；和力量同天只做 15–20 分钟）'
       : goal === '力量' ? '10–15 分钟（热身/放松，别抢恢复）'
-      : goal === '塑形' ? '25–35 分钟（中低强度）'
-      : '20–30 分钟（低强度，先保力量恢复）';
+      : goal === '塑形' ? '25–35 分钟（中低强度；力量后 15–20 分钟）'
+      : '20–30 分钟（低强度；力量后 15–20 分钟就够）';
     out.push('时长 <b>' + dur + '</b>');
+    out.push('力量同一天：<b>最多 30 分钟</b>，别走到 1 小时 —— 超了只抢恢复，不会多燃脂');
     var hr = hrRange(0.60, 0.70);
-    out.push(hr ? '心率 <b>' + hr[0] + '–' + hr[1] + ' 次/分</b>（Zone 2 燃脂 · 按 ' + (220 - ageOf()) + ' 最大心率）'
-                : '心率：设置里填「年龄」后自动给 Zone 2 区间（最大心率 60–70%）');
+    out.push(hr ? '心率 <b>' + hr[0] + '–' + hr[1] + ' 次/分</b>（Zone 2，能说话不能唱歌 · 按 ' + (220 - ageOf()) + ' 最大心率；超了降速或降坡）'
+                : '心率要求：<b>最大心率的 60–70%</b>（Zone 2，能说话不能唱歌）。设置→年龄 填了才换算成具体数字');
     if (c.how) out.push('参数 ' + c.how);
     out.push('消耗 <b>≈ ' + Math.round(c.met * 3.5 * BODY.kg / 200 * min) + ' kcal</b>（' + min + ' 分钟 · MET ' + c.met + '）');
     out.push('频率 每周 <b>2–3 次 Zone 2 + 1 次 HIIT</b>，跟腿部力量日错开');
@@ -2213,7 +2215,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
       var meta = $('.exmeta', card);
       if (meta){
         meta.textContent = exMetaTxt({ sets: v.sets, rep: v.rep, rest: curEx.rest }) +
-          (lastWeightOf(curEx.n) ? ' · 上次 ' + uTxt(lastWeightOf(curEx.n).kg) : '') +
+          lastLineOf({ n: curEx.n, rep: v.rep }) +
           (curEx.orig ? ' · 已换：原「' + curEx.orig + '」' : '');
       }
       var setsEl = $('.sets', card);
@@ -2480,6 +2482,16 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   function isCardio(e){ return !!(e && /分钟/.test(String(e.rep))); }
   /* v6.75：按秒记的（如农夫行走）—— 有重量，但「次数」那一行其实是时长 */
   function isSeconds(e){ return !!(e && /秒/.test(String(e.rep))); }
+  /* v6.95：按动作名判断类型（历史页只拿得到名字） */
+  function libByName(name){
+    for (var i = 0; i < EXLIB.length; i++){
+      for (var j = 0; j < EXLIB[i].items.length; j++){
+        if (EXLIB[i].items[j].n === name) return EXLIB[i].items[j];
+      }
+    }
+    return null;
+  }
+  function isCardioName(name){ var e = libByName(name); return e ? isCardio(e) : false; }
   /* v6.75：这一条记录的单位（次 / 秒 / 米），写进日志，历史页照着显示 */
   function repUnit(rep){ return /秒/.test(String(rep)) ? '秒' : (/米/.test(String(rep)) ? '米' : ''); }
   function exMetaTxt(e){
@@ -2491,6 +2503,12 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     if (isCardio(e)) return '有氧';
     var kg = kgOf(e);
     return kg ? uTxt(kg) : '自重';
+  }
+  /* v6.95：有氧的「上次」只报时长，不报 0 kg / 组数 */
+  function lastLineOf(e){
+    var lw = lastWeightOf(e.n); if (!lw) return '';
+    if (isCardio(e)) return lw.reps ? ' · 上次 ' + Math.round(lw.reps) + ' 分钟' : '';
+    return lw.kg ? ' · 上次 ' + uTxt(lw.kg) : '';
   }
   function uVol(kgVol){ var v = uName() === 'lb' ? (kgVol || 0) * LB_RATE : (kgVol || 0); return Math.round(v); }
   function uToKg(v){ return uName() === 'lb' ? v / LB_RATE : v; }
@@ -2789,8 +2807,9 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     if (cnt){ cnt.textContent = g.items.length + ' 个'; cnt.style.display = ''; cnt.style.marginLeft = 'auto'; }
     if (ttl) ttl.style.marginLeft = '0';
     body.innerHTML = g.items.map(function(e){
+      var meta = isCardio(e) ? e.rep : (e.sets + ' × ' + e.rep);
       return '<button class="librow" data-n="' + e.n + '"><span>' + e.n + '</span>' +
-        '<em>' + e.sets + ' × ' + e.rep + '</em></button>';
+        '<em>' + meta + '</em></button>';
     }).join('');
   }
 
@@ -2824,10 +2843,10 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   function isoDisplay(iso){ var a = String(iso).split('-'); return (+a[1]) + '月' + (+a[2]) + '日'; }
 
   function totalSets(key){
-    return EX[key].reduce(function(a,e){ return a + e.sets; }, 0);
+    return EX[key].reduce(function(a,e){ return a + (isCardio(e) ? 0 : e.sets); }, 0);
   }
   function todaySets(key){
-    return dayEx(key).reduce(function(a,e){ return a + e.sets; }, 0);
+    return dayEx(key).reduce(function(a,e){ return a + (isCardio(e) ? 0 : e.sets); }, 0);
   }
 
   function extrasHTML(){
@@ -2836,11 +2855,11 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
       var dots = '';
       for (var k = 0; k < e.sets; k++) dots += '<button class="dot"></button>';
       var ekg = kgOf(e);
-      html += '<article class="ex extra" data-ex="x' + e.__u + '">' +
+      html += '<article class="ex extra' + (isCardio(e) ? ' cardio' : '') + '" data-ex="x' + e.__u + '">' +
         '<div class="exrow"><h3><i class="grade b">' + (e.g || 'B') + '</i>' + e.n + '<i class="swaptag">加</i></h3>' +
         '<span class="exload">' + exLoadTxt(e) + '</span></div>' +
         '<p class="exmeta">' + exMetaTxt(e) +
-          (lastWeightOf(e.n) ? ' · 上次 ' + uTxt(lastWeightOf(e.n).kg) : '') + '</p>' +
+          lastLineOf(e) + '</p>' +
         '<div class="sets">' + dots + '<span class="setcount">0/' + e.sets + '</span>' +
         '<button class="exdel" data-del="' + e.__u + '" aria-label="移除这个动作">移除</button></div>' +
         '</article>';
@@ -2853,7 +2872,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     var by = {}, order = [];
     allLogs().filter(function(l){ return l.d === iso; }).forEach(function(l){
       if (skip && skip.indexOf(l.n) >= 0) return;
-      if (!by[l.n]){ by[l.n] = { n:l.n, sets:0, kg:0, reps:0, vol:0 }; order.push(l.n); }
+      if (!by[l.n]){ by[l.n] = { n:l.n, m:l.m, sets:0, kg:0, reps:0, vol:0 }; order.push(l.n); }
       var o = by[l.n];
       o.sets++;
       if ((l.kg || 0) > o.kg) o.kg = l.kg || 0;
@@ -2862,6 +2881,11 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     });
     return order.map(function(n){
       var o = by[n];
+      if (o.m === 'cardio'){
+        return '<article class="ex ro" data-n="' + o.n + '">' +
+          '<div class="exrow"><h3>' + o.n + '</h3><span class="exload">有氧</span></div>' +
+          '<p class="exmeta">' + Math.round(o.reps) + ' 分钟</p></article>';
+      }
       return '<article class="ex ro" data-n="' + o.n + '">' +
         '<div class="exrow"><h3>' + o.n + '</h3><span class="exload">' + (o.kg ? uTxt(o.kg) : '自重') + '</span></div>' +
         '<p class="exmeta">' + o.sets + ' 组 × ' + Math.round(o.reps) + ' 次 · 合计 ' +
@@ -2872,7 +2896,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   /* 休息日：只显示自己加进来的动作 */
   function renderExtrasOnly(){
     var list = extrasOn();
-    var all = list.reduce(function(a, e){ return a + e.sets; }, 0);
+    var all = list.reduce(function(a, e){ return a + (isCardio(e) ? 0 : e.sets); }, 0);
     $('#exList').innerHTML = extrasHTML();
     $('#listMeta').textContent = all + ' 有效组';
     renderSets();
@@ -2890,25 +2914,25 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
       if (adhoc && key === adhocKey){
         useSets = Math.max(2, Math.min(e.sets + 1, Math.round(e.sets * adhocScale)));
       }
-      renderedSets += useSets;
+      if (!isCardio(e)) renderedSets += useSets;
       var dots = '';
       for (var k = 0; k < useSets; k++) dots += '<button class="dot"></button>';
       var ekg = kgOf(e);
       var load = exLoadTxt(e);
       var gcls = e.g === 'A' ? ' a' : (e.g === 'B' ? ' b' : '');
-      html += '<article class="ex" data-ex="' + key + i + '" data-rest="' + e.rest + '">' +
+      html += '<article class="ex' + (isCardio(e) ? ' cardio' : '') + '" data-ex="' + key + i + '" data-rest="' + e.rest + '">' +
         '<div class="exrow"><h3><i class="grade' + gcls + '">' + (e.g || 'B') + '</i>' + e.n +
           (e.orig ? '<i class="swaptag">换</i>' : '') + '</h3>' +
         '<span class="exload">' + load + '</span></div>' +
         '<p class="exmeta">' + exMetaTxt(e) +
-          (lastWeightOf(e.n) ? ' · 上次 ' + uTxt(lastWeightOf(e.n).kg) : '') +
+          lastLineOf(e) +
           (e.orig ? ' · 已换：原「' + e.orig + '」' : '') + '</p>' +
         '<div class="sets">' + dots + '<span class="setcount">0/' + useSets + '</span></div>' +
         '</article>';
     });
     html += extrasHTML();
     $('#exList').innerHTML = html;
-    var all = renderedSets + extrasOn().reduce(function(a, e){ return a + e.sets; }, 0);
+    var all = renderedSets + extrasOn().reduce(function(a, e){ return a + (isCardio(e) ? 0 : e.sets); }, 0);
     $('#listMeta').textContent = all + ' 有效组';
     renderSets();
   }
@@ -2920,11 +2944,12 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     if (isToday){
       t = '今天';
       if (todayKey){
-        var done = document.querySelectorAll('#exList .dot.on').length;
-        var total = document.querySelectorAll('#exList .dot').length;
-        t += ' · ' + TITLE[todayKey][0] + ' · ' + done + '/' + total + ' 组';
+        var done = document.querySelectorAll('#exList .ex:not(.cardio) .dot.on').length;
+        var total = document.querySelectorAll('#exList .ex:not(.cardio) .dot').length;
+        var cN = document.querySelectorAll('#exList .ex.cardio .dot.on').length;
+        t += ' · ' + TITLE[todayKey][0] + ' · ' + done + '/' + total + ' 组' + (cN ? ' · 有氧 ' + cN + ' 次' : '');
       } else {
-        var ed = document.querySelectorAll('#exList .dot').length;
+        var ed = document.querySelectorAll('#exList .ex:not(.cardio) .dot').length;
         var lg = allLogs().filter(function(l){ return l.d === iso; });
         t += ed ? ' · 加练 · ' + document.querySelectorAll('#exList .dot.on').length + '/' + ed + ' 组'
                : (lg.length ? ' · 已练 ' + lg.length + ' 组' : ' · 休息日');
@@ -3112,9 +3137,14 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
       }
       train++;
       var acts = EX[key], sets = totalSets(key);
+      var cardioN = acts.filter(function(a){ return isCardio(a); }).length;
       var rows = acts.map(function(a){
         var gcls = a.g === 'A' ? ' a' : (a.g === 'B' ? ' b' : '');
         var lw = lastWeightOf(a.n);
+        if (isCardio(a)){
+          return '<div class="exi"><span><i class="grade' + gcls + '">' + a.g + '</i>' + a.n + '</span>' +
+            '<span class="exr"><em class="exlast">有氧</em><b>' + a.rep + '</b></span></div>';
+        }
         return '<div class="exi"><span><i class="grade' + gcls + '">' + a.g + '</i>' + a.n + '</span>' +
           '<span class="exr"><em class="exlast">' + (lw ? uTxt(lw.kg) : '没练过') + '</em>' +
           '<b>' + a.sets + ' × ' + a.rep + '</b></span></div>';
@@ -3122,7 +3152,8 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
       html += '<div class="weekday" data-day="' + key + '"><div class="wd">' + wd + '</div>' +
         '<div class="wdmain"><h4>' + TITLE[key][0] + ' <span class="en">' + TITLE[key][1] + '</span>' +
         (today ? ' <span class="badge">今天</span>' : '') +
-        ' <span class="chev"></span></h4><p>' + acts.length + ' 动作 · ' + sets + ' 有效组</p>' +
+        ' <span class="chev"></span></h4><p>' + acts.length + ' 动作 · ' + sets + ' 有效组' +
+        (cardioN ? ' · 有氧 ' + cardioN + ' 次' : '') + '</p>' +
         '<div class="exlist">' + rows + '</div></div></div>';
     });
     $('#weekCard').innerHTML = html;
@@ -3836,7 +3867,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   }
 
   /* ---------- 启动版本比对（同热量账本） ---------- */
-  var APP_VERSION = 'v6.94';
+  var APP_VERSION = 'v6.95';
   fetch('./version.txt?t=' + Date.now(), { cache: 'no-store' })
     .then(function(r){ return r.ok ? r.text() : ''; })
     .then(function(v){
@@ -3858,6 +3889,11 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
   /* ---------- 更新记录 ---------- */
   var RELEASES = [
+    { v:'v6.95', d:'11-13', items:[
+      '有氧不再借用力量字段：加动作/本周排布只写时长、不写「1 ×」和重量，历史页报分钟不报组数',
+      '有效组数、动作重量榜、累计组数只算力量；有氧在日期行单独报「有氧 N 次」',
+      '有氧建议写清：力量同天最多 30 分钟（别走 1 小时）、心率 Zone 2 60–70%，时长上限 45 分钟'
+    ]},
     { v:'v6.94', d:'11-11', items:[
       '加动作：部位名回到左边（白色加粗）、个数在右；关闭按钮改成和图标页一样的形状（26 圆角 / 高 50）'
     ]},
@@ -4916,7 +4952,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   function lastWeightOf(name){
     var best = null;
     allLogs().forEach(function(l){ if (l.n === name && (!best || l.d >= best.d)) best = l; });
-    return best ? { kg: best.kg, d: best.d } : null;
+    return best ? { kg: best.kg, reps: best.reps, d: best.d } : null;
   }
   function splitTrainDays(){
     return daysOf(splitDays).filter(function(d){ return d[1] !== 'rest'; }).length;
@@ -5119,7 +5155,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
       var mvU = uVol(mv);
       mvEl.innerHTML = (mvU >= 10000 ? Math.round(mvU / 1000) + 'k' : mvU.toLocaleString('en-US')) + '<em>' + uName() + '</em>';
     }
-    var prCount = loggedNames().length;
+    var prCount = loggedNames().filter(function(n){ return !isCardioName(n); }).length;
     var prEl = $('#logPR'); if (prEl) prEl.textContent = prCount;
     var bars = weekVolumes(8), maxv = 1;
     bars.forEach(function(b){ if (b.v > maxv) maxv = b.v; });
@@ -5134,7 +5170,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     }
     var prCard = $('#prCard');
     if (prCard){
-      var names = loggedNames();        /* 只列真正练过的，计划里有但没练过的不占地方 */
+      var names = loggedNames().filter(function(n){ return !isCardioName(n); });  /* 有氧没有重量，不进重量榜 */
       names.sort(function(a, b){
         var A = lastWeightOf(a), B = lastWeightOf(b);
         return String(B ? B.d : '').localeCompare(String(A ? A.d : ''));
@@ -5153,9 +5189,9 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
   function paintMe(){
     paintSum();
-    var days = trainedDays(), sets = allLogs().length, vol = 0;
+    var days = trainedDays(), sets = allLogs().filter(function(l){ return l.m !== 'cardio'; }).length, vol = 0;
     allLogs().forEach(function(l){ vol += (l.kg || 0) * (l.reps || 0); });
-    var prCount = loggedNames().length;
+    var prCount = loggedNames().filter(function(n){ return !isCardioName(n); }).length;
     var el = $('#meStats');
     if (el){
       var weeks = days.length ? Math.max(1, Math.ceil((new Date(todayISO()) - new Date(days[0] + 'T00:00:00')) / 604800000)) : 0;
@@ -5180,7 +5216,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
         o.times++;
         if ((l.kg || 0) >= o.kg){ o.kg = l.kg; o.d = l.d; }
       });
-      var list = order.map(function(n){ return by[n]; }).sort(function(a, b){ return b.times - a.times; }).slice(0, 5);
+      var list = order.filter(function(n){ return !isCardioName(n); }).map(function(n){ return by[n]; }).sort(function(a, b){ return b.times - a.times; }).slice(0, 5);
       el2.innerHTML = list.length ? list.map(function(o){
         return '<div class="pr" data-n="' + o.n + '"><div class="nm">' + o.n + '<small>练了 ' + o.times + ' 组 · ' + shortDate(o.d) + '</small></div>' +
           '<div class="val"><b>' + (o.kg ? uVal(o.kg) + '<em>' + uName() + '</em>' : '—') + '</b></div></div>';
@@ -5201,6 +5237,9 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
       var a = by[d], kgs = [];
       a.forEach(function(l){ var k = l.kg || 0; if (k && kgs.indexOf(k) < 0) kgs.push(k); });
       kgs.sort(function(x, y){ return y - x; });
+      if (isCardioName(ex.n)){
+        return '<div class="ehrow"><span>' + shortDate(d) + '</span><b>' + Math.round(a[0].reps || 0) + ' 分钟</b></div>';
+      }
       return '<div class="ehrow"><span>' + shortDate(d) + '</span><b>' + (kgs.length ? kgs.map(function(k){ return uVal(k); }).join(' / ') + ' ' + uName() + ' × ' : '') + a.length + ' 组</b></div>';
     }).join('');
   }
@@ -5218,24 +5257,34 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
       openSheet('#histSheet');
       return;
     }
+    var cardio = isCardioName(name);
     var best = 0; ls.forEach(function(l){ if ((l.kg || 0) > best) best = l.kg || 0; });
     var recent = ls.slice().sort(function(a, b){ return b.d.localeCompare(a.d) || (b.t || 0) - (a.t || 0); })[0];
-    $('#histSum').innerHTML =
-      '<div class="hs"><b>' + (best ? uVal(best) + '<em>' + uName() + '</em>' : '—') + '</b><i>最好</i></div>' +
-      '<div class="hs"><b>' + (recent.kg ? uVal(recent.kg) + '<em>' + uName() + '</em>' : '自重') + '</b><i>最近</i></div>' +
-      '<div class="hs"><b>' + ls.length + '</b><i>组数</i></div>';
+    if (cardio){
+      /* 有氧没有重量 / 组数：只报时长和次数 */
+      $('#histSum').innerHTML =
+        '<div class="hs"><b>' + (recent.reps ? Math.round(recent.reps) + '<em>分钟</em>' : '—') + '</b><i>最近</i></div>' +
+        '<div class="hs"><b>' + ls.length + '<em>次</em></b><i>次数</i></div>';
+    } else {
+      $('#histSum').innerHTML =
+        '<div class="hs"><b>' + (best ? uVal(best) + '<em>' + uName() + '</em>' : '—') + '</b><i>最好</i></div>' +
+        '<div class="hs"><b>' + (recent.kg ? uVal(recent.kg) + '<em>' + uName() + '</em>' : '自重') + '</b><i>最近</i></div>' +
+        '<div class="hs"><b>' + ls.length + '</b><i>组数</i></div>';
+    }
     var by = {};
     ls.forEach(function(l){ (by[l.d] = by[l.d] || []).push(l); });
     $('#histList').innerHTML = Object.keys(by).sort().reverse().map(function(d){
       var a = by[d], kg = 0, vol = 0, reps = 0, u = a[0].u || '次';
       a.forEach(function(l){ if ((l.kg || 0) > kg) kg = l.kg || 0; vol += (l.kg || 0) * (l.reps || 0); reps = Math.max(reps, l.reps || 0); });
       /* v6.75：按秒 / 米记的动作不显示「合计 kg」（单位不是次数，乘出来没有意义） */
-      var hm = (u === '次')
+      var hm = cardio
+        ? Math.round(reps) + ' 分钟'
+        : (u === '次')
         ? a.length + ' 组 × ' + Math.round(reps) + ' 次 · 合计 ' + uVol(vol).toLocaleString('en-US') + ' ' + uName()
         : a.length + ' 组 × ' + Math.round(reps) + ' ' + u;
       return '<div class="hrow"><div class="hd"><b>' + shortDate(d) + '</b><span>周' + WD_CN[wdIdx(d)] + '</span></div>' +
         '<div class="hm">' + hm + '</div>' +
-        '<div class="hv">' + (kg ? uVal(kg) + '<em>' + uName() + '</em>' : '自重') + '</div></div>';
+        '<div class="hv">' + (cardio ? '' : (kg ? uVal(kg) + '<em>' + uName() + '</em>' : '自重')) + '</div></div>';
     }).join('');
     openSheet('#histSheet');
   }
