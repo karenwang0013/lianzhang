@@ -1299,7 +1299,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
     <div class="statusbg" aria-hidden="true"></div>
     <div class="topbar">
-      <div class="brand">训练<span>账本</span><i class="btag">v6.96</i></div>
+      <div class="brand">训练<span>账本</span><i class="btag">v6.97</i></div>
       <div class="topactions">
         <button class="topbtn topicon" id="reloadTop" aria-label="强制更新" title="强制更新">
           <svg viewBox="0 -960 960 960" aria-hidden="true"><path d="M480-160q-134 0-227-93t-93-227q0-134 93-227t227-93q69 0 132 28.5T720-690v-70q0-17 11.5-28.5T760-800q17 0 28.5 11.5T800-760v200q0 17-11.5 28.5T760-520H560q-17 0-28.5-11.5T520-560q0-17 11.5-28.5T560-600h128q-32-56-87.5-88T480-720q-100 0-170 70t-70 170q0 100 70 170t170 70q68 0 124.5-34.5T692-367q8-14 22.5-19.5t29.5-.5q16 5 23 21t-1 30q-41 80-117 128t-169 48Z"/></svg>
@@ -1590,7 +1590,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     <!-- 设置 -->
     <div class="sheet" id="setSheet">
       <div class="grab"></div>
-      <div class="sh-hd sh-sub"><button class="backbtn" id="setBack" aria-label="返回"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5 8 12l7 7"/></svg></button><h2>设置</h2><span class="vtag">v6.95</span></div>
+      <div class="sh-hd sh-sub"><button class="backbtn" id="setBack" aria-label="返回"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5 8 12l7 7"/></svg></button><h2>设置</h2><span class="vtag">v6.97</span></div>
       <div class="setbody">
         <div class="setlabel">训练设置</div>
         <div class="setrows">
@@ -1607,7 +1607,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
           <button class="srow" id="openBackup" data-ic="cloud_done"><span class="ico"></span><span class="lbl">数据备份</span><span class="val" id="backupVal">iCloud</span></button>
           <div class="srow" data-ic="monitor_heart"><span class="ico"></span><span class="lbl">Apple 健康</span><span class="sw"></span></div>
           <button class="srow" id="openRemind" data-ic="assignment"><span class="ico"></span><span class="lbl">训练提醒</span><span class="val" id="remindVal">开</span></button>
-          <button class="srow" id="openRel" data-ic="checklist"><span class="ico"></span><span class="lbl">更新记录</span><span class="val">v6.96</span></button>
+          <button class="srow" id="openRel" data-ic="checklist"><span class="ico"></span><span class="lbl">更新记录</span><span class="val">v6.97</span></button>
         </div>
       </div>
     </div>
@@ -2705,6 +2705,9 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
   function swapKey(key, i){ return todayISO() + '|' + key + i; }
   function swappedName(key, i){ return (store.swaps || {})[swapKey(key, i)] || ''; }
+  /* 这天删掉的计划动作（按日期存，只影响那一天） */
+  function skipKey(iso, key, i){ return iso + '|' + key + i; }
+  function isSkipped(iso, key, i){ return !!(store.skip && store.skip[skipKey(iso, key, i)]); }
   /* 今天这一天的动作表（把被替换的动作换掉），计划页仍按原计划展示 */
   /* 某一天额外加的动作（存在 store.extra[日期]），默认当前看的那天 */
   function extrasOn(iso){
@@ -2846,7 +2849,9 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     return EX[key].reduce(function(a,e){ return a + (isCardio(e) ? 0 : e.sets); }, 0);
   }
   function todaySets(key){
-    return dayEx(key).reduce(function(a,e){ return a + (isCardio(e) ? 0 : e.sets); }, 0);
+    return dayEx(key).reduce(function(a, e, i){
+      return a + ((isCardio(e) || isSkipped(todayISO(), key, i)) ? 0 : e.sets);
+    }, 0);
   }
 
   function extrasHTML(){
@@ -2910,6 +2915,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
     var html = '', renderedSets = 0;
     dayEx(key).forEach(function(e, i){
+      if (isSkipped(viewISO, key, i)) return;
       var useSets = e.sets;
       if (adhoc && key === adhocKey){
         useSets = Math.max(2, Math.min(e.sets + 1, Math.round(e.sets * adhocScale)));
@@ -2927,7 +2933,8 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
         '<p class="exmeta">' + exMetaTxt(e) +
           lastLineOf(e) +
           (e.orig ? ' · 已换：原「' + e.orig + '」' : '') + '</p>' +
-        '<div class="sets">' + dots + '<span class="setcount">0/' + useSets + '</span></div>' +
+        '<div class="sets">' + dots + '<span class="setcount">0/' + useSets + '</span>' +
+          '<button class="exdel" data-skip="' + key + i + '" aria-label="移除这个动作">移除</button></div>' +
         '</article>';
     });
     html += extrasHTML();
@@ -3867,7 +3874,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   }
 
   /* ---------- 启动版本比对（同热量账本） ---------- */
-  var APP_VERSION = 'v6.96';
+  var APP_VERSION = 'v6.97';
   fetch('./version.txt?t=' + Date.now(), { cache: 'no-store' })
     .then(function(r){ return r.ok ? r.text() : ''; })
     .then(function(v){
@@ -3889,6 +3896,9 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
   /* ---------- 更新记录 ---------- */
   var RELEASES = [
+    { v:'v6.97', d:'11-13', items:[
+      '安排日里系统推荐的动作也能移除（只影响当天；删的时候连已打的组一起清掉，以后想练可在「＋ 加动作」里加回来）'
+    ]},
     { v:'v6.96', d:'11-13', items:[
       '重量一律按 2.5 kg 整格显示：历史里存下的非整格值（如 54.6）自动归到最近的 2.5 整格（54.6 → 55），手输后也不会再冒半格小数'
     ]},
@@ -4718,7 +4728,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     });
     out.del = del;
     out.logs = Object.keys(map).map(function(k){ return map[k]; }).sort(function(a, b){ return (a.t || 0) - (b.t || 0); });
-    ['weights','exv','extra','swaps','icons','remind','opts'].forEach(function(k){
+    ['weights','exv','extra','swaps','skip','icons','remind','opts'].forEach(function(k){
       out[k] = Object.assign({}, (remote && remote[k]) || {}, (local && local[k]) || {});
     });
     out.settings = Object.assign({}, (remote && remote.settings) || {}, (local && local.settings) || {});
@@ -5361,9 +5371,29 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     if (todayKey) renderToday(todayKey); else renderDay();
     paintAll();
   });
+  /* 移除计划里系统推荐的动作（只影响这一天；它已打的组一起删） */
+  document.addEventListener('click', function(ev){
+    var d = ev.target && ev.target.closest && ev.target.closest('.exdel[data-skip]');
+    if (!d) return;
+    ev.stopPropagation(); ev.preventDefault();
+    var seg = d.dataset.skip || '';
+    var key = seg.replace(/[0-9]+$/, '');
+    var idx = parseInt(seg.slice(key.length), 10);
+    var ex = key ? (dayEx(key) || [])[idx] : null;
+    if (!ex) return;
+    if (!window.confirm('把「' + ex.n + '」从今天移除？以后想练可以在「＋ 加动作」里加回来。')) return;
+    store.skip = store.skip || {};
+    store.skip[skipKey(viewISO, key, idx)] = Date.now();
+    var pre = viewISO + '|' + seg + '|';
+    allLogs().forEach(function(l){ if (l && l.id && l.id.indexOf(pre) === 0) markDel(l.id); });
+    store.logs = allLogs().filter(function(l){ return !(l && l.id && l.id.indexOf(pre) === 0); });
+    saveStore();
+    if (todayKey) renderToday(todayKey); else renderDay();
+    paintAll();
+  }, true);
   /* 移除这天加的动作（捕获阶段，先于打开动作卡） */
   document.addEventListener('click', function(ev){
-    var d = ev.target && ev.target.closest && ev.target.closest('.exdel');
+    var d = ev.target && ev.target.closest && ev.target.closest('.exdel[data-del]');
     if (!d) return;
     ev.stopPropagation(); ev.preventDefault();
     var iso = viewISO, list = (store.extra && store.extra[iso]) || [];
