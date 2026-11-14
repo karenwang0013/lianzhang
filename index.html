@@ -489,7 +489,9 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
 /* 选中块：胶囊（圆角 = 高度一半），比 Dock 高度扁一档 —— 材质与颜色照热量账本 */
 .pill{
-  position:absolute;left:7px;top:4px;   /* v6.59：四边留白 5（条 61 / 胶囊 51 / 边框 1 → 4+1=5） */
+  /* v7.03：给默认 left/width = placePill() 的手机档结果（4 / 格子宽−8），
+     脚本还没跑完时胶囊就已经在位，不再 0 宽闪一下；JS 跑起来后写内联样式，值完全一致。 */
+  position:absolute;left:4px;width:calc(25% - 8px);top:4px;   /* v6.59：四边留白 5（条 61 / 胶囊 51 / 边框 1 → 4+1=5） */
   height:51px;border-radius:25.5px;   /* v6.59：胶囊 51 高、正胶囊 */
   transition:left .62s cubic-bezier(.33,1.06,.32,1),width .42s cubic-bezier(.33,1.06,.32,1);
   pointer-events:none;
@@ -1165,7 +1167,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
      半径 = Dock 圆角 18 − 内缩 8 = 10；宽高由 placePill() 给成「整格」→ 完整包住按钮。 */
   /* v6.72：top 8 → 7 —— 条有 1px 边框，绝对定位相对 padding box，
      8 会让滑块「上 8 / 下 6」；7 之后上下各 7（+1px 边框 = 视觉 8），四边相等。 */
-  .pill{top:7px;height:calc(var(--dock-h) - 16px);border-radius:10px}
+  .pill{top:7px;left:7px;width:calc(25% - 14px);height:calc(var(--dock-h) - 16px);border-radius:10px}   /* v7.03：默认值 = iPad 档 placePill() 结果 */
   .pill.press .pillbody{border-radius:inherit}
   .tab{height:calc(var(--dock-h) - 16px);gap:4px}
   .tab .ico{width:38px;height:38px}
@@ -1315,7 +1317,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
     <div class="statusbg" aria-hidden="true"></div>
     <div class="topbar">
-      <div class="brand">训练<span>账本</span><i class="btag">v7.02</i></div>
+      <div class="brand">训练<span>账本</span><i class="btag">v7.03</i></div>
       <div class="topactions">
         <button class="topbtn topicon" id="reloadTop" aria-label="强制更新" title="强制更新">
           <svg viewBox="0 -960 960 960" aria-hidden="true"><path d="M480-160q-134 0-227-93t-93-227q0-134 93-227t227-93q69 0 132 28.5T720-690v-70q0-17 11.5-28.5T760-800q17 0 28.5 11.5T800-760v200q0 17-11.5 28.5T760-520H560q-17 0-28.5-11.5T520-560q0-17 11.5-28.5T560-600h128q-32-56-87.5-88T480-720q-100 0-170 70t-70 170q0 100 70 170t170 70q68 0 124.5-34.5T692-367q8-14 22.5-19.5t29.5-.5q16 5 23 21t-1 30q-41 80-117 128t-169 48Z"/></svg>
@@ -1524,19 +1526,19 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     <nav class="dock">
       <div class="pill" id="pill"><i class="pillbody"></i></div>
       <button class="tab on" data-tab="today">
-        <svg class="ico" viewBox="0 -960 960 960" aria-hidden="true"><path/></svg>
+        <svg class="ico" viewBox="0 -960 960 960" aria-hidden="true"><path d="M268-650 147-529q-9 9-21 9t-21-9q-8-8-8.5-20.5T104-571l36-37-35-35q-9-9-9-21t9-21l64-64-21-21q-9-9-9-21t9-21q8-8 20.5-8.5T190-813l22 21 63-63q9-9 21-9t21 9l35 35 37-36q9-8 21-8t21 9q9 9 9 21t-9 21L310-692l382 382 121-121q9-9 21-9t21 9q8 8 8.5 20.5T856-389l-36 37 35 35q9 9 9 21t-9 21l-65 65 21 21q9 9 9 21t-9 21q-9 9-21 9t-21-9l-21-21-63 63q-9 9-21 9t-21-9l-35-35-37 36q-9 8-21 8t-21-9q-9-9-9-21t9-21l121-121-382-382Z"/></svg>
         <span>今日</span>
       </button>
       <button class="tab" data-tab="plan">
-        <svg class="ico" viewBox="0 -960 960 960" aria-hidden="true"><path/></svg>
+        <svg class="ico" viewBox="0 -960 960 960" aria-hidden="true"><path d="M180-80q-24 0-42-18t-18-42v-620q0-24 18-42t42-18h65v-28q0-13.6 9-22.8 9-9.2 23.02-9.2t23.5 9.2Q310-861.6 310-848v28h340v-28q0-13.6 9-22.8 9-9.2 23.02-9.2t23.5 9.2Q715-861.6 715-848v28h65q24 0 42 18t18 42v620q0 24-18 42t-42 18H180Zm0-60h600v-430H180v430Zm130-280q-12.75 0-21.37-8.68-8.63-8.67-8.63-21.5 0-12.82 8.63-21.32 8.62-8.5 21.37-8.5h340q12.75 0 21.38 8.68 8.62 8.67 8.62 21.5 0 12.82-8.62 21.32-8.63 8.5-21.38 8.5H310Zm0 180q-12.75 0-21.37-8.68-8.63-8.67-8.63-21.5 0-12.82 8.63-21.32 8.62-8.5 21.37-8.5h219q12.75 0 21.38 8.68 8.62 8.67 8.62 21.5 0 12.82-8.62 21.32-8.63 8.5-21.38 8.5H310Z"/></svg>
         <span>计划</span>
       </button>
       <button class="tab" data-tab="log">
-        <svg class="ico" viewBox="0 -960 960 960" aria-hidden="true"><path/></svg>
+        <svg class="ico" viewBox="0 -960 960 960" aria-hidden="true"><path d="M690-160q-12.75 0-21.37-8.63Q660-177.25 660-190v-220q0-12.75 8.63-21.38Q677.25-440 690-440h80q12.75 0 21.38 8.62Q800-422.75 800-410v220q0 12.75-8.62 21.37Q782.75-160 770-160h-80Zm-250 0q-12.75 0-21.37-8.63Q410-177.25 410-190v-580q0-12.75 8.63-21.38Q427.25-800 440-800h80q12.75 0 21.38 8.62Q550-782.75 550-770v580q0 12.75-8.62 21.37Q532.75-160 520-160h-80Zm-250 0q-12.75 0-21.37-8.63Q160-177.25 160-190v-380q0-12.75 8.63-21.38Q177.25-600 190-600h80q12.75 0 21.38 8.62Q300-582.75 300-570v380q0 12.75-8.62 21.37Q282.75-160 270-160h-80Z"/></svg>
         <span>记录</span>
       </button>
       <button class="tab" data-tab="me">
-        <svg class="ico" viewBox="0 -960 960 960" aria-hidden="true"><path/></svg>
+        <svg class="ico" viewBox="0 -960 960 960" aria-hidden="true"><path d="M372-523q-42-42-42-108t42-108q42-42 108-42t108 42q42 42 42 108t-42 108q-42 42-108 42t-108-42ZM160-220v-34q0-38 19-65t49-41q67-30 128.5-45T480-420q62 0 123 15.5T731-360q31 14 50 41t19 65v34q0 25-17.5 42.5T740-160H220q-25 0-42.5-17.5T160-220Z"/></svg>
         <span>我的</span>
       </button>
     </nav>
@@ -1606,7 +1608,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     <!-- 设置 -->
     <div class="sheet" id="setSheet">
       <div class="grab"></div>
-      <div class="sh-hd sh-sub"><button class="backbtn" id="setBack" aria-label="返回"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5 8 12l7 7"/></svg></button><h2>设置</h2><span class="vtag">v7.02</span></div>
+      <div class="sh-hd sh-sub"><button class="backbtn" id="setBack" aria-label="返回"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5 8 12l7 7"/></svg></button><h2>设置</h2><span class="vtag">v7.03</span></div>
       <div class="setbody">
         <div class="setlabel">训练设置</div>
         <div class="setrows">
@@ -1623,7 +1625,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
           <button class="srow" id="openBackup" data-ic="cloud_done"><span class="ico"></span><span class="lbl">数据备份</span><span class="val" id="backupVal">iCloud</span></button>
           <div class="srow" data-ic="monitor_heart"><span class="ico"></span><span class="lbl">Apple 健康</span><span class="sw"></span></div>
           <button class="srow" id="openRemind" data-ic="assignment"><span class="ico"></span><span class="lbl">训练提醒</span><span class="val" id="remindVal">开</span></button>
-          <button class="srow" id="openRel" data-ic="checklist"><span class="ico"></span><span class="lbl">更新记录</span><span class="val">v7.02</span></button>
+          <button class="srow" id="openRel" data-ic="checklist"><span class="ico"></span><span class="lbl">更新记录</span><span class="val">v7.03</span></button>
         </div>
       </div>
     </div>
@@ -3900,7 +3902,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   }
 
   /* ---------- 启动版本比对（同热量账本） ---------- */
-  var APP_VERSION = 'v7.02';
+  var APP_VERSION = 'v7.03';
   fetch('./version.txt?t=' + Date.now(), { cache: 'no-store' })
     .then(function(r){ return r.ok ? r.text() : ''; })
     .then(function(v){
@@ -3922,6 +3924,9 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
   /* ---------- 更新记录 ---------- */
   var RELEASES = [
+    { v:'v7.03', d:'11-15', items:[
+      '修：打开 App 的那一两秒里，底栏只有中文、没有图标，选中块也是空的 —— 图标和胶囊要等脚本跑起来才画。现在四个图标和选中块直接写在页面里，加载过程中就到位，脚本跑完的数值跟以前完全一样，加载完看不出区别。'
+    ]},
     { v:'v7.02', d:'11-15', items:[
       '修：偶尔打开时底栏四个图标是空的、日期和数字全显示「—」。那不是样式坏了，是整段脚本这一次没跑起来 —— 文字写在页面里所以还在，图标和数字要脚本画。现在页面没拿全或脚本报错时自动重载一次（每个会话最多一次，不会循环）；Service Worker 也不再缓存半截页面，免得下次断网又拿到它。'
     ]},
