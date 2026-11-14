@@ -1301,7 +1301,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
     <div class="statusbg" aria-hidden="true"></div>
     <div class="topbar">
-      <div class="brand">训练<span>账本</span><i class="btag">v7.00</i></div>
+      <div class="brand">训练<span>账本</span><i class="btag">v7.01</i></div>
       <div class="topactions">
         <button class="topbtn topicon" id="reloadTop" aria-label="强制更新" title="强制更新">
           <svg viewBox="0 -960 960 960" aria-hidden="true"><path d="M480-160q-134 0-227-93t-93-227q0-134 93-227t227-93q69 0 132 28.5T720-690v-70q0-17 11.5-28.5T760-800q17 0 28.5 11.5T800-760v200q0 17-11.5 28.5T760-520H560q-17 0-28.5-11.5T520-560q0-17 11.5-28.5T560-600h128q-32-56-87.5-88T480-720q-100 0-170 70t-70 170q0 100 70 170t170 70q68 0 124.5-34.5T692-367q8-14 22.5-19.5t29.5-.5q16 5 23 21t-1 30q-41 80-117 128t-169 48Z"/></svg>
@@ -1592,7 +1592,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     <!-- 设置 -->
     <div class="sheet" id="setSheet">
       <div class="grab"></div>
-      <div class="sh-hd sh-sub"><button class="backbtn" id="setBack" aria-label="返回"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5 8 12l7 7"/></svg></button><h2>设置</h2><span class="vtag">v7.00</span></div>
+      <div class="sh-hd sh-sub"><button class="backbtn" id="setBack" aria-label="返回"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5 8 12l7 7"/></svg></button><h2>设置</h2><span class="vtag">v7.01</span></div>
       <div class="setbody">
         <div class="setlabel">训练设置</div>
         <div class="setrows">
@@ -1609,7 +1609,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
           <button class="srow" id="openBackup" data-ic="cloud_done"><span class="ico"></span><span class="lbl">数据备份</span><span class="val" id="backupVal">iCloud</span></button>
           <div class="srow" data-ic="monitor_heart"><span class="ico"></span><span class="lbl">Apple 健康</span><span class="sw"></span></div>
           <button class="srow" id="openRemind" data-ic="assignment"><span class="ico"></span><span class="lbl">训练提醒</span><span class="val" id="remindVal">开</span></button>
-          <button class="srow" id="openRel" data-ic="checklist"><span class="ico"></span><span class="lbl">更新记录</span><span class="val">v7.00</span></button>
+          <button class="srow" id="openRel" data-ic="checklist"><span class="ico"></span><span class="lbl">更新记录</span><span class="val">v7.01</span></button>
         </div>
       </div>
     </div>
@@ -3390,7 +3390,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
      实测：s = 0.3*(dx-W)，收尾 ~0.25s，上一页不变暗、无阴影、两页都不透明。 */
   (function(){
     var PAR = 0.3, MS = 260, EASE = 'cubic-bezier(.32,.72,0,1)';
-    var sx = 0, sy = 0, active = false, el = null, dx = 0, t0 = 0, prev = [];
+    var sx = 0, sy = 0, active = false, el = null, dx = 0, t0 = 0, prev = [], lockUntil = 0;
     function pageEl(){
       var all = document.querySelectorAll('.sheet.page.on');
       return all.length ? all[all.length - 1] : null;   /* 最上面那一层 */
@@ -3417,6 +3417,10 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     }
     document.addEventListener('touchstart', function(e){
       var all = document.querySelectorAll('.sheet.page.on'); el = all.length ? all[all.length - 1] : null; if (!el) return;
+      /* v7.01：上一段返回动画（260ms）还没收完时不接新手势。
+         否则第二下滑会接在「正在关闭的那一页」上：子页刚关、这下滑又被当成在设置页上 → 一次连退两层，
+         或者接在已经被隐藏的页上 → 看起来「返回不了」。 */
+      if (Date.now() < lockUntil){ el = null; return; }
       var t = e.touches[0]; if (!t || t.clientX > 26) return;
       active = true; sx = t.clientX; sy = t.clientY; dx = 0; t0 = Date.now(); prev = [];
       el.style.transition = 'none';
@@ -3436,6 +3440,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     document.addEventListener('touchend', function(){
       if (!active || !el) return;
       active = false;
+      lockUntil = Date.now() + MS + 60;      /* v7.01：收尾动画期间锁住，避免下一滑接错页 */
       var target = el; el = null;
       var w = W(), ease = 'transform ' + MS + 'ms ' + EASE;
       if (dx > 56 || (dx > 26 && Date.now() - t0 < 300)){
@@ -3454,6 +3459,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
       dx = 0;
     }, { passive: true });
     document.addEventListener('touchcancel', function(){
+      if (el || active) lockUntil = Date.now() + MS + 60;
       if (el) resetStyle(el);
       dropPrev();
       active = false; el = null; dx = 0;
@@ -3880,7 +3886,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   }
 
   /* ---------- 启动版本比对（同热量账本） ---------- */
-  var APP_VERSION = 'v7.00';
+  var APP_VERSION = 'v7.01';
   fetch('./version.txt?t=' + Date.now(), { cache: 'no-store' })
     .then(function(r){ return r.ok ? r.text() : ''; })
     .then(function(v){
@@ -3902,6 +3908,10 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
   /* ---------- 更新记录 ---------- */
   var RELEASES = [
+    { v:'v7.01', d:'11-14', items:[
+      '修：设置里点进子页（更新记录、云同步、图标、提醒、选项）后，手势返回有时候不生效、或者一下子退了两层。原因：返回动画要 0.26 秒，第二下滑如果赶在动画里起手，会被接到「正在关闭的那一页」上 —— 子页已经关了，这下滑就落到设置主页上，于是一次退两层；接在已经隐藏的页上就完全没反应。现在动画收尾期间不再接新手势。',
+      '竖屏、横屏都一样处理；只改手势判定，页面外观没动。'
+    ]},
     { v:'v7.00', d:'11-14', items:[
       '修：在一台设备上加的动作（比如 iPad 上加的有氧），另一台设备同步后一直看不到。原因：每天加的动作是整块按「本地优先」合并的 —— 同一天两台设备都动过，自己那份就把对方整块盖掉。现在按创建时间取并集，两边的都留着；删掉的动作留墓碑，不会被对面旧数据复活。',
       '说明：只影响「不同设备同一天各自动过动作」这一类，已记的组数、重量不变。'
