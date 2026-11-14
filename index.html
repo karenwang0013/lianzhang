@@ -1301,7 +1301,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
     <div class="statusbg" aria-hidden="true"></div>
     <div class="topbar">
-      <div class="brand">训练<span>账本</span><i class="btag">v6.99</i></div>
+      <div class="brand">训练<span>账本</span><i class="btag">v7.00</i></div>
       <div class="topactions">
         <button class="topbtn topicon" id="reloadTop" aria-label="强制更新" title="强制更新">
           <svg viewBox="0 -960 960 960" aria-hidden="true"><path d="M480-160q-134 0-227-93t-93-227q0-134 93-227t227-93q69 0 132 28.5T720-690v-70q0-17 11.5-28.5T760-800q17 0 28.5 11.5T800-760v200q0 17-11.5 28.5T760-520H560q-17 0-28.5-11.5T520-560q0-17 11.5-28.5T560-600h128q-32-56-87.5-88T480-720q-100 0-170 70t-70 170q0 100 70 170t170 70q68 0 124.5-34.5T692-367q8-14 22.5-19.5t29.5-.5q16 5 23 21t-1 30q-41 80-117 128t-169 48Z"/></svg>
@@ -1592,7 +1592,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     <!-- 设置 -->
     <div class="sheet" id="setSheet">
       <div class="grab"></div>
-      <div class="sh-hd sh-sub"><button class="backbtn" id="setBack" aria-label="返回"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5 8 12l7 7"/></svg></button><h2>设置</h2><span class="vtag">v6.99</span></div>
+      <div class="sh-hd sh-sub"><button class="backbtn" id="setBack" aria-label="返回"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5 8 12l7 7"/></svg></button><h2>设置</h2><span class="vtag">v7.00</span></div>
       <div class="setbody">
         <div class="setlabel">训练设置</div>
         <div class="setrows">
@@ -1609,7 +1609,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
           <button class="srow" id="openBackup" data-ic="cloud_done"><span class="ico"></span><span class="lbl">数据备份</span><span class="val" id="backupVal">iCloud</span></button>
           <div class="srow" data-ic="monitor_heart"><span class="ico"></span><span class="lbl">Apple 健康</span><span class="sw"></span></div>
           <button class="srow" id="openRemind" data-ic="assignment"><span class="ico"></span><span class="lbl">训练提醒</span><span class="val" id="remindVal">开</span></button>
-          <button class="srow" id="openRel" data-ic="checklist"><span class="ico"></span><span class="lbl">更新记录</span><span class="val">v6.99</span></button>
+          <button class="srow" id="openRel" data-ic="checklist"><span class="ico"></span><span class="lbl">更新记录</span><span class="val">v7.00</span></button>
         </div>
       </div>
     </div>
@@ -3880,7 +3880,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   }
 
   /* ---------- 启动版本比对（同热量账本） ---------- */
-  var APP_VERSION = 'v6.99';
+  var APP_VERSION = 'v7.00';
   fetch('./version.txt?t=' + Date.now(), { cache: 'no-store' })
     .then(function(r){ return r.ok ? r.text() : ''; })
     .then(function(v){
@@ -3902,6 +3902,10 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
   /* ---------- 更新记录 ---------- */
   var RELEASES = [
+    { v:'v7.00', d:'11-14', items:[
+      '修：在一台设备上加的动作（比如 iPad 上加的有氧），另一台设备同步后一直看不到。原因：每天加的动作是整块按「本地优先」合并的 —— 同一天两台设备都动过，自己那份就把对方整块盖掉。现在按创建时间取并集，两边的都留着；删掉的动作留墓碑，不会被对面旧数据复活。',
+      '说明：只影响「不同设备同一天各自动过动作」这一类，已记的组数、重量不变。'
+    ]},
     { v:'v6.99', d:'11-13', items:[
       '动作名后面的组数（0/4）字号、字重跟动作名一致，不再是小号灰字'
     ]},
@@ -4740,7 +4744,30 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     });
     out.del = del;
     out.logs = Object.keys(map).map(function(k){ return map[k]; }).sort(function(a, b){ return (a.t || 0) - (b.t || 0); });
-    ['weights','exv','extra','swaps','skip','icons','remind','opts'].forEach(function(k){
+    /* v7.00：extra 每天存的是一个数组，原来按天整块「本地优先」→ 同一天在另一台设备上加的动作，
+       同步时被自己那天的旧数组整块盖掉。表现就是「iPad 上加了一个有氧，手机上永远看不到」。
+       改成按 u 取并集（u 就是创建时间）；删掉的动作用 delEx 墓碑压住，比墓碑新才算又加回来。 */
+    var rex = (remote && remote.extra) || {}, lex = (local && local.extra) || {}, outEx = {};
+    var delEx = Object.assign({}, (remote && remote.delEx) || {}, (local && local.delEx) || {});
+    var exDays = {};
+    Object.keys(rex).forEach(function(d){ exDays[d] = 1; });
+    Object.keys(lex).forEach(function(d){ exDays[d] = 1; });
+    Object.keys(exDays).forEach(function(d){
+      var pos = {}, arr = [];
+      (rex[d] || []).concat(lex[d] || []).forEach(function(x, i){
+        if (!x) return;
+        var k2 = d + '|' + (x.u == null ? 'i' + i : x.u);
+        if (pos[k2] == null){ pos[k2] = arr.length; arr.push(Object.assign({}, x)); }
+        else Object.assign(arr[pos[k2]], x);     /* 后出现的（本地）覆盖组数/次数，u 不变 */
+      });
+      outEx[d] = arr.filter(function(x){
+        var dm = delEx[d + '|' + x.u];
+        return !(dm && dm > (+x.u || 0));
+      });
+    });
+    out.extra = outEx;
+    out.delEx = delEx;
+    ['weights','exv','swaps','skip','icons','remind','opts'].forEach(function(k){
       out[k] = Object.assign({}, (remote && remote[k]) || {}, (local && local[k]) || {});
     });
     out.settings = Object.assign({}, (remote && remote.settings) || {}, (local && local.settings) || {});
@@ -5414,6 +5441,11 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     var item = list[idx];
     if (!window.confirm('把「' + (item ? item.n : '这个动作') + '」从这天移除？')) return;
     if (idx >= 0) list.splice(idx, 1);
+    if (item){
+      /* v7.00：删掉也要留墓碑，否则 extra 改成取并集后，另一台设备那份会把它又拉回来 */
+      store.delEx = store.delEx || {};
+      store.delEx[iso + '|' + u] = Date.now();
+    }
     /* v6.78：连它的组数记录一起删，不然记录会剩成一张只读卡（点不动、也删不掉） */
     var pre = iso + '|x' + u + '|';
     allLogs().forEach(function(l){ if (l && l.id && l.id.indexOf(pre) === 0) markDel(l.id); });
