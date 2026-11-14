@@ -1317,7 +1317,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
     <div class="statusbg" aria-hidden="true"></div>
     <div class="topbar">
-      <div class="brand">训练<span>账本</span><i class="btag">v7.03</i></div>
+      <div class="brand">训练<span>账本</span><i class="btag">v7.04</i></div>
       <div class="topactions">
         <button class="topbtn topicon" id="reloadTop" aria-label="强制更新" title="强制更新">
           <svg viewBox="0 -960 960 960" aria-hidden="true"><path d="M480-160q-134 0-227-93t-93-227q0-134 93-227t227-93q69 0 132 28.5T720-690v-70q0-17 11.5-28.5T760-800q17 0 28.5 11.5T800-760v200q0 17-11.5 28.5T760-520H560q-17 0-28.5-11.5T520-560q0-17 11.5-28.5T560-600h128q-32-56-87.5-88T480-720q-100 0-170 70t-70 170q0 100 70 170t170 70q68 0 124.5-34.5T692-367q8-14 22.5-19.5t29.5-.5q16 5 23 21t-1 30q-41 80-117 128t-169 48Z"/></svg>
@@ -1526,7 +1526,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     <nav class="dock">
       <div class="pill" id="pill"><i class="pillbody"></i></div>
       <button class="tab on" data-tab="today">
-        <svg class="ico" viewBox="0 -960 960 960" aria-hidden="true"><path d="M268-650 147-529q-9 9-21 9t-21-9q-8-8-8.5-20.5T104-571l36-37-35-35q-9-9-9-21t9-21l64-64-21-21q-9-9-9-21t9-21q8-8 20.5-8.5T190-813l22 21 63-63q9-9 21-9t21 9l35 35 37-36q9-8 21-8t21 9q9 9 9 21t-9 21L310-692l382 382 121-121q9-9 21-9t21 9q8 8 8.5 20.5T856-389l-36 37 35 35q9 9 9 21t-9 21l-65 65 21 21q9 9 9 21t-9 21q-9 9-21 9t-21-9l-21-21-63 63q-9 9-21 9t-21-9l-35-35-37 36q-9 8-21 8t-21-9q-9-9-9-21t9-21l121-121-382-382Z"/></svg>
+        <svg class="ico" viewBox="0 -960 960 960" aria-hidden="true"><path d="M180-80q-24 0-42-18t-18-42v-620q0-24 18-42t42-18h65v-28q0-13.6 9-22.8 9-9.2 23.02-9.2t23.5 9.2Q310-861.6 310-848v28h340v-28q0-13.6 9-22.8 9-9.2 23.02-9.2t23.5 9.2Q715-861.6 715-848v28h65q24 0 42 18t18 42v191q0 12.75-8.68 21.37-8.67 8.63-21.5 8.63-12.82 0-21.32-8.7-8.5-8.69-8.5-21.54v-.76H180v430h290q12.75 0 21.38 8.68 8.62 8.67 8.62 21.5 0 12.82-8.62 21.32Q482.75-80 470-80H180Zm380-30v-81q0-5.57 2-10.78 2-5.22 7-10.22l211.61-210.77q9.11-9.12 20.25-13.18Q812-440 823-440q12 0 23 4.5t20 13.5l37 37q9 9 13 20t4 22q0 11-4.5 22.5t-13.58 20.62L692-89q-5 5-10.22 7-5.21 2-10.78 2h-81q-12.75 0-21.37-8.63Q560-97.25 560-110Zm263-194 37-39-37-37-38 38 38 38Z"/></svg>
         <span>今日</span>
       </button>
       <button class="tab" data-tab="plan">
@@ -1542,6 +1542,22 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
         <span>我的</span>
       </button>
     </nav>
+
+    <!-- v7.04：底栏图标在这里就先按「本机存的你选的那个」画一次 —— 解析到这一行就执行，
+         早于默认图标的首次绘制，加载中看到的就是加载完的样子，不会先闪默认图标再换。
+         没存过（或用的是默认图标）就保持 HTML 里写的默认值；脚本整个没跑起来也不空白。 -->
+    <script>
+      (function(){
+        var m = {};
+        try { var s = JSON.parse(localStorage.getItem('lz.v1') || 'null'); if (s && s.dockPaths) m = s.dockPaths; } catch(e){}
+        for (var k in m) {
+          var p = document.querySelector('.tab[data-tab="' + k + '"] path');
+          if (!p || !m[k] || !m[k].d) continue;
+          p.setAttribute('d', m[k].d);
+          if (m[k].t) p.setAttribute('transform', m[k].t); else p.removeAttribute('transform');
+        }
+      })();
+    </script>
 
     <!-- 遮罩 -->
     <div class="mask" id="mask"></div>
@@ -1608,7 +1624,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     <!-- 设置 -->
     <div class="sheet" id="setSheet">
       <div class="grab"></div>
-      <div class="sh-hd sh-sub"><button class="backbtn" id="setBack" aria-label="返回"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5 8 12l7 7"/></svg></button><h2>设置</h2><span class="vtag">v7.03</span></div>
+      <div class="sh-hd sh-sub"><button class="backbtn" id="setBack" aria-label="返回"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5 8 12l7 7"/></svg></button><h2>设置</h2><span class="vtag">v7.04</span></div>
       <div class="setbody">
         <div class="setlabel">训练设置</div>
         <div class="setrows">
@@ -1625,7 +1641,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
           <button class="srow" id="openBackup" data-ic="cloud_done"><span class="ico"></span><span class="lbl">数据备份</span><span class="val" id="backupVal">iCloud</span></button>
           <div class="srow" data-ic="monitor_heart"><span class="ico"></span><span class="lbl">Apple 健康</span><span class="sw"></span></div>
           <button class="srow" id="openRemind" data-ic="assignment"><span class="ico"></span><span class="lbl">训练提醒</span><span class="val" id="remindVal">开</span></button>
-          <button class="srow" id="openRel" data-ic="checklist"><span class="ico"></span><span class="lbl">更新记录</span><span class="val">v7.03</span></button>
+          <button class="srow" id="openRel" data-ic="checklist"><span class="ico"></span><span class="lbl">更新记录</span><span class="val">v7.04</span></button>
         </div>
       </div>
     </div>
@@ -2534,7 +2550,18 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   function uToKg(v){ return uName() === 'lb' ? v / LB_RATE : v; }
   function uStep(){ return uName() === 'lb' ? 5 / LB_RATE : 2.5; }   /* lb 一次 5 lb，kg 一次 2.5 kg */
 
-  function saveStore(){ try { localStorage.setItem(LSK, JSON.stringify(store)); } catch(e){} try { autoSnap(); } catch(e){} try { cloudSchedule(); } catch(e){} }
+  /* v7.04：把底栏四个图标「现在长什么样」缓存进本机，供页面顶部那小段脚本在加载中先画 —— 
+     否则打开时会先显示 HTML 里的默认图标、脚本跑完再换成你选的，看着像图标跳了一下。 */
+  function cacheDockPaths(){
+    try{
+      store.dockPaths = {};
+      ['today','plan','log','me'].forEach(function(k){
+        var n = chosen[k];
+        if (ICONS[n]) store.dockPaths[k] = { d: ICONS[n], t: ICON_T[n] || '' };
+      });
+    }catch(e){}
+  }
+  function saveStore(){ cacheDockPaths(); try { localStorage.setItem(LSK, JSON.stringify(store)); } catch(e){} try { autoSnap(); } catch(e){} try { cloudSchedule(); } catch(e){} }
   /* 重量按动作名存，这样同一动作在「推」「上肢」两个方案里共用一个重量 */
   if (!store.exv) store.exv = {};
   /* 一次性清掉早期遗留的离谱重量（80/120 这种远超体重模型的）；初始化最后才跑 */
@@ -3902,7 +3929,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   }
 
   /* ---------- 启动版本比对（同热量账本） ---------- */
-  var APP_VERSION = 'v7.03';
+  var APP_VERSION = 'v7.04';
   fetch('./version.txt?t=' + Date.now(), { cache: 'no-store' })
     .then(function(r){ return r.ok ? r.text() : ''; })
     .then(function(v){
@@ -3924,6 +3951,9 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
   /* ---------- 更新记录 ---------- */
   var RELEASES = [
+    { v:'v7.04', d:'11-15', items:[
+      '修 v7.03 带出来的新问题：加载中先显示默认图标、加载完再换成你选的（比如「今日」那颗），看着像跳了一下。现在你选过的图标会存在本机，页面一解析到底栏就按它画，加载中和加载完完全一致。没选过的仍是默认图标，脚本没跑起来也不会空白。'
+    ]},
     { v:'v7.03', d:'11-15', items:[
       '修：打开 App 的那一两秒里，底栏只有中文、没有图标，选中块也是空的 —— 图标和胶囊要等脚本跑起来才画。现在四个图标和选中块直接写在页面里，加载过程中就到位，脚本跑完的数值跟以前完全一样，加载完看不出区别。'
     ]},
@@ -5634,6 +5664,8 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   document.body.scrollTop = 0;
   $('#scroller').scrollTop = 0;
   setTimeout(function(){ $('#scroller').scrollTop = 0; }, 120);
+  /* v7.04：第一次运行（本机还没这份缓存）就把底栏图标存下来，之后每次打开加载中都是对的 */
+  if (!store.dockPaths){ cacheDockPaths(); try { localStorage.setItem(LSK, JSON.stringify(store)); } catch(e){} }
   window.__lzBooted = true;
   try{ sessionStorage.removeItem('bootRetry'); }catch(e){}
 })();
