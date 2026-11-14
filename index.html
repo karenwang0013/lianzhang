@@ -11,6 +11,20 @@
 <link rel="icon" type="image/png" href="./icon-192.png">
 <link rel="apple-touch-icon" href="./apple-touch-icon.png">
 <title>训练账本</title>
+<script>
+/* v7.02：页面没拿全 / 脚本报错时，自动重载一次。症状是「底栏图标空白、数字全是 —」——那说明整段脚本没跑起来，
+   不是样式问题。每个会话最多重载一次，正常加载后清掉标记，不会循环。 */
+(function(){
+  function retry(){
+    try{ if (sessionStorage.getItem('bootRetry')) return; sessionStorage.setItem('bootRetry','1'); }catch(e){}
+    location.replace(location.pathname + '?r=' + Date.now());
+  }
+  window.addEventListener('error', function(e){ if (e && e.message) retry(); });
+  window.addEventListener('load', function(){
+    setTimeout(function(){ if (!window.__lzBooted) retry(); }, 2500);
+  });
+})();
+</script>
 <style>
 :root{
   /* ===== 颜色（与热量账本 :root 一致） ===== */
@@ -1301,7 +1315,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
     <div class="statusbg" aria-hidden="true"></div>
     <div class="topbar">
-      <div class="brand">训练<span>账本</span><i class="btag">v7.01</i></div>
+      <div class="brand">训练<span>账本</span><i class="btag">v7.02</i></div>
       <div class="topactions">
         <button class="topbtn topicon" id="reloadTop" aria-label="强制更新" title="强制更新">
           <svg viewBox="0 -960 960 960" aria-hidden="true"><path d="M480-160q-134 0-227-93t-93-227q0-134 93-227t227-93q69 0 132 28.5T720-690v-70q0-17 11.5-28.5T760-800q17 0 28.5 11.5T800-760v200q0 17-11.5 28.5T760-520H560q-17 0-28.5-11.5T520-560q0-17 11.5-28.5T560-600h128q-32-56-87.5-88T480-720q-100 0-170 70t-70 170q0 100 70 170t170 70q68 0 124.5-34.5T692-367q8-14 22.5-19.5t29.5-.5q16 5 23 21t-1 30q-41 80-117 128t-169 48Z"/></svg>
@@ -1592,7 +1606,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     <!-- 设置 -->
     <div class="sheet" id="setSheet">
       <div class="grab"></div>
-      <div class="sh-hd sh-sub"><button class="backbtn" id="setBack" aria-label="返回"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5 8 12l7 7"/></svg></button><h2>设置</h2><span class="vtag">v7.01</span></div>
+      <div class="sh-hd sh-sub"><button class="backbtn" id="setBack" aria-label="返回"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5 8 12l7 7"/></svg></button><h2>设置</h2><span class="vtag">v7.02</span></div>
       <div class="setbody">
         <div class="setlabel">训练设置</div>
         <div class="setrows">
@@ -1609,7 +1623,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
           <button class="srow" id="openBackup" data-ic="cloud_done"><span class="ico"></span><span class="lbl">数据备份</span><span class="val" id="backupVal">iCloud</span></button>
           <div class="srow" data-ic="monitor_heart"><span class="ico"></span><span class="lbl">Apple 健康</span><span class="sw"></span></div>
           <button class="srow" id="openRemind" data-ic="assignment"><span class="ico"></span><span class="lbl">训练提醒</span><span class="val" id="remindVal">开</span></button>
-          <button class="srow" id="openRel" data-ic="checklist"><span class="ico"></span><span class="lbl">更新记录</span><span class="val">v7.01</span></button>
+          <button class="srow" id="openRel" data-ic="checklist"><span class="ico"></span><span class="lbl">更新记录</span><span class="val">v7.02</span></button>
         </div>
       </div>
     </div>
@@ -3886,7 +3900,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   }
 
   /* ---------- 启动版本比对（同热量账本） ---------- */
-  var APP_VERSION = 'v7.01';
+  var APP_VERSION = 'v7.02';
   fetch('./version.txt?t=' + Date.now(), { cache: 'no-store' })
     .then(function(r){ return r.ok ? r.text() : ''; })
     .then(function(v){
@@ -3908,6 +3922,9 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
   /* ---------- 更新记录 ---------- */
   var RELEASES = [
+    { v:'v7.02', d:'11-15', items:[
+      '修：偶尔打开时底栏四个图标是空的、日期和数字全显示「—」。那不是样式坏了，是整段脚本这一次没跑起来 —— 文字写在页面里所以还在，图标和数字要脚本画。现在页面没拿全或脚本报错时自动重载一次（每个会话最多一次，不会循环）；Service Worker 也不再缓存半截页面，免得下次断网又拿到它。'
+    ]},
     { v:'v7.01', d:'11-14', items:[
       '修：设置里点进子页（更新记录、云同步、图标、提醒、选项）后，手势返回有时候不生效、或者一下子退了两层。原因：返回动画要 0.26 秒，第二下滑如果赶在动画里起手，会被接到「正在关闭的那一页」上 —— 子页已经关了，这下滑就落到设置主页上，于是一次退两层；接在已经隐藏的页上就完全没反应。现在动画收尾期间不再接新手势。',
       '竖屏、横屏都一样处理；只改手势判定，页面外观没动。'
@@ -5612,6 +5629,8 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   document.body.scrollTop = 0;
   $('#scroller').scrollTop = 0;
   setTimeout(function(){ $('#scroller').scrollTop = 0; }, 120);
+  window.__lzBooted = true;
+  try{ sessionStorage.removeItem('bootRetry'); }catch(e){}
 })();
 </script>
 </body>

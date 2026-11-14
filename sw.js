@@ -1,7 +1,7 @@
 /* 练账 · Service Worker
    目的只有一个：每次打开都拿到最新的 index.html（热量账本同款「网络优先」）。
    只有断网时才回退到缓存，避免 iOS PWA 长期卡在旧版本。 */
-const CACHE = 'lianzhang-v17';
+const CACHE = 'lianzhang-v18';
 
 self.addEventListener('install', () => self.skipWaiting());
 
@@ -21,8 +21,12 @@ self.addEventListener('fetch', (e) => {
     e.respondWith(
       fetch(req, { cache: 'no-store' })
         .then((res) => {
-          const copy = res.clone();
-          caches.open(CACHE).then((c) => c.put(req, copy)).catch(() => {});
+          // v7.02：只有完整成功的页面才进缓存 —— 半截页面存进去，以后断网就会一直拿它，
+          // 表现是「底栏图标空白、数字全是 —」（脚本没跑）。
+          if (res && res.ok) {
+            const copy = res.clone();
+            caches.open(CACHE).then((c) => c.put(req, copy)).catch(() => {});
+          }
           return res;
         })
         .catch(() => caches.match(req))
