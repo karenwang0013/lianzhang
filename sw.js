@@ -1,9 +1,16 @@
 /* 练账 · Service Worker
    目的只有一个：每次打开都拿到最新的 index.html（热量账本同款「网络优先」）。
    只有断网时才回退到缓存，避免 iOS PWA 长期卡在旧版本。 */
-const CACHE = 'lianzhang-v18';
+const CACHE = 'lianzhang-v19';
 
-self.addEventListener('install', () => self.skipWaiting());
+self.addEventListener('install', (e) => {
+  e.waitUntil(
+    caches.open(CACHE)
+      // 逐个缓存：某一个下载失败（网络抖动）也不会让整批都白装
+      .then((c) => Promise.allSettled(['./', './index.html'].map((a) => c.add(a))))
+      .then(() => self.skipWaiting())
+  );
+});
 
 self.addEventListener('activate', (e) => {
   e.waitUntil(
@@ -46,6 +53,6 @@ self.addEventListener('fetch', (e) => {
       const copy = res.clone();
       caches.open(CACHE).then((c) => c.put(req, copy)).catch(() => {});
       return res;
-    }))
+    })).catch(() => new Response('', { status: 504, statusText: 'offline' }))
   );
 });
