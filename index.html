@@ -62,10 +62,11 @@
   --dock-w:25px;   /* v6.54：照 App Store（左右各离屏 25） */
   --dock-b:22px;   /* v6.54：照 App Store（条底离屏 21.7 ≈ 22） */
   --dock-bottom:22px;
-  /* v6.57：弹层（动作库 / 历史 / 添加记录…）的边距与圆角还是按 v6.53 那套（左右 10 / 离底 10 / 圆角 45） */
-  --sheet-w:10px;
-  --sheet-b:10px;
-  --sheet-r:45px;
+  /* v7.07：弹层改回悬浮卡牌（用户口径）—— 左右 8 / 离底 8 / 四角圆角 = 屏幕圆角 − 8（同心，弧缝=边缝）；
+     尺寸以卡牌自身为准，不再跟 Dock 挂钩 */
+  --sheet-w:8px;
+  --sheet-b:8px;
+  --sheet-r:54px;
   --lens-inset:8px;
   --safe-t:env(safe-area-inset-top,0px);
   --safe-b:env(safe-area-inset-bottom,0px);
@@ -732,14 +733,13 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
 /* ---------- 弹层：玻璃 + 46 圆角（实测 #nutSheet） ---------- */
 .sheet{
-  /* v6.57：弹层的边距与圆角沿用 v6.53 那一套（左右 10 / 离底 10 / 圆角 45），
-     不再跟 Dock 联动 —— Dock 改成 App Store 尺寸后弹层会变窄、圆角变方。 */
-  /* v6.60：用户口径「不要悬浮卡牌」—— 底部卡牌一律贴左右边 + 贴底，只留上圆角 */
-  position:absolute;left:0;right:0;
-  top:auto;bottom:0;height:fit-content;z-index:41;
+  /* v7.07：改回悬浮卡牌（用户口径）—— 左右 8 / 离底 8 / 四角圆角 = 屏幕圆角 − 8（同心，弧缝=边缝）；
+     尺寸以卡牌自身为准，不再跟 Dock 挂钩 */
+  position:absolute;left:var(--sheet-w);right:var(--sheet-w);
+  top:auto;bottom:var(--sheet-b);height:fit-content;z-index:41;
   opacity:0;pointer-events:none;
   transform:translateY(102%);
-  border-radius:46px 46px 0 0;
+  border-radius:var(--sheet-r);
   background-color:transparent;
   background-image:linear-gradient(180deg,var(--glass-top) 0%,var(--glass-bot) 100%),var(--edge-gloss);
   background-origin:border-box;
@@ -836,7 +836,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 .sheet .cta+.cta{margin-top:9px}
 
 /* 动作详情 */
-.sheet#exSheet{position:fixed;top:auto;bottom:0;height:fit-content;left:0;right:0;border-radius:46px 46px 0 0;
+.sheet#exSheet{position:fixed;top:auto;bottom:var(--sheet-b);height:fit-content;left:var(--sheet-w);right:var(--sheet-w);border-radius:var(--sheet-r);
   max-height:calc(100% - 96px);overflow-y:auto;transform:translateY(110%)}
 #exSheet.on{transform:none}
 /* v6.61：动作名离牌顶太远（14 外层 + 12 pinbody = 26）—— 收到 6+6 ≈ 13，跟热量账本记录卡（11）一个量级 */
@@ -1317,7 +1317,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
     <div class="statusbg" aria-hidden="true"></div>
     <div class="topbar">
-      <div class="brand">训练<span>账本</span><i class="btag">v7.06</i></div>
+      <div class="brand">训练<span>账本</span><i class="btag">v7.07</i></div>
       <div class="topactions">
         <button class="topbtn topicon" id="reloadTop" aria-label="强制更新" title="强制更新">
           <svg viewBox="0 -960 960 960" aria-hidden="true"><path d="M480-160q-134 0-227-93t-93-227q0-134 93-227t227-93q69 0 132 28.5T720-690v-70q0-17 11.5-28.5T760-800q17 0 28.5 11.5T800-760v200q0 17-11.5 28.5T760-520H560q-17 0-28.5-11.5T520-560q0-17 11.5-28.5T560-600h128q-32-56-87.5-88T480-720q-100 0-170 70t-70 170q0 100 70 170t170 70q68 0 124.5-34.5T692-367q8-14 22.5-19.5t29.5-.5q16 5 23 21t-1 30q-41 80-117 128t-169 48Z"/></svg>
@@ -1624,7 +1624,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     <!-- 设置 -->
     <div class="sheet" id="setSheet">
       <div class="grab"></div>
-      <div class="sh-hd sh-sub"><button class="backbtn" id="setBack" aria-label="返回"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5 8 12l7 7"/></svg></button><h2>设置</h2><span class="vtag">v7.06</span></div>
+      <div class="sh-hd sh-sub"><button class="backbtn" id="setBack" aria-label="返回"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5 8 12l7 7"/></svg></button><h2>设置</h2><span class="vtag">v7.07</span></div>
       <div class="setbody">
         <div class="setlabel">训练设置</div>
         <div class="setrows">
@@ -1641,7 +1641,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
           <button class="srow" id="openBackup" data-ic="cloud_done"><span class="ico"></span><span class="lbl">数据备份</span><span class="val" id="backupVal">iCloud</span></button>
           <div class="srow" data-ic="monitor_heart"><span class="ico"></span><span class="lbl">Apple 健康</span><span class="sw"></span></div>
           <button class="srow" id="openRemind" data-ic="assignment"><span class="ico"></span><span class="lbl">训练提醒</span><span class="val" id="remindVal">开</span></button>
-          <button class="srow" id="openRel" data-ic="checklist"><span class="ico"></span><span class="lbl">更新记录</span><span class="val">v7.06</span></button>
+          <button class="srow" id="openRel" data-ic="checklist"><span class="ico"></span><span class="lbl">更新记录</span><span class="val">v7.07</span></button>
         </div>
       </div>
     </div>
@@ -1859,6 +1859,20 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
       setIconPath(el, n, s.d0);
     });
   }
+
+  // v7.07：弹层圆角 = 这台设备的屏幕圆角 − 8（与屏幕弧同心，弧缝=边缝）。按屏宽取档（历史实测表）。
+  var SHEET_SR = [[320,0],[375,39],[390,47.3],[393,55],[402,62],[414,41.5],[420,62],[428,53.3],[430,55],[440,62],[460,62]];
+  function syncSheetR(){
+    var pad = matchMedia('(min-width:700px) and (min-height:700px)').matches;
+    if (pad){  // iPad：历史口径「圆角 = 屏幕圆角实测 18」（与热量账本同一值）
+      document.documentElement.style.setProperty('--sheet-r', '18px'); return;
+    }
+    var w = Math.round(innerWidth), sr = 47.3;
+    for (var i = 0; i < SHEET_SR.length; i++) if (w >= SHEET_SR[i][0]) sr = SHEET_SR[i][1];
+    document.documentElement.style.setProperty('--sheet-r', Math.max(10, Math.round(sr - 8)) + 'px');
+  }
+  syncSheetR();
+  addEventListener('resize', syncSheetR);
 
   function paintTab(key){
     var btn = $('.tab[data-tab="' + key + '"]');
@@ -3947,7 +3961,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   }
 
   /* ---------- 启动版本比对（同热量账本） ---------- */
-  var APP_VERSION = 'v7.06';
+  var APP_VERSION = 'v7.07';
   /* 版本徽标统一从 APP_VERSION 取，不再写死在 HTML（v7.05） */
   $$('.btag, .vtag').forEach(function(el){ el.textContent = APP_VERSION; });
   var relVal = $('#openRel .val'); if (relVal) relVal.textContent = APP_VERSION;
@@ -3972,6 +3986,9 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
   /* ---------- 更新记录 ---------- */
   var RELEASES = [
+    { v:'v7.07', d:'11-17', items:[
+      '改：底部弹层卡牌改回悬浮样式——左右 8 / 离底 8 / 四角都有圆弧，尺寸以卡牌自身为准、不再跟 Dock 栏挂钩；圆角按这台设备的屏幕圆角 − 8 算，左右、底部和圆弧处的缝一样宽。'
+    ]},
     { v:'v7.06', d:'11-17', items:[
       '修：没练的那天，动作全被藏起来只剩一句「这天没有训练记录」——想补记都不知道那天该练什么。现在过去每天的计划动作永远显示成卡片，没练就是 0/N、点一下就能补记；练了一半的日子也把没练的动作一并列出来，不再隐藏。'
     ]},
