@@ -1317,7 +1317,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
     <div class="statusbg" aria-hidden="true"></div>
     <div class="topbar">
-      <div class="brand">训练<span>账本</span><i class="btag">v7.05</i></div>
+      <div class="brand">训练<span>账本</span><i class="btag">v7.06</i></div>
       <div class="topactions">
         <button class="topbtn topicon" id="reloadTop" aria-label="强制更新" title="强制更新">
           <svg viewBox="0 -960 960 960" aria-hidden="true"><path d="M480-160q-134 0-227-93t-93-227q0-134 93-227t227-93q69 0 132 28.5T720-690v-70q0-17 11.5-28.5T760-800q17 0 28.5 11.5T800-760v200q0 17-11.5 28.5T760-520H560q-17 0-28.5-11.5T520-560q0-17 11.5-28.5T560-600h128q-32-56-87.5-88T480-720q-100 0-170 70t-70 170q0 100 70 170t170 70q68 0 124.5-34.5T692-367q8-14 22.5-19.5t29.5-.5q16 5 23 21t-1 30q-41 80-117 128t-169 48Z"/></svg>
@@ -1624,7 +1624,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     <!-- 设置 -->
     <div class="sheet" id="setSheet">
       <div class="grab"></div>
-      <div class="sh-hd sh-sub"><button class="backbtn" id="setBack" aria-label="返回"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5 8 12l7 7"/></svg></button><h2>设置</h2><span class="vtag">v7.05</span></div>
+      <div class="sh-hd sh-sub"><button class="backbtn" id="setBack" aria-label="返回"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5 8 12l7 7"/></svg></button><h2>设置</h2><span class="vtag">v7.06</span></div>
       <div class="setbody">
         <div class="setlabel">训练设置</div>
         <div class="setrows">
@@ -1641,7 +1641,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
           <button class="srow" id="openBackup" data-ic="cloud_done"><span class="ico"></span><span class="lbl">数据备份</span><span class="val" id="backupVal">iCloud</span></button>
           <div class="srow" data-ic="monitor_heart"><span class="ico"></span><span class="lbl">Apple 健康</span><span class="sw"></span></div>
           <button class="srow" id="openRemind" data-ic="assignment"><span class="ico"></span><span class="lbl">训练提醒</span><span class="val" id="remindVal">开</span></button>
-          <button class="srow" id="openRel" data-ic="checklist"><span class="ico"></span><span class="lbl">更新记录</span><span class="val">v7.05</span></button>
+          <button class="srow" id="openRel" data-ic="checklist"><span class="ico"></span><span class="lbl">更新记录</span><span class="val">v7.06</span></button>
         </div>
       </div>
     </div>
@@ -2955,30 +2955,24 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     renderSets();
   }
 
-  function renderToday(key){
-    todayKey = key;
-    var t = TITLE[key];
-    $('#todayName').textContent = t[0];
-    $('#todayEn').textContent = t[1];
-
-    var html = '', renderedSets = 0;
+  /* 一天的计划卡 HTML（今天 / 过去补记共用）。adhocOn 时按加练缩放组数；sets = 非有氧总组数 */
+  function planCardsHTML(key, iso, adhocOn){
+    var html = '', sets = 0;
     dayEx(key).forEach(function(e, i){
-      if (isSkipped(viewISO, key, i)) return;
+      if (isSkipped(iso, key, i)) return;
       var useSets = e.sets;
-      if (adhoc && key === adhocKey){
+      if (adhocOn && key === adhocKey){
         useSets = Math.max(2, Math.min(e.sets + 1, Math.round(e.sets * adhocScale)));
       }
-      if (!isCardio(e)) renderedSets += useSets;
+      if (!isCardio(e)) sets += useSets;
       var dots = '';
       for (var k = 0; k < useSets; k++) dots += '<button class="dot"></button>';
-      var ekg = kgOf(e);
-      var load = exLoadTxt(e);
       var gcls = e.g === 'A' ? ' a' : (e.g === 'B' ? ' b' : '');
       html += '<article class="ex' + (isCardio(e) ? ' cardio' : '') + '" data-ex="' + key + i + '" data-rest="' + e.rest + '">' +
         '<div class="exrow"><h3><i class="grade' + gcls + '">' + (e.g || 'B') + '</i>' + e.n +
           '<span class="setcount">0/' + useSets + '</span>' +
           (e.orig ? '<i class="swaptag">换</i>' : '') + '</h3>' +
-        '<span class="exload">' + load + '</span></div>' +
+        '<span class="exload">' + exLoadTxt(e) + '</span></div>' +
         '<p class="exmeta">' + exMetaTxt(e) +
           lastLineOf(e) +
           (e.orig ? ' · 已换：原「' + e.orig + '」' : '') + '</p>' +
@@ -2986,9 +2980,20 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
           '<button class="exdel" data-skip="' + key + i + '" aria-label="移除这个动作">移除</button></div>' +
         '</article>';
     });
+    return { html: html, sets: sets };
+  }
+
+  function renderToday(key){
+    todayKey = key;
+    var t = TITLE[key];
+    $('#todayName').textContent = t[0];
+    $('#todayEn').textContent = t[1];
+
+    var pc = planCardsHTML(key, viewISO, adhoc);
+    var html = pc.html;
     html += extrasHTML();
     $('#exList').innerHTML = html;
-    var all = renderedSets + extrasOn().reduce(function(a, e){ return a + (isCardio(e) ? 0 : e.sets); }, 0);
+    var all = pc.sets + extrasOn().reduce(function(a, e){ return a + (isCardio(e) ? 0 : e.sets); }, 0);
     $('#listMeta').textContent = all + ' 有效组';
     renderSets();
   }
@@ -3017,7 +3022,9 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
         t += ' · ' + (k2 ? '计划 ' + totalSets(k2) + ' 组' : '休息日');
       } else {
         var lg = allLogs().filter(function(l){ return l.d === iso; });
-        t += lg.length ? ' · ' + lg.length + ' 组' : ' · 没记录';
+        var pk = keyForISO(iso), psets = pk ? totalSets(pk) : 0;
+        t += lg.length ? ' · ' + lg.length + ' 组'
+           : (psets ? ' · 没练 · 计划 ' + psets + ' 组' : ' · 休息日');
       }
     }
     var ds = $('#dSub'); if (ds) ds.textContent = t;
@@ -3073,44 +3080,55 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     paintHero();
   }
 
-  /* 过去某天：自己加的动作可以勾，其余按真实日志汇总成「那天练了什么」 */
+  /* 过去某天：计划动作永远画成卡（没练就是 0/N，能补记），加练卡可勾，
+     记录里计划之外的动作用只读汇总兜底；未来那天不给卡（也记不了），只给文字版计划 */
   function renderPastDay(iso){
     var future = iso > todayISO();
     var logs = allLogs().filter(function(l){ return l.d === iso; });
     var exs = future ? [] : extrasOn(iso);
+    var key = keyForISO(iso), plan = (!future && key) ? dayEx(key) : [];
     $('#listTitle').textContent = '周' + WD_CN[wdIdx(iso)] + (future ? '的计划 · ' : '的动作 · ') + shortDate(iso);
-    if (!logs.length && !exs.length){
-      var key = keyForISO(iso), plan = key ? dayEx(key) : [];
+    if (future){
       $('#todayName').textContent = plan.length ? TITLE[key][0] : '休';
       $('#todayEn').textContent = plan.length ? TITLE[key][1] : 'REST';
       $('#listMeta').textContent = plan.length ? '原计划 ' + totalSets(key) + ' 组' : '休息日';
-      $('#exList').innerHTML = '<div class="card emptycard"><b>' +
-        (plan.length ? (future ? '这天还没到' : '这天没有训练记录') : '这天是休息日') + '</b>' +
+      $('#exList').innerHTML = '<div class="card emptycard"><b>这天还没到</b>' +
         (plan.length ? '<p>原计划：' + plan.map(function(e){ return e.n + ' ' + e.sets + '×' + e.rep; }).join(' · ') + '</p>' : '') +
         '</div>';
       return;
     }
-    var by = {}, order = [], vol = 0;
-    logs.forEach(function(l){
-      if (!by[l.n]){ by[l.n] = { n: l.n, sets: 0, kg: 0, reps: 0, vol: 0 }; order.push(l.n); }
-      var o = by[l.n];
-      o.sets++;
-      if ((l.kg || 0) > o.kg) o.kg = l.kg || 0;
-      o.reps = Math.max(o.reps, l.reps || 0);
-      o.vol += (l.kg || 0) * (l.reps || 0);
-      vol += (l.kg || 0) * (l.reps || 0);
-    });
+    if (plan.length){
+      $('#todayName').textContent = TITLE[key][0];
+      $('#todayEn').textContent = TITLE[key][1];
+    } else if (!logs.length && exs.length){
+      $('#todayName').textContent = '加练';
+      $('#todayEn').textContent = 'EXTRA';
+    } else if (logs.length){
+      $('#todayName').textContent = '已练';
+      $('#todayEn').textContent = 'DONE';
+    } else {
+      $('#todayName').textContent = '休';
+      $('#todayEn').textContent = 'REST';
+    }
+    if (!plan.length && !logs.length && !exs.length){
+      $('#listMeta').textContent = '休息日';
+      $('#exList').innerHTML = '<div class="card emptycard"><b>这天是休息日</b></div>';
+      return;
+    }
     if (logs.length){
+      var vol = 0;
+      logs.forEach(function(l){ vol += (l.kg || 0) * (l.reps || 0); });
       $('#listMeta').innerHTML = logs.length + ' 组 · ' + uVol(vol).toLocaleString('en-US') + ' ' + uName() +
         ' <button class="dayclear" id="clearDay" data-iso="' + iso + '">清除这天</button>';
     } else {
-      $('#todayName').textContent = '加练';
-      $('#todayEn').textContent = 'EXTRA';
-      $('#listMeta').textContent = exs.reduce(function(a, e){ return a + e.sets; }, 0) + ' 有效组';
+      $('#listMeta').textContent = plan.length ? '没练 · 原计划 ' + totalSets(key) + ' 组'
+        : (exs.length ? exs.reduce(function(a, e){ return a + e.sets; }, 0) + ' 有效组' : '休息日');
     }
-    /* v6.78：已经是加练卡的动作用 skip 排掉，否则同一动作在一页里出现两张（一张能点、一张只读） */
-    $('#exList').innerHTML = (exs.length ? extrasHTML() : '') +
-      loggedSummaryHTML(iso, exs.map(function(e){ return e.n; }));
+    /* 已画成卡的（计划 + 加练）要从只读汇总里 skip 掉，否则一页两张卡 */
+    var skip = plan.map(function(e){ return e.n; }).concat(exs.map(function(e){ return e.n; }));
+    $('#exList').innerHTML = (plan.length ? planCardsHTML(key, iso, false).html : '') +
+      (exs.length ? extrasHTML() : '') +
+      loggedSummaryHTML(iso, skip);
     renderSets();
   }
 
@@ -3929,7 +3947,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   }
 
   /* ---------- 启动版本比对（同热量账本） ---------- */
-  var APP_VERSION = 'v7.05';
+  var APP_VERSION = 'v7.06';
   /* 版本徽标统一从 APP_VERSION 取，不再写死在 HTML（v7.05） */
   $$('.btag, .vtag').forEach(function(el){ el.textContent = APP_VERSION; });
   var relVal = $('#openRel .val'); if (relVal) relVal.textContent = APP_VERSION;
@@ -3954,6 +3972,9 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
   /* ---------- 更新记录 ---------- */
   var RELEASES = [
+    { v:'v7.06', d:'11-17', items:[
+      '修：没练的那天，动作全被藏起来只剩一句「这天没有训练记录」——想补记都不知道那天该练什么。现在过去每天的计划动作永远显示成卡片，没练就是 0/N、点一下就能补记；练了一半的日子也把没练的动作一并列出来，不再隐藏。'
+    ]},
     { v:'v7.05', d:'11-16', items:[
       '修：顶栏和设置页的版本徽标是写死的 v7.04，发新版也不会跟着变，看起来像「没更新成功」（代码其实已是新版）。现在徽标统一从版本号变量取，以后不会再说 v7.04 了。另外 Service Worker 补了断网兜底：首次安装就预存首页、断网时静态资源不再白屏。'
     ]},
