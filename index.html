@@ -1317,7 +1317,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
     <div class="statusbg" aria-hidden="true"></div>
     <div class="topbar">
-      <div class="brand">训练<span>账本</span><i class="btag">v7.08</i></div>
+      <div class="brand">训练<span>账本</span><i class="btag"></i></div>
       <div class="topactions">
         <button class="topbtn topicon" id="reloadTop" aria-label="强制更新" title="强制更新">
           <svg viewBox="0 -960 960 960" aria-hidden="true"><path d="M480-160q-134 0-227-93t-93-227q0-134 93-227t227-93q69 0 132 28.5T720-690v-70q0-17 11.5-28.5T760-800q17 0 28.5 11.5T800-760v200q0 17-11.5 28.5T760-520H560q-17 0-28.5-11.5T520-560q0-17 11.5-28.5T560-600h128q-32-56-87.5-88T480-720q-100 0-170 70t-70 170q0 100 70 170t170 70q68 0 124.5-34.5T692-367q8-14 22.5-19.5t29.5-.5q16 5 23 21t-1 30q-41 80-117 128t-169 48Z"/></svg>
@@ -1625,7 +1625,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     <!-- 设置 -->
     <div class="sheet" id="setSheet">
       <div class="grab"></div>
-      <div class="sh-hd sh-sub"><button class="backbtn" id="setBack" aria-label="返回"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5 8 12l7 7"/></svg></button><h2>设置</h2><span class="vtag">v7.08</span></div>
+      <div class="sh-hd sh-sub"><button class="backbtn" id="setBack" aria-label="返回"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5 8 12l7 7"/></svg></button><h2>设置</h2><span class="vtag"></span></div>
       <div class="setbody">
         <div class="setlabel">训练设置</div>
         <div class="setrows">
@@ -1642,7 +1642,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
           <button class="srow" id="openBackup" data-ic="cloud_done"><span class="ico"></span><span class="lbl">数据备份</span><span class="val" id="backupVal">iCloud</span></button>
           <div class="srow" data-ic="monitor_heart"><span class="ico"></span><span class="lbl">Apple 健康</span><span class="sw"></span></div>
           <button class="srow" id="openRemind" data-ic="assignment"><span class="ico"></span><span class="lbl">训练提醒</span><span class="val" id="remindVal">开</span></button>
-          <button class="srow" id="openRel" data-ic="checklist"><span class="ico"></span><span class="lbl">更新记录</span><span class="val">v7.08</span></button>
+          <button class="srow" id="openRel" data-ic="checklist"><span class="ico"></span><span class="lbl">更新记录</span><span class="val"></span></button>
         </div>
       </div>
     </div>
@@ -3962,7 +3962,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   }
 
   /* ---------- 启动版本比对（同热量账本） ---------- */
-  var APP_VERSION = 'v7.08';
+  var APP_VERSION = 'v7.09';
   /* 版本徽标统一从 APP_VERSION 取，不再写死在 HTML（v7.05） */
   $$('.btag, .vtag').forEach(function(el){ el.textContent = APP_VERSION; });
   var relVal = $('#openRel .val'); if (relVal) relVal.textContent = APP_VERSION;
@@ -3972,21 +3972,37 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
       v = (v || '').trim();
       if (v && v !== APP_VERSION){
         try{
-          var n = +(sessionStorage.getItem('verTries') || 0);
-          if (n < 2){
-            sessionStorage.setItem('verTries', n + 1);
+          /* v7.09：不再限制「本次会话只跳 2 次」——PWA 挂后台几天再回来也会自动更新（同热量账本 15 秒节流） */
+          var lastJump = +(sessionStorage.getItem('ver-jump-at') || 0);
+          if (Date.now() - lastJump > 15000){
+            sessionStorage.setItem('ver-jump-at', String(Date.now()));
             // 带参数跳转才能绕过 iOS web clip 的 HTML 缓存
             location.replace(location.pathname + '?v=' + Date.now());
           }
         }catch(e){}
-      } else {
-        try{ sessionStorage.removeItem('verTries'); }catch(e){}
       }
     })
     .catch(function(){});
+  document.addEventListener('visibilitychange', function(){
+    if (document.visibilityState !== 'visible') return;
+    fetch('./version.txt?t=' + Date.now(), { cache: 'no-store' })
+      .then(function(r){ return r.ok ? r.text() : ''; })
+      .then(function(v){
+        v = (v || '').trim();
+        var lastJump = +(sessionStorage.getItem('ver-jump-at') || 0);
+        if (v && v !== APP_VERSION && Date.now() - lastJump > 15000){
+          sessionStorage.setItem('ver-jump-at', String(Date.now()));
+          location.replace(location.pathname + '?v=' + Date.now());
+        }
+      })
+      .catch(function(){});
+  });
 
   /* ---------- 更新记录 ---------- */
   var RELEASES = [
+    { v:'v7.09', d:'11-19', items:[
+      '改：加载中不再先显示旧版本号（徽标等页面加载完才出现）；版本自动更新不再限次数——挂后台几天再打开也会自动更新，不用再点「强制更新」。'
+    ]},
     { v:'v7.08', d:'11-19', items:[
       '新增：热量账本 → 练账提醒 —— 昨天吃得比平时多 300 千卡以上，首页顶部提示今天加练有氧约多少分钟。'
     ]},
