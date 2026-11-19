@@ -1406,10 +1406,6 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
           </div>
         </div>
 
-        <div class="listhead">
-          <h2 id="listTitle">今天的动作</h2>
-          <span id="listMeta">–</span>
-        </div>
         <div class="remindbar" id="remindBar" hidden>
           <span id="remindText">提醒</span>
           <button id="remindClose">知道了</button>
@@ -1417,6 +1413,11 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
         <div class="adhocbar" id="adhocBar" hidden>
           <span id="adhocText">今天加练</span>
           <button id="cancelAdhoc">取消加练</button>
+        </div>
+
+        <div class="listhead">
+          <h2 id="listTitle">今天的动作</h2>
+          <span id="listMeta">–</span>
         </div>
 
         <div id="exList"></div>
@@ -3977,7 +3978,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   }
 
   /* ---------- 启动版本比对（同热量账本） ---------- */
-  var APP_VERSION = 'v7.17';
+  var APP_VERSION = 'v7.18';
   /* 版本徽标统一从 APP_VERSION 取，不再写死在 HTML（v7.05） */
   $$('.btag, .vtag').forEach(function(el){ el.textContent = APP_VERSION; });
   var relVal = $('#openRel .val'); if (relVal) relVal.textContent = APP_VERSION;
@@ -4015,6 +4016,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
   /* ---------- 更新记录 ---------- */
   var RELEASES = [
+    { v:'v7.18', d:'11-19', items:['整理：今日页「本周只练了 N 组，找一天补一补？知道了」这条原来夹在「今天的动作」标题和动作列表中间，看着像一条动作；挪到页面最上面（本周数字下面），下面的动作列表不再被它隔开'] },
     { v:'v7.17', d:'11-19', items:['改：趋势页两颗胶囊统一成红色（打卡热力那颗原来灰的）；去掉打卡热力里重复的「练了 N 天」；每周容量图例改成「有记录 N 周 · 平均 X」，不再让人以为 8 周全算进去了'] },
     { v:'v7.16', d:'11-19', items:['改：趋势页「每周容量」「打卡热力」照热量账本的卡片样式统一 —— 标题收进卡里、右上角一颗数字胶囊（本周容量 / 练了几天），图下面一行图例（本周·更早 / 练了·没练 + 右侧区间说明），柱子高度也从 126 收到 112'] },
     { v:'v7.15', d:'11-19', items:['改：「提醒」块改名「热量账本 · 数据互通」，盒子加宽到和下面卡片一样宽；「锻炼日志」挪到趋势页最下面；「动作重量」框里固定显示 6 个动作，框底一行「展开全部 N 个动作」可点开/收起'] },
