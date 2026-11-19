@@ -638,6 +638,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 #prCard .pr + .pr{border-top:1px solid var(--line)}
 #prCard .pr + .pr{border:none}
 #prCard .pr .val{margin-left:0;justify-content:flex-start;margin-top:4px}
+#prCard .prow{grid-column:1/-1;background:none;border:0;border-top:1px solid var(--line);color:var(--lime);font:inherit;font-size:13px;font-weight:600;padding:11px 0 3px;margin:0;cursor:pointer;text-align:center}
 /* 提醒没内容时也占着位，不空一块 */
 .card.idle{color:var(--muted) !important;font-weight:500 !important;border-color:var(--line) !important}
 .pr{display:flex;align-items:center;justify-content:flex-start;padding:12px 0}
@@ -1451,12 +1452,9 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
       <!-- ============ 记录 ============ -->
       <section class="view" data-view="log">
-        <div class="card logdayscard">
-          <button class="srow" id="openDays" data-ic="calendar_month"><span class="ico"><svg viewBox="0 -960 960 960"><path d="M180-80q-24 0-42-18t-18-42v-620q0-24 18-42t42-18h65v-28q0-13.6 9-22.8 9-9.2 23.02-9.2t23.5 9.2Q310-861.6 310-848v28h340v-28q0-13.6 9-22.8 9-9.2 23.02-9.2t23.5 9.2Q715-861.6 715-848v28h65q24 0 42 18t18 42v620q0 24-18 42t-42 18H180Zm0-60h600v-430H180v430Zm300-260q-17 0-28.5-11.5T440-440q0-17 11.5-28.5T480-480q17 0 28.5 11.5T520-440q0 17-11.5 28.5T480-400Zm-188.5-11.5Q280-423 280-440t11.5-28.5Q303-480 320-480t28.5 11.5Q360-457 360-440t-11.5 28.5Q337-400 320-400t-28.5-11.5ZM640-400q-17 0-28.5-11.5T600-440q0-17 11.5-28.5T640-480q17 0 28.5 11.5T680-440q0 17-11.5 28.5T640-400ZM480-240q-17 0-28.5-11.5T440-280q0-17 11.5-28.5T480-320q17 0 28.5 11.5T520-280q0 17-11.5 28.5T480-240Zm-188.5-11.5Q280-263 280-280t11.5-28.5Q303-320 320-320t28.5 11.5Q360-297 360-280t-11.5 28.5Q337-240 320-240t-28.5-11.5ZM640-240q-17 0-28.5-11.5T600-280q0-17 11.5-28.5T640-320q17 0 28.5 11.5T680-280q0 17-11.5 28.5T640-240Z"/></svg></span><span class="lbl">锻炼日志</span><span class="val" id="daysVal">0 天</span></button>
-        </div>
 
-        <div class="listhead"><h2>提醒</h2><span>来自热量账本</span></div>
-        <div class="card" id="dietAlert" hidden style="margin:0 14px 10px;padding:14px 16px;font-size:14px;line-height:1.7;color:var(--lime);font-weight:600;border:1px solid color-mix(in srgb, var(--lime) 35%, transparent)"></div>
+        <div class="listhead"><h2>热量账本</h2><span>数据互通</span></div>
+        <div class="card" id="dietAlert" hidden style="margin:12px 0 0;padding:14px 16px;font-size:14px;line-height:1.7;color:var(--lime);font-weight:600;border:1px solid color-mix(in srgb, var(--lime) 35%, transparent)"></div>
 
         <div class="listhead"><h2>每周容量</h2><span>公斤 · 近 8 周</span></div>
         <div class="card">
@@ -1471,6 +1469,10 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
             <div class="heat" id="heat"></div>
           </div>
           <div class="heatsum"><span id="heatSum">近 14 周</span></div>
+        </div>
+
+        <div class="card logdayscard">
+        <button class="srow" id="openDays" data-ic="calendar_month"><span class="ico"><svg viewBox="0 -960 960 960"><path d="M180-80q-24 0-42-18t-18-42v-620q0-24 18-42t42-18h65v-28q0-13.6 9-22.8 9-9.2 23.02-9.2t23.5 9.2Q310-861.6 310-848v28h340v-28q0-13.6 9-22.8 9-9.2 23.02-9.2t23.5 9.2Q715-861.6 715-848v28h65q24 0 42 18t18 42v620q0 24-18 42t-42 18H180Zm0-60h600v-430H180v430Zm300-260q-17 0-28.5-11.5T440-440q0-17 11.5-28.5T480-480q17 0 28.5 11.5T520-440q0 17-11.5 28.5T480-400Zm-188.5-11.5Q280-423 280-440t11.5-28.5Q303-480 320-480t28.5 11.5Q360-457 360-440t-11.5 28.5Q337-400 320-400t-28.5-11.5ZM640-400q-17 0-28.5-11.5T600-440q0-17 11.5-28.5T640-480q17 0 28.5 11.5T680-440q0 17-11.5 28.5T640-400ZM480-240q-17 0-28.5-11.5T440-280q0-17 11.5-28.5T480-320q17 0 28.5 11.5T520-280q0 17-11.5 28.5T480-240Zm-188.5-11.5Q280-263 280-280t11.5-28.5Q303-320 320-320t28.5 11.5Q360-297 360-280t-11.5 28.5Q337-240 320-240t-28.5-11.5ZM640-240q-17 0-28.5-11.5T600-280q0-17 11.5-28.5T640-320q17 0 28.5 11.5T680-280q0 17-11.5 28.5T640-240Z"/></svg></span><span class="lbl">锻炼日志</span><span class="val" id="daysVal">0 天</span></button>
         </div>
       </section>
 
@@ -3323,6 +3325,11 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   });
   document.addEventListener('pointerup', function(){ $('#pill').classList.remove('press'); });
   document.addEventListener('pointercancel', function(){ $('#pill').classList.remove('press'); });
+  document.addEventListener('click', function(e){
+    var b = e.target && e.target.closest ? e.target.closest('#prExp') : null;
+    if (!b) return;
+    prOpen = !prOpen; paintLog();
+  });
 
   /* ---------- 按钮 ---------- */
   $('#planCta').addEventListener('click', function(){
@@ -3960,7 +3967,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   }
 
   /* ---------- 启动版本比对（同热量账本） ---------- */
-  var APP_VERSION = 'v7.14';
+  var APP_VERSION = 'v7.15';
   /* 版本徽标统一从 APP_VERSION 取，不再写死在 HTML（v7.05） */
   $$('.btag, .vtag').forEach(function(el){ el.textContent = APP_VERSION; });
   var relVal = $('#openRel .val'); if (relVal) relVal.textContent = APP_VERSION;
@@ -3998,6 +4005,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
   /* ---------- 更新记录 ---------- */
   var RELEASES = [
+    { v:'v7.15', d:'11-19', items:['改：「提醒」块改名「热量账本 · 数据互通」，盒子加宽到和下面卡片一样宽；「锻炼日志」挪到趋势页最下面；「动作重量」框里固定显示 6 个动作，框底一行「展开全部 N 个动作」可点开/收起'] },
     { v:'v7.14', d:'11-19', items:['修：「我的」页动作重量下面多出的两个 </div> 把页面提前闭合，身体数据和当前目标漏到所有页面外面，导致每个页面都叠着「增肌 / 训练日…」几行字——已删掉，各页恢复只显示自己那块'] },
     { v:'v7.13', d:'11-19', items:['改：底栏「记录」改名「趋势」，和热量账本同一位置同一名字'] },
     { v:'v7.12', d:'11-19', items:['改：「动作重量」压成两列小格（最多 6 个，不再一行一个拉老长）；「提醒」没内容时也占着位置，显示"暂无提醒"，不再空一块'] },
@@ -5327,6 +5335,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     }).join('');
   }
 
+  var prOpen = false;
   function paintLog(){
     var days = trainedDays();
     renderDays();
@@ -5358,13 +5367,14 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
         var A = lastWeightOf(a), B = lastWeightOf(b);
         return String(B ? B.d : '').localeCompare(String(A ? A.d : ''));
       });
-      /* v7.12：小格只显示「动作 + 最近重量」，最多 6 个，多的并成一行字 */
-      prCard.innerHTML = names.length ? names.slice(0, 6).map(function(n){
+      /* v7.13：默认只显示 6 个，卡片底部一行「展开全部」可点（动作格本身不点） */
+      var shown = prOpen ? names.length : Math.min(6, names.length);
+      prCard.innerHTML = names.length ? names.slice(0, shown).map(function(n){
         var lw = lastWeightOf(n);
         return '<div class="pr">' +
           '<div class="nm">' + n + '</div>' +
           '<div class="val"><b>' + (lw ? (lw.kg ? uVal(lw.kg) + '<em>' + uName() + '</em>' : '自重') : '—') + '</b><small>' + (lw ? shortDate(lw.d) : '没记录') + '</small></div></div>';
-      }).join('') + (names.length > 6 ? '<p class="emptyline" style="grid-column:1/-1">另有 ' + (names.length - 6) + ' 个动作，点动作进日志看</p>' : '')
+      }).join('') + (names.length > 6 ? '<button class="prow" id="prExp" type="button">' + (prOpen ? '收起' : '展开全部 ' + names.length + ' 个动作 ›') + '</button>' : '')
         : '<p class="emptyline">还没有动作记录</p>';
     }
   }
@@ -5712,7 +5722,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   function paintDietAlert(){
     var el = $('#dietAlert'); if (!el) return;
     var over = (DIET && DIET.yKcal != null) ? Math.round(DIET.yKcal - DIET.kcal) : 0;
-    if (over < 300){ el.hidden = false; el.classList.add('idle'); el.innerHTML = '暂无提醒 · 热量账本昨天吃多了会在这提醒你'; return; }
+    if (over < 300){ el.hidden = false; el.classList.add('idle'); el.innerHTML = '昨天吃得比平时多 300 千卡以上，这里会提示今天加练多少'; return; }
     el.classList.remove('idle');
     var mins = Math.round(over / 4 / 5) * 5;
     var stale = (DIET.last && DIET.last < todayISO()) ? '（数据到 ' + DIET.last.slice(5) + '）' : '';
