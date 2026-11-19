@@ -1450,17 +1450,6 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
         <div class="listhead"><h2>本周排布</h2><span id="weekMeta">6 练 · 1 休</span></div>
         <div class="card" id="weekCard" style="padding:4px 16px"></div>
 
-        <div class="listhead"><h2>每周有效组数</h2></div>
-        <div class="card volcard" id="volCard">
-          <div class="vol"><span class="vl">胸</span><div class="vbar"><i style="width:70%"></i></div><span class="vv">14</span></div>
-          <div class="vol"><span class="vl">背</span><div class="vbar"><i style="width:80%"></i></div><span class="vv">16</span></div>
-          <div class="vol"><span class="vl">腿</span><div class="vbar"><i style="width:85%"></i></div><span class="vv">17</span></div>
-          <div class="vol"><span class="vl">肩</span><div class="vbar"><i style="width:50%"></i></div><span class="vv">10</span></div>
-          <div class="vol"><span class="vl">手臂</span><div class="vbar"><i style="width:40%"></i></div><span class="vv">8</span></div>
-          <div class="vol"><span class="vl">核心</span><div class="vbar"><i style="width:30%"></i></div><span class="vv">6</span></div>
-          <div class="volfoot"><span>合计 <b>71</b> 有效组</span><span>建议区间 60–80</span></div>
-        </div>
-
         <button class="cta inline ghost" id="planCta">让 AI 重新规划</button>
       </section>
 
@@ -1485,6 +1474,8 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
           </div>
           <div class="legend"><span><i style="background:var(--lime)"></i>练了</span><span><i style="background:rgba(255,255,255,.12)"></i>没练</span><span class="r" id="heatSum">近 14 周</span></div>
         </div>
+
+<div class="card volcard" id="volCard"></div>
 
         <div class="card logdayscard">
         <button class="srow" id="openDays" data-ic="calendar_month"><span class="ico"><svg viewBox="0 -960 960 960"><path d="M180-80q-24 0-42-18t-18-42v-620q0-24 18-42t42-18h65v-28q0-13.6 9-22.8 9-9.2 23.02-9.2t23.5 9.2Q310-861.6 310-848v28h340v-28q0-13.6 9-22.8 9-9.2 23.02-9.2t23.5 9.2Q715-861.6 715-848v28h65q24 0 42 18t18 42v620q0 24-18 42t-42 18H180Zm0-60h600v-430H180v430Zm300-260q-17 0-28.5-11.5T440-440q0-17 11.5-28.5T480-480q17 0 28.5 11.5T520-440q0 17-11.5 28.5T480-400Zm-188.5-11.5Q280-423 280-440t11.5-28.5Q303-480 320-480t28.5 11.5Q360-457 360-440t-11.5 28.5Q337-400 320-400t-28.5-11.5ZM640-400q-17 0-28.5-11.5T600-440q0-17 11.5-28.5T640-480q17 0 28.5 11.5T680-440q0 17-11.5 28.5T640-400ZM480-240q-17 0-28.5-11.5T440-280q0-17 11.5-28.5T480-320q17 0 28.5 11.5T520-280q0 17-11.5 28.5T480-240Zm-188.5-11.5Q280-263 280-280t11.5-28.5Q303-320 320-320t28.5 11.5Q360-297 360-280t-11.5 28.5Q337-240 320-240t-28.5-11.5ZM640-240q-17 0-28.5-11.5T600-280q0-17 11.5-28.5T640-320q17 0 28.5 11.5T680-280q0 17-11.5 28.5T640-240Z"/></svg></span><span class="lbl">锻炼日志</span><span class="val" id="daysVal">0 天</span></button>
@@ -3090,8 +3081,14 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
           renderSets();
         } else {
           $('#listMeta').textContent = '恢复';
+          /* v7.23：休息建议和顶部那条「找一天补一补」合成一条，别分两处各说一句 */
+          var _st = remindStats();
+          var _lim = Math.max(3, Math.round(_st.med * 2));
+          var _needMore = remindCfg().on && _st.days && _st.sets7 < _st.planned * 0.4 && _st.gap < _lim;
           $('#exList').innerHTML = '<div class="card emptycard"><b>今天休息</b>' +
-            '<p>恢复：8,000 步 + 拉伸。想在家练就点下面「＋ 加动作」。</p>' +
+            '<p>' + (_needMore
+              ? '本周才 ' + _st.sets7 + ' / ' + _st.planned + ' 组，正好今天补一补；' + '不练就 8,000 步 + 拉伸，想练点下面「＋ 加动作」。'
+              : '恢复：8,000 步 + 拉伸。想在家练就点下面「＋ 加动作」。') + '</p>' +
             '<button class="cta inline ghost" id="trainAny">加练</button></div>';
         }
       } else {
@@ -3403,7 +3400,8 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     } else if (st.sets7 > st.planned * 1.1){
       msg = '本周已经练了 ' + st.sets7 + ' 组，超过计划（' + st.planned + ' 组），注意恢复。';
     } else if (st.days && st.sets7 < st.planned * 0.4 && st.gap < restLimit){
-      msg = '本周只练了 ' + st.sets7 + ' 组（计划 ' + st.planned + ' 组），找一天补一补？';
+      /* v7.23：今天是休息日时，「今天休息」卡里已经写了同一件事，顶部不再重复 */
+      msg = (todayKey === 'rest') ? '' : ('本周只练了 ' + st.sets7 + ' 组（计划 ' + st.planned + ' 组），找一天补一补？');
     }
     bar.hidden = !msg;
     txt.textContent = msg;
@@ -3986,7 +3984,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   }
 
   /* ---------- 启动版本比对（同热量账本） ---------- */
-  var APP_VERSION = 'v7.22';
+  var APP_VERSION = 'v7.23';
   /* 版本徽标统一从 APP_VERSION 取，不再写死在 HTML（v7.05） */
   $$('.btag, .vtag').forEach(function(el){ el.textContent = APP_VERSION; });
   var relVal = $('#openRel .val'); if (relVal) relVal.textContent = APP_VERSION;
@@ -4024,6 +4022,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
   /* ---------- 更新记录 ---------- */
   var RELEASES = [
+    { v:'v7.23', d:'11-19', items:['整理：计划页的「每周有效组数」搬到趋势页（看图的地方），标题收进卡里、右上角一颗「合计 N 组」胶囊，样式和每周容量/打卡热力一致；休息日不再同时出现「找一天补一补」和「今天休息/恢复」两条建议，合成一条'] },
     { v:'v7.22', d:'11-19', items:['改：动作重量「展开全部」不再一直保持——切到别的页面或重开 App，回到「我的」就是收起状态（只显示 6 个）'] },
     { v:'v7.21', d:'11-19', items:['修：动作重量每行下面多出来那个「›」——它是老样式给 .pr 加的伪元素，换成三列后掉到第二行把行高撑到两倍；现在这条只留给「更多动作」列表，动作重量一行干净'] },
     { v:'v7.20', d:'11-19', items:['调：动作重量三列的中间那列（动作名）改成居中，左右两列定宽（重量 64 / 组数 60），中间的空白被用上了'] },
@@ -5228,6 +5227,8 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
         '<span class="vst ' + st + '">' + labelOf(v, b, st) + '</span></div>';
     }).join('');
     var tb = [60, 80], tst = stateOf(total, tb);
+    /* v7.23：整块挪到趋势页，标题收进卡里、右上角胶囊放合计 */
+    html = '<h3>每周有效组数<span class="tag' + (tst === 'ok' ? '' : ' g') + '">合计 ' + total + ' 组</span></h3>' + html;
     html += '<div class="volfoot"><span>合计 <b>' + total + '</b> 有效组</span>' +
       '<span class="st ' + tst + '">' + (tst === 'ok' ? '达标 ✓' : (tst === 'low' ? '还差 ' + (tb[0] - total) + ' 组' : '超 ' + (total - tb[1]) + ' 组')) + ' · 建议 60–80</span></div>';
     var vc = $('#volCard'); if (vc) vc.innerHTML = html;
