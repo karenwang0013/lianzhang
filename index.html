@@ -654,6 +654,21 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 #prCard .prow{display:block;width:100%;background:none;border:0;border-top:1px solid var(--line);color:var(--lime);font:inherit;font-size:13px;font-weight:600;padding:11px 0 3px;margin:0;cursor:pointer;text-align:center}
 /* 提醒没内容时也占着位，不空一块 */
 .card.idle{color:var(--muted) !important;font-weight:500 !important;border-color:var(--line) !important}
+/* ---------- 热量账本 · 数据互通卡（v7.24：标题 + 数据行 + 说明） ---------- */
+.card.tbc{padding:13px 16px 14px}
+.tbc .tbhd{display:flex;align-items:center;gap:8px;margin-bottom:2px}
+.tbc .tbtag{margin-left:auto}
+.tbc .tbt{font-size:13.5px;font-weight:650;color:var(--text);letter-spacing:.01em}
+.tbc .tbtag{font-size:10px;font-weight:600;padding:3px 8px;border-radius:20px;background:rgba(228,0,43,.12);color:var(--lime)}
+.tbc .tbtag.g{background:rgba(255,255,255,.06);color:var(--muted)}
+.tbc .tbrows{margin-top:9px}
+.tbc .tbrow{display:flex;align-items:baseline;justify-content:space-between;padding:7px 0}
+.tbc .tbrow + .tbrow{border-top:1px solid var(--line)}
+.tbc .tbrow .k{font-size:12px;color:var(--muted)}
+.tbc .tbrow .v{font-size:16px;font-weight:650;color:var(--text);font-variant-numeric:tabular-nums}
+.tbc .tbrow .v em{font-style:normal;font-size:10px;font-weight:500;color:var(--muted);margin-left:3px}
+.tbc .tbnote{margin:9px 0 0;font-size:11.5px;line-height:1.6;color:var(--muted2)}
+.tbc.idle .tbt{color:var(--muted)}
 .pr{display:flex;align-items:center;justify-content:flex-start;padding:12px 0}
 .pr + .pr{border-top:1px solid var(--line)}
 .pr .nm{font-size:13.5px;font-weight:550}
@@ -1457,7 +1472,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
       <section class="view" data-view="log">
 
         <div class="listhead"><h2>热量账本</h2><span>数据互通</span></div>
-        <div class="card" id="dietAlert" hidden style="margin:12px 0 0;padding:14px 16px;font-size:14px;line-height:1.7;color:var(--lime);font-weight:600;border:1px solid color-mix(in srgb, var(--lime) 35%, transparent)"></div>
+        <div class="card tbc" id="dietAlert" hidden></div>
 
         <div class="card">
           <h3>每周容量<span class="tag" id="volTag">—</span></h3>
@@ -4022,6 +4037,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   /* ---------- 更新记录 ---------- */
   var RELEASES = [
     { v:'v7.24', d:'11-19', items:['改：腿日去掉「坐姿提踵」—— 站姿已经练到腓肠肌，坐姿只补比目鱼肌，这个阶段多 3 组只增疲劳；腿日从 7 动作 23 组变成 6 动作 20 组'] },
+    { v:'v7.24', d:'11-19', items:['改：「热量账本 · 数据互通」这块写成正经卡片——标题 + 右上角状态胶囊 + 摄入/比平时多/建议加练三行数据 + 一行说明；没数据时也有一行说明，不再是一大句话'] },
     { v:'v7.23', d:'11-19', items:['整理：计划页的「每周有效组数」搬到趋势页（看图的地方），标题收进卡里、右上角一颗「合计 N 组」胶囊，样式和每周容量/打卡热力一致；休息日不再同时出现「找一天补一补」和「今天休息/恢复」两条建议，合成一条'] },
     { v:'v7.22', d:'11-19', items:['改：动作重量「展开全部」不再一直保持——切到别的页面或重开 App，回到「我的」就是收起状态（只显示 6 个）'] },
     { v:'v7.21', d:'11-19', items:['修：动作重量每行下面多出来那个「›」——它是老样式给 .pr 加的伪元素，换成三列后掉到第二行把行高撑到两倍；现在这条只留给「更多动作」列表，动作重量一行干净'] },
@@ -5760,13 +5776,29 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   /* v7.08：热量账本 → 练账的提醒条 —— 昨天吃得比平时多 ≥300 千卡就提示今天加练有氧（约 4 千卡/分钟） */
   function paintDietAlert(){
     var el = $('#dietAlert'); if (!el) return;
+    /* v7.24：和热量账本那边同一套「标题 + 数据行 + 说明」版式，不再是一大句话 */
     var over = (DIET && DIET.yKcal != null) ? Math.round(DIET.yKcal - DIET.kcal) : 0;
-    if (over < 300){ el.hidden = false; el.classList.add('idle'); el.innerHTML = '昨天吃得比平时多 300 千卡以上，这里会提示今天加练多少'; return; }
+    var row = function(k, v, u){ return '<div class="tbrow"><span class="k">' + k + '</span><span class="v">' + v + (u ? '<em>' + u + '</em>' : '') + '</span></div>'; };
+    var head = function(title, tag, idle){
+      return '<div class="tbhd"><span class="tbt">' + title + '</span><span class="tbtag' + (idle ? ' g' : '') + '">' + tag + '</span></div>';
+    };
+    el.hidden = false;
+    if (over < 300){
+      el.classList.add('idle');
+      el.innerHTML = head('热量账本 · 数据互通', '暂无要求', true) +
+        '<p class="tbnote">热量账本昨天吃得比平时多 300 千卡以上时，这里会写清多出多少、建议今天加练多少分钟有氧。</p>';
+      return;
+    }
     el.classList.remove('idle');
     var mins = Math.round(over / 4 / 5) * 5;
-    var stale = (DIET.last && DIET.last < todayISO()) ? '（数据到 ' + DIET.last.slice(5) + '）' : '';
-    el.hidden = false;
-    el.innerHTML = '热量账本' + stale + '：昨天吃 ' + DIET.yKcal + ' 千卡，比平时多约 ' + over + ' 千卡<br>→ 今天建议加练有氧约 <b>' + mins + ' 分钟</b>（快走 / 单车，约 4 千卡/分钟）';
+    var stale = (DIET.last && DIET.last < todayISO()) ? '数据到 ' + DIET.last.slice(5) : '昨天';
+    el.innerHTML = head('热量账本 · 今日建议', '需加练', false) +
+      '<div class="tbrows">' +
+        row('摄入', DIET.yKcal, '千卡') +
+        row('比平时多', over, '千卡') +
+        row('建议加练有氧', mins, '分钟') +
+      '</div>' +
+      '<p class="tbnote">' + stale + ' · 快走或单车，约 4 千卡/分钟。不想加练就把这 ' + over + ' 千卡从今天预算里扣掉。</p>';
   }
 
   /* ---------- 初始化 ---------- */
