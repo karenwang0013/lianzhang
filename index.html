@@ -665,7 +665,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 .pr .val i{font-style:normal;font-size:10.5px;color:var(--muted2);letter-spacing:.04em}
 .pr .val i.flat{color:var(--muted2)}
 .pr[data-n]{cursor:pointer}
-.pr[data-n]::after{content:"›";margin-left:10px;color:rgba(255,255,255,.24);font-size:15px;line-height:1}
+#meMore .pr[data-n]::after{content:"›";margin-left:10px;color:rgba(255,255,255,.24);font-size:15px;line-height:1}
 
 .heatmonths{display:flex;margin:0 0 5px 16px;font-size:9.5px;color:var(--muted2)}
 .heatmonths span{flex:1}
@@ -3984,7 +3984,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   }
 
   /* ---------- 启动版本比对（同热量账本） ---------- */
-  var APP_VERSION = 'v7.20';
+  var APP_VERSION = 'v7.21';
   /* 版本徽标统一从 APP_VERSION 取，不再写死在 HTML（v7.05） */
   $$('.btag, .vtag').forEach(function(el){ el.textContent = APP_VERSION; });
   var relVal = $('#openRel .val'); if (relVal) relVal.textContent = APP_VERSION;
@@ -4022,6 +4022,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
   /* ---------- 更新记录 ---------- */
   var RELEASES = [
+    { v:'v7.21', d:'11-19', items:['修：动作重量每行下面多出来那个「›」——它是老样式给 .pr 加的伪元素，换成三列后掉到第二行把行高撑到两倍；现在这条只留给「更多动作」列表，动作重量一行干净'] },
     { v:'v7.20', d:'11-19', items:['调：动作重量三列的中间那列（动作名）改成居中，左右两列定宽（重量 64 / 组数 60），中间的空白被用上了'] },
     { v:'v7.19', d:'11-19', items:['改：我的页「动作重量」改成一行一个动作 —— 左重量 / 中动作名 / 右组数，三列对齐，整行可点开这个动作的历史（之前小格子点不动）'] },
     { v:'v7.18', d:'11-19', items:['整理：今日页「本周只练了 N 组，找一天补一补？知道了」这条原来夹在「今天的动作」标题和动作列表中间，看着像一条动作；挪到页面最上面（本周数字下面），下面的动作列表不再被它隔开'] },
