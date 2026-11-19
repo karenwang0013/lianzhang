@@ -642,15 +642,15 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 /* v7.12：动作重量压成两列小格，不再一行一个动作拉老长 */
 #prCard{display:block;padding:2px 16px 4px !important}
 /* v7.19：一行一个动作 —— 左重量 / 中动作 / 右组数，整行可点（进这个动作的历史） */
-#prCard .pr{display:grid;grid-template-columns:58px 1fr auto;align-items:baseline;gap:10px;
+#prCard .pr{display:grid;grid-template-columns:64px 1fr 60px;align-items:baseline;gap:10px;
   border:0;border-radius:0;padding:11px 0;margin:0;border-top:1px solid var(--line);cursor:pointer}
 #prCard .pr:first-child{border-top:0}
 #prCard .pr:active{background:rgba(255,255,255,.03)}
 #prCard .pr .kg{font-size:15.5px;font-weight:650;font-variant-numeric:tabular-nums;letter-spacing:-.01em}
 #prCard .pr .kg em{font-style:normal;font-size:10px;color:var(--muted);margin-left:2px;font-weight:500}
 #prCard .pr .kg.self{font-size:13px;color:var(--muted)}
-#prCard .pr .pnm{font-size:14px;font-weight:550;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-#prCard .pr .sets{font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums;white-space:nowrap}
+#prCard .pr .pnm{font-size:14px;font-weight:550;text-align:center;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#prCard .pr .sets{font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums;white-space:nowrap;text-align:right}
 #prCard .prow{display:block;width:100%;background:none;border:0;border-top:1px solid var(--line);color:var(--lime);font:inherit;font-size:13px;font-weight:600;padding:11px 0 3px;margin:0;cursor:pointer;text-align:center}
 /* 提醒没内容时也占着位，不空一块 */
 .card.idle{color:var(--muted) !important;font-weight:500 !important;border-color:var(--line) !important}
@@ -3984,7 +3984,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   }
 
   /* ---------- 启动版本比对（同热量账本） ---------- */
-  var APP_VERSION = 'v7.19';
+  var APP_VERSION = 'v7.20';
   /* 版本徽标统一从 APP_VERSION 取，不再写死在 HTML（v7.05） */
   $$('.btag, .vtag').forEach(function(el){ el.textContent = APP_VERSION; });
   var relVal = $('#openRel .val'); if (relVal) relVal.textContent = APP_VERSION;
@@ -4022,6 +4022,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
   /* ---------- 更新记录 ---------- */
   var RELEASES = [
+    { v:'v7.20', d:'11-19', items:['调：动作重量三列的中间那列（动作名）改成居中，左右两列定宽（重量 64 / 组数 60），中间的空白被用上了'] },
     { v:'v7.19', d:'11-19', items:['改：我的页「动作重量」改成一行一个动作 —— 左重量 / 中动作名 / 右组数，三列对齐，整行可点开这个动作的历史（之前小格子点不动）'] },
     { v:'v7.18', d:'11-19', items:['整理：今日页「本周只练了 N 组，找一天补一补？知道了」这条原来夹在「今天的动作」标题和动作列表中间，看着像一条动作；挪到页面最上面（本周数字下面），下面的动作列表不再被它隔开'] },
     { v:'v7.17', d:'11-19', items:['改：趋势页两颗胶囊统一成红色（打卡热力那颗原来灰的）；去掉打卡热力里重复的「练了 N 天」；每周容量图例改成「有记录 N 周 · 平均 X」，不再让人以为 8 周全算进去了'] },
