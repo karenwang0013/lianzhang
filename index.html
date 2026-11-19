@@ -3333,6 +3333,8 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     if (name === 'plan') setTimeout(function(){ placeSplitLens(true); }, 30);
     $('#scroller').classList.toggle('tight', name !== 'today');
     $('#scroller').scrollTop = 0;
+    /* v7.22：离开「我的」就把动作重量收回 6 个，下次进来是从收起开始 */
+    if (name !== 'me' && prOpen){ prOpen = false; paintLog(); }
   }
   $$('.tab').forEach(function(t){
     t.addEventListener('click', function(){ setTab(t.dataset.tab); });
@@ -3984,7 +3986,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   }
 
   /* ---------- 启动版本比对（同热量账本） ---------- */
-  var APP_VERSION = 'v7.21';
+  var APP_VERSION = 'v7.22';
   /* 版本徽标统一从 APP_VERSION 取，不再写死在 HTML（v7.05） */
   $$('.btag, .vtag').forEach(function(el){ el.textContent = APP_VERSION; });
   var relVal = $('#openRel .val'); if (relVal) relVal.textContent = APP_VERSION;
@@ -4022,6 +4024,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
   /* ---------- 更新记录 ---------- */
   var RELEASES = [
+    { v:'v7.22', d:'11-19', items:['改：动作重量「展开全部」不再一直保持——切到别的页面或重开 App，回到「我的」就是收起状态（只显示 6 个）'] },
     { v:'v7.21', d:'11-19', items:['修：动作重量每行下面多出来那个「›」——它是老样式给 .pr 加的伪元素，换成三列后掉到第二行把行高撑到两倍；现在这条只留给「更多动作」列表，动作重量一行干净'] },
     { v:'v7.20', d:'11-19', items:['调：动作重量三列的中间那列（动作名）改成居中，左右两列定宽（重量 64 / 组数 60），中间的空白被用上了'] },
     { v:'v7.19', d:'11-19', items:['改：我的页「动作重量」改成一行一个动作 —— 左重量 / 中动作名 / 右组数，三列对齐，整行可点开这个动作的历史（之前小格子点不动）'] },
