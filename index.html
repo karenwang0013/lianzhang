@@ -618,7 +618,14 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 .stat b em{font-style:normal;font-size:13px;color:rgba(242,244,242,.62);font-weight:600;margin-left:2px;letter-spacing:0}
 .stat span{display:block;margin-top:7px;font-size:10px;color:var(--muted2);letter-spacing:.05em}
 
-.bars{display:flex;align-items:flex-end;justify-content:space-between;gap:6px;height:126px;margin-top:4px}
+.bars{display:flex;align-items:flex-end;justify-content:space-between;gap:6px;height:112px;margin-top:2px}
+/* v7.16：趋势页卡片标题照热量账本 —— 标题在卡里、右上角一颗数字胶囊、图下一行图例 */
+.card h3{margin:0 0 10px;font-size:12.5px;line-height:20px;min-height:20px;font-weight:600;letter-spacing:.4px;color:var(--muted);display:flex;align-items:center;gap:8px}
+.card h3 .tag{margin-left:auto;font-size:10px;font-weight:600;letter-spacing:0;padding:3px 8px;border-radius:20px;background:rgba(228,0,43,.12);color:var(--lime)}
+.card h3 .tag.g{background:rgba(255,255,255,.06);color:var(--muted)}
+.legend{display:flex;gap:14px;font-size:11px;color:var(--muted2);margin-top:8px}
+.legend i{display:inline-block;width:7px;height:7px;border-radius:2px;margin-right:4px}
+.legend .r{margin-left:auto;color:var(--muted)}
 .bar{flex:1;display:flex;flex-direction:column;align-items:center;gap:8px;height:100%}
 .bar i{
   display:block;width:100%;max-width:15px;border-radius:5px;
@@ -1456,19 +1463,20 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
         <div class="listhead"><h2>热量账本</h2><span>数据互通</span></div>
         <div class="card" id="dietAlert" hidden style="margin:12px 0 0;padding:14px 16px;font-size:14px;line-height:1.7;color:var(--lime);font-weight:600;border:1px solid color-mix(in srgb, var(--lime) 35%, transparent)"></div>
 
-        <div class="listhead"><h2>每周容量</h2><span>公斤 · 近 8 周</span></div>
         <div class="card">
+          <h3>每周容量<span class="tag" id="volTag">—</span></h3>
           <div class="bars empty" id="logBars"><p class="emptyline">最近 8 周还没有记录</p></div>
+          <div class="legend"><span><i style="background:var(--lime)"></i>本周</span><span><i style="background:rgba(255,255,255,.24)"></i>更早</span><span class="r" id="volLegend">最近 8 周</span></div>
         </div>
 
-        <div class="listhead"><h2>打卡热力</h2><span>近 14 周</span></div>
         <div class="card">
+          <h3>打卡热力<span class="tag g" id="heatTag">近 14 周</span></h3>
           <div class="heatmonths" id="heatMonths"></div>
           <div class="heatwrap">
             <div class="heatdow"><i>一</i><i></i><i>三</i><i></i><i>五</i><i></i><i>日</i></div>
             <div class="heat" id="heat"></div>
           </div>
-          <div class="heatsum"><span id="heatSum">近 14 周</span></div>
+          <div class="legend"><span><i style="background:var(--lime)"></i>练了</span><span><i style="background:rgba(255,255,255,.12)"></i>没练</span><span class="r" id="heatSum">近 14 周</span></div>
         </div>
 
         <div class="card logdayscard">
@@ -3757,6 +3765,8 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     box.innerHTML = cells;
     var sm = $('#heatSum');
     if (sm) sm.textContent = '近 14 周 · 练了 ' + trainedDays + ' 天';
+    var ht = $('#heatTag');
+    if (ht) ht.textContent = '练了 ' + trainedDays + ' 天';
     var mo = $('#heatMonths');
     if (mo){
       var labels = [], lastM = -1;
@@ -3967,7 +3977,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   }
 
   /* ---------- 启动版本比对（同热量账本） ---------- */
-  var APP_VERSION = 'v7.15';
+  var APP_VERSION = 'v7.16';
   /* 版本徽标统一从 APP_VERSION 取，不再写死在 HTML（v7.05） */
   $$('.btag, .vtag').forEach(function(el){ el.textContent = APP_VERSION; });
   var relVal = $('#openRel .val'); if (relVal) relVal.textContent = APP_VERSION;
@@ -4005,6 +4015,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
   /* ---------- 更新记录 ---------- */
   var RELEASES = [
+    { v:'v7.16', d:'11-19', items:['改：趋势页「每周容量」「打卡热力」照热量账本的卡片样式统一 —— 标题收进卡里、右上角一颗数字胶囊（本周容量 / 练了几天），图下面一行图例（本周·更早 / 练了·没练 + 右侧区间说明），柱子高度也从 126 收到 112'] },
     { v:'v7.15', d:'11-19', items:['改：「提醒」块改名「热量账本 · 数据互通」，盒子加宽到和下面卡片一样宽；「锻炼日志」挪到趋势页最下面；「动作重量」框里固定显示 6 个动作，框底一行「展开全部 N 个动作」可点开/收起'] },
     { v:'v7.14', d:'11-19', items:['修：「我的」页动作重量下面多出的两个 </div> 把页面提前闭合，身体数据和当前目标漏到所有页面外面，导致每个页面都叠着「增肌 / 训练日…」几行字——已删掉，各页恢复只显示自己那块'] },
     { v:'v7.13', d:'11-19', items:['改：底栏「记录」改名「趋势」，和热量账本同一位置同一名字'] },
@@ -5353,6 +5364,16 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     bars.forEach(function(b){ if (b.v > maxv) maxv = b.v; });
     var barsEl = $('#logBars');
     var hasVol = bars.some(function(b){ return b.v > 0; });
+    var vt = $('#volTag'), vl = $('#volLegend');
+    if (vt){
+      var wv = bars.length ? bars[bars.length - 1].v : 0;
+      vt.textContent = '本周 ' + (wv ? uVol(wv).toLocaleString('en-US') + ' ' + uName() : '没记录');
+    }
+    if (vl){
+      var nz = bars.filter(function(b){ return b.v > 0; });
+      var avg = nz.length ? Math.round(nz.reduce(function(a, b){ return a + b.v; }, 0) / nz.length) : 0;
+      vl.textContent = '最近 8 周 · 平均 ' + (avg ? uVol(avg).toLocaleString('en-US') + ' ' + uName() : '—');
+    }
     if (barsEl){
       barsEl.classList.toggle('empty', !hasVol);
       barsEl.innerHTML = hasVol ? bars.map(function(b, i){
