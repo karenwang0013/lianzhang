@@ -1497,12 +1497,9 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
           <div class="pr"><div class="nm">深蹲</div><div class="val"><b>—</b><small>没记录</small></div></div>
           <div class="pr"><div class="nm">卧推</div><div class="val"><b>—</b><small>没记录</small></div></div>
           <div class="pr"><div class="nm">引体向上</div><div class="val"><b>—</b><small>没记录</small></div></div>
-        </div>
-            <div class="val"><b>—</b><i class="flat">未练</i></div>
           </div>
-        </div>
 
-        <div class="card bodycard" style="margin-top:12px">
+          <div class="card bodycard" style="margin-top:12px">
           <div class="bchead">
             <span>身体数据 · 热量账本同步</span>
             <span class="synctime">自动</span>
@@ -3963,7 +3960,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   }
 
   /* ---------- 启动版本比对（同热量账本） ---------- */
-  var APP_VERSION = 'v7.13';
+  var APP_VERSION = 'v7.14';
   /* 版本徽标统一从 APP_VERSION 取，不再写死在 HTML（v7.05） */
   $$('.btag, .vtag').forEach(function(el){ el.textContent = APP_VERSION; });
   var relVal = $('#openRel .val'); if (relVal) relVal.textContent = APP_VERSION;
@@ -4001,6 +3998,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
   /* ---------- 更新记录 ---------- */
   var RELEASES = [
+    { v:'v7.14', d:'11-19', items:['修：「我的」页动作重量下面多出的两个 </div> 把页面提前闭合，身体数据和当前目标漏到所有页面外面，导致每个页面都叠着「增肌 / 训练日…」几行字——已删掉，各页恢复只显示自己那块'] },
     { v:'v7.13', d:'11-19', items:['改：底栏「记录」改名「趋势」，和热量账本同一位置同一名字'] },
     { v:'v7.12', d:'11-19', items:['改：「动作重量」压成两列小格（最多 6 个，不再一行一个拉老长）；「提醒」没内容时也占着位置，显示"暂无提醒"，不再空一块'] },
     { v:'v7.11', d:'11-19', items:['修：v7.10 改版导致页面错乱（多余闭合标签），已恢复；提醒仍在记录页、动作重量在我的'] },
