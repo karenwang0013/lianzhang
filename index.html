@@ -2445,7 +2445,6 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
       {n:'腿举',g:'A',sets:3,rep:'10–12',kg:120,rest:90,m:'quads'},
       {n:'腿弯举',g:'B',sets:3,rep:'12',kg:35,rest:60,m:'hamstring'},
       {n:'站姿提踵',g:'B',sets:3,rep:'15',kg:60,rest:45,m:'calves'},
-      {n:'坐姿提踵',g:'B',sets:3,rep:'15–20',kg:40,rest:45,m:'calves'},
       {n:'卷腹',g:'B',sets:3,rep:'15–20',kg:0,rest:45,m:'core'}
     ],
     upper: [
@@ -3984,7 +3983,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   }
 
   /* ---------- 启动版本比对（同热量账本） ---------- */
-  var APP_VERSION = 'v7.23';
+  var APP_VERSION = 'v7.24';
   /* 版本徽标统一从 APP_VERSION 取，不再写死在 HTML（v7.05） */
   $$('.btag, .vtag').forEach(function(el){ el.textContent = APP_VERSION; });
   var relVal = $('#openRel .val'); if (relVal) relVal.textContent = APP_VERSION;
@@ -4022,6 +4021,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
   /* ---------- 更新记录 ---------- */
   var RELEASES = [
+    { v:'v7.24', d:'11-19', items:['改：腿日去掉「坐姿提踵」—— 站姿已经练到腓肠肌，坐姿只补比目鱼肌，这个阶段多 3 组只增疲劳；腿日从 7 动作 23 组变成 6 动作 20 组'] },
     { v:'v7.23', d:'11-19', items:['整理：计划页的「每周有效组数」搬到趋势页（看图的地方），标题收进卡里、右上角一颗「合计 N 组」胶囊，样式和每周容量/打卡热力一致；休息日不再同时出现「找一天补一补」和「今天休息/恢复」两条建议，合成一条'] },
     { v:'v7.22', d:'11-19', items:['改：动作重量「展开全部」不再一直保持——切到别的页面或重开 App，回到「我的」就是收起状态（只显示 6 个）'] },
     { v:'v7.21', d:'11-19', items:['修：动作重量每行下面多出来那个「›」——它是老样式给 .pr 加的伪元素，换成三列后掉到第二行把行高撑到两倍；现在这条只留给「更多动作」列表，动作重量一行干净'] },
