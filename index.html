@@ -1470,7 +1470,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
         </div>
 
         <div class="card">
-          <h3>打卡热力<span class="tag g" id="heatTag">近 14 周</span></h3>
+          <h3>打卡热力<span class="tag" id="heatTag">近 14 周</span></h3>
           <div class="heatmonths" id="heatMonths"></div>
           <div class="heatwrap">
             <div class="heatdow"><i>一</i><i></i><i>三</i><i></i><i>五</i><i></i><i>日</i></div>
@@ -3764,7 +3764,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     box.classList.remove('empty');
     box.innerHTML = cells;
     var sm = $('#heatSum');
-    if (sm) sm.textContent = '近 14 周 · 练了 ' + trainedDays + ' 天';
+    if (sm) sm.textContent = '近 14 周';
     var ht = $('#heatTag');
     if (ht) ht.textContent = '练了 ' + trainedDays + ' 天';
     var mo = $('#heatMonths');
@@ -3977,7 +3977,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   }
 
   /* ---------- 启动版本比对（同热量账本） ---------- */
-  var APP_VERSION = 'v7.16';
+  var APP_VERSION = 'v7.17';
   /* 版本徽标统一从 APP_VERSION 取，不再写死在 HTML（v7.05） */
   $$('.btag, .vtag').forEach(function(el){ el.textContent = APP_VERSION; });
   var relVal = $('#openRel .val'); if (relVal) relVal.textContent = APP_VERSION;
@@ -4015,6 +4015,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
   /* ---------- 更新记录 ---------- */
   var RELEASES = [
+    { v:'v7.17', d:'11-19', items:['改：趋势页两颗胶囊统一成红色（打卡热力那颗原来灰的）；去掉打卡热力里重复的「练了 N 天」；每周容量图例改成「有记录 N 周 · 平均 X」，不再让人以为 8 周全算进去了'] },
     { v:'v7.16', d:'11-19', items:['改：趋势页「每周容量」「打卡热力」照热量账本的卡片样式统一 —— 标题收进卡里、右上角一颗数字胶囊（本周容量 / 练了几天），图下面一行图例（本周·更早 / 练了·没练 + 右侧区间说明），柱子高度也从 126 收到 112'] },
     { v:'v7.15', d:'11-19', items:['改：「提醒」块改名「热量账本 · 数据互通」，盒子加宽到和下面卡片一样宽；「锻炼日志」挪到趋势页最下面；「动作重量」框里固定显示 6 个动作，框底一行「展开全部 N 个动作」可点开/收起'] },
     { v:'v7.14', d:'11-19', items:['修：「我的」页动作重量下面多出的两个 </div> 把页面提前闭合，身体数据和当前目标漏到所有页面外面，导致每个页面都叠着「增肌 / 训练日…」几行字——已删掉，各页恢复只显示自己那块'] },
@@ -5372,7 +5373,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     if (vl){
       var nz = bars.filter(function(b){ return b.v > 0; });
       var avg = nz.length ? Math.round(nz.reduce(function(a, b){ return a + b.v; }, 0) / nz.length) : 0;
-      vl.textContent = '最近 8 周 · 平均 ' + (avg ? uVol(avg).toLocaleString('en-US') + ' ' + uName() : '—');
+      vl.textContent = '有记录 ' + nz.length + ' 周 · 平均 ' + (avg ? uVol(avg).toLocaleString('en-US') + ' ' + uName() : '—');
     }
     if (barsEl){
       barsEl.classList.toggle('empty', !hasVol);
