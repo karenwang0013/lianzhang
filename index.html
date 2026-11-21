@@ -2543,6 +2543,22 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   var LB_RATE = 2.2046226218;
   var store = { weights: {} };
   try { var rawLS = localStorage.getItem(LSK); if (rawLS){ var o = JSON.parse(rawLS); if (o && o.weights) store = o; } } catch(e){}
+  /* v7.27：删掉的动作按「动作名」永久记（store.hide），任何一天都不再出现；
+     老数据是「日期|计划名+序号」，启动时翻译成名字（只看当前计划里同一位置的那个动作） */
+  (function(){
+    if (!store.skip) return;
+    store.hide = store.hide || {};
+    var keys = ['push2','pull2','legs2','push','pull','legs','upper','lower','full'];
+    Object.keys(store.skip).forEach(function(k){
+      var seg = String(k).split('|')[1] || '', key = '', i = NaN;
+      for (var j = 0; j < keys.length; j++){
+        var rest = seg.indexOf(keys[j]) === 0 ? seg.slice(keys[j].length) : '';
+        if (/^\d+$/.test(rest)){ key = keys[j]; i = parseInt(rest, 10); break; }
+      }
+      var e = (key && i >= 0) ? (EX[key] || [])[i] : null;
+      if (e && !store.hide[e.n]) store.hide[e.n] = store.skip[k] || Date.now();
+    });
+  })();
   if (!store.weights) store.weights = {};
   if (store.icons) Object.keys(store.icons).forEach(function(k){ if (k in ICON_DEFAULTS) chosen[k] = store.icons[k]; });
   /* 显示单位：内部一律按 kg 存，只有显示和输入时换算 */
@@ -2789,7 +2805,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   function swappedName(key, i){ return (store.swaps || {})[swapKey(key, i)] || ''; }
   /* 这天删掉的计划动作（按日期存，只影响那一天） */
   function skipKey(iso, key, i){ return iso + '|' + key + i; }
-  function isSkipped(iso, key, i){ return !!(store.skip && store.skip[skipKey(iso, key, i)]); }
+  function isSkipped(iso, key, i, n){ return !!((store.hide && n && store.hide[n]) || (store.skip && store.skip[skipKey(iso, key, i)])); }
   /* 今天这一天的动作表（把被替换的动作换掉），计划页仍按原计划展示 */
   /* 某一天额外加的动作（存在 store.extra[日期]），默认当前看的那天 */
   function extrasOn(iso){
@@ -2933,7 +2949,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   }
   function todaySets(key){
     return dayEx(key).reduce(function(a, e, i){
-      return a + ((isCardio(e) || isSkipped(todayISO(), key, i)) ? 0 : e.sets);
+      return a + ((isCardio(e) || isSkipped(todayISO(), key, i, e.n)) ? 0 : e.sets);
     }, 0);
   }
 
@@ -2995,7 +3011,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   function planCardsHTML(key, iso, adhocOn){
     var html = '', sets = 0;
     dayEx(key).forEach(function(e, i){
-      if (isSkipped(iso, key, i)) return;
+      if (isSkipped(iso, key, i, e.n)) return;
       var useSets = e.sets;
       if (adhocOn && key === adhocKey){
         useSets = Math.max(2, Math.min(e.sets + 1, Math.round(e.sets * adhocScale)));
@@ -3999,7 +4015,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   }
 
   /* ---------- 启动版本比对（同热量账本） ---------- */
-  var APP_VERSION = 'v7.26';
+  var APP_VERSION = 'v7.27';
   /* 版本徽标统一从 APP_VERSION 取，不再写死在 HTML（v7.05） */
   $$('.btag, .vtag').forEach(function(el){ el.textContent = APP_VERSION; });
   var relVal = $('#openRel .val'); if (relVal) relVal.textContent = APP_VERSION;
@@ -4037,6 +4053,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
   /* ---------- 更新记录 ---------- */
   var RELEASES = [
+    { v:'v7.27', d:'11-21', items:['改：「移除」改成永久删掉——按动作名记，以后任何一天都不再出现（以前只删当天，同一套训练日下一周又整组回来）；想练还能在「＋ 加动作」里加回来','修：五/六分化（计划名带 2 的那套）点「移除」没反应——按钮存的是「pull2+序号」，旧解析把它拆成 pull+20，找不到动作就直接返回']},
     { v:'v7.26', d:'11-21', items:['改：山羊挺身从「背」挪到「臀」组—— 它是髋伸动作，主要练臀大肌和腘绳肌，腰只是撑住'] },
     { v:'v7.25', d:'11-21', items:['加：动作库「背」组新增「山羊挺身」（3 组 × 12–15，自重，可负重），加动作里能选到了'] },
     { v:'v7.24', d:'11-19', items:['改：腿日去掉「坐姿提踵」—— 站姿已经练到腓肠肌，坐姿只补比目鱼肌，这个阶段多 3 组只增疲劳；腿日从 7 动作 23 组变成 6 动作 20 组'] },
@@ -4950,7 +4967,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     });
     out.extra = outEx;
     out.delEx = delEx;
-    ['weights','exv','swaps','skip','icons','remind','opts'].forEach(function(k){
+    ['weights','exv','swaps','skip','hide','icons','remind','opts'].forEach(function(k){
       out[k] = Object.assign({}, (remote && remote[k]) || {}, (local && local[k]) || {});
     });
     out.settings = Object.assign({}, (remote && remote.settings) || {}, (local && local.settings) || {});
@@ -5613,14 +5630,18 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     var d = ev.target && ev.target.closest && ev.target.closest('.exdel[data-skip]');
     if (!d) return;
     ev.stopPropagation(); ev.preventDefault();
-    var seg = d.dataset.skip || '';
-    var key = seg.replace(/[0-9]+$/, '');
-    var idx = parseInt(seg.slice(key.length), 10);
+    var seg = d.dataset.skip || '', key = '', idx = -1;
+    /* v7.27：data-skip 是「计划名+序号」（如 pull20 = pull2 的第 0 个）；按已知计划名从长到短对，别把 pull2 拆成 pull+20 */
+    Object.keys(EX).sort(function(a, b){ return b.length - a.length; }).forEach(function(k){
+      if (key) return;
+      var r = seg.indexOf(k) === 0 ? seg.slice(k.length) : '';
+      if (/^\d+$/.test(r)){ key = k; idx = parseInt(r, 10); }
+    });
     var ex = key ? (dayEx(key) || [])[idx] : null;
     if (!ex) return;
-    if (!window.confirm('把「' + ex.n + '」从今天移除？以后想练可以在「＋ 加动作」里加回来。')) return;
-    store.skip = store.skip || {};
-    store.skip[skipKey(viewISO, key, idx)] = Date.now();
+    if (!window.confirm('把「' + ex.n + '」从计划里删掉？以后不会再出现，想练可以在「＋ 加动作」里加回来。')) return;
+    store.hide = store.hide || {};
+    store.hide[ex.n] = Date.now();
     var pre = viewISO + '|' + seg + '|';
     allLogs().forEach(function(l){ if (l && l.id && l.id.indexOf(pre) === 0) markDel(l.id); });
     store.logs = allLogs().filter(function(l){ return !(l && l.id && l.id.indexOf(pre) === 0); });
