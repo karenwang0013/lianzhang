@@ -2826,7 +2826,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
       { n:'T杠划船', g:'A', sets:3, rep:'10', kg:35, rest:90, m:'back' },
       { n:'直臂下压', g:'B', sets:3, rep:'12–15', kg:20, rest:60, m:'back' },
       { n:'辅助引体', g:'A', sets:3, rep:'8–10', kg:0, rest:90, m:'back' },
-      { n:'山羊挺身', g:'B', sets:3, rep:'12–15', kg:0, rest:60, m:'back' },
+      { n:'山羊挺身', g:'B', sets:3, rep:'12–15', kg:0, rest:60, m:'glutes' },
       /* 肩 */
       { n:'杠铃推举', g:'A', sets:3, rep:'6–8', kg:30, rest:120, m:'shoulder' },
       { n:'器械推肩', g:'A', sets:3, rep:'10–12', kg:25, rest:90, m:'shoulder' },
@@ -3999,7 +3999,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   }
 
   /* ---------- 启动版本比对（同热量账本） ---------- */
-  var APP_VERSION = 'v7.25';
+  var APP_VERSION = 'v7.26';
   /* 版本徽标统一从 APP_VERSION 取，不再写死在 HTML（v7.05） */
   $$('.btag, .vtag').forEach(function(el){ el.textContent = APP_VERSION; });
   var relVal = $('#openRel .val'); if (relVal) relVal.textContent = APP_VERSION;
@@ -4037,6 +4037,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
   /* ---------- 更新记录 ---------- */
   var RELEASES = [
+    { v:'v7.26', d:'11-21', items:['改：山羊挺身从「背」挪到「臀」组—— 它是髋伸动作，主要练臀大肌和腘绳肌，腰只是撑住'] },
     { v:'v7.25', d:'11-21', items:['加：动作库「背」组新增「山羊挺身」（3 组 × 12–15，自重，可负重），加动作里能选到了'] },
     { v:'v7.24', d:'11-19', items:['改：腿日去掉「坐姿提踵」—— 站姿已经练到腓肠肌，坐姿只补比目鱼肌，这个阶段多 3 组只增疲劳；腿日从 7 动作 23 组变成 6 动作 20 组'] },
     { v:'v7.24', d:'11-19', items:['改：「热量账本 · 数据互通」这块写成正经卡片——标题 + 右上角状态胶囊 + 摄入/比平时多/建议加练三行数据 + 一行说明；没数据时也有一行说明，不再是一大句话'] },
