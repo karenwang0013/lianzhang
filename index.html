@@ -1402,7 +1402,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
               <circle class="ring-fg" id="ringFg" cx="100" cy="100" r="84"/>
             </svg>
             <div class="ringmid">
-              <span class="rlbl">近 7 天</span>
+              <span class="rlbl">本周</span>
               <span class="rnum"><b id="weekDays">–</b><i class="rslash">/</i><b id="weekPlan" class="tot">–</b></span>
               <span class="rgap" id="weekGap"></span>
             </div>
@@ -1417,7 +1417,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
               <div class="v"><span id="todayName">–</span><small id="todayEn"></small></div>
             </div>
             <div>
-              <div class="k">近 7 天容量</div>
+              <div class="k">本周容量</div>
               <div class="v" id="weekVol">–</div>
             </div>
             <div>
@@ -3423,10 +3423,10 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
       msg = st.gap > 900 ? '还没有训练记录，今天练一次？'
         : ('已经 ' + st.gap + ' 天没练了' + (st.med ? '（你平时每 ' + st.med + ' 天一次）' : '') + '，今天动一动？');
     } else if (st.sets7 > st.planned * 1.1){
-      msg = '近 7 天已经练了 ' + st.sets7 + ' 组，超过计划（' + st.planned + ' 组），注意恢复。';
+      msg = '本周已经练了 ' + st.sets7 + ' 组，超过计划（' + st.planned + ' 组），注意恢复。';
     } else if (st.days && st.sets7 < st.planned * 0.4 && st.gap < restLimit){
       /* v7.23：今天是休息日时，「今天休息」卡里已经写了同一件事，顶部不再重复 */
-      msg = (todayKey === 'rest') ? '' : ('近 7 天只练了 ' + st.sets7 + ' 组（计划 ' + st.planned + ' 组），找一天补一补？');
+      msg = (todayKey === 'rest') ? '' : ('本周只练了 ' + st.sets7 + ' 组（计划 ' + st.planned + ' 组），找一天补一补？');
     }
     bar.hidden = !msg;
     txt.textContent = msg;
@@ -4009,7 +4009,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   }
 
   /* ---------- 启动版本比对（同热量账本） ---------- */
-  var APP_VERSION = 'v7.32';
+  var APP_VERSION = 'v7.31';
   /* 版本徽标统一从 APP_VERSION 取，不再写死在 HTML（v7.05） */
   $$('.btag, .vtag').forEach(function(el){ el.textContent = APP_VERSION; });
   var relVal = $('#openRel .val'); if (relVal) relVal.textContent = APP_VERSION;
@@ -4047,7 +4047,6 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
   /* ---------- 更新记录 ---------- */
   var RELEASES = [
-    { v:'v7.32', d:'11-23', items:['修：天数口径统一成近 7 天——圆环从「本周一–周日」改成今天往前数 7 天，周一不再归零（今天读 5 / 3 天 · 已超 2 天），周小结的天数、组数也用同一个窗口，和顶部提醒条一致'] },
     { v:'v7.31', d:'11-23', items:['修：今日页「本周已经练了 N 组，超过计划」那条蓝条上面紧贴统计卡（0px）、下面空 24px；现在改成一上一下都是 24px'] },
     { v:'v7.30', d:'11-23', items:['改：重量加减从 2.5 kg 一档改成 0.5 kg 一档——卡片上的 − / + 每次 0.5 kg，建议重量和上次 +2.5% 也按 0.5 取整，不再被拉回 2.5 的整格'] },
     { v:'v7.29', d:'11-23', items:['加：动作库「胸」组新增「蝴蝶机夹胸」（3 组 × 12–15，起始 20kg），「＋ 加动作」里能选到了'] },
@@ -5180,9 +5179,8 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     return Math.round(v);
   }
   /* 以某天所在的那一周算：练了几天 + 容量 */
-  function weekStats(iso, roll){
-    /* roll=true 时按近 7 天（今天往前数）算，和提醒条的组数、热量账本同一个窗口 */
-    var mon = roll ? isoMinus(todayISO(), 6) : mondayISO(iso), end = roll ? todayISO() : isoMinus(mon, -6), m = {}, v = 0;
+  function weekStats(iso){
+    var mon = mondayISO(iso), end = isoMinus(mon, -6), m = {}, v = 0;
     allLogs().forEach(function(l){
       if (l.d >= mon && l.d <= end){ m[l.d] = 1; v += (l.kg || 0) * (l.reps || 0); }
     });
@@ -5220,7 +5218,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   }
 
   function paintHero(){
-    var n = splitTrainDays(), wk = weekStats(viewISO, viewISO === todayISO()), dn = wk.days;
+    var n = splitTrainDays(), wk = weekStats(viewISO), dn = wk.days;
     var wd = $('#weekDays'); if (wd) wd.textContent = dn;
     var wp = $('#weekPlan'); if (wp) wp.textContent = n;
     var wg = $('#weekGap');
@@ -5299,7 +5297,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   var sumMode = 'wk';
   function sumStats(mode){
     var today = todayISO();
-    var from = mode === 'wk' ? isoMinus(today, 6) : today.slice(0, 8) + '01';
+    var from = mode === 'wk' ? mondayISO(today) : today.slice(0, 8) + '01';
     var logs = allLogs().filter(function(l){ return l.d >= from && l.d <= today; });
     var daySet = {}, vol = 0;
     logs.forEach(function(l){ daySet[l.d] = 1; vol += (l.kg || 0) * (l.reps || 0); });
@@ -5358,7 +5356,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     var ttl = $('#sumTitle'), rg = $('#sumRange'), box = $('#sumBody');
     if (!box) return;
     if (ttl) ttl.textContent = sumMode === 'wk' ? '周小结' : '月小结';
-    if (rg) rg.textContent = sumMode === 'wk' ? '近 7 天' : '本月';
+    if (rg) rg.textContent = sumMode === 'wk' ? '本周' : '本月';
     var rows = '';
     rows += '<div class="sumline"><b>' + st.days + ' 天</b><i>训练 · 计划 ' + st.planDays + ' 天</i></div>';
     rows += '<div class="sumline"><b>' + st.sets + ' 组</b><i>组数 · 计划 ' + st.planSets + ' 组</i></div>';
