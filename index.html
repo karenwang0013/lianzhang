@@ -1019,7 +1019,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 .adhocbar>span{flex:1 1 auto;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .adhocbar button{white-space:nowrap;flex:none}
 .adhocbar{display:flex;align-items:center;justify-content:space-between;gap:10px;
-  margin:0 2px 10px;padding:8px 12px;border-radius:12px;
+  margin:24px 2px 10px;padding:8px 12px;border-radius:12px;   /* v7.34：上边距 0 → 24，与蓝条同口径（之前紧贴统计卡「顶格」） */
   background-color:rgba(228,0,43,.10);border:1px solid rgba(228,0,43,.28);
   font-size:12px;color:rgba(242,244,242,.86);letter-spacing:.01em}
 .adhocbar[hidden]{display:none}
@@ -2943,7 +2943,8 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   }
   function todaySets(key){
     return dayEx(key).reduce(function(a, e, i){
-      return a + ((isCardio(e) || isSkipped(todayISO(), key, i, e.n)) ? 0 : e.sets);
+      if (isCardio(e) || isSkipped(todayISO(), key, i, e.n)) return a;
+      return a + exvOf(e).sets;   /* v7.34：用她调过的组数，和卡片点阵同口径 */
     }, 0);
   }
 
@@ -3001,15 +3002,15 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     renderSets();
   }
 
-  /* 一天的计划卡 HTML（今天 / 过去补记共用）。adhocOn 时按加练缩放组数；sets = 非有氧总组数 */
+  /* 一天的计划卡 HTML（今天 / 过去补记共用）；sets = 非有氧总组数 */
   function planCardsHTML(key, iso, adhocOn){
     var html = '', sets = 0;
     dayEx(key).forEach(function(e, i){
       if (isSkipped(iso, key, i, e.n)) return;
-      var useSets = e.sets;
-      if (adhocOn && key === adhocKey){
-        useSets = Math.max(2, Math.min(e.sets + 1, Math.round(e.sets * adhocScale)));
-      }
+      /* v7.34：组数只认「她调过的值」（store.exv），不再按加练系数临时缩放——
+         之前加练时 4 组被 ×0.75 显示成 3 组，调完一次次被重渲染打回去。 */
+      var v = exvOf(e);
+      var useSets = v.sets;
       if (!isCardio(e)) sets += useSets;
       var dots = '';
       for (var k = 0; k < useSets; k++) dots += '<button class="dot"></button>';
@@ -3019,8 +3020,8 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
           '<span class="setcount">0/' + useSets + '</span>' +
           (e.orig ? '<i class="swaptag">换</i>' : '') + '</h3>' +
         '<span class="exload">' + exLoadTxt(e) + '</span></div>' +
-        '<p class="exmeta">' + exMetaTxt(e) +
-          lastLineOf(e) +
+        '<p class="exmeta">' + exMetaTxt({ sets: useSets, rep: v.rep, rest: e.rest }) +
+          lastLineOf({ n: e.n, rep: v.rep }) +
           (e.orig ? ' · 已换：原「' + e.orig + '」' : '') + '</p>' +
         '<div class="sets">' + dots +
           '<button class="exdel" data-skip="' + key + i + '" aria-label="移除这个动作">移除</button></div>' +
@@ -3086,7 +3087,14 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
     if (isToday){
       $('#listTitle').textContent = '今天的动作';
-      if (!key){
+      if (!key && adhoc && adhocKey && EX[adhocKey]){
+        /* v7.34：加练是本次打开里的临时状态，云端同步 / 任何重渲染都得留着它。
+           以前重渲染走「今天没计划」分支，加练的整场动作和那根条就一起消失了。 */
+        todayKey = adhocKey;
+        $('#todayName').textContent = TITLE[adhocKey][0];
+        $('#todayEn').textContent = TITLE[adhocKey][1];
+        renderToday(adhocKey);
+      } else if (!key){
         todayKey = '';
         $('#todayName').textContent = '休';
         $('#todayEn').textContent = 'REST';
@@ -3126,7 +3134,6 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
       todayKey = '';
       renderPastDay(iso);
     }
-    if (isToday && !key) adhoc = false;
     setSub();
     paintAdhoc();
     paintHero();
@@ -4009,7 +4016,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   }
 
   /* ---------- 启动版本比对（同热量账本） ---------- */
-  var APP_VERSION = 'v7.33';
+  var APP_VERSION = 'v7.34';
   /* 版本徽标统一从 APP_VERSION 取，不再写死在 HTML（v7.05） */
   $$('.btag, .vtag').forEach(function(el){ el.textContent = APP_VERSION; });
   var relVal = $('#openRel .val'); if (relVal) relVal.textContent = APP_VERSION;
@@ -4047,6 +4054,10 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
   /* ---------- 更新记录 ---------- */
   var RELEASES = [
+    { v:'v7.34', d:'11-24', items:[
+      '修：休息日点「加练」后，加练的整场动作和那条「加练 · …」会自己消失（云端同步一重渲染就当成休息日重画）——现在本次打开期间一直留着，直到点「取消加练」',
+      '修：加练时组数被自动缩放（4 组显示成 3 组、3 组显示成 2 组），在弹层里调了又被重渲染打回去；现在组数只认你调过的值，卡片点阵、弹层、有效组数同口径',
+      '修：加练条「加练 · 拉 · 90/58 组」上面紧贴统计卡（顶格），下空 24px；改成和蓝条一样上下都 24px'] },
     { v:'v7.33', d:'11-23', items:['撤：v7.32 把圆环/周小结/容量标签的天数改成近 7 天，改错了地方——这几处恢复「本周一–周日」原样，只在趋势页的互通天数上修'] },
     { v:'v7.31', d:'11-23', items:['修：今日页「本周已经练了 N 组，超过计划」那条蓝条上面紧贴统计卡（0px）、下面空 24px；现在改成一上一下都是 24px'] },
     { v:'v7.30', d:'11-23', items:['改：重量加减从 2.5 kg 一档改成 0.5 kg 一档——卡片上的 − / + 每次 0.5 kg，建议重量和上次 +2.5% 也按 0.5 取整，不再被拉回 2.5 的整格'] },
