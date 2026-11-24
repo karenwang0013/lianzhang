@@ -3232,28 +3232,37 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   function trainAnyway(){
     var pick = pickAdhocSession();
     if (!pick) return;
+    var info = adhocInfo();
+    adhocScale = info.scale; adhocWhy = info.why;
+
     adhoc = true;
     adhocKey = pick.key;
-
-    /* 最近 7 天练了多少组 vs 计划一周的组数 → 决定这场加练要加量还是减量 */
-    var weekAgo = isoMinus(todayISO(), 6);
-    var sets7 = allLogs().filter(function(l){ return l.d >= weekAgo; }).length;
-    var planned = 0;
-    daysOf(splitDays).forEach(function(d){ if (d[1] !== 'rest') planned += totalSets(d[1]); });
-    var ratio = planned ? sets7 / planned : 0;
-    if (ratio >= 1.05) adhocScale = 0.75;
-    else if (ratio >= 0.75) adhocScale = 0.9;
-    else if (ratio <= 0.2) adhocScale = 1.15;
-    else adhocScale = 1;
-
-    var adjTxt = adhocScale < 1 ? ' · 减量' : (adhocScale > 1 ? ' · 加量' : '');
-    adhocWhy = sets7 + '/' + planned + ' 组' + adjTxt;
-
+    store.adhoc = { d: todayISO(), k: pick.key };   /* v7.35：关掉 App 再打开也还在 */
+    saveStore();
     todayKey = pick.key;
     $('#todayName').textContent = TITLE[pick.key][0];
     $('#todayEn').textContent = TITLE[pick.key][1];
     renderToday(pick.key);
     paintAdhoc();
+  }
+
+  /* v7.35：加练这场「练什么、为什么减量」——开场和重开 App 恢复都用它 */
+  function adhocInfo(){
+    var weekAgo = isoMinus(todayISO(), 6);
+    var sets7 = allLogs().filter(function(l){ return l.d >= weekAgo; }).length;
+    var planned = 0;
+    daysOf(splitDays).forEach(function(d){ if (d[1] !== 'rest') planned += totalSets(d[1]); });
+    var ratio = planned ? sets7 / planned : 0;
+    var scale = ratio >= 1.05 ? 0.75 : (ratio >= 0.75 ? 0.9 : (ratio <= 0.2 ? 1.15 : 1));
+    var adj = scale < 1 ? ' · 减量' : (scale > 1 ? ' · 加量' : '');
+    return { scale: scale, why: sets7 + '/' + planned + ' 组' + adj };
+  }
+  function restoreAdhoc(){
+    var a = store.adhoc;
+    if (!a || a.d !== todayISO() || !a.k || !EX[a.k]) return;
+    adhoc = true; adhocKey = a.k;
+    var info = adhocInfo();
+    adhocScale = info.scale; adhocWhy = info.why;
   }
 
   function renderWeek(n){
@@ -4016,7 +4025,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   }
 
   /* ---------- 启动版本比对（同热量账本） ---------- */
-  var APP_VERSION = 'v7.34';
+  var APP_VERSION = 'v7.35';
   /* 版本徽标统一从 APP_VERSION 取，不再写死在 HTML（v7.05） */
   $$('.btag, .vtag').forEach(function(el){ el.textContent = APP_VERSION; });
   var relVal = $('#openRel .val'); if (relVal) relVal.textContent = APP_VERSION;
@@ -4054,6 +4063,8 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
   /* ---------- 更新记录 ---------- */
   var RELEASES = [
+    { v:'v7.35', d:'11-24', items:[
+      '修：点过「加练」以后关掉 App 再打开，加练的整场动作会没（加练只记在内存里，重开就回休息日）——现在这场会记在本机，同一天重开 App 直接接着练，直到点「取消加练」'] },
     { v:'v7.34', d:'11-24', items:[
       '修：休息日点「加练」后，加练的整场动作和那条「加练 · …」会自己消失（云端同步一重渲染就当成休息日重画）——现在本次打开期间一直留着，直到点「取消加练」',
       '修：加练时组数被自动缩放（4 组显示成 3 组、3 组显示成 2 组），在弹层里调了又被重渲染打回去；现在组数只认你调过的值，卡片点阵、弹层、有效组数同口径',
@@ -5589,6 +5600,8 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
       saveStore();
     }
     adhoc = false; adhocKey = '';
+    store.adhoc = null;   /* v7.35：取消 = 这场不做了，重开 App 也别再恢复 */
+    saveStore();
     renderDay();
     paintAll();
   });
@@ -5850,6 +5863,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
   migrateWeights();
   migrateExtraIds();
+  restoreAdhoc();   /* v7.35：昨天点过加练、关过 App —— 打开就接着这场 */
   paintRemindRow();
   setSplit(3);
   placeSplitLens(true);
