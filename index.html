@@ -2053,14 +2053,16 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     var dn = $('#exDone'); if (dn) dn.textContent = done + ' / ' + plan;
   }
 
-  /* v6.86：同一个按钮 700ms 内的第二次触发直接忽略。iPhone 上一次点按偶尔会送两次 click，
-     她又被 v6.85 之前的「点了没反应」养成连点习惯，一下就会多记一组。 */
-  var _lastSetTap = 0, _lastSetEx = '';
+  /* v7.36：以前是「同一个动作 700ms 内的第二次触发一律忽略」——快速连点会被当成重复丢掉，
+     表现为「点 3 下只记成 2 组，停一下再点才有反应」。
+     现在只吞「同一次点按」带来的第二次 click：每个 pointerdown 是一个计数器，同一次点按只认第一个 click。
+     不同点按各算各的，点多快都记。 */
+  var _tapGen = 0, _lastSetTap = 0, _lastSetGen = -1;
+  document.addEventListener('pointerdown', function(){ _tapGen++; }, true);
   function completeSet(ex){
     var id = ex.dataset.ex;
-    var nowTap = Date.now();
-    if (_lastSetEx === id && nowTap - _lastSetTap < 700) return;
-    _lastSetTap = nowTap; _lastSetEx = id;
+    if (_tapGen === _lastSetGen && Date.now() - _lastSetTap < 600) return;   /* 同一次点按的重复 click */
+    _lastSetGen = _tapGen; _lastSetTap = Date.now();
     var total = $$('.dot', ex).length;
     /* v6.85：补「最小的空编号」而不是「已勾几个」。删过第 1 组的话，已勾 3 个但编号 1/2/3 都占着，
        拿 3 去记会和已有那条撞上 → setOn 什么都不做 → 点「完成本组」毫无反应。 */
@@ -4025,7 +4027,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   }
 
   /* ---------- 启动版本比对（同热量账本） ---------- */
-  var APP_VERSION = 'v7.35';
+  var APP_VERSION = 'v7.36';
   /* 版本徽标统一从 APP_VERSION 取，不再写死在 HTML（v7.05） */
   $$('.btag, .vtag').forEach(function(el){ el.textContent = APP_VERSION; });
   var relVal = $('#openRel .val'); if (relVal) relVal.textContent = APP_VERSION;
@@ -4063,6 +4065,8 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
   /* ---------- 更新记录 ---------- */
   var RELEASES = [
+    { v:'v7.36', d:'11-24', items:[
+      '修：快速连点「完成本组」会漏记——原来同一个动作 700ms 内的第二次点击一律丢掉（点 3 下只记 2 组、要停一下再点才有反应）。现在只忽略「同一次点按」重复送来的第二个 click，点多快都照记'] },
     { v:'v7.35', d:'11-24', items:[
       '修：点过「加练」以后关掉 App 再打开，加练的整场动作会没（加练只记在内存里，重开就回休息日）——现在这场会记在本机，同一天重开 App 直接接着练，直到点「取消加练」'] },
     { v:'v7.34', d:'11-24', items:[
