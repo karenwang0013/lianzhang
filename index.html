@@ -2475,18 +2475,18 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     lsA: [
       {n:'杠铃深蹲',g:'S',sets:4,rep:'5–6',kg:80,rest:180,m:'quads'},
       {n:'罗马尼亚硬拉',g:'S',sets:3,rep:'8',kg:70,rest:120,m:'hamstring'},
+      {n:'坐姿哑铃推肩',g:'A',sets:3,rep:'8–10',kg:20,rest:90,m:'shoulder'},
       {n:'腿举',g:'A',sets:3,rep:'10–12',kg:120,rest:90,m:'quads'},
       {n:'腿弯举',g:'B',sets:3,rep:'12',kg:35,rest:60,m:'hamstring'},
-      {n:'坐姿哑铃推肩',g:'A',sets:3,rep:'8–10',kg:20,rest:90,m:'shoulder'},
       {n:'哑铃侧平举',g:'B',sets:4,rep:'12–15',kg:10,rest:60,m:'shoulder'},
       {n:'卷腹',g:'B',sets:3,rep:'15–20',kg:0,rest:45,m:'core'}
     ],
     lsB: [
       {n:'哈克深蹲',g:'S',sets:3,rep:'10–12',kg:90,rest:120,m:'quads'},
-      {n:'臀桥',g:'A',sets:3,rep:'10–12',kg:70,rest:90,m:'glutes'},
+      {n:'臀桥',g:'S',sets:3,rep:'10–12',kg:70,rest:90,m:'glutes'},
+      {n:'坐姿哑铃推肩',g:'A',sets:3,rep:'8–10',kg:20,rest:90,m:'shoulder'},
       {n:'腿弯举',g:'B',sets:3,rep:'12',kg:35,rest:60,m:'hamstring'},
       {n:'站姿提踵',g:'B',sets:3,rep:'15',kg:60,rest:45,m:'calves'},
-      {n:'坐姿哑铃推肩',g:'A',sets:3,rep:'8–10',kg:20,rest:90,m:'shoulder'},
       {n:'哑铃侧平举',g:'B',sets:4,rep:'12–15',kg:10,rest:60,m:'shoulder'},
       {n:'悬垂举腿',g:'B',sets:3,rep:'10–12',kg:0,rest:60,m:'core'}
     ],
@@ -4098,7 +4098,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   }
 
   /* ---------- 启动版本比对（同热量账本） ---------- */
-  var APP_VERSION = 'v7.42';
+  var APP_VERSION = 'v7.43';
   /* 版本徽标统一从 APP_VERSION 取，不再写死在 HTML（v7.05） */
   $$('.btag, .vtag').forEach(function(el){ el.textContent = APP_VERSION; });
   var relVal = $('#openRel .val'); if (relVal) relVal.textContent = APP_VERSION;
@@ -4136,6 +4136,9 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
   /* ---------- 更新记录 ---------- */
   var RELEASES = [
+    { v:'v7.43', d:'11-28', items:[
+      '改：调整动作顺序 —— 大动作在前、孤立在后（Avelar 2019）：胸背日 卧推 → 引体 → 上斜 → 划船 → 三头 → 二头；腿肩日 深蹲 → RDL → 推肩 → 腿举 → 腿弯举 → 侧平举 → 核心',
+      '说明：推肩原来是第 5 个，现在提到腿的两个大动作之后、器械之前 —— 推类要趁还有力气时推；卧推和推肩仍然不在同一天（两种推不叠加）' ] },
     { v:'v7.42', d:'11-28', items:[
       '改：按「少练胸、多练背」重排 —— 胸 14→10 组/周、背 14→16 组/周、肩中束 8 组、核心 6 组（胸背 A 加二头、B 加面拉和下背宽度）' ] },
     { v:'v7.41', d:'11-28', items:[
