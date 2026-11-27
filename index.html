@@ -2604,12 +2604,12 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
   /* v7.46：分化改成「循环」—— 不按星期排，练完一轮接着下一轮（他那条视频的核心）。 */
   var SPLITS = {
-    3:{ label:'三分化 · 推 / 拉 / 腿（练一休一）', cycle:['push3','rest','pull3','rest','legs3','rest'],
-        desc:'推（胸/肩/三头）→ 休 → 拉（背/二头）→ 休 → 腿（腿/核心）→ 休 → 循环，6 天一轮。' },
-    4:{ label:'四分化 · 胸三头 / 背二头 / 肩 / 腿（练一休一）', cycle:['ct4','rest','bb4','rest','sho4','rest','lg4','rest'],
-        desc:'胸+三头 → 休 → 背+二头 → 休 → 肩 → 休 → 腿 → 休 → 循环，8 天一轮。' },
-    5:{ label:'五分化 · 胸 / 背 / 肩 / 臂 / 腿（练一休一）', cycle:['ch5','rest','bk5','rest','sho5','rest','arm5','rest','lg5','rest'],
-        desc:'胸 → 休 → 背 → 休 → 肩 → 休 → 臂 → 休 → 腿 → 休 → 循环，10 天一轮。' }
+    3:{ label:'三分化 · 推 / 拉 / 腿（7 天一轮）', cycle:['push3','rest','pull3','rest','legs3','rest','rest'],
+        desc:'推 → 休 → 拉 → 休 → 腿 → 休 → 休，7 天正好一轮。' },
+    4:{ label:'四分化 · 胸三头 / 背二头 / 肩 / 腿（7 天一轮）', cycle:['ct4','rest','bb4','rest','sho4','rest','lg4'],
+        desc:'胸+三头 → 休 → 背+二头 → 休 → 肩 → 休 → 腿；排满 7 天，腿之后直接接下一轮。' },
+    5:{ label:'五分化 · 胸 / 背 / 肩 / 臂 / 腿（7 天一轮）', cycle:['ch5','bk5','sho5','arm5','lg5','rest','rest'],
+        desc:'胸 → 背 → 肩 → 臂 → 腿 → 休 → 休，7 天一轮。' }
   };
   var SPLITS_LEGACY_DAYS = null;
   /* 循环锚点：从哪天开始、第几块开始算 */
@@ -2625,9 +2625,9 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   }
   var SPLITS_FAT = {
     3:{ label:'减脂三分化 · 推 / 拉 / 腿肩', desc:'三次练完全身，练一休一；有氧放休息日，每周最多 2–3 次、每次不超过 30 分钟。',
-        cycle:['fpush','rest','fpull','rest','flegs','rest'] },
+        cycle:['fpush','rest','fpull','rest','flegs','rest','rest'] },
     4:{ label:'减脂四分化 · 胸臂 / 背臂 / 肩 / 腿', desc:'四次练完全身，练二休一；有氧放休息日或练后。',
-        cycle:['fpush','rest','fpull','rest','fshoulder','rest','flegs','rest'] }
+        cycle:['fpush','rest','fpull','rest','fshoulder','rest','flegs'] }
   };
   var splitMode = 'std';   /* std = 常规分化；fat = 减脂版 */
   function splitObj(n){ return (splitMode === 'fat' && SPLITS_FAT[n]) ? SPLITS_FAT[n] : SPLITS[n]; }
@@ -4164,7 +4164,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   }
 
   /* ---------- 启动版本比对（同热量账本） ---------- */
-  var APP_VERSION = 'v7.48';
+  var APP_VERSION = 'v7.49';
   /* 版本徽标统一从 APP_VERSION 取，不再写死在 HTML（v7.05） */
   $$('.btag, .vtag').forEach(function(el){ el.textContent = APP_VERSION; });
   var relVal = $('#openRel .val'); if (relVal) relVal.textContent = APP_VERSION;
@@ -4202,6 +4202,8 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
   /* ---------- 更新记录 ---------- */
   var RELEASES = [
+    { v:'v7.49', d:'11-28', items:[
+      '改：循环统一按 7 天一轮 —— 3 分化 推/休/拉/休/腿/休/休；4 分化 胸/休/背/休/肩/休/腿（排满 7 天，腿后直接接下一轮）；5 分化 胸/背/肩/臂/腿/休/休' ] },
     { v:'v7.48', d:'11-28', items:[
       '改：按你说的把所有休息天排进循环 —— 练一天休一天。三分化 6 天一轮、四分化 8 天一轮、五分化 10 天一轮',
       '删：2 天那一档（表里只有 3/4/5）' ] },
