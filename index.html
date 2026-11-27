@@ -1460,7 +1460,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
       <section class="view" data-view="plan">
         <div class="card aicard">
           <div class="aihd"><span class="tag">✦ AI · 3 天前更新</span><span class="planmeta" id="planEyebrow">4 练 / 周 · 共 8 周</span></div>
-          <h2 id="splitName">四分化 · 上下肢 ×2</h2>
+          <h2 id="splitName">四分化 · 胸背 / 腿肩 ×2</h2>
           <div class="splpick" id="splitPick">
             <span class="seg-lens"><span class="lens-body"></span></span>
             <button class="sp" data-n="2">2 天</button>
@@ -2453,58 +2453,57 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
   /* ---------- 动作库 + 分化方案 ---------- */
   var EX = {
-    /* v7.38：按增肌重排（去掉推拉腿 1×/周 与 5/6 分化那几档）
-       依据：Pelland 2025 Sports Med 元回归（67 项研究）—— 周组数越多长得越多（递减收益），
-       频率在「组数相等」时对增肌没有可辨识的影响；Schoenfeld 2016 剂量反应：每肌群 10+ 组/周 > 5–9 > <5。
-       所以结构按「每肌群每周 10–15 组、单次不超过约 22 组」来分，动作只用基础复合 + 必要孤立。 */
-    upA: [
-      {n:'平板杠铃卧推',ss:'A1',g:'S',sets:4,rep:'6–8',kg:80,rest:150,m:'chest'},
-      {n:'引体向上',ss:'A2',g:'S',sets:4,rep:'力竭-1',kg:0,rest:120,m:'back'},
-      {n:'坐姿哑铃推肩',g:'A',sets:3,rep:'8–10',kg:20,rest:90,m:'shoulder'},
-      {n:'哑铃侧平举',g:'B',sets:4,rep:'12–15',kg:10,rest:60,m:'shoulder'},
-      {n:'绳索下压',ss:'B1',g:'B',sets:4,rep:'10–12',kg:25,rest:60,m:'triceps'},
-      {n:'哑铃弯举',ss:'B2',g:'B',sets:4,rep:'10–12',kg:12,rest:60,m:'biceps'}
+    /* v7.40：按「搭配练」排 —— 胸配背、腿配肩。每块肌肉一周练 2 次、各 14 组左右。
+       依据：周组数是增肌的主变量（Schoenfeld 2016 元回归，PMID 27433992：每肌群 10+ 组/周 > 5–9 > <5）；
+       拮抗肌（推↔拉）放同一天可以轮着做、省时间（Sports Med 2025 超级组综述，PMID 39903375）。 */
+    cbA: [
+      {n:'平板杠铃卧推',g:'S',sets:4,rep:'6–8',kg:80,rest:150,m:'chest'},
+      {n:'引体向上',g:'S',sets:4,rep:'力竭-1',kg:0,rest:120,m:'back'},
+      {n:'上斜哑铃卧推',g:'A',sets:3,rep:'8–10',kg:28,rest:120,m:'chest'},
+      {n:'坐姿绳索划船',g:'A',sets:3,rep:'10',kg:50,rest:90,m:'back'},
+      {n:'绳索下压',g:'B',sets:3,rep:'10–12',kg:25,rest:60,m:'triceps'},
+      {n:'哑铃弯举',g:'B',sets:3,rep:'10–12',kg:12,rest:60,m:'biceps'}
     ],
-    upB: [
-      {n:'上斜哑铃卧推',ss:'A1',g:'S',sets:3,rep:'8–10',kg:28,rest:120,m:'chest'},
-      {n:'单臂哑铃划船',ss:'A2',g:'A',sets:3,rep:'10',kg:30,rest:90,m:'back'},
-      {n:'双杠臂屈伸',ss:'B1',g:'A',sets:3,rep:'8–10',kg:0,rest:90,m:'chest'},
-      {n:'高位下拉',ss:'B2',g:'A',sets:3,rep:'10–12',kg:40,rest:90,m:'back'},
+    cbB: [
+      {n:'上斜哑铃卧推',g:'S',sets:4,rep:'8–10',kg:28,rest:120,m:'chest'},
+      {n:'高位下拉',g:'S',sets:4,rep:'10–12',kg:40,rest:90,m:'back'},
+      {n:'双杠臂屈伸',g:'A',sets:3,rep:'8–10',kg:0,rest:90,m:'chest'},
+      {n:'单臂哑铃划船',g:'A',sets:3,rep:'10',kg:30,rest:90,m:'back'},
       {n:'面拉',g:'B',sets:3,rep:'15',kg:20,rest:60,m:'shoulder'},
-      {n:'哑铃侧平举',g:'B',sets:4,rep:'12–15',kg:10,rest:60,m:'shoulder'},
       {n:'锤式弯举',g:'B',sets:3,rep:'10–12',kg:10,rest:60,m:'biceps'}
     ],
-    loA: [
+    lsA: [
       {n:'杠铃深蹲',g:'S',sets:4,rep:'5–6',kg:80,rest:180,m:'quads'},
       {n:'罗马尼亚硬拉',g:'S',sets:3,rep:'8',kg:70,rest:120,m:'hamstring'},
       {n:'腿举',g:'A',sets:3,rep:'10–12',kg:120,rest:90,m:'quads'},
       {n:'腿弯举',g:'B',sets:3,rep:'12',kg:35,rest:60,m:'hamstring'},
-      {n:'站姿提踵',g:'B',sets:3,rep:'15',kg:60,rest:45,m:'calves'},
-      {n:'卷腹',g:'B',sets:3,rep:'15–20',kg:0,rest:45,m:'core'}
+      {n:'坐姿哑铃推肩',g:'A',sets:3,rep:'8–10',kg:20,rest:90,m:'shoulder'},
+      {n:'哑铃侧平举',g:'B',sets:3,rep:'12–15',kg:10,rest:60,m:'shoulder'}
     ],
-    loB: [
+    lsB: [
       {n:'哈克深蹲',g:'S',sets:3,rep:'10–12',kg:90,rest:120,m:'quads'},
       {n:'臀桥',g:'A',sets:3,rep:'10–12',kg:70,rest:90,m:'glutes'},
       {n:'腿举',g:'A',sets:3,rep:'12–15',kg:110,rest:90,m:'quads'},
       {n:'腿弯举',g:'B',sets:3,rep:'12',kg:35,rest:60,m:'hamstring'},
-      {n:'坐姿提踵',g:'B',sets:3,rep:'15–20',kg:40,rest:45,m:'calves'},
-      {n:'悬垂举腿',g:'B',sets:3,rep:'10–12',kg:0,rest:60,m:'core'}
+      {n:'站姿提踵',g:'B',sets:3,rep:'15',kg:60,rest:45,m:'calves'},
+      {n:'坐姿哑铃推肩',g:'A',sets:3,rep:'8–10',kg:20,rest:90,m:'shoulder'},
+      {n:'哑铃侧平举',g:'B',sets:3,rep:'12–15',kg:10,rest:60,m:'shoulder'}
     ],
     fbA: [
       {n:'杠铃深蹲',g:'S',sets:4,rep:'5–6',kg:80,rest:180,m:'quads'},
-      {n:'平板杠铃卧推',ss:'A1',g:'S',sets:4,rep:'6–8',kg:80,rest:150,m:'chest'},
-      {n:'引体向上',ss:'A2',g:'S',sets:4,rep:'力竭-1',kg:0,rest:120,m:'back'},
-      {n:'哑铃侧平举',ss:'B1',g:'B',sets:3,rep:'12–15',kg:10,rest:60,m:'shoulder'},
-      {n:'哑铃弯举',ss:'B2',g:'B',sets:3,rep:'10–12',kg:12,rest:60,m:'biceps'},
+      {n:'平板杠铃卧推',g:'S',sets:4,rep:'6–8',kg:80,rest:150,m:'chest'},
+      {n:'引体向上',g:'S',sets:4,rep:'力竭-1',kg:0,rest:120,m:'back'},
+      {n:'哑铃侧平举',g:'B',sets:3,rep:'12–15',kg:10,rest:60,m:'shoulder'},
+      {n:'哑铃弯举',g:'B',sets:3,rep:'10–12',kg:12,rest:60,m:'biceps'},
       {n:'卷腹',g:'B',sets:3,rep:'15–20',kg:0,rest:45,m:'core'}
     ],
     fbB: [
       {n:'罗马尼亚硬拉',g:'S',sets:4,rep:'8',kg:70,rest:120,m:'hamstring'},
       {n:'腿举',g:'A',sets:3,rep:'10–12',kg:120,rest:90,m:'quads'},
-      {n:'双杠臂屈伸',ss:'A1',g:'A',sets:3,rep:'8–10',kg:0,rest:90,m:'chest'},
-      {n:'坐姿绳索划船',ss:'A2',g:'A',sets:3,rep:'10',kg:50,rest:90,m:'back'},
-      {n:'坐姿哑铃推肩',ss:'B1',g:'A',sets:3,rep:'8–10',kg:20,rest:90,m:'shoulder'},
-      {n:'绳索下压',ss:'B2',g:'B',sets:3,rep:'10–12',kg:25,rest:60,m:'triceps'}
+      {n:'双杠臂屈伸',g:'A',sets:3,rep:'8–10',kg:0,rest:90,m:'chest'},
+      {n:'坐姿绳索划船',g:'A',sets:3,rep:'10',kg:50,rest:90,m:'back'},
+      {n:'坐姿哑铃推肩',g:'A',sets:3,rep:'8–10',kg:20,rest:90,m:'shoulder'},
+      {n:'绳索下压',g:'B',sets:3,rep:'10–12',kg:25,rest:60,m:'triceps'}
     ],
     /* v7.37：减脂版分化 —— 按「体脂率下降顺序」那套：胸+三头（带前束）/ 背+二头（带后束）/ 腿+肩 / 肩单独 */
     fpush: [
@@ -2540,10 +2539,10 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   };
 
   var TITLE = {
-    upA:['上肢A','UPPER A','胸 · 背 · 肩 · 臂',55],
-    upB:['上肢B','UPPER B','上斜 · 划船 · 后束',55],
-    loA:['下肢A','LOWER A','深蹲 · 硬拉 · 小腿',60],
-    loB:['下肢B','LOWER B','哈克 · 臀 · 腿弯举',55],
+    cbA:['胸+背 A','CHEST · BACK','胸 · 背 · 三头 · 二头',55],
+    cbB:['胸+背 B','CHEST · BACK','上斜 · 下拉 · 二头',55],
+    lsA:['腿+肩 A','LEGS · SHO','深蹲 · 硬拉 · 肩',60],
+    lsB:['腿+肩 B','LEGS · SHO','哈克 · 臀 · 肩',55],
     fbA:['全身A','FULL A','蹲 · 推 · 拉',50],
     fbB:['全身B','FULL B','硬拉 · 上斜 · 划船',50],
     fpush:['推','PUSH','胸 · 三头 · 前束',50],
@@ -2555,12 +2554,12 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   /* v7.38：只剩 3 档（2 / 3 / 4 天）。增肌看的是每肌群周组数，不是分化花样；
      5 / 6 分化要么把单次堆到 25+ 组、要么每肌群一周只碰一次，都不如这三档 —— 直接删掉。 */
   var SPLITS = {
-    2:{ label:'两分化 · 全身', desc:'时间少时的保底：全身 A / B 各一次，每个肌群每周 2 次、约 7–8 组。',
-        days:[['周一','fbA'],['周二','rest'],['周三','rest'],['周四','fbB'],['周五','rest'],['周六','rest'],['周日','rest']] },
-    3:{ label:'三分化 · 全身 ×3', desc:'一周 3 练、每肌群碰 3 次，每次 18–19 组；胸背腿各约 11 组/周，单次不堆量。',
-        days:[['周一','fbA'],['周二','rest'],['周三','fbB'],['周四','rest'],['周五','fbA'],['周六','rest'],['周日','rest']] },
-    4:{ label:'四分化 · 上下肢 ×2', desc:'增肌首选：上 A / 下 A / 上 B / 下 B，每肌群每周 10–13 组、分两次练完，单次 19–22 组。',
-        days:[['周一','upA'],['周二','loA'],['周三','rest'],['周四','upB'],['周五','loB'],['周六','rest'],['周日','rest']] }
+    2:{ label:'两分化 · 胸背 / 腿肩', desc:'一周两练的保底：胸+背一天、腿+肩一天，每块肌肉每周 1 次。',
+        days:[['周一','cbA'],['周二','rest'],['周三','rest'],['周四','lsA'],['周五','rest'],['周六','rest'],['周日','rest']] },
+    3:{ label:'三分化 · 胸背 / 腿肩 / 胸背', desc:'一周三练：胸+背、腿+肩、胸+背。胸背一周 2 次、腿肩 1 次，各约 20 组一次。',
+        days:[['周一','cbA'],['周二','rest'],['周三','lsA'],['周四','rest'],['周五','cbB'],['周六','rest'],['周日','rest']] },
+    4:{ label:'四分化 · 胸背 / 腿肩 ×2', desc:'推荐：胸+背 → 腿+肩 → 休 → 胸+背 → 腿+肩 → 休。每块肌肉一周 2 次、各 14 组左右。',
+        days:[['周一','cbA'],['周二','lsA'],['周三','rest'],['周四','cbB'],['周五','lsB'],['周六','rest'],['周日','rest']] }
   };
 
   /* v7.37：减脂版分化（只覆盖 3 天 / 4 天两档）——
@@ -2570,7 +2569,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     3:{ label:'减脂三分化 · 胸三头 / 背二头 / 腿肩', desc:'三次练完全身，练一休一；有氧放休息日，每周最多 2–3 次、每次不超过 30 分钟。',
         days:[['周一','fpush'],['周二','rest'],['周三','fpull'],['周四','rest'],['周五','flegs'],['周六','rest'],['周日','rest']] },
     4:{ label:'减脂四分化 · 肩单独', desc:'四次练完全身，练二休一（周一二、周四五）；肩单独一天练前中后束，有氧放休息日或练后。',
-        days:[['周一','fpush'],['周二','fpull'],['周三','rest'],['周四','fshoulder'],['周五','loA'],['周六','rest'],['周日','rest']] }
+        days:[['周一','fpush'],['周二','fpull'],['周三','rest'],['周四','fshoulder'],['周五','lsA'],['周六','rest'],['周日','rest']] }
   };
   var splitMode = 'std';   /* std = 常规分化；fat = 减脂版 */
   function splitObj(n){ return (splitMode === 'fat' && SPLITS_FAT[n]) ? SPLITS_FAT[n] : SPLITS[n]; }
@@ -2852,7 +2851,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     var gmap = { chest:'胸', back:'背', quads:'腿', hamstring:'腿', calves:'腿', glutes:'臀',
                  shoulder:'肩', triceps:'手臂', biceps:'手臂', grip:'手臂', core:'核心', cardio:'有氧' };
     var seen = {}, groups = {};
-    var all = [].concat(EX.upA, EX.upB, EX.loA, EX.loB, EX.fbA, EX.fbB,
+    var all = [].concat(EX.cbA, EX.cbB, EX.lsA, EX.lsB, EX.fbA, EX.fbB,
                        EX.fpush, EX.fpull, EX.flegs, EX.fshoulder, [
       /* 核心 */
       { n:'卷腹', g:'B', sets:3, rep:'15–20', kg:0, rest:45, m:'core' },
@@ -4092,7 +4091,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   }
 
   /* ---------- 启动版本比对（同热量账本） ---------- */
-  var APP_VERSION = 'v7.39';
+  var APP_VERSION = 'v7.40';
   /* 版本徽标统一从 APP_VERSION 取，不再写死在 HTML（v7.05） */
   $$('.btag, .vtag').forEach(function(el){ el.textContent = APP_VERSION; });
   var relVal = $('#openRel .val'); if (relVal) relVal.textContent = APP_VERSION;
@@ -4130,6 +4129,10 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
   /* ---------- 更新记录 ---------- */
   var RELEASES = [
+    { v:'v7.40', d:'11-27', items:[
+      '改：计划改成「搭配练」—— 4 天＝胸+背 / 腿+肩 / 休 / 胸+背 / 腿+肩 / 休；3 天＝胸背 / 腿肩 / 胸背；2 天＝胸背 / 腿肩',
+      '说明：胸和背是一推一拉，同一天练可以轮着做、不用干等；每块肌肉一周练 2 次、各 14 组左右（增肌最稳的量）',
+      '撤：上一版的 A1/A2、B1/B2 角标全部去掉，动作列表恢复成简单的一列' ] },
     { v:'v7.39', d:'11-27', items:[
       '加：上肢 A/B、全身 A/B 里标出超级组配对（A1/A2、B1/B2）—— 两个动作轮着做，一个做完立刻做另一个，两个都做完再休息；同样时间能多做 2–4 组',
       '配对原则：拮抗肌才配（卧推↔引体、下压↔弯举、上斜↔单臂划船、双杠↔下拉），同肌群或同动作模式不配（那样力量输出会掉）',
@@ -5960,7 +5963,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   migrateExtraIds();
   restoreAdhoc();   /* v7.35：昨天点过加练、关过 App —— 打开就接着这场 */
   paintRemindRow();
-  setSplit(3);
+  setSplit(splitDays);   /* v7.40：按默认值（4 天 胸背/腿肩 ×2）启动，别写死 3 */
   placeSplitLens(true);
   paintWeekVol();
   paintAll();
