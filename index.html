@@ -1463,7 +1463,6 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
           <h2 id="splitName">四分化 · 胸三头 / 背二头 / 肩 / 腿 / 休</h2>
           <div class="splpick" id="splitPick">
             <span class="seg-lens"><span class="lens-body"></span></span>
-            <button class="sp" data-n="2">2 天</button>
             <button class="sp" data-n="3">3 天</button>
             <button class="sp on" data-n="4">4 天</button>
             <button class="sp" data-n="5">5 天</button>
@@ -2605,14 +2604,12 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
   /* v7.46：分化改成「循环」—— 不按星期排，练完一轮接着下一轮（他那条视频的核心）。 */
   var SPLITS = {
-    2:{ label:'两分化 · 胸背+手臂 / 肩+腿', cycle:['ub','sl2'],
-        desc:'时间少时的最简：两天各 4 个动作，练完休息一天再来一轮。' },
-    3:{ label:'三分化 · 推 / 拉 / 腿 / 休', cycle:['push3','pull3','legs3','rest'],
-        desc:'推（胸/肩/三头）→ 拉（背/二头）→ 腿（腿/核心）→ 休 → 循环，每次 5 个动作。' },
-    4:{ label:'四分化 · 胸三头 / 背二头 / 肩 / 腿 / 休', cycle:['ct4','bb4','sho4','lg4','rest'],
-        desc:'胸+三头 → 背+二头 → 肩 → 腿 → 休 → 循环，每次 4–5 个动作。' },
-    5:{ label:'五分化 · 胸 / 背 / 肩 / 臂 / 腿 / 休', cycle:['ch5','bk5','sho5','arm5','lg5','rest'],
-        desc:'胸 → 背 → 肩 → 臂 → 腿 → 休 → 循环，单块肌肉一天练透。' }
+    3:{ label:'三分化 · 推 / 拉 / 腿（练一休一）', cycle:['push3','rest','pull3','rest','legs3','rest'],
+        desc:'推（胸/肩/三头）→ 休 → 拉（背/二头）→ 休 → 腿（腿/核心）→ 休 → 循环，6 天一轮。' },
+    4:{ label:'四分化 · 胸三头 / 背二头 / 肩 / 腿（练一休一）', cycle:['ct4','rest','bb4','rest','sho4','rest','lg4','rest'],
+        desc:'胸+三头 → 休 → 背+二头 → 休 → 肩 → 休 → 腿 → 休 → 循环，8 天一轮。' },
+    5:{ label:'五分化 · 胸 / 背 / 肩 / 臂 / 腿（练一休一）', cycle:['ch5','rest','bk5','rest','sho5','rest','arm5','rest','lg5','rest'],
+        desc:'胸 → 休 → 背 → 休 → 肩 → 休 → 臂 → 休 → 腿 → 休 → 循环，10 天一轮。' }
   };
   var SPLITS_LEGACY_DAYS = null;
   /* 循环锚点：从哪天开始、第几块开始算 */
@@ -2628,9 +2625,9 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   }
   var SPLITS_FAT = {
     3:{ label:'减脂三分化 · 推 / 拉 / 腿肩', desc:'三次练完全身，练一休一；有氧放休息日，每周最多 2–3 次、每次不超过 30 分钟。',
-        cycle:['fpush','fpull','flegs','rest'] },
+        cycle:['fpush','rest','fpull','rest','flegs','rest'] },
     4:{ label:'减脂四分化 · 胸臂 / 背臂 / 肩 / 腿', desc:'四次练完全身，练二休一；有氧放休息日或练后。',
-        cycle:['fpush','fpull','fshoulder','flegs','rest'] }
+        cycle:['fpush','rest','fpull','rest','fshoulder','rest','flegs','rest'] }
   };
   var splitMode = 'std';   /* std = 常规分化；fat = 减脂版 */
   function splitObj(n){ return (splitMode === 'fat' && SPLITS_FAT[n]) ? SPLITS_FAT[n] : SPLITS[n]; }
@@ -3743,7 +3740,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
   /* 基础设置：点行 → 选一个值 */
   var SET_OPTS = {
-    '每周训练频率': ['2 天','3 天','4 天','5 天'],
+    '每周训练频率': ['3 天','4 天','5 天'],
     '可用器械': ['商业健身房','只有哑铃','徒手'],
     '训练经验': ['新手','1–2 年','3 年以上'],
     '单次时长上限': ['45 分钟','60 分钟','90 分钟']
@@ -3772,7 +3769,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     store.opts = store.opts || {}; store.opts[label] = v; saveStore();
     if (label === '每周训练频率'){
       var n = parseInt(v, 10);
-      if (n >= 2 && n <= 5) setSplit(n);
+      if (n >= 3 && n <= 5) setSplit(n);
     }
     openSheet('#setSheet');
   });
@@ -4167,7 +4164,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   }
 
   /* ---------- 启动版本比对（同热量账本） ---------- */
-  var APP_VERSION = 'v7.47';
+  var APP_VERSION = 'v7.48';
   /* 版本徽标统一从 APP_VERSION 取，不再写死在 HTML（v7.05） */
   $$('.btag, .vtag').forEach(function(el){ el.textContent = APP_VERSION; });
   var relVal = $('#openRel .val'); if (relVal) relVal.textContent = APP_VERSION;
@@ -4205,6 +4202,9 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
   /* ---------- 更新记录 ---------- */
   var RELEASES = [
+    { v:'v7.48', d:'11-28', items:[
+      '改：按你说的把所有休息天排进循环 —— 练一天休一天。三分化 6 天一轮、四分化 8 天一轮、五分化 10 天一轮',
+      '删：2 天那一档（表里只有 3/4/5）' ] },
     { v:'v7.47', d:'11-28', items:[
       '改：完全照那张「3/4/5 分化训练计划表」录动作 —— 4 分化：胸+三头（卧推/上斜/飞鸟/下压/窄距）· 背+二头（引体/杠铃划船/坐姿划船/下拉/弯举）· 肩（杠铃推举/侧平举/俯身飞鸟/面拉）· 腿（深蹲/硬拉/腿举/腿弯举/提踵）',
       '加：5 分化（胸 / 背 / 肩 / 臂 / 腿 / 休），单块肌肉一天练透；3 分化改成 推 / 拉 / 腿 / 休',
@@ -6076,7 +6076,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   paintRemindRow();
   /* v7.41：启动时恢复上次选的分化（含常规/减脂版），没存过才用默认 4 天 */
   splitMode = (store.splitMode === 'fat' && SPLITS_FAT[store.splitDays]) ? 'fat' : 'std';
-  splitDays = (store.splitDays >= 2 && store.splitDays <= 5) ? store.splitDays : 4;
+  splitDays = (store.splitDays >= 3 && store.splitDays <= 5) ? store.splitDays : 4;
   setSplit(splitDays);
   placeSplitLens(true);
   paintWeekVol();
