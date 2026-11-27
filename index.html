@@ -2461,8 +2461,8 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
       {n:'引体向上',g:'S',sets:4,rep:'力竭-1',kg:0,rest:120,m:'back'},
       {n:'上斜哑铃卧推',g:'A',sets:3,rep:'8–10',kg:28,rest:120,m:'chest'},
       {n:'坐姿绳索划船',g:'A',sets:3,rep:'10',kg:50,rest:90,m:'back'},
-      {n:'绳索下压',g:'B',sets:3,rep:'10–12',kg:25,rest:60,m:'triceps'},
-      {n:'哑铃弯举',g:'B',sets:3,rep:'10–12',kg:12,rest:60,m:'biceps'}
+      {n:'绳索下压',g:'B',sets:4,rep:'10–12',kg:25,rest:60,m:'triceps'},
+      {n:'哑铃弯举',g:'B',sets:4,rep:'10–12',kg:12,rest:60,m:'biceps'}
     ],
     cbB: [
       {n:'上斜哑铃卧推',g:'S',sets:4,rep:'8–10',kg:28,rest:120,m:'chest'},
@@ -2470,7 +2470,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
       {n:'双杠臂屈伸',g:'A',sets:3,rep:'8–10',kg:0,rest:90,m:'chest'},
       {n:'单臂哑铃划船',g:'A',sets:3,rep:'10',kg:30,rest:90,m:'back'},
       {n:'面拉',g:'B',sets:3,rep:'15',kg:20,rest:60,m:'shoulder'},
-      {n:'锤式弯举',g:'B',sets:3,rep:'10–12',kg:10,rest:60,m:'biceps'}
+      {n:'锤式弯举',g:'B',sets:4,rep:'10–12',kg:10,rest:60,m:'biceps'}
     ],
     lsA: [
       {n:'杠铃深蹲',g:'S',sets:4,rep:'5–6',kg:80,rest:180,m:'quads'},
@@ -2478,7 +2478,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
       {n:'腿举',g:'A',sets:3,rep:'10–12',kg:120,rest:90,m:'quads'},
       {n:'腿弯举',g:'B',sets:3,rep:'12',kg:35,rest:60,m:'hamstring'},
       {n:'坐姿哑铃推肩',g:'A',sets:3,rep:'8–10',kg:20,rest:90,m:'shoulder'},
-      {n:'哑铃侧平举',g:'B',sets:3,rep:'12–15',kg:10,rest:60,m:'shoulder'}
+      {n:'哑铃侧平举',g:'B',sets:4,rep:'12–15',kg:10,rest:60,m:'shoulder'}
     ],
     lsB: [
       {n:'哈克深蹲',g:'S',sets:3,rep:'10–12',kg:90,rest:120,m:'quads'},
@@ -2487,7 +2487,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
       {n:'腿弯举',g:'B',sets:3,rep:'12',kg:35,rest:60,m:'hamstring'},
       {n:'站姿提踵',g:'B',sets:3,rep:'15',kg:60,rest:45,m:'calves'},
       {n:'坐姿哑铃推肩',g:'A',sets:3,rep:'8–10',kg:20,rest:90,m:'shoulder'},
-      {n:'哑铃侧平举',g:'B',sets:3,rep:'12–15',kg:10,rest:60,m:'shoulder'}
+      {n:'哑铃侧平举',g:'B',sets:4,rep:'12–15',kg:10,rest:60,m:'shoulder'}
     ],
     fbA: [
       {n:'杠铃深蹲',g:'S',sets:4,rep:'5–6',kg:80,rest:180,m:'quads'},
@@ -3365,10 +3365,15 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
   function setSplit(n){
     splitDays = n;
+    store.splitDays = n; saveStore();     /* v7.41：选了几分化要记住，退出再进不变 */
     $$('#splitPick .sp').forEach(function(b){ b.classList.toggle('on', +b.dataset.n === n); });
     placeSplitLens();
     $('#splitName').textContent = splitLabel(n);
     syncSplitMode(!!SPLITS_FAT[n]);
+    var fv = document.querySelector('#setSheet .srow .val');
+    var freqRow = null;
+    $$('#setSheet .srow').forEach(function(r){ if ((r.querySelector('.lbl')||{}).textContent === '每周训练频率') freqRow = r; });
+    if (freqRow) freqRow.querySelector('.val').textContent = n + ' 天';
     renderWeek(n);
     renderDay();
     paintAll();
@@ -3391,6 +3396,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   function setSplitMode(m){
     if (m === 'fat' && splitDays !== 3 && splitDays !== 4) splitDays = 3;
     splitMode = (m === 'fat') ? 'fat' : 'std';
+    store.splitMode = splitMode; saveStore();
     setSplit(splitDays);
   }
 
@@ -4091,7 +4097,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   }
 
   /* ---------- 启动版本比对（同热量账本） ---------- */
-  var APP_VERSION = 'v7.40';
+  var APP_VERSION = 'v7.41';
   /* 版本徽标统一从 APP_VERSION 取，不再写死在 HTML（v7.05） */
   $$('.btag, .vtag').forEach(function(el){ el.textContent = APP_VERSION; });
   var relVal = $('#openRel .val'); if (relVal) relVal.textContent = APP_VERSION;
@@ -4129,6 +4135,9 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
   /* ---------- 更新记录 ---------- */
   var RELEASES = [
+    { v:'v7.41', d:'11-28', items:[
+      '修：选了几分化退出再进又变回 4 天 —— 分化选择和「常规/减脂版」开关现在存到本机，重开 App 还是你上次选的那档',
+      '改：上肢的孤立动作各补 1 组（二头 3→4、三头 3→4、侧平举 3→4），补上原来偏低的 6 组/周，变成 8 组/周' ] },
     { v:'v7.40', d:'11-27', items:[
       '改：计划改成「搭配练」—— 4 天＝胸+背 / 腿+肩 / 休 / 胸+背 / 腿+肩 / 休；3 天＝胸背 / 腿肩 / 胸背；2 天＝胸背 / 腿肩',
       '说明：胸和背是一推一拉，同一天练可以轮着做、不用干等；每块肌肉一周练 2 次、各 14 组左右（增肌最稳的量）',
@@ -5963,7 +5972,10 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   migrateExtraIds();
   restoreAdhoc();   /* v7.35：昨天点过加练、关过 App —— 打开就接着这场 */
   paintRemindRow();
-  setSplit(splitDays);   /* v7.40：按默认值（4 天 胸背/腿肩 ×2）启动，别写死 3 */
+  /* v7.41：启动时恢复上次选的分化（含常规/减脂版），没存过才用默认 4 天 */
+  splitMode = (store.splitMode === 'fat' && SPLITS_FAT[store.splitDays]) ? 'fat' : 'std';
+  splitDays = (store.splitDays >= 2 && store.splitDays <= 4) ? store.splitDays : 4;
+  setSplit(splitDays);
   placeSplitLens(true);
   paintWeekVol();
   paintAll();
