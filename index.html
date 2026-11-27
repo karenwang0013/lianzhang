@@ -2688,7 +2688,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     c.sets = v.sets; c.rep = v.rep; return c;
   }
   /* 体重 / 身体数据（与「我的」页一致） */
-  var BODY = { kg: 66.1, bf: 19.4, exp: '1–2 年' };   /* v7.38：对齐体脂秤最新一条（2026-11-23：66.1 kg / 19.4%） */
+  var BODY = { kg: (store.bodyKg >= 25 && store.bodyKg <= 300) ? store.bodyKg : 66.1, bf: 19.4, exp: '1–2 年' };   /* v7.38：对齐体脂秤最新一条（2026-11-23：66.1 kg / 19.4%） */
   /* 体重倍数 → 估算 1RM（女 / 1–2 年经验档），哑铃动作按单只算 */
   var BW_FACTOR = {
     '杠铃深蹲':0.95, '硬拉':1.20, '罗马尼亚硬拉':0.90, '腿举':2.00,
@@ -4098,7 +4098,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   }
 
   /* ---------- 启动版本比对（同热量账本） ---------- */
-  var APP_VERSION = 'v7.43';
+  var APP_VERSION = 'v7.44';
   /* 版本徽标统一从 APP_VERSION 取，不再写死在 HTML（v7.05） */
   $$('.btag, .vtag').forEach(function(el){ el.textContent = APP_VERSION; });
   var relVal = $('#openRel .val'); if (relVal) relVal.textContent = APP_VERSION;
@@ -4136,6 +4136,8 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
   /* ---------- 更新记录 ---------- */
   var RELEASES = [
+    { v:'v7.44', d:'11-28', items:[
+      '改：建议重量接上热量账本的体重 —— 那边称了体重，练账这边按「体重 × 系数」算的起始重量会跟着变，不用再手动改；你手动调过的动作重量仍然优先' ] },
     { v:'v7.43', d:'11-28', items:[
       '改：调整动作顺序 —— 大动作在前、孤立在后（Avelar 2019）：胸背日 卧推 → 引体 → 上斜 → 划船 → 三头 → 二头；腿肩日 深蹲 → RDL → 推肩 → 腿举 → 腿弯举 → 侧平举 → 核心',
       '说明：推肩原来是第 5 个，现在提到腿的两个大动作之后、器械之前 —— 推类要趁还有力气时推；卧推和推肩仍然不在同一天（两种推不叠加）' ] },
@@ -5852,6 +5854,20 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
       yKcal: yKcal };
   }
 
+  /* v7.44：把热量账本里的最新体重接进来 —— 建议重量是按「体重 × 系数 ×% 1RM」算的，
+     体重一变，建议重量就该跟着变；原来 BODY.kg 写死 66.1，换体重后建议一直是旧的。 */
+  function applyWeightFromDiet(best){
+    var w = best && +best.weight;
+    if (!(w >= 25 && w <= 300)) return;
+    w = Math.round(w * 10) / 10;
+    if (Math.abs((BODY.kg || 0) - w) < 0.05) return;
+    BODY.kg = w;
+    store.bodyKg = w; saveStore();
+    /* 建议重量变了 → 把今日卡片和计划页重画一遍（她手动改过的重量不受影响，kgOf 优先用 store.weights） */
+    try { if (typeof renderDay === 'function') renderDay(); } catch(e){}
+    try { if (typeof paintAll === 'function') paintAll(); } catch(e){}
+  }
+
   function pullDietBridge(){
     if (dietPulling) return;
     dietPulling = true;
@@ -5887,6 +5903,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
       }
       DIET = best;
       try { localStorage.setItem(DIET_K, JSON.stringify(best)); } catch(e){}
+      applyWeightFromDiet(best);
       paintDietRec();
     });
   }
