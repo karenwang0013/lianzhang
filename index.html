@@ -412,6 +412,9 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   border-radius:999px;background-color:rgba(255,255,255,.085);opacity:0;
   transition:transform .5s cubic-bezier(.33,1.06,.32,1),opacity .2s ease}
 .splpick .seg-lens.on{opacity:1}
+/* v7.39：超级组配对角标（A1/A2、B1/B2 —— 两个动作轮着做） */
+.ex .ss,.exi .ss{font-style:normal;font-size:9.5px;font-weight:800;line-height:1.4;letter-spacing:.02em;
+  color:#0a0f0c;background:var(--lime);border-radius:4px;padding:1px 4px;margin-right:5px;vertical-align:1px}
 .splpick .seg-lens.noanim{transition:none}
 /* v7.37：常规 / 减脂版 切换（两颗小胶囊，不挤占天数选择条） */
 .splmode{display:flex;gap:6px;margin:8px 0 0}
@@ -2455,18 +2458,18 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
        频率在「组数相等」时对增肌没有可辨识的影响；Schoenfeld 2016 剂量反应：每肌群 10+ 组/周 > 5–9 > <5。
        所以结构按「每肌群每周 10–15 组、单次不超过约 22 组」来分，动作只用基础复合 + 必要孤立。 */
     upA: [
-      {n:'平板杠铃卧推',g:'S',sets:4,rep:'6–8',kg:80,rest:150,m:'chest'},
-      {n:'引体向上',g:'S',sets:4,rep:'力竭-1',kg:0,rest:120,m:'back'},
+      {n:'平板杠铃卧推',ss:'A1',g:'S',sets:4,rep:'6–8',kg:80,rest:150,m:'chest'},
+      {n:'引体向上',ss:'A2',g:'S',sets:4,rep:'力竭-1',kg:0,rest:120,m:'back'},
       {n:'坐姿哑铃推肩',g:'A',sets:3,rep:'8–10',kg:20,rest:90,m:'shoulder'},
       {n:'哑铃侧平举',g:'B',sets:4,rep:'12–15',kg:10,rest:60,m:'shoulder'},
-      {n:'绳索下压',g:'B',sets:4,rep:'10–12',kg:25,rest:60,m:'triceps'},
-      {n:'哑铃弯举',g:'B',sets:4,rep:'10–12',kg:12,rest:60,m:'biceps'}
+      {n:'绳索下压',ss:'B1',g:'B',sets:4,rep:'10–12',kg:25,rest:60,m:'triceps'},
+      {n:'哑铃弯举',ss:'B2',g:'B',sets:4,rep:'10–12',kg:12,rest:60,m:'biceps'}
     ],
     upB: [
-      {n:'上斜哑铃卧推',g:'S',sets:3,rep:'8–10',kg:28,rest:120,m:'chest'},
-      {n:'双杠臂屈伸',g:'A',sets:3,rep:'8–10',kg:0,rest:90,m:'chest'},
-      {n:'单臂哑铃划船',g:'A',sets:3,rep:'10',kg:30,rest:90,m:'back'},
-      {n:'高位下拉',g:'A',sets:3,rep:'10–12',kg:40,rest:90,m:'back'},
+      {n:'上斜哑铃卧推',ss:'A1',g:'S',sets:3,rep:'8–10',kg:28,rest:120,m:'chest'},
+      {n:'单臂哑铃划船',ss:'A2',g:'A',sets:3,rep:'10',kg:30,rest:90,m:'back'},
+      {n:'双杠臂屈伸',ss:'B1',g:'A',sets:3,rep:'8–10',kg:0,rest:90,m:'chest'},
+      {n:'高位下拉',ss:'B2',g:'A',sets:3,rep:'10–12',kg:40,rest:90,m:'back'},
       {n:'面拉',g:'B',sets:3,rep:'15',kg:20,rest:60,m:'shoulder'},
       {n:'哑铃侧平举',g:'B',sets:4,rep:'12–15',kg:10,rest:60,m:'shoulder'},
       {n:'锤式弯举',g:'B',sets:3,rep:'10–12',kg:10,rest:60,m:'biceps'}
@@ -2489,19 +2492,19 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     ],
     fbA: [
       {n:'杠铃深蹲',g:'S',sets:4,rep:'5–6',kg:80,rest:180,m:'quads'},
-      {n:'平板杠铃卧推',g:'S',sets:4,rep:'6–8',kg:80,rest:150,m:'chest'},
-      {n:'引体向上',g:'S',sets:4,rep:'力竭-1',kg:0,rest:120,m:'back'},
-      {n:'哑铃侧平举',g:'B',sets:3,rep:'12–15',kg:10,rest:60,m:'shoulder'},
-      {n:'哑铃弯举',g:'B',sets:3,rep:'10–12',kg:12,rest:60,m:'biceps'},
+      {n:'平板杠铃卧推',ss:'A1',g:'S',sets:4,rep:'6–8',kg:80,rest:150,m:'chest'},
+      {n:'引体向上',ss:'A2',g:'S',sets:4,rep:'力竭-1',kg:0,rest:120,m:'back'},
+      {n:'哑铃侧平举',ss:'B1',g:'B',sets:3,rep:'12–15',kg:10,rest:60,m:'shoulder'},
+      {n:'哑铃弯举',ss:'B2',g:'B',sets:3,rep:'10–12',kg:12,rest:60,m:'biceps'},
       {n:'卷腹',g:'B',sets:3,rep:'15–20',kg:0,rest:45,m:'core'}
     ],
     fbB: [
       {n:'罗马尼亚硬拉',g:'S',sets:4,rep:'8',kg:70,rest:120,m:'hamstring'},
       {n:'腿举',g:'A',sets:3,rep:'10–12',kg:120,rest:90,m:'quads'},
-      {n:'双杠臂屈伸',g:'A',sets:3,rep:'8–10',kg:0,rest:90,m:'chest'},
-      {n:'坐姿绳索划船',g:'A',sets:3,rep:'10',kg:50,rest:90,m:'back'},
-      {n:'坐姿哑铃推肩',g:'A',sets:3,rep:'8–10',kg:20,rest:90,m:'shoulder'},
-      {n:'绳索下压',g:'B',sets:3,rep:'10–12',kg:25,rest:60,m:'triceps'}
+      {n:'双杠臂屈伸',ss:'A1',g:'A',sets:3,rep:'8–10',kg:0,rest:90,m:'chest'},
+      {n:'坐姿绳索划船',ss:'A2',g:'A',sets:3,rep:'10',kg:50,rest:90,m:'back'},
+      {n:'坐姿哑铃推肩',ss:'B1',g:'A',sets:3,rep:'8–10',kg:20,rest:90,m:'shoulder'},
+      {n:'绳索下压',ss:'B2',g:'B',sets:3,rep:'10–12',kg:25,rest:60,m:'triceps'}
     ],
     /* v7.37：减脂版分化 —— 按「体脂率下降顺序」那套：胸+三头（带前束）/ 背+二头（带后束）/ 腿+肩 / 肩单独 */
     fpush: [
@@ -2949,7 +2952,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     return (EX[key] || []).map(function(e, i){
       var s = swappedName(key, i), a = s && SUB[s];
       if (!a) return normEx(e);
-      return normEx({ n:s, g:a.g, sets:a.sets, rep:a.rep, kg:a.kg, rest:a.rest, m:a.m, orig:e.n });
+      return normEx({ n:s, g:a.g, sets:a.sets, rep:a.rep, kg:a.kg, rest:a.rest, m:a.m, orig:e.n, ss:e.ss });
     });
   }
 
@@ -3053,7 +3056,8 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
       for (var k = 0; k < useSets; k++) dots += '<button class="dot"></button>';
       var gcls = e.g === 'A' ? ' a' : (e.g === 'B' ? ' b' : '');
       html += '<article class="ex' + (isCardio(e) ? ' cardio' : '') + '" data-ex="' + key + i + '" data-rest="' + e.rest + '">' +
-        '<div class="exrow"><h3><i class="grade' + gcls + '">' + (e.g || 'B') + '</i>' + e.n +
+        '<div class="exrow"><h3><i class="grade' + gcls + '">' + (e.g || 'B') + '</i>' +
+          (e.ss ? '<i class="ss">' + e.ss + '</i>' : '') + e.n +
           '<span class="setcount">0/' + useSets + '</span>' +
           (e.orig ? '<i class="swaptag">换</i>' : '') + '</h3>' +
         '<span class="exload">' + exLoadTxt(e) + '</span></div>' +
@@ -3324,7 +3328,8 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
           return '<div class="exi"><span><i class="grade' + gcls + '">' + a.g + '</i>' + a.n + '</span>' +
             '<span class="exr"><em class="exlast">有氧</em><b>' + a.rep + '</b></span></div>';
         }
-        return '<div class="exi"><span><i class="grade' + gcls + '">' + a.g + '</i>' + a.n + '</span>' +
+        return '<div class="exi"><span><i class="grade' + gcls + '">' + a.g + '</i>' +
+          (a.ss ? '<i class="ss">' + a.ss + '</i>' : '') + a.n + '</span>' +
           '<span class="exr"><em class="exlast">' + (lw ? uTxt(lw.kg) : '没练过') + '</em>' +
           '<b>' + a.sets + ' × ' + a.rep + '</b></span></div>';
       }).join('');
@@ -4087,7 +4092,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   }
 
   /* ---------- 启动版本比对（同热量账本） ---------- */
-  var APP_VERSION = 'v7.38';
+  var APP_VERSION = 'v7.39';
   /* 版本徽标统一从 APP_VERSION 取，不再写死在 HTML（v7.05） */
   $$('.btag, .vtag').forEach(function(el){ el.textContent = APP_VERSION; });
   var relVal = $('#openRel .val'); if (relVal) relVal.textContent = APP_VERSION;
@@ -4125,6 +4130,10 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
   /* ---------- 更新记录 ---------- */
   var RELEASES = [
+    { v:'v7.39', d:'11-27', items:[
+      '加：上肢 A/B、全身 A/B 里标出超级组配对（A1/A2、B1/B2）—— 两个动作轮着做，一个做完立刻做另一个，两个都做完再休息；同样时间能多做 2–4 组',
+      '配对原则：拮抗肌才配（卧推↔引体、下压↔弯举、上斜↔单臂划船、双杠↔下拉），同肌群或同动作模式不配（那样力量输出会掉）',
+      '说明：结构和组数一个都没改，只是把顺序排成能配对的；不按配对做也不影响计划本身' ] },
     { v:'v7.38', d:'11-27', items:[
       '改：计划只留 3 档（2 天全身 / 3 天全身×3 / 4 天上下肢×2），删掉 5 天、6 天 —— 增肌看的是每肌群每周组数，5/6 分化的次数要么单次堆到 25+ 组、要么每肌群一周只碰一次，不如这三档',
       '改：动作全部按增肌重排（每肌群 10–13 组/周、单次 ≤22 组、只留基础复合 + 必要孤立）：上肢A/B、下肢A/B、全身A/B 六套；手臂、小腿是短板（6–7 组），换胸背腿的足量',
@@ -5343,7 +5352,13 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     var eb = $('#planEyebrow'); if (eb) eb.textContent = n + ' 练 / 周 · 共 8 周';
     var why = $('#whyDays'); if (why) why.textContent = '每周 ' + n + ' 练';
     var sd = $('#splitDesc');
-    if (sd) sd.textContent = '第 5 周减载 · 本周按减载容量练';
+    if (sd){
+      /* v7.39：只有带超级组配对的分化才提示 A1/A2；减脂版和纯腿日没有配对 */
+      var hasSS = daysOf(splitDays).some(function(d){ return d[1] !== 'rest' && (EX[d[1]] || []).some(function(e){ return e.ss; }); });
+      sd.textContent = '第 5 周减载 · ' + (hasSS
+        ? '标 A1/A2（B1/B2）的两个动作轮着做：一个做完立刻做另一个，两个都做完再休息'
+        : '本周按减载容量练');
+    }
     var groups = {}, total = 0;
     GROUP_ORDER.forEach(function(g){ groups[g] = 0; });
     days.forEach(function(d){
