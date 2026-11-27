@@ -407,11 +407,19 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 .splpick .sp .sptag{margin-left:4px;font-style:normal;font-size:9.5px;font-weight:800;line-height:1.5;
   color:#0a0f0c;background:#fff;border-radius:5px;padding:1px 5px;letter-spacing:.02em}
 .splpick .sp:active{transform:scale(.96)}
+.splpick .sp.dim{opacity:.32}
 .splpick .seg-lens{position:absolute;left:0;top:0;width:0;height:0;z-index:0;pointer-events:none;
   border-radius:999px;background-color:rgba(255,255,255,.085);opacity:0;
   transition:transform .5s cubic-bezier(.33,1.06,.32,1),opacity .2s ease}
 .splpick .seg-lens.on{opacity:1}
 .splpick .seg-lens.noanim{transition:none}
+/* v7.37：常规 / 减脂版 切换（两颗小胶囊，不挤占天数选择条） */
+.splmode{display:flex;gap:6px;margin:8px 0 0}
+.splmode .sm{flex:0 0 auto;border:1px solid var(--line);background:rgba(255,255,255,.04);
+  border-radius:999px;padding:5px 12px;font-family:inherit;font-size:11.5px;font-weight:650;
+  color:var(--muted2);cursor:pointer;transition:background .2s,color .2s,border-color .2s,transform .16s}
+.splmode .sm.on{background-color:rgba(214,255,75,.14);border-color:rgba(214,255,75,.34);color:var(--lime)}
+.splmode .sm:active{transform:scale(.95)}
 
 /* ---------- 动作卡：玻璃 + 16 圆角（对应 .meal） ---------- */
 .ex{
@@ -1458,6 +1466,10 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
             <button class="sp" data-n="5">5 天</button>
             <button class="sp" data-n="6">6 天</button>
           </div>
+          <div class="splmode" id="splitMode">
+            <button class="sm on" data-m="std">常规</button>
+            <button class="sm" data-m="fat">减脂版</button>
+          </div>
           <p id="splitDesc">每周 3 练 · 4 休 · 第 5 周减载</p>
           <p id="dietRec" hidden></p>
         </div>
@@ -2113,7 +2125,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   function shiftMinutes(rep, d){
     var m = String(rep).match(/(\d+)\s*分钟/);
     if (!m) return rep;
-    var n = Math.max(5, Math.min(45, (+m[1]) + d * 5));   /* v6.95：有氧封顶 45 分钟，力量后本来只该 15–20 */
+    var n = Math.max(5, Math.min(30, (+m[1]) + d * 5));   /* v7.37：有氧封顶 30 分钟（减脂期每周 2–3 次、单次 ≤30 分钟） */
     return n + ' 分钟';
   }
   /* v6.74：按距离 / 按时间记的（rep 带「米」「秒」，如农夫行走）不拼「次」 */
@@ -2511,6 +2523,40 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
       {n:'坐姿绳索划船',g:'A',sets:3,rep:'10',kg:50,rest:90,m:'back'},
       {n:'坐姿哑铃推肩',g:'A',sets:3,rep:'10',kg:20,rest:90,m:'shoulder'},
       {n:'卷腹',g:'B',sets:3,rep:'15–20',kg:0,rest:45,m:'core'}
+    ],
+    /* v7.37：减脂版分化 —— 按「体脂率下降顺序」那套：胸+三头（带前束）/ 背+二头（带后束）/ 腿+肩 / 肩单独 */
+    fpush: [
+      {n:'平板杠铃卧推',g:'S',sets:4,rep:'6–8',kg:80,rest:150,m:'chest'},
+      {n:'上斜哑铃卧推',g:'A',sets:3,rep:'8–10',kg:28,rest:120,m:'chest'},
+      {n:'绳索夹胸',g:'B',sets:3,rep:'12–15',kg:15,rest:60,m:'chest'},
+      {n:'绳索下压',g:'B',sets:3,rep:'12',kg:25,rest:60,m:'triceps'},
+      {n:'窄距卧推',g:'A',sets:3,rep:'8–10',kg:35,rest:90,m:'triceps'},
+      {n:'哑铃前平举',g:'B',sets:3,rep:'12–15',kg:6,rest:45,m:'shoulder'}
+    ],
+    fpull: [
+      {n:'引体向上',g:'S',sets:4,rep:'力竭-1',kg:0,rest:120,m:'back'},
+      {n:'坐姿绳索划船',g:'A',sets:3,rep:'10',kg:50,rest:90,m:'back'},
+      {n:'高位下拉',g:'A',sets:3,rep:'10–12',kg:40,rest:90,m:'back'},
+      {n:'面拉',g:'B',sets:3,rep:'15',kg:20,rest:60,m:'shoulder'},
+      {n:'哑铃弯举',g:'B',sets:3,rep:'12',kg:12,rest:60,m:'biceps'},
+      {n:'锤式弯举',g:'B',sets:3,rep:'12',kg:10,rest:60,m:'biceps'}
+    ],
+    flegs: [
+      {n:'杠铃深蹲',g:'S',sets:4,rep:'5–6',kg:80,rest:180,m:'quads'},
+      {n:'罗马尼亚硬拉',g:'S',sets:3,rep:'8',kg:70,rest:120,m:'hamstring'},
+      {n:'腿举',g:'A',sets:3,rep:'10–12',kg:120,rest:90,m:'quads'},
+      {n:'腿弯举',g:'B',sets:3,rep:'12',kg:35,rest:60,m:'hamstring'},
+      {n:'站姿提踵',g:'B',sets:3,rep:'15',kg:60,rest:45,m:'calves'},
+      {n:'坐姿哑铃推肩',g:'A',sets:3,rep:'10',kg:20,rest:90,m:'shoulder'},
+      {n:'哑铃侧平举',g:'B',sets:3,rep:'15',kg:10,rest:60,m:'shoulder'},
+      {n:'卷腹',g:'B',sets:3,rep:'15–20',kg:0,rest:45,m:'core'}
+    ],
+    fshoulder: [
+      {n:'坐姿哑铃推肩',g:'S',sets:4,rep:'10',kg:20,rest:90,m:'shoulder'},
+      {n:'哑铃侧平举',g:'A',sets:4,rep:'15',kg:10,rest:60,m:'shoulder'},
+      {n:'绳索侧平举',g:'B',sets:3,rep:'15',kg:5,rest:45,m:'shoulder'},
+      {n:'反向飞鸟',g:'B',sets:3,rep:'15',kg:8,rest:45,m:'shoulder'},
+      {n:'哑铃前平举',g:'B',sets:3,rep:'12–15',kg:6,rest:45,m:'shoulder'}
     ]
   };
 
@@ -2523,7 +2569,11 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     full:['全身','FULL','全身复合',55],
     push2:['推','PUSH','胸 · 肩 · 三头',45],
     pull2:['拉','PULL','背 · 二头',45],
-    legs2:['腿','LEGS','股四 · 腘绳 · 小腿',50]
+    legs2:['腿','LEGS','股四 · 腘绳 · 小腿',50],
+    fpush:['推','PUSH','胸 · 三头 · 前束',50],
+    fpull:['拉','PULL','背 · 二头 · 后束',50],
+    flegs:['腿+肩','LEGS','股四 · 腘绳 · 肩',60],
+    fshoulder:['肩','SHOULDER','前 · 中 · 后束',40]
   };
 
   /* 5 档分化；周五固定为「今天」 */
@@ -2539,6 +2589,18 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     6:{ label:'六分化 · 推拉腿 ×2', desc:'每周 6 练跑两轮轻量推拉腿，每个肌群一周 2 次、间隔 72 小时。8 周一个周期，第 5 周自动减载 30%。',
         days:[['周一','push2'],['周二','pull2'],['周三','legs2'],['周四','pull2'],['周五','push2'],['周六','legs2'],['周日','rest']] } 
   };
+
+  /* v7.37：减脂版分化（只覆盖 3 天 / 4 天两档）——
+     3 天：三次练完全身，练一休一（周一三五）
+     4 天：四次练完全身，练二休一（周一二、周四五），肩单独一天 */
+  var SPLITS_FAT = {
+    3:{ label:'减脂三分化 · 胸三头 / 背二头 / 腿肩', desc:'三次练完全身，练一休一；有氧放休息日，每周最多 2–3 次、每次不超过 30 分钟。',
+        days:[['周一','fpush'],['周二','rest'],['周三','fpull'],['周四','rest'],['周五','flegs'],['周六','rest'],['周日','rest']] },
+    4:{ label:'减脂四分化 · 肩单独', desc:'四次练完全身，练二休一（周一二、周四五）；肩单独一天练前中后束，有氧放休息日或练后。',
+        days:[['周一','fpush'],['周二','fpull'],['周三','rest'],['周四','fshoulder'],['周五','legs'],['周六','rest'],['周日','rest']] }
+  };
+  var splitMode = 'std';   /* std = 常规分化；fat = 减脂版 */
+  function splitObj(n){ return (splitMode === 'fat' && SPLITS_FAT[n]) ? SPLITS_FAT[n] : SPLITS[n]; }
 
   /* ---------- 本地数据：动作重量（用户自己改，刷新不丢） ---------- */
   var LSK = 'lz.v1';
@@ -2817,7 +2879,8 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     var gmap = { chest:'胸', back:'背', quads:'腿', hamstring:'腿', calves:'腿', glutes:'臀',
                  shoulder:'肩', triceps:'手臂', biceps:'手臂', grip:'手臂', core:'核心', cardio:'有氧' };
     var seen = {}, groups = {};
-    var all = [].concat(EX.push, EX.pull, EX.legs, EX.upper, EX.lower, EX.full, [
+    var all = [].concat(EX.push, EX.pull, EX.legs, EX.upper, EX.lower, EX.full,
+                       EX.fpush, EX.fpull, EX.flegs, EX.fshoulder, [
       /* 核心 */
       { n:'卷腹', g:'B', sets:3, rep:'15–20', kg:0, rest:45, m:'core' },
       { n:'悬垂举腿', g:'B', sets:3, rep:'10–12', kg:0, rest:60, m:'core' },
@@ -2924,10 +2987,12 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   var WKN = ['周一','周二','周三','周四','周五','周六','周日'];
 
   function splitSeq(n){
-    return SPLITS[n].days.filter(function(d){ return d[1] !== 'rest'; }).map(function(d){ return d[1]; });
+    return splitObj(n).days.filter(function(d){ return d[1] !== 'rest'; }).map(function(d){ return d[1]; });
   }
   /* 这一周每天练什么（现在固定按分化自带的安排） */
-  function daysOf(n){ return SPLITS[n].days; }
+  function daysOf(n){ return splitObj(n).days; }
+  function splitLabel(n){ return splitObj(n).label; }
+  function splitDesc(n){ return splitObj(n).desc; }
 
   var viewISO = todayISO();
   var todayKey = '';
@@ -3268,7 +3333,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   }
 
   function renderWeek(n){
-    var sp = SPLITS[n], days = daysOf(n), html = '', train = 0, rest = 0;
+    var sp = splitObj(n), days = daysOf(n), html = '', train = 0, rest = 0;
     days.forEach(function(d, di){
       var wd = d[0], key = d[1];
       var today = (isoMinus(mondayISO(todayISO()), -di) === todayISO());
@@ -3301,7 +3366,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
         '<div class="exlist">' + rows + '</div></div></div>';
     });
     $('#weekCard').innerHTML = html;
-    $('#weekMeta').textContent = train + ' 练 · ' + rest + ' 休';
+    $('#weekMeta').textContent = train + ' 练 · ' + rest + ' 休 · 有氧 ' + weekCardio() + '/3';
     $$('.weekday[data-day]').forEach(function(w){
       w.addEventListener('click', function(){ w.classList.toggle('open'); });
     });
@@ -3328,10 +3393,31 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     splitDays = n;
     $$('#splitPick .sp').forEach(function(b){ b.classList.toggle('on', +b.dataset.n === n); });
     placeSplitLens();
-    $('#splitName').textContent = SPLITS[n].label;
+    $('#splitName').textContent = splitLabel(n);
+    syncSplitMode(!!SPLITS_FAT[n]);
     renderWeek(n);
     renderDay();
     paintAll();
+  }
+
+  /* v7.37：减脂版只覆盖 3 天 / 4 天两档 —— 切到减脂版时落在这两档上，天数不合法就回到 3 天 */
+  function syncSplitMode(fatAvail){
+    var fat = splitMode === 'fat';
+    $$('#splitMode .sm').forEach(function(b){ b.classList.toggle('on', b.dataset.m === (fat ? 'fat' : 'std')); });
+    $$('#splitPick .sp').forEach(function(b){ b.classList.toggle('dim', fat && !SPLITS_FAT[+b.dataset.n]); });
+    if (fat && !fatAvail){
+      if (splitDays === 3 || splitDays === 4) return;
+      splitDays = 3;
+      $$('#splitPick .sp').forEach(function(b){ b.classList.toggle('on', +b.dataset.n === 3); });
+      placeSplitLens(); $('#splitName').textContent = splitLabel(3);
+      renderWeek(3);
+      syncSplitMode(true);
+    }
+  }
+  function setSplitMode(m){
+    if (m === 'fat' && splitDays !== 3 && splitDays !== 4) splitDays = 3;
+    splitMode = (m === 'fat') ? 'fat' : 'std';
+    setSplit(splitDays);
   }
 
   /* ---------- Tab 切换 ---------- */
@@ -3647,6 +3733,10 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   $('#splitPick').addEventListener('click', function(e){
     var b = e.target.closest('.sp');
     if (b) setSplit(+b.dataset.n);
+  });
+  $('#splitMode').addEventListener('click', function(e){
+    var b = e.target.closest('.sm');
+    if (b) setSplitMode(b.dataset.m);
   });
   $('#wkPrev').addEventListener('click', function(){ selectDay(isoMinus(viewISO, 1)); });
   var wkHold = null, wkHeld = false;
@@ -4027,7 +4117,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   }
 
   /* ---------- 启动版本比对（同热量账本） ---------- */
-  var APP_VERSION = 'v7.36';
+  var APP_VERSION = 'v7.37';
   /* 版本徽标统一从 APP_VERSION 取，不再写死在 HTML（v7.05） */
   $$('.btag, .vtag').forEach(function(el){ el.textContent = APP_VERSION; });
   var relVal = $('#openRel .val'); if (relVal) relVal.textContent = APP_VERSION;
@@ -4065,6 +4155,10 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
   /* ---------- 更新记录 ---------- */
   var RELEASES = [
+    { v:'v7.37', d:'11-27', items:[
+      '加：计划页多一个「常规 / 减脂版」开关 —— 减脂版按「三次/四次练完全身」排：3 天＝胸+三头 / 背+二头 / 腿+肩（练一休一），4 天＝再把肩单独拆一天（练二休一）',
+      '改：有氧单次时长上限 45 → 30 分钟（减脂期每周 2–3 次、每次不超过 30 分钟）',
+      '加：「本周排布」右侧多一项「有氧 N/3」，本周（周一–周日）做过几次有氧一眼看到'] },
     { v:'v7.36', d:'11-24', items:[
       '修：快速连点「完成本组」会漏记——原来同一个动作 700ms 内的第二次点击一律丢掉（点 3 下只记 2 组、要停一下再点才有反应）。现在只忽略「同一次点按」重复送来的第二个 click，点多快都照记'] },
     { v:'v7.35', d:'11-24', items:[
@@ -5184,6 +5278,12 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     allLogs().forEach(function(l){ if (l.id && l.d) m[l.d] = 1; });
     return Object.keys(m).sort();
   }
+  /* v7.37：本周（周一–周日）做了几次有氧 —— 减脂期建议每周 2–3 次、单次 ≤30 分钟 */
+  function weekCardio(){
+    var mon = mondayISO(todayISO()), end = isoMinus(mon, -6), n = 0;
+    allLogs().forEach(function(l){ if (l.d >= mon && l.d <= end && isCardioName(l.n)) n++; });
+    return n;
+  }
   function streakDays(){
     var days = trainedDays();
     if (!days.length) return 0;
@@ -5264,6 +5364,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   function paintPlan(){
     var n0 = splitTrainDays();
     var days = daysOf(splitDays), n = n0;
+    syncSplitMode(!!SPLITS_FAT[splitDays]);
     var eb = $('#planEyebrow'); if (eb) eb.textContent = n + ' 练 / 周 · 共 8 周';
     var why = $('#whyDays'); if (why) why.textContent = '每周 ' + n + ' 练';
     var sd = $('#splitDesc');
