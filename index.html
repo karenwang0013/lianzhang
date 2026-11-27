@@ -2460,17 +2460,19 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
       {n:'平板杠铃卧推',g:'S',sets:4,rep:'6–8',kg:80,rest:150,m:'chest'},
       {n:'引体向上',g:'S',sets:4,rep:'力竭-1',kg:0,rest:120,m:'back'},
       {n:'上斜哑铃卧推',g:'A',sets:3,rep:'8–10',kg:28,rest:120,m:'chest'},
-      {n:'坐姿绳索划船',g:'S',sets:4,rep:'10',kg:50,rest:90,m:'back'},
+      {n:'坐姿绳索划船',g:'A',sets:3,rep:'10',kg:50,rest:90,m:'back'},
       {n:'绳索下压',g:'B',sets:3,rep:'10–12',kg:25,rest:60,m:'triceps'},
-      {n:'哑铃弯举',g:'B',sets:3,rep:'10–12',kg:12,rest:60,m:'biceps'}
+      {n:'哑铃弯举',g:'B',sets:3,rep:'10–12',kg:12,rest:60,m:'biceps'},
+      {n:'卷腹',g:'B',sets:2,rep:'15–20',kg:0,rest:45,m:'core'}
     ],
     cbB: [
       {n:'高位下拉',g:'S',sets:4,rep:'10–12',kg:40,rest:90,m:'back'},
       {n:'单臂哑铃划船',g:'S',sets:4,rep:'10',kg:30,rest:90,m:'back'},
       {n:'双杠臂屈伸',g:'A',sets:3,rep:'8–10',kg:0,rest:90,m:'chest'},
-      {n:'面拉',g:'B',sets:3,rep:'15',kg:20,rest:60,m:'shoulder'},
-      {n:'哑铃侧平举',g:'B',sets:4,rep:'12–15',kg:10,rest:60,m:'shoulder'},
-      {n:'锤式弯举',g:'B',sets:3,rep:'10–12',kg:10,rest:60,m:'biceps'}
+      {n:'面拉',g:'B',sets:2,rep:'15',kg:20,rest:60,m:'shoulder'},
+      {n:'哑铃侧平举',g:'B',sets:3,rep:'12–15',kg:10,rest:60,m:'shoulder'},
+      {n:'锤式弯举',g:'B',sets:3,rep:'10–12',kg:10,rest:60,m:'biceps'},
+      {n:'悬垂举腿',g:'B',sets:2,rep:'10–12',kg:0,rest:60,m:'core'}
     ],
     lsA: [
       {n:'杠铃深蹲',g:'S',sets:4,rep:'5–6',kg:80,rest:180,m:'quads'},
@@ -2478,8 +2480,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
       {n:'坐姿哑铃推肩',g:'A',sets:3,rep:'8–10',kg:20,rest:90,m:'shoulder'},
       {n:'腿举',g:'A',sets:3,rep:'10–12',kg:120,rest:90,m:'quads'},
       {n:'腿弯举',g:'B',sets:3,rep:'12',kg:35,rest:60,m:'hamstring'},
-      {n:'哑铃侧平举',g:'B',sets:4,rep:'12–15',kg:10,rest:60,m:'shoulder'},
-      {n:'卷腹',g:'B',sets:3,rep:'15–20',kg:0,rest:45,m:'core'}
+      {n:'哑铃侧平举',g:'B',sets:3,rep:'12–15',kg:10,rest:60,m:'shoulder'}
     ],
     lsB: [
       {n:'哈克深蹲',g:'S',sets:3,rep:'10–12',kg:90,rest:120,m:'quads'},
@@ -2487,8 +2488,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
       {n:'坐姿哑铃推肩',g:'A',sets:3,rep:'8–10',kg:20,rest:90,m:'shoulder'},
       {n:'腿弯举',g:'B',sets:3,rep:'12',kg:35,rest:60,m:'hamstring'},
       {n:'站姿提踵',g:'B',sets:3,rep:'15',kg:60,rest:45,m:'calves'},
-      {n:'哑铃侧平举',g:'B',sets:4,rep:'12–15',kg:10,rest:60,m:'shoulder'},
-      {n:'悬垂举腿',g:'B',sets:3,rep:'10–12',kg:0,rest:60,m:'core'}
+      {n:'哑铃侧平举',g:'B',sets:3,rep:'12–15',kg:10,rest:60,m:'shoulder'}
     ],
     fbA: [
       {n:'杠铃深蹲',g:'S',sets:4,rep:'5–6',kg:80,rest:180,m:'quads'},
@@ -4098,7 +4098,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   }
 
   /* ---------- 启动版本比对（同热量账本） ---------- */
-  var APP_VERSION = 'v7.44';
+  var APP_VERSION = 'v7.45';
   /* 版本徽标统一从 APP_VERSION 取，不再写死在 HTML（v7.05） */
   $$('.btag, .vtag').forEach(function(el){ el.textContent = APP_VERSION; });
   var relVal = $('#openRel .val'); if (relVal) relVal.textContent = APP_VERSION;
@@ -4136,6 +4136,9 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
   /* ---------- 更新记录 ---------- */
   var RELEASES = [
+    { v:'v7.45', d:'11-28', items:[
+      '改：腿肩日减量 —— 从 23/22 组降到 19/18 组，去掉腿肩日的腹肌（挪去胸背日），肩压到 推肩3+侧平举3；腿日不该扛 20+ 组',
+      '改：胸背日各带 2 组腹（卷腹 / 悬垂举腿），胸背日 22 组' ] },
     { v:'v7.44', d:'11-28', items:[
       '改：建议重量接上热量账本的体重 —— 那边称了体重，练账这边按「体重 × 系数」算的起始重量会跟着变，不用再手动改；你手动调过的动作重量仍然优先' ] },
     { v:'v7.43', d:'11-28', items:[
