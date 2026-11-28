@@ -1459,13 +1459,12 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
       <!-- ============ 计划 ============ -->
       <section class="view" data-view="plan">
         <div class="card aicard">
-          <div class="aihd"><span class="tag">✦ AI · 3 天前更新</span><span class="planmeta" id="planEyebrow">5 天一轮 · 4 练 1 休</span></div>
-          <h2 id="splitName">四分化 · 胸三头 / 背二头 / 肩 / 腿 / 休</h2>
+          <div class="aihd"><span class="tag">✦ AI · 3 天前更新</span><span class="planmeta" id="planEyebrow">7 天一轮</span></div>
+          <h2 id="splitName">四分化 · 胸三头 / 背二头 / 肩腹 / 腿核心</h2>
           <div class="splpick" id="splitPick">
             <span class="seg-lens"><span class="lens-body"></span></span>
             <button class="sp" data-n="3">3 天</button>
             <button class="sp on" data-n="4">4 天</button>
-            <button class="sp" data-n="5">5 天</button>
           </div>
           <div class="splmode" id="splitMode">
             <button class="sm on" data-m="std">常规</button>
@@ -2464,88 +2463,56 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
   /* ---------- 动作库 + 分化方案 ---------- */
   var EX = {
-    /* v7.47：完全照她给的那张「3/4/5 分化训练计划表」录 —— 每组 4–5 个重点动作，按循环练。
-       3 分化：推(胸/肩/三头) / 拉(背/二头) / 腿(腿/核心) → 休 → 循环
-       4 分化：胸+三头 / 背+二头 / 肩 / 腿 → 休 → 循环
-       5 分化：胸 / 背 / 肩 / 臂 / 腿 → 休 → 循环 */
+    /* v7.51：只留两个阶段 —— 三分化（基础版：推/拉/腿）、四分化（进阶版：胸三头/背二头/肩腹/腿核心）
+       照她 2026-11-28 给的表录；每肌群一周练一次，练一休一，7 天一轮。 */
     push3: [
       {n:'杠铃卧推',g:'S',sets:4,rep:'6–8',kg:80,rest:150,m:'chest'},
       {n:'上斜哑铃卧推',g:'A',sets:3,rep:'8–10',kg:28,rest:120,m:'chest'},
-      {n:'哑铃飞鸟',g:'B',sets:3,rep:'12–15',kg:12,rest:60,m:'chest'},
-      {n:'杠铃推举',g:'A',sets:3,rep:'6–8',kg:30,rest:120,m:'shoulder'},
+      {n:'杠铃推举',g:'A',sets:4,rep:'6–8',kg:30,rest:120,m:'shoulder'},
+      {n:'哑铃侧平举',g:'B',sets:3,rep:'12–15',kg:10,rest:60,m:'shoulder'},
       {n:'绳索下压',g:'B',sets:3,rep:'10–12',kg:25,rest:60,m:'triceps'}
     ],
     pull3: [
-      {n:'引体向上',g:'S',sets:4,rep:'力竭-1',kg:0,rest:120,m:'back'},
-      {n:'杠铃划船',g:'A',sets:3,rep:'8–10',kg:40,rest:90,m:'back'},
-      {n:'坐姿绳索划船',g:'A',sets:3,rep:'10',kg:50,rest:90,m:'back'},
-      {n:'高位下拉',g:'A',sets:3,rep:'10–12',kg:40,rest:90,m:'back'},
-      {n:'EZ杠弯举',g:'B',sets:3,rep:'10–12',kg:20,rest:60,m:'biceps'}
-    ],
-    legs3: [
-      {n:'杠铃深蹲',g:'S',sets:4,rep:'5–6',kg:80,rest:180,m:'quads'},
-      {n:'罗马尼亚硬拉',g:'S',sets:3,rep:'8',kg:70,rest:120,m:'hamstring'},
-      {n:'腿举',g:'A',sets:3,rep:'10–12',kg:120,rest:90,m:'quads'},
-      {n:'腿弯举',g:'B',sets:3,rep:'12',kg:35,rest:60,m:'hamstring'},
-      {n:'卷腹',g:'B',sets:3,rep:'15–20',kg:0,rest:45,m:'core'}
-    ],
-    ct4: [
-      {n:'杠铃卧推',g:'S',sets:4,rep:'6–8',kg:80,rest:150,m:'chest'},
-      {n:'上斜哑铃卧推',g:'A',sets:3,rep:'8–10',kg:28,rest:120,m:'chest'},
-      {n:'哑铃飞鸟',g:'B',sets:3,rep:'12–15',kg:12,rest:60,m:'chest'},
-      {n:'绳索下压',g:'B',sets:3,rep:'10–12',kg:25,rest:60,m:'triceps'},
-      {n:'窄距卧推',g:'A',sets:3,rep:'8–10',kg:35,rest:90,m:'triceps'}
-    ],
-    bb4: [
-      {n:'引体向上',g:'S',sets:4,rep:'力竭-1',kg:0,rest:120,m:'back'},
-      {n:'杠铃划船',g:'A',sets:3,rep:'8–10',kg:40,rest:90,m:'back'},
-      {n:'坐姿绳索划船',g:'A',sets:3,rep:'10',kg:50,rest:90,m:'back'},
-      {n:'高位下拉',g:'A',sets:3,rep:'10–12',kg:40,rest:90,m:'back'},
+      {n:'高位下拉',g:'S',sets:4,rep:'6–10',kg:40,rest:120,m:'back'},
+      {n:'坐姿绳索划船',g:'A',sets:3,rep:'8–12',kg:50,rest:90,m:'back'},
+      {n:'俯身哑铃划船',g:'A',sets:3,rep:'8–12',kg:14,rest:90,m:'back'},
+      {n:'面拉',g:'B',sets:3,rep:'12–15',kg:20,rest:60,m:'shoulder'},
       {n:'哑铃弯举',g:'B',sets:3,rep:'10–12',kg:12,rest:60,m:'biceps'}
     ],
+    legs3: [
+      {n:'杠铃深蹲',g:'S',sets:4,rep:'5–8',kg:80,rest:180,m:'quads'},
+      {n:'腿举',g:'A',sets:3,rep:'8–12',kg:120,rest:120,m:'quads'},
+      {n:'弓步蹲',g:'A',sets:3,rep:'10',kg:10,rest:90,m:'quads'},
+      {n:'腿弯举',g:'B',sets:3,rep:'12',kg:35,rest:60,m:'hamstring'},
+      {n:'站姿提踵',g:'B',sets:4,rep:'15–20',kg:60,rest:45,m:'calves'}
+    ],
+    ct4: [
+      {n:'哑铃卧推',g:'S',sets:4,rep:'8–12',kg:22,rest:120,m:'chest'},
+      {n:'上斜哑铃卧推',g:'A',sets:3,rep:'8–12',kg:28,rest:120,m:'chest'},
+      {n:'蝴蝶机夹胸',g:'B',sets:3,rep:'12',kg:20,rest:60,m:'chest'},
+      {n:'哑铃颈后臂屈伸',g:'B',sets:3,rep:'10–15',kg:12,rest:60,m:'triceps'},
+      {n:'仰卧哑铃臂屈伸',g:'B',sets:3,rep:'10–15',kg:6,rest:60,m:'triceps'}
+    ],
+    bb4: [
+      {n:'引体向上',g:'S',sets:4,rep:'力竭',kg:0,rest:120,m:'back'},
+      {n:'俯身哑铃划船',g:'A',sets:4,rep:'8–12',kg:14,rest:90,m:'back'},
+      {n:'高位下拉',g:'A',sets:3,rep:'10–12',kg:40,rest:90,m:'back'},
+      {n:'哑铃弯举',g:'B',sets:3,rep:'10–15',kg:12,rest:60,m:'biceps'},
+      {n:'坐姿集中弯举',g:'B',sets:3,rep:'10–15',kg:4.5,rest:60,m:'biceps'}
+    ],
     sho4: [
-      {n:'杠铃推举',g:'S',sets:4,rep:'6–8',kg:30,rest:120,m:'shoulder'},
-      {n:'哑铃侧平举',g:'A',sets:4,rep:'12–15',kg:10,rest:60,m:'shoulder'},
-      {n:'俯身飞鸟',g:'B',sets:3,rep:'15',kg:8,rest:45,m:'shoulder'},
-      {n:'面拉',g:'B',sets:3,rep:'15',kg:20,rest:60,m:'shoulder'}
+      {n:'坐姿哑铃推肩',g:'S',sets:4,rep:'8–12',kg:20,rest:120,m:'shoulder'},
+      {n:'绳索侧平举',g:'A',sets:4,rep:'12–15',kg:5,rest:60,m:'shoulder'},
+      {n:'俯身飞鸟',g:'B',sets:3,rep:'12–15',kg:8,rest:45,m:'shoulder'},
+      {n:'悬垂举腿',g:'B',sets:3,rep:'15–20',kg:0,rest:60,m:'core'},
+      {n:'卷腹',g:'B',sets:3,rep:'15–20',kg:0,rest:45,m:'core'}
     ],
     lg4: [
-      {n:'杠铃深蹲',g:'S',sets:4,rep:'5–6',kg:80,rest:180,m:'quads'},
-      {n:'罗马尼亚硬拉',g:'S',sets:3,rep:'8',kg:70,rest:120,m:'hamstring'},
-      {n:'腿举',g:'A',sets:3,rep:'10–12',kg:120,rest:90,m:'quads'},
-      {n:'腿弯举',g:'B',sets:3,rep:'12',kg:35,rest:60,m:'hamstring'},
-      {n:'站姿提踵',g:'B',sets:3,rep:'15',kg:60,rest:45,m:'calves'}
-    ],
-    ch5: [
-      {n:'杠铃卧推',g:'S',sets:4,rep:'6–8',kg:80,rest:150,m:'chest'},
-      {n:'上斜哑铃卧推',g:'A',sets:3,rep:'8–10',kg:28,rest:120,m:'chest'},
-      {n:'哑铃飞鸟',g:'B',sets:3,rep:'12–15',kg:12,rest:60,m:'chest'},
-      {n:'蝴蝶机夹胸',g:'B',sets:3,rep:'12–15',kg:20,rest:60,m:'chest'}
-    ],
-    bk5: [
-      {n:'引体向上',g:'S',sets:4,rep:'力竭-1',kg:0,rest:120,m:'back'},
-      {n:'杠铃划船',g:'A',sets:3,rep:'8–10',kg:40,rest:90,m:'back'},
-      {n:'坐姿绳索划船',g:'A',sets:3,rep:'10',kg:50,rest:90,m:'back'},
-      {n:'高位下拉',g:'A',sets:3,rep:'10–12',kg:40,rest:90,m:'back'}
-    ],
-    sho5: [
-      {n:'杠铃推举',g:'S',sets:4,rep:'6–8',kg:30,rest:120,m:'shoulder'},
-      {n:'哑铃侧平举',g:'A',sets:4,rep:'12–15',kg:10,rest:60,m:'shoulder'},
-      {n:'俯身飞鸟',g:'B',sets:3,rep:'15',kg:8,rest:45,m:'shoulder'},
-      {n:'面拉',g:'B',sets:3,rep:'15',kg:20,rest:60,m:'shoulder'}
-    ],
-    arm5: [
-      {n:'绳索下压',g:'B',sets:3,rep:'10–12',kg:25,rest:60,m:'triceps'},
-      {n:'窄距卧推',g:'A',sets:3,rep:'8–10',kg:35,rest:90,m:'triceps'},
-      {n:'哑铃弯举',g:'B',sets:3,rep:'10–12',kg:12,rest:60,m:'biceps'},
-      {n:'锤式弯举',g:'B',sets:3,rep:'10–12',kg:10,rest:60,m:'biceps'}
-    ],
-    lg5: [
-      {n:'杠铃深蹲',g:'S',sets:4,rep:'5–6',kg:80,rest:180,m:'quads'},
-      {n:'腿举',g:'A',sets:3,rep:'10–12',kg:120,rest:90,m:'quads'},
-      {n:'腿弯举',g:'B',sets:3,rep:'12',kg:35,rest:60,m:'hamstring'},
-      {n:'罗马尼亚硬拉',g:'S',sets:3,rep:'8',kg:70,rest:120,m:'hamstring'},
-      {n:'站姿提踵',g:'B',sets:3,rep:'15',kg:60,rest:45,m:'calves'}
+      {n:'杠铃深蹲',g:'S',sets:4,rep:'8–12',kg:80,rest:180,m:'quads'},
+      {n:'腿弯举',g:'B',sets:3,rep:'10–15',kg:35,rest:60,m:'hamstring'},
+      {n:'腿屈伸',g:'B',sets:3,rep:'12–15',kg:15,rest:60,m:'quads'},
+      {n:'站姿提踵',g:'B',sets:3,rep:'15–20',kg:60,rest:45,m:'calves'},
+      {n:'平板支撑',g:'B',sets:3,rep:'60 秒',kg:0,rest:45,m:'core'}
     ],
     ub: [
       {n:'杠铃卧推',g:'S',sets:4,rep:'6–8',kg:80,rest:150,m:'chest'},
@@ -2594,17 +2561,12 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
   var TITLE = {
     push3:['推','PUSH','胸 · 肩 · 三头',55],
-    pull3:['拉','PULL','背 · 二头',55],
-    legs3:['腿','LEGS','腿 · 核心',55],
-    ct4:['胸+三头','CHEST · TRI','推 · 上斜 · 飞鸟 · 三头',50],
+    pull3:['拉','PULL','背 · 后束 · 二头',55],
+    legs3:['腿','LEGS','股四 · 腘绳 · 小腿',55],
+    ct4:['胸+三头','CHEST · TRI','卧推 · 上斜 · 夹胸 · 三头',50],
     bb4:['背+二头','BACK · BI','引体 · 划船 · 下拉 · 二头',50],
-    sho4:['肩','SHOULDER','推 · 中束 · 后束',45],
-    lg4:['腿','LEGS','深蹲 · 硬拉 · 腿举 · 小腿',55],
-    ch5:['胸','CHEST','推 · 上斜 · 飞鸟 · 夹胸',45],
-    bk5:['背','BACK','引体 · 划船 · 下拉',50],
-    sho5:['肩','SHOULDER','推 · 中束 · 后束',45],
-    arm5:['手臂','ARMS','三头 · 二头',40],
-    lg5:['腿','LEGS','深蹲 · 腿举 · 硬拉 · 小腿',55],
+    sho4:['肩+腹','SHOULDER · ABS','推肩 · 中束 · 后束 · 腹',45],
+    lg4:['腿+核心','LEGS · CORE','深蹲 · 弯举 · 屈伸 · 小腿 · 平板',55],
     ub:['胸背+手臂','UPPER','卧推 · 引体 · 侧 · 二头',50],
     sl2:['肩+腿','SHO · LEGS','深蹲 · 硬拉 · 推 · 侧',50],
     fpush:['推','PUSH','胸 · 三头 · 前束',50],
@@ -2615,12 +2577,10 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
   /* v7.46：分化改成「循环」—— 不按星期排，练完一轮接着下一轮（他那条视频的核心）。 */
   var SPLITS = {
-    3:{ label:'三分化 · 推 / 拉 / 腿（7 天一轮）', cycle:['push3','rest','pull3','rest','legs3','rest','rest'],
+    3:{ label:'三分化 · 推 / 拉 / 腿（基础版 · 7 天一轮）', cycle:['push3','rest','pull3','rest','legs3','rest','rest'],
         desc:'推 → 休 → 拉 → 休 → 腿 → 休 → 休，7 天正好一轮。' },
-    4:{ label:'四分化 · 胸三头 / 背二头 / 肩 / 腿（7 天一轮）', cycle:['ct4','rest','bb4','rest','sho4','rest','lg4'],
-        desc:'胸+三头 → 休 → 背+二头 → 休 → 肩 → 休 → 腿；排满 7 天，腿之后直接接下一轮。' },
-    5:{ label:'五分化 · 胸 / 背 / 肩 / 臂 / 腿（7 天一轮）', cycle:['ch5','bk5','sho5','arm5','lg5','rest','rest'],
-        desc:'胸 → 背 → 肩 → 臂 → 腿 → 休 → 休，7 天一轮。' }
+    4:{ label:'四分化 · 胸三头 / 背二头 / 肩腹 / 腿核心（进阶版 · 7 天一轮）', cycle:['ct4','rest','bb4','rest','sho4','rest','lg4'],
+        desc:'胸+三头 → 休 → 背+二头 → 休 → 肩+腹 → 休 → 腿+核心；腿之后直接接下一轮。' }
   };
   var SPLITS_LEGACY_DAYS = null;
   /* 循环锚点：从哪天开始、第几块开始算 */
@@ -2680,7 +2640,9 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   /* v6.75：这一条记录的单位（次 / 秒 / 米），写进日志，历史页照着显示 */
   function repUnit(rep){ return /秒/.test(String(rep)) ? '秒' : (/米/.test(String(rep)) ? '米' : ''); }
   function exMetaTxt(e){
-    var s = (isCardio(e) || /米|秒/.test(String(e.rep))) ? e.rep : (e.sets + ' 组 × ' + e.rep + ' 次');
+    var s = isCardio(e) ? e.rep
+          : (/米|秒/.test(String(e.rep)) ? (e.sets > 1 ? e.sets + ' 组 × ' + e.rep : e.rep)
+          : (e.sets + ' 组 × ' + e.rep + ' 次'));
     if (e.rest) s += ' · 休息 ' + e.rest + ' 秒';
     return s;
   }
@@ -2760,7 +2722,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   /* 体重倍数 → 估算 1RM（女 / 1–2 年经验档），哑铃动作按单只算 */
   var BW_FACTOR = {
     '杠铃深蹲':0.95, '硬拉':1.20, '罗马尼亚硬拉':0.90, '腿举':2.00,
-    '平板杠铃卧推':0.60, '上斜哑铃卧推':0.22, '双杠臂屈伸':0.00, '窄距卧推':0.55,
+    '平板杠铃卧推':0.60, '杠铃卧推':0.60, '上斜哑铃卧推':0.22, '双杠臂屈伸':0.00, '窄距卧推':0.55,
     '引体向上':0.00, '坐姿绳索划船':0.55, '单臂哑铃划船':0.28, '杠铃划船':0.60,
     '坐姿哑铃推肩':0.14, '哑铃侧平举':0.075, '面拉':0.22,
     '绳索下压':0.35, '哑铃弯举':0.13, '锤式弯举':0.13,
@@ -2771,7 +2733,9 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     '杠铃推举':0.40, '器械推肩':0.35, '绳索侧平举':0.06, '哑铃前平举':0.06, '反向飞鸟':0.06, '俯身飞鸟':0.06,
     '哈克深蹲':1.30, '史密斯深蹲':0.85, '高脚杯深蹲':0.40, '保加利亚分腿蹲':0.28,
     '臀桥':1.10, '髋外展':0.45, '腿举提踵':1.60, '坐姿腿弯举':0.30,
-    '窄距卧推':0.55, '哑铃颈后臂屈伸':0.14, '绳索弯举':0.13, '牧师凳弯举':0.13, 'EZ杠弯举':0.13
+    '窄距卧推':0.55, '哑铃颈后臂屈伸':0.14, '绳索弯举':0.13, '牧师凳弯举':0.13, 'EZ杠弯举':0.13,
+    '俯身哑铃划船':0.28, '弓步蹲':0.20, '仰卧哑铃臂屈伸':0.14, '坐姿集中弯举':0.10,
+    '腿屈伸':0.35, '平板支撑':0.00
   };
   /* 次数区间 → 用多少 % 的 1RM */
   function pctForReps(rep){
@@ -2921,7 +2885,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
                  shoulder:'肩', triceps:'手臂', biceps:'手臂', grip:'手臂', core:'核心', cardio:'有氧' };
     var seen = {}, groups = {};
     var all = [].concat(EX.push3, EX.pull3, EX.legs3, EX.ct4, EX.bb4, EX.sho4, EX.lg4,
-                       EX.ch5, EX.bk5, EX.sho5, EX.arm5, EX.lg5, EX.ub, EX.sl2,
+                       EX.ub, EX.sl2,
                        EX.fpush, EX.fpull, EX.flegs, EX.fshoulder, [
       /* 核心 */
       { n:'卷腹', g:'B', sets:3, rep:'15–20', kg:0, rest:45, m:'core' },
@@ -2936,6 +2900,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
       { n:'史密斯卧推', g:'A', sets:3, rep:'8–10', kg:50, rest:120, m:'chest' },
       { n:'绳索夹胸', g:'B', sets:3, rep:'12–15', kg:15, rest:60, m:'chest' },
       { n:'蝴蝶机夹胸', g:'B', sets:3, rep:'12–15', kg:20, rest:60, m:'chest' },
+      { n:'哑铃飞鸟', g:'B', sets:3, rep:'12–15', kg:12, rest:60, m:'chest' },
       { n:'俯卧撑', g:'B', sets:3, rep:'12–20', kg:0, rest:60, m:'chest' },
       /* 背 */
       { n:'高位下拉', g:'A', sets:3, rep:'10–12', kg:40, rest:90, m:'back' },
@@ -3751,7 +3716,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
   /* 基础设置：点行 → 选一个值 */
   var SET_OPTS = {
-    '每周训练频率': ['3 天','4 天','5 天'],
+    '每周训练频率': ['3 天','4 天'],
     '可用器械': ['商业健身房','只有哑铃','徒手'],
     '训练经验': ['新手','1–2 年','3 年以上'],
     '单次时长上限': ['45 分钟','60 分钟','90 分钟']
@@ -3780,7 +3745,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     store.opts = store.opts || {}; store.opts[label] = v; saveStore();
     if (label === '每周训练频率'){
       var n = parseInt(v, 10);
-      if (n >= 3 && n <= 5) setSplit(n);
+      if (n >= 3 && n <= 4) setSplit(n);
     }
     openSheet('#setSheet');
   });
@@ -4175,7 +4140,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   }
 
   /* ---------- 启动版本比对（同热量账本） ---------- */
-  var APP_VERSION = 'v7.50';
+  var APP_VERSION = 'v7.51';
   /* 版本徽标统一从 APP_VERSION 取，不再写死在 HTML（v7.05） */
   $$('.btag, .vtag').forEach(function(el){ el.textContent = APP_VERSION; });
   var relVal = $('#openRel .val'); if (relVal) relVal.textContent = APP_VERSION;
@@ -4213,6 +4178,9 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
   /* ---------- 更新记录 ---------- */
   var RELEASES = [
+    { v:'v7.51', d:'11-28', items:[
+      '改：只留两个阶段 —— 三分化（基础版）＝推 / 拉 / 腿，四分化（进阶版）＝胸+三头 / 背+二头 / 肩+腹 / 腿+核心，动作与组数按你给的表重排',
+      '删：五分化那一档' ] },
     { v:'v7.50', d:'11-28', items:[
       '修：点动作打不开卡片（v7.46 起分化 key 带数字，卡 id 被拆错，查不到动作 → 点了没反应、打勾也记不上）' ] },
     { v:'v7.49', d:'11-28', items:[
@@ -6091,7 +6059,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   paintRemindRow();
   /* v7.41：启动时恢复上次选的分化（含常规/减脂版），没存过才用默认 4 天 */
   splitMode = (store.splitMode === 'fat' && SPLITS_FAT[store.splitDays]) ? 'fat' : 'std';
-  splitDays = (store.splitDays >= 3 && store.splitDays <= 5) ? store.splitDays : 4;
+  splitDays = (store.splitDays >= 3 && store.splitDays <= 4) ? store.splitDays : 4;
   setSplit(splitDays);
   placeSplitLens(true);
   paintWeekVol();
