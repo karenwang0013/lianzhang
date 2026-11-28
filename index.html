@@ -3002,6 +3002,13 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   var WD_CN = ['一','二','三','四','五','六','日'];
 
   function wdIdx(iso){ return (new Date(iso + 'T00:00:00').getDay() + 6) % 7; }
+  /* v7.53：今天实际练的是哪一块（今天只有一种 key 有记录时返回它）—— 换分化/改排布后休息日也要看到打卡 */
+  function doneKey(iso){
+    var ks = {};
+    allLogs().forEach(function(l){ if (l.d === iso && l.k && EX[l.k]) ks[l.k] = 1; });
+    var a = Object.keys(ks);
+    return a.length === 1 ? a[0] : '';
+  }
   function keyForISO(iso){
     /* v7.46：按循环算（第几天练哪块），不再按星期几 */
     var c = cycOf(splitDays); if (!c.length) return '';
@@ -3167,6 +3174,11 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
         $('#todayName').textContent = TITLE[adhocKey][0];
         $('#todayEn').textContent = TITLE[adhocKey][1];
         renderToday(adhocKey);
+      } else if (doneKey(iso)){
+        todayKey = doneKey(iso);
+        $('#todayName').textContent = TITLE[todayKey][0];
+        $('#todayEn').textContent = TITLE[todayKey][1];
+        renderToday(todayKey);
       } else if (!key){
         todayKey = '';
         $('#todayName').textContent = '休';
@@ -4131,7 +4143,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   }
 
   /* ---------- 启动版本比对（同热量账本） ---------- */
-  var APP_VERSION = 'v7.52';
+  var APP_VERSION = 'v7.53';
   /* 版本徽标统一从 APP_VERSION 取，不再写死在 HTML（v7.05） */
   $$('.btag, .vtag').forEach(function(el){ el.textContent = APP_VERSION; });
   var relVal = $('#openRel .val'); if (relVal) relVal.textContent = APP_VERSION;
@@ -4169,6 +4181,8 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
   /* ---------- 更新记录 ---------- */
   var RELEASES = [
+    { v:'v7.53', d:'11-28', items:[
+      '修：今天排的是休息、但已经练过一块时，首页直接显示那块的动作和勾（原来只显示「已练」汇总，等于打卡看不见）' ] },
     { v:'v7.52', d:'11-28', items:[
       '改：计划按星期排（周一→周日），不再写成「第 1 天 / 第 2 天」' ] },
     { v:'v7.51', d:'11-28', items:[
