@@ -2583,17 +2583,8 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
         desc:'胸+三头 → 休 → 背+二头 → 休 → 肩+腹 → 休 → 腿+核心；腿之后直接接下一轮。' }
   };
   var SPLITS_LEGACY_DAYS = null;
-  /* 循环锚点：从哪天开始、第几块开始算 */
+  /* v7.52：循环按星期走（周一→周日），不再按日期差算锚点 */
   function cycOf(n){ return splitObj(n).cycle || []; }
-  function cycPos(iso){
-    var c = cycOf(splitDays); if (!c.length) return 0;
-    var a = store.cycAnchor;
-    if (!a || !a.d || a.i == null){ a = { d: todayISO(), i: 0 }; store.cycAnchor = a; saveStore(); }
-    var d0 = new Date(a.d + 'T00:00:00'), d1 = new Date(iso + 'T00:00:00');
-    var diff = Math.round((d1 - d0) / 86400000);
-    var pos = ((a.i + diff) % c.length + c.length) % c.length;
-    return pos;
-  }
   var SPLITS_FAT = {
     3:{ label:'减脂三分化 · 推 / 拉 / 腿肩', desc:'三次练完全身，练一休一；有氧放休息日，每周最多 2–3 次、每次不超过 30 分钟。',
         cycle:['fpush','rest','fpull','rest','flegs','rest','rest'] },
@@ -3000,7 +2991,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   function daysOf(n){
     var sp = splitObj(n);
     var c = sp.cycle || [];
-    if (c.length) return c.map(function(k, i){ return ['第' + (i + 1) + '天', k]; });
+    if (c.length) return c.map(function(k, i){ return [WKN[i] || ('第' + (i + 1) + '天'), k]; });
     return sp.days || [];
   }
   function splitLabel(n){ return splitObj(n).label; }
@@ -3014,7 +3005,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   function keyForISO(iso){
     /* v7.46：按循环算（第几天练哪块），不再按星期几 */
     var c = cycOf(splitDays); if (!c.length) return '';
-    var k = c[cycPos(iso)];
+    var k = c[wdIdx(iso) % c.length];
     return (k && k !== 'rest') ? k : '';
   }
   function isoDisplay(iso){ var a = String(iso).split('-'); return (+a[1]) + '月' + (+a[2]) + '日'; }
@@ -3352,7 +3343,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     var c = cycOf(n); if (!c.length) c = [];
     days.forEach(function(d, di){
       var label = d[0], key = d[1];
-      var isToday = (cycPos(todayISO()) === di);
+      var isToday = (wdIdx(todayISO()) === di);
       var badge = isToday ? ' <span class="badge">今天</span>' : '';
       if (key === 'rest'){
         rest++;
@@ -4140,7 +4131,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   }
 
   /* ---------- 启动版本比对（同热量账本） ---------- */
-  var APP_VERSION = 'v7.51';
+  var APP_VERSION = 'v7.52';
   /* 版本徽标统一从 APP_VERSION 取，不再写死在 HTML（v7.05） */
   $$('.btag, .vtag').forEach(function(el){ el.textContent = APP_VERSION; });
   var relVal = $('#openRel .val'); if (relVal) relVal.textContent = APP_VERSION;
@@ -4178,6 +4169,8 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
   /* ---------- 更新记录 ---------- */
   var RELEASES = [
+    { v:'v7.52', d:'11-28', items:[
+      '改：计划按星期排（周一→周日），不再写成「第 1 天 / 第 2 天」' ] },
     { v:'v7.51', d:'11-28', items:[
       '改：只留两个阶段 —— 三分化（基础版）＝推 / 拉 / 腿，四分化（进阶版）＝胸+三头 / 背+二头 / 肩+腹 / 腿+核心，动作与组数按你给的表重排',
       '删：五分化那一档' ] },
