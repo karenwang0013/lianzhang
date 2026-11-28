@@ -1980,9 +1980,20 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
   /* v6.78：加练卡以前拿数组下标当 id（x0/x1），删掉一个后面的卡就整体错位、打过的勾看着像被清空。
      现在每条卡带固定 u，按 u 反查卡片和它的记录 */
+  /* v7.50：卡 id 是「key + 下标」，但 v7.46 起的 key 自带数字（ct4 / sho4 / push3），
+     按「去掉尾部数字」拆会拆成 'ct' + 40 → 查不到动作，整张卡点不开、打勾也没反应。
+     改成按 EX 里真实存在的 key 从短到长试拆。 */
+  function domIdParts(id){
+    var s = String(id);
+    for (var i = 1; i < s.length; i++){
+      var b = s.slice(i);
+      if (/^\d+$/.test(b) && EX[s.slice(0, i)]) return { key: s.slice(0, i), idx: +b };
+    }
+    var k = s.replace(/[0-9]+$/, '');
+    return { key: k, idx: parseInt(s.slice(k.length), 10) || 0 };
+  }
   function exByDomId(id){
-    var key = id.replace(/[0-9]+$/, '');
-    var idx = parseInt(id.slice(key.length), 10) || 0;
+    var p = domIdParts(id), key = p.key, idx = p.idx;
     if (key === 'x'){
       var hit = extrasOn().filter(function(e){ return +e.__u === idx; })[0];
       return hit || null;
@@ -1991,7 +2002,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   }
 
   function setOn(id, setIdx, on){
-    var key = id.replace(/[0-9]+$/, '');
+    var key = domIdParts(id).key;
     var ex = exByDomId(id);   /* 换过动作就记在替代动作名下 */
     if (!ex) return;
     var lid = viewISO + '|' + id + '|' + setIdx;
@@ -4046,7 +4057,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     return out;
   }
   function paintPick(){
-    var key = curExId.replace(/[0-9]+$/, ''), idx = parseInt(curExId.replace(/^[a-z]+/, ''), 10) || 0;
+    var _p = domIdParts(curExId), key = _p.key, idx = _p.idx;
     var names = pickCandidates(key, idx);
     var curExObj = origOf(key, idx) || (dayEx(key) || [])[idx] || {};
     var cur = swappedName(key, idx) || curExObj.n || '';
@@ -4057,7 +4068,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
     box.scrollTop = 0;
   }
   function selectPick(name){
-    var key = curExId.replace(/[0-9]+$/, ''), idx = parseInt(curExId.replace(/^[a-z]+/, ''), 10) || 0;
+    var _p = domIdParts(curExId), key = _p.key, idx = _p.idx;
     setTimeout(function(){ setPicking(false); }, 0);
     var orig = origOf(key, idx); if (!orig) return;
     store.swaps = store.swaps || {};
@@ -4164,7 +4175,7 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
   }
 
   /* ---------- 启动版本比对（同热量账本） ---------- */
-  var APP_VERSION = 'v7.49';
+  var APP_VERSION = 'v7.50';
   /* 版本徽标统一从 APP_VERSION 取，不再写死在 HTML（v7.05） */
   $$('.btag, .vtag').forEach(function(el){ el.textContent = APP_VERSION; });
   var relVal = $('#openRel .val'); if (relVal) relVal.textContent = APP_VERSION;
@@ -4202,6 +4213,8 @@ h1 .en{font-size:14px;font-weight:600;letter-spacing:.16em;color:var(--muted2)}
 
   /* ---------- 更新记录 ---------- */
   var RELEASES = [
+    { v:'v7.50', d:'11-28', items:[
+      '修：点动作打不开卡片（v7.46 起分化 key 带数字，卡 id 被拆错，查不到动作 → 点了没反应、打勾也记不上）' ] },
     { v:'v7.49', d:'11-28', items:[
       '改：循环统一按 7 天一轮 —— 3 分化 推/休/拉/休/腿/休/休；4 分化 胸/休/背/休/肩/休/腿（排满 7 天，腿后直接接下一轮）；5 分化 胸/背/肩/臂/腿/休/休' ] },
     { v:'v7.48', d:'11-28', items:[
